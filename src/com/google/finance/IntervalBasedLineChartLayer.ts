@@ -1,0 +1,179 @@
+namespace com.google.finance
+{
+	export class IntervalBasedLineChartLayer extends IntervalBasedChartLayer
+	{
+		constructor(param1: ViewPoint, param2: DataSource)
+		{
+			super(param1, param2);
+		}
+
+		private drawLine(param1: number, param2: Context, param3: DataUnit[], param4: number, param5: number, param6: number, param7: number): number
+		{
+			let _loc8_ = NaN;
+			let _loc9_ = NaN;
+			let _loc10_= 0;
+			let _loc12_= 0;
+			let _loc13_= 0;
+			let _loc15_ = NaN;
+			let _loc16_ = NaN;
+			switch (param1)
+			{
+				case Const.DAILY:
+				case Const.WEEKLY:
+					if (isNaN(param7))
+					{
+						_loc8_ = this.viewPoint.getXPos(param3[param5]);
+						_loc9_ = this.getCloseYPos(param2, param3[param5]);
+						param5--;
+						this.graphics.moveTo(_loc8_, this.viewPoint.maxy);
+						this.graphics.lineStyle(0, 0, 0);
+						this.graphics.lineTo(_loc8_, _loc9_);
+					}
+					else
+					{
+						while (param5 >= param4 && this.viewPoint.getXPos(param3[param5]) >= param6)
+						{
+							param5--;
+						}
+						if (param5 < param4)
+							return param6;
+
+						this.graphics.moveTo(param6, this.viewPoint.maxy);
+						this.graphics.lineStyle(0, 0, 0);
+						this.graphics.lineTo(param6, param7);
+					}
+					this.graphics.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
+					_loc13_ = param5;
+					while (_loc13_ >= param4)
+					{
+						_loc8_ = this.viewPoint.getXPos(param3[_loc13_]);
+						_loc9_ = this.getCloseYPos(param2, param3[_loc13_]);
+						this.graphics.lineTo(_loc8_, _loc9_);
+						_loc13_--;
+					}
+					return _loc8_;
+				case Const.INTRADAY:
+				case Const.FIVE_MINUTES:
+				case Const.HALF_HOUR:
+					while (param5 >= param4 && this.viewPoint.getXPos(param3[param5]) >= param6)
+					{
+						param5--;
+					}
+					if (param5 < param4)
+						return param6;
+
+					_loc8_ = this.viewPoint.getXPos(param3[param5]);
+					this.graphics.moveTo(_loc8_, this.viewPoint.maxy);
+					_loc10_ = param5;
+					let _loc11_ = this.dataSource.visibleExtendedHours.length() === 0;
+					_loc12_ = this.dataSource.data.marketDayLength;
+					while (_loc10_ > param4)
+					{
+						this.graphics.lineStyle(0, 0, 0);
+						_loc8_ = this.viewPoint.getXPos(param3[_loc10_]);
+						_loc9_ = this.getCloseYPos(param2, param3[_loc10_]);
+						this.graphics.lineTo(_loc8_, this.viewPoint.maxy);
+						this.graphics.lineTo(_loc8_, _loc9_);
+						let _loc14_ = notnull(this.getDataSeries());
+						this.graphics.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
+						while (_loc10_ > param4 && param3[_loc10_].dayMinute !== _loc14_.marketOpenMinute)
+						{
+							_loc10_--;
+							_loc8_ = this.viewPoint.getXPos(param3[_loc10_]);
+							_loc9_ = this.getCloseYPos(param2, param3[_loc10_]);
+							this.graphics.lineTo(_loc8_, _loc9_);
+						}
+						this.graphics.lineStyle(0, 0, 0);
+						this.graphics.lineTo(_loc8_, this.viewPoint.maxy);
+						_loc10_--;
+						if (_loc11_ && _loc10_ > param4)
+						{
+							_loc15_ = param3[_loc10_].relativeMinutes;
+							_loc16_ = param3[_loc10_ + 1].relativeMinutes;
+							if (_loc16_ > _loc15_ + _loc12_)
+							{
+								_loc9_ = this.getCloseYPos(param2, param3[_loc10_]);
+								_loc8_ = this.viewPoint.getMinuteXPos(_loc16_ - 1);
+								this.graphics.lineTo(_loc8_, this.viewPoint.maxy);
+								this.graphics.lineTo(_loc8_, _loc9_);
+								this.graphics.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
+								_loc8_ = this.viewPoint.getMinuteXPos(_loc15_ + 1);
+								this.graphics.lineTo(_loc8_, _loc9_);
+								this.graphics.lineStyle(0, 0, 0);
+								this.graphics.lineTo(_loc8_, this.viewPoint.maxy);
+							}
+						}
+					}
+					return this.viewPoint.getXPos(param3[param4]);
+				default:
+					return -1;
+			}
+		}
+
+		renderLayer(context: Context) 
+		{
+			if (!this.isEnabled())
+				return;
+
+			let vp = this.viewPoint;
+			let _loc2_ = notnull(this.getDataSeries());
+			this.localYOffset = vp.miny + vp.medPriceY + vp.V_OFFSET;
+			this.localYScale = vp.maxPriceRangeViewSize / context.maxPriceRange;
+			this.lineThickness = Const.LINE_CHART_LINE_THICKNESS;
+			this.lineColor = Const.LINE_CHART_LINE_COLOR;
+			this.lineVisibility = Const.LINE_CHART_LINE_VISIBILITY;
+			let _loc3_ = vp.getDetailLevelForTechnicalStyle();
+			let _loc4_= 0;
+			let _loc5_= 0;
+			let _loc6_ = Number.MAX_VALUE;
+			let _loc7_ = NaN;
+			let _loc8_ = true;
+			this.graphics.clear();
+			do
+			{
+				let _loc9_ = Const.getDetailLevelInterval(_loc3_);
+				let _loc10_ = _loc2_.getPointsInIntervalArray(_loc9_);
+				if (!_loc10_ || _loc10_.length === 0)
+				{
+					_loc3_++;
+				}
+				else
+				{
+					_loc4_ = Math.max(_loc2_.getRelativeMinuteIndex(vp.getFirstMinute(), _loc10_) - 1, 0);
+					_loc5_ = Math.min(_loc2_.getRelativeMinuteIndex(vp.getLastMinute(), _loc10_) + 1, this.getLastRealPointIndex(_loc10_));
+					let _loc11_ = _loc10_[_loc10_.length - 1];
+					if (_loc8_ && _loc3_ >= Const.DAILY && _loc5_ === _loc10_.length - 1 && _loc11_.relativeMinutes < vp.getLastMinute())
+					{
+						let _loc12_ = _loc2_.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
+						if (_loc12_ && _loc12_.length > 0)
+						{
+							let _loc13_ = _loc12_[_loc12_.length - 1];
+							let _loc14_ = vp.getXPos(_loc13_);
+							let _loc15_ = this.getCloseYPos(context, _loc13_);
+							this.graphics.beginFill(Const.LINE_CHART_FILL_COLOR, Const.LINE_CHART_FILL_VISIBILITY);
+							this.graphics.moveTo(_loc14_, vp.maxy);
+							this.graphics.lineStyle(0, 0, 0);
+							this.graphics.lineTo(_loc14_, _loc15_);
+							_loc14_ = vp.getXPos(_loc11_);
+							_loc15_ = this.getCloseYPos(context, _loc11_);
+							this.graphics.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
+							this.graphics.lineTo(_loc14_, _loc15_);
+							this.graphics.lineStyle(0, 0, 0);
+							this.graphics.lineTo(_loc14_, vp.maxy);
+							this.graphics.endFill();
+						}
+					}
+					this.graphics.beginFill(Const.LINE_CHART_FILL_COLOR, Const.LINE_CHART_FILL_VISIBILITY);
+					_loc6_ = this.drawLine(_loc3_, context, _loc10_, _loc4_, _loc5_, _loc6_, _loc7_);
+					_loc7_ = this.getCloseYPos(context, _loc10_[_loc4_]);
+					this.graphics.lineStyle(0, 0, 0);
+					this.graphics.lineTo(_loc6_, vp.maxy);
+					this.graphics.endFill();
+					_loc8_ = false;
+					_loc3_++;
+				}
+			}
+			while (_loc3_ <= Const.WEEKLY && _loc4_ === 0);
+		}
+	}
+}

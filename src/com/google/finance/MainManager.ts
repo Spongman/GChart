@@ -124,6 +124,8 @@ namespace com.google.finance
 
 		private init()
 		{
+			flash.display.Graphics.initialize();
+			
 			this.stage.align = flash.display.StageAlign.TOP_LEFT;
 			this.stage.scaleMode = flash.display.StageScaleMode.NO_SCALE;
 			this.stage.addEventListener(Events.RESIZE, flash.display.Stage.bind(this.onResize, this));

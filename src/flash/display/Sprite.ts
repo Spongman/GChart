@@ -3,8 +3,8 @@
 	export class Graphics
 	{
 		private static _pending: Graphics[] = [];
-		private static _blitCanvas:HTMLCanvasElement;
-		private static _blitContext:CanvasRenderingContext2D;
+		private static _blitCanvas: HTMLCanvasElement;
+		private static _blitContext: CanvasRenderingContext2D;
 
 		private _context: CanvasRenderingContext2D;
 		private _fill = false;
@@ -16,11 +16,11 @@
 			//this._context = context;
 		}
 
-		
-		static initialize() {
+
+		static initialize()
+		{
 			Graphics._blitCanvas = document.createElement('canvas');
 			Graphics._blitContext = Graphics._blitCanvas.getContext('2d')!;
-			Graphics._blitContext.globalCompositeOperation = "copy";
 		}
 
 
@@ -46,10 +46,10 @@
 		private _height = 0;
 		get height() { return this._height; }
 
-		private ensureCanvas() {
-
-			if (!this._context) {
-				
+		private ensureCanvas()
+		{
+			if (!this._context)
+			{
 				var canvas = document.createElement("canvas");
 				//canvas.style.border = "2px dotted red";
 				canvas.width = canvas.height = 0;
@@ -66,9 +66,39 @@
 		_miny: number;
 		_maxy: number;
 
-
 		private ensure(w: number, h: number)
 		{
+			/*
+			if (!this._sized)
+			{
+				this._minx = this._maxx = x;
+				this._miny = this._maxy = y;
+				this._sized = true;
+				return;
+			}
+
+			if (this._minx < x && this._maxx > x &&
+				this._miny < y && this._maxy > y)
+			{
+				return;
+			}
+
+			var oldminx = this._minx;
+			var oldminy = this._miny;
+			var oldmaxx = this._maxx;
+			var oldmaxy = this._maxy;
+
+			if (this._minx > x)
+				this._minx = x;
+			if (this._maxx < x)
+				this._maxx = x;
+
+			if (this._miny > y)
+				this._miny = y;
+			if (this._maxy < y)
+				this._maxy = y;
+			*/
+
 			if (w <= this._width && h <= this._height)
 				return;
 
@@ -77,19 +107,24 @@
 			if (h < this._height)
 				w = this._height;
 
+			this._width = w;
+			this._height = h;
+
 			var context = this._context;
 			var canvas = context.canvas;
+			w += 5 + context.lineWidth / 2;
+			h += 5 + context.lineWidth / 2;
 
 			if (Graphics._blitCanvas.width < canvas.width)
 				Graphics._blitCanvas.width = canvas.width;
 			if (Graphics._blitCanvas.height < canvas.height)
 				Graphics._blitCanvas.height = canvas.height;
 
-			var foo = context.globalCompositeOperation;
+			var globalCompositeOperation = context.globalCompositeOperation;
 			context.globalCompositeOperation = "copy";
 			Graphics._blitContext.globalCompositeOperation = "copy";
 			Graphics._blitContext.drawImage(canvas, 0, 0);
-			context.globalCompositeOperation = foo;
+			context.globalCompositeOperation = globalCompositeOperation;
 
 			canvas.width = w;
 			canvas.height = h;
@@ -98,69 +133,7 @@
 				0, 0, w, h
 			);
 
-			this._width = w;
-			this._height = h;
-			
 			this.setStyle();
-			return;
-
-			if (w >= 0 && h >= 0)
-			{
-				if (this._sized) {
-					if (this._minx > w)
-						this._minx = w;
-					if (this._maxx < w)
-						this._maxx = w;
-					
-					if (this._miny > h)
-						this._miny = h;
-					if (this._maxy < h)
-						this._maxy = h;
-				}
-				else {
-					this._minx = this._maxx = w;
-					this._miny = this._maxy = h;
-					this._sized = true;
-				}
-
-				//console.log(this._minx + "," + this._miny + "->" + this._maxx + "," + this._maxy);
-
-				if (w > this._width || h > this._height)
-				{
-					var context = this._context;
-					var canvas = context.canvas;
-					w += 5 + context.lineWidth / 2;
-					h += 5 + context.lineWidth / 2;
-
-					var oldWidth = canvas.width;
-					var oldHeight = canvas.height;
-					if (oldWidth > 0 && oldHeight > 0)
-					{
-						let temp_cnvs = document.createElement('canvas');
-						let temp_cntx = notnull(temp_cnvs.getContext('2d'));
-						temp_cnvs.width = canvas.width;
-						temp_cnvs.height = canvas.height;
-						temp_cntx.drawImage(canvas, 0, 0);
-
-						canvas.width = w;
-						canvas.height = h;
-						context.drawImage(temp_cnvs, 0, 0);
-					}
-					else
-					{
-						canvas.width = w;
-						canvas.height = h;
-
-						//context.clearRect(0, 0, w, h);
-					}
-
-					this._width = w;
-					this._height = h;
-					
-					this.setStyle();
-					//context.moveTo(this._x, this._y);
-				}
-			}
 		}
 
 		private endStroke()
@@ -279,23 +252,13 @@
 
 			this.endStroke();
 
-			//if (!this._sized)
-			//	return false;
-			
-			console.log("clear: " + this._minx + "," + this._miny + "->" + this._maxx + "," + this._maxy);
-			
-			this._sized = false;
-
-			//this._context.clearRect(this._minx, this._miny, this._maxx - this._minx, this._maxy - this._miny);
 			this._context.clearRect(0, 0, this._context.canvas.width, this._context.canvas.height);
 		}
 
 		drawRect(x: number, y: number, w: number, h: number)
 		{
-			//return;
 			this.endStroke();
 
-			console.log("drawRect: " + x + ", " + y + " " + w + " x " + h);
 			this.ensure(x + w, y + h);
 
 			if (this._fill)
@@ -306,8 +269,6 @@
 
 		drawRoundRect(x: number, y: number, w: number, h: number, rx: number, ry: number)
 		{
-			this.endStroke();
-
 			this.drawRect(x, y, w, h);
 		}
 	}
@@ -807,6 +768,4 @@
 		scaleX: number;
 		scaleY: number;
 	}
-
-	Graphics.initialize();
 }

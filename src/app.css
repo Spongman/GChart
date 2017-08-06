@@ -10,8 +10,6 @@ body {
 }
 
 #stage {
-	//width: 553px;
-	//height: 540px;
 	position: relative;
 	overflow: hidden;
 
@@ -80,8 +78,6 @@ canvas {
 .pending {
 	visibility: hidden;
 	position: absolute;
-	aleft: -10000px;
-	atop: -10000px;
 }
 
 .button img,

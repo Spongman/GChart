@@ -24,7 +24,7 @@ var tsProject = ts.createProject(
 	'./src/tsconfig.json', {
 		removeComments: config.production,
 		experimentalAsyncFunctions: !config.production,
-		target: config.production ? "es2015" : "es2017"
+		//target: config.production ? "es2015" : "es2017"
 	}
 );
 

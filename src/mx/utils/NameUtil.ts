@@ -9,7 +9,7 @@ namespace mx.utils
 	{
 		private static counter = 0;
 
-		static displayObjectToString(param1: flash.display.DisplayObject): string
+		static displayObjectToString(param1: flash.display.DisplayObject): string|null
 		{
 			let result: string|null = null;
 			let displayObject = param1;

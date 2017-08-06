@@ -11,16 +11,16 @@
 
 		addEventListener(type: string, listener: Function, useCapture?: boolean, priority?: number, useWeakReference?: boolean): void
 		{
-			var listeners = this._events[type] || (this._events[type] = []);
+			let listeners = this._events[type] || (this._events[type] = []);
 			listeners.push(listener);
 		}
 
 		protected fire(name: string, ...rest: any[])
 		{
-			var listeners = this._events[name];
+			let listeners = this._events[name];
 			if (listeners)
 			{
-				for (var i = 0; i < listeners.length; i++)
+				for (let i = 0; i < listeners.length; i++)
 				{
 					listeners[i].apply(null, rest);
 				}

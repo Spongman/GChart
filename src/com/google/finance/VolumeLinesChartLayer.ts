@@ -43,7 +43,7 @@ namespace com.google.finance
 			while (_loc14_ > param8)
 				_loc14_--;
 
-			var point = <indicator.VolumeIndicatorPoint>param4.points[_loc14_];
+			let point = <indicator.VolumeIndicatorPoint>param4.points[_loc14_];
 			let _loc17_ = param3.getXPos(_loc10_[_loc14_].point);
 			let _loc18_ = param3.getIntervalLength(param6 / 60);
 			_loc15_ = Utils.extendedMax(param7, _loc11_[param2 - 1]);

@@ -26,10 +26,10 @@
 
 		static cleanupPending()
 		{
-			var pending = Graphics._pending;
-			for (var i = 0; i < pending.length; i++)
+			let pending = Graphics._pending;
+			for (let i = 0; i < pending.length; i++)
 			{
-				var graphics = pending[i];
+				let graphics = pending[i];
 				if (graphics._pending)
 				{
 					graphics._pending = false;
@@ -50,7 +50,7 @@
 		{
 			if (!this._context)
 			{
-				var canvas = document.createElement("canvas");
+				let canvas = document.createElement("canvas");
 				//canvas.style.border = "2px dotted red";
 				canvas.width = canvas.height = 0;
 				//canvas.width = this.element.offsetWidth;
@@ -66,71 +66,91 @@
 		_miny: number;
 		_maxy: number;
 
-		private ensure(w: number, h: number)
+		private ensure(x: number, y: number)
 		{
-			/*
+			let context = this._context;
+			let canvas = context.canvas;
+
+			let to2 = this._thickness / 2;
+			let minx = Math.floor(x - to2);
+			let maxx = Math.ceil(x + to2);
+			let miny = Math.floor(y - to2);
+			let maxy = Math.ceil(y - to2);
+
 			if (!this._sized)
 			{
-				this._minx = this._maxx = x;
-				this._miny = this._maxy = y;
+				this._minx = minx;
+				this._maxx = maxx;
+				this._miny = miny;
+				this._maxy = maxy;
+				canvas.style.left = this._minx + "px";
+				canvas.style.top = this._miny + "px";
 				this._sized = true;
 				return;
 			}
 
-			if (this._minx < x && this._maxx > x &&
-				this._miny < y && this._maxy > y)
+			if (this._minx <= minx && this._maxx >= maxx &&
+				this._miny <= miny && this._maxy >= maxy)
 			{
 				return;
 			}
 
-			var oldminx = this._minx;
-			var oldminy = this._miny;
-			var oldmaxx = this._maxx;
-			var oldmaxy = this._maxy;
 
-			if (this._minx > x)
-				this._minx = x;
-			if (this._maxx < x)
-				this._maxx = x;
 
-			if (this._miny > y)
-				this._miny = y;
-			if (this._maxy < y)
-				this._maxy = y;
+			let oldminx = this._minx;
+			let oldminy = this._miny;
+			let oldmaxx = this._maxx;
+			let oldmaxy = this._maxy;
+
+			if (this._minx > minx)
+			{
+				this._minx = Math.floor(minx);
+				canvas.style.left = this._minx + "px";
+			}
+			if (this._maxx < maxx)
+				this._maxx = Math.ceil(maxx);
+
+			if (this._miny > miny)
+			{
+				this._miny = Math.floor(miny);
+				canvas.style.top = this._miny + "px";
+			}
+			if (this._maxy < maxy)
+				this._maxy = Math.ceil(maxy);
+
+			let w = this._maxx - this._minx;
+			let h = this._maxy - this._miny;
+
+			//console.log(w, h);
+
+			/*
+			if (w <= 0 || h <= 0)
+				return;
 			*/
 
-			if (w <= this._width && h <= this._height)
-				return;
+			let oldWidth = canvas.width;
+			let oldHeight = canvas.height;
 
-			if (w < this._width)
-				w = this._width;
-			if (h < this._height)
-				w = this._height;
+			if (Graphics._blitCanvas.width < oldWidth)
+				Graphics._blitCanvas.width = oldWidth;
+			if (Graphics._blitCanvas.height < oldHeight)
+				Graphics._blitCanvas.height = oldHeight;
 
-			this._width = w;
-			this._height = h;
-
-			var context = this._context;
-			var canvas = context.canvas;
-			w += 5 + context.lineWidth / 2;
-			h += 5 + context.lineWidth / 2;
-
-			if (Graphics._blitCanvas.width < canvas.width)
-				Graphics._blitCanvas.width = canvas.width;
-			if (Graphics._blitCanvas.height < canvas.height)
-				Graphics._blitCanvas.height = canvas.height;
-
-			var globalCompositeOperation = context.globalCompositeOperation;
+			let globalCompositeOperation = context.globalCompositeOperation;
 			context.globalCompositeOperation = "copy";
 			Graphics._blitContext.globalCompositeOperation = "copy";
 			Graphics._blitContext.drawImage(canvas, 0, 0);
 			context.globalCompositeOperation = globalCompositeOperation;
 
-			canvas.width = w;
-			canvas.height = h;
-			context.drawImage(Graphics._blitCanvas,
-				0, 0, w, h,
-				0, 0, w, h
+			canvas.width = w + 5;
+			canvas.height = h + 5;
+
+			context.drawImage(
+				Graphics._blitCanvas,
+				0, 0,
+				oldWidth, oldHeight,
+				oldminx - this._minx, oldminy - this._miny,
+				oldWidth, oldHeight
 			);
 
 			this.setStyle();
@@ -154,7 +174,7 @@
 				this._path = true;
 				this.ensureCanvas();
 				this._context.beginPath();
-				this._context.moveTo(this._x, this._y);
+				this._context.moveTo(this._x - this._minx, this._y - this._miny);
 
 				if (!this._pending)
 				{
@@ -171,7 +191,7 @@
 		{
 			this.beginStroke();
 			this.ensure(x, y);
-			this._context.moveTo(x, y);
+			this._context.moveTo(x - this._minx, y - this._miny);
 			this._x = x;
 			this._y = y;
 		}
@@ -183,7 +203,7 @@
 
 			this.beginStroke();
 			this.ensure(x, y);
-			this._context.lineTo(x, y);
+			this._context.lineTo(x - this._minx, y - this._miny);
 			this._x = x;
 			this._y = y;
 		}
@@ -219,7 +239,7 @@
 		{
 			this.ensureCanvas();
 			this._context.strokeStyle = cssColor(this._color, this._alpha);
-			var thickness = this._thickness;
+			let thickness = this._thickness;
 			this._context.lineWidth = thickness;
 			if (thickness > 4)
 				this._context.lineCap = "round";
@@ -257,14 +277,16 @@
 
 		drawRect(x: number, y: number, w: number, h: number)
 		{
+			let fill = this._fill;
 			this.endStroke();
 
+			this.ensure(x, y);
 			this.ensure(x + w, y + h);
 
-			if (this._fill)
-				this._context.fillRect(x, y, w, h);
+			if (fill)
+				this._context.fillRect(x - this._minx, y - this._miny, w, h);
 			else
-				this._context.rect(x, y, w, h);
+				this._context.rect(x - this._minx, y - this._miny, w, h);
 		}
 
 		drawRoundRect(x: number, y: number, w: number, h: number, rx: number, ry: number)
@@ -317,7 +339,7 @@
 		protected _graphics: Graphics;
 		get graphics(): Graphics
 		{
-			var graphics = this._graphics;
+			let graphics = this._graphics;
 			if (graphics == null)
 			{
 				this._graphics = graphics = new Graphics(this.element);
@@ -418,7 +440,7 @@
 			if (child.parent)
 				child.parent.removeChild(child);
 
-			var childElement = child.element;
+			let childElement = child.element;
 			if (childElement.parentElement)
 			{
 				assert(childElement.parentElement === document.body);
@@ -446,7 +468,7 @@
 
 			this.prepareChild(child);
 
-			var childBefore = this.children[index];
+			let childBefore = this.children[index];
 			this.children.splice(index, 0, child);
 			return this.element.insertBefore(child.element, childBefore && childBefore.element);
 		}
@@ -460,7 +482,7 @@
 		{
 			assert(i >= 0 && i < this.children.length);
 
-			var child = this.getChildAt(i);
+			let child = this.getChildAt(i);
 			//this.element.removeChild(child.element);
 			child.element.remove();
 			this.children.splice(i, 1);
@@ -483,8 +505,8 @@
 			assert(i1 >= 0 && i1 < this.children.length);
 			assert(i2 >= 0 && i2 < this.children.length);
 
-			var child1 = this.children[i1];
-			var child2 = this.children[i2];
+			let child1 = this.children[i1];
+			let child2 = this.children[i2];
 			this.children[i1] = child2;
 			this.children[i2] = child1;
 			// TODO: swap elements
@@ -578,12 +600,15 @@
 			this.stage = this;
 			this.mouseEnabled = false;
 
-			/*
 			window.addEventListener("resize", () => {
+				this.updateSize();
 				this.element.dispatchEvent(new Event("resize"));
 			});
-			*/
 
+			this.updateSize();
+		}
+
+		private updateSize () {
 			this._width = this.element.clientWidth;
 			this._height = this.element.clientHeight;
 		}
@@ -607,18 +632,18 @@
 
 		setMouse(x: number, y: number)
 		{
-			var offset = offsetOf(this.element);
+			let offset = offsetOf(this.element);
 			this._mouseX = x - offset.left;
 			this._mouseY = y - offset.top;
 		}
 
-		static bind(fToBind: EventListener, oThis: any, ...rest: any[]): EventListener
+		static bind(fToBind: Function, oThis: any, ...rest: any[]): EventListener
 		{
-			var aArgs = Array.prototype.slice.call(arguments, 2),
+			let aArgs = Array.prototype.slice.call(arguments, 2),
 				fNOP = function () { },
 				fBound = function ()
 				{
-					var value = fToBind.apply(this instanceof fNOP
+					let value = fToBind.apply(this instanceof fNOP
 						? this
 						: oThis,
 						aArgs.concat(Array.prototype.slice.call(arguments)));
@@ -689,7 +714,7 @@
 	{
 		constructor(name?: string)
 		{
-			var elt = document.createElement("div");
+			let elt = document.createElement("div");
 			super(elt, name);
 		}
 

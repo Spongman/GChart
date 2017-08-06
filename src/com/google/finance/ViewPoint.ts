@@ -143,7 +143,7 @@ namespace com.google.finance
 
 		private topCanvas: flash.display.Sprite;
 		
-		protected layersContext: Context;
+		public layersContext: Context;
 
 		private static readonly MIN_ZOOM_CHART_AMOUNT = 6;
 
@@ -288,7 +288,7 @@ namespace com.google.finance
 			if (MainManager.paramsObj.snapping === "false")
 				return;
 
-			var dataSource = this.getBaseDataSource();
+			let dataSource = this.getBaseDataSource();
 			if (!dataSource)
 				return;
 
@@ -632,7 +632,7 @@ namespace com.google.finance
 
 		zoomInMinutes_Handler(param1: Context, param2 = false)
 		{
-			var context: Context | null;
+			let context: Context | null;
 			if (Const.INDICATOR_ENABLED && this.myController && this.myController.currentIntervalLevel >= 0)
 				context = this.adjustBarChartContext(param1, this.myController.currentIntervalLevel);
 			else

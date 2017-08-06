@@ -92,7 +92,7 @@ namespace com.google.finance.indicator
 
 				for (let _loc14_ = _loc11_; _loc14_ >= _loc12_; _loc14_--)
 				{
-					var points = _loc8_[_loc13_].points[_loc14_];
+					let points = _loc8_[_loc13_].points[_loc14_];
 					if (!points)
 						continue;	// TODO: this shouldn't happen
 

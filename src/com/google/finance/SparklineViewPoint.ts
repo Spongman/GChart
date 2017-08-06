@@ -416,7 +416,7 @@ namespace com.google.finance
 		getLastDataUnit(): DataUnit
 		{
 			let _loc1_ = this.displayManager.getMainViewPoint();
-			return notnull(_loc1_).getLastDataUnit();
+			return notnull(_loc1_.getLastDataUnit());
 		}
 
 		getLeftX(): number
@@ -764,7 +764,7 @@ namespace com.google.finance
 
 		getNewContext(param1: number, param2: number): Context
 		{
-			var context = new Context();
+			let context = new Context();
 			context.lastMinute = param1;
 			context.count = param2;
 			return context;

@@ -10,15 +10,18 @@ namespace com.google.finance
 			param1.bottomTextHeight = this.bottomTextHeight;
 		}
 
-		private drawRectangle(param1: number, param2: number, param3: number, param4: number, param5: number, param6: number) 
+		private drawRectangle(color: number, alpha: number, x1: number, y1: number, x2: number, y2: number) 
 		{
 			this.graphics.lineStyle(0, 0, 0);
-			this.graphics.beginFill(param1, param2);
+			this.graphics.beginFill(color, alpha);
+			this.graphics.drawRect(x1, y1, x2 - x1, y2 - y1);
+			/*
 			this.graphics.moveTo(param3, param4);
 			this.graphics.lineTo(param5, param4);
 			this.graphics.lineTo(param5, param6);
 			this.graphics.lineTo(param3, param6);
 			this.graphics.lineTo(param3, param4);
+			*/
 			this.graphics.endFill();
 		}
 

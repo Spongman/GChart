@@ -47,7 +47,7 @@ namespace com.google.finance
 		{
 			let posInInterval = notnull(param1.posInInterval);
 			let _loc3_ = posInInterval[param2].refDataSeries;
-			let _loc4_ = _loc3_.getPointsInIntervalArray(param2);
+			let _loc4_ = notnull(_loc3_).getPointsInIntervalArray(param2);
 			return _loc4_[posInInterval[param2].position];
 		}
 

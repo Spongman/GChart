@@ -66,7 +66,7 @@ namespace com.google.finance
 			while (_loc3_ >= 0)
 			{
 				let _loc4_ = param2[_loc3_];
-				let _loc5_ = _loc4_.refDataSeries.units[_loc4_.pos];
+				let _loc5_ = notnull(_loc4_.refDataSeries).units[_loc4_.pos];
 				if (_loc5_.relativeMinutes <= param1.lastMinute)
 					return _loc3_;
 
@@ -80,7 +80,7 @@ namespace com.google.finance
 			for (let _loc3_ = 0; _loc3_ < param2.length; _loc3_++)
 			{
 				let _loc4_ = param2[_loc3_];
-				let _loc5_ = _loc4_.refDataSeries.units[_loc4_.pos];
+				let _loc5_ = notnull(_loc4_.refDataSeries).units[_loc4_.pos];
 				if (_loc5_.relativeMinutes > param1.lastMinute - param1.count)
 					return _loc3_;
 			}
@@ -223,21 +223,21 @@ namespace com.google.finance
 
 		private getVisibleDataUnit(param1: PinPoint): DataUnit
 		{
-			let _loc2_ = param1.refDataSeries.units[param1.pos];
+			let _loc5_ = notnull(param1.refDataSeries);
+			let _loc2_ = _loc5_.units[param1.pos];
 			let _loc3_ = this.viewPoint.getSkipInterval();
 			let _loc4_ = 0;
 			if (_loc3_.interval >= Const.WEEKLY_INTERVAL)
 			{
-				let _loc5_ = param1.refDataSeries;
 				let _loc6_ = _loc5_.getNextWeekEnd(param1.pos);
-				_loc4_ = Number(param1.refDataSeries.fridays[_loc6_]);
+				_loc4_ = Number(_loc5_.fridays[_loc6_]);
 			}
 			else if (_loc3_.interval >= Const.DAILY_INTERVAL)
 				_loc4_ = Number(param1.dayPos);
 			else
 				_loc4_ = Number(param1.pos + (param1.dayPos - param1.pos) % _loc3_.skip);
 
-			return param1.refDataSeries.units[_loc4_];
+			return _loc5_.units[_loc4_];
 		}
 
 		private renderFlagsGroup(param1: Context, param2: number, param3: number, param4: number, param5: number, param6: number, param7: PinPoint[], param8: number, param9: number) 

@@ -38,7 +38,7 @@ namespace com.google.finance
 			let _loc1_: DataSeries[] = [];
 			for (let _loc2_ = 0; _loc2_ < this.intervals.length; _loc2_++)
 			{
-				var ds = this.getDataSeries(this.intervals[_loc2_]);
+				let ds = this.getDataSeries(this.intervals[_loc2_]);
 				if (ds)
 					_loc1_.push(ds);
 			}

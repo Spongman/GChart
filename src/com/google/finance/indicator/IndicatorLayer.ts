@@ -276,7 +276,7 @@ namespace com.google.finance.indicator
 
 			for (let _loc11_ = 0; _loc11_ < _loc7_.length; _loc11_++)
 			{
-				var point = _loc7_[_loc11_].points[_loc8_];
+				let point = _loc7_[_loc11_].points[_loc8_];
 				if (!point)
 					continue;	// TODO:
 				let _loc9_ = point.getPoint();

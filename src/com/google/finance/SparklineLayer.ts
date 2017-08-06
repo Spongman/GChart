@@ -160,7 +160,7 @@ namespace com.google.finance
 
 		private getMaxRange(param1: number, param2: number, param3: number[]) 
 		{
-			let _loc4_ = this.getDataSeries();
+			let _loc4_ = notnull(this.getDataSeries());
 			let _loc5_ = _loc4_.units;
 			let _loc6_ = param2;
 			this.minPriceLog = Number.POSITIVE_INFINITY;

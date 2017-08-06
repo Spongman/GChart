@@ -14,7 +14,7 @@
 		{
 			console.log("load", request.url);
 
-			var xhr = new XMLHttpRequest();
+			let xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = () =>
 			{
 				switch (xhr.readyState)

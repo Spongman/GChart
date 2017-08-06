@@ -44,6 +44,7 @@ namespace com.google.finance
 			if (_loc3_ > _loc4_)
 				return 1;
 
+			// TODO: PinPoint only?
 			if (param1.letter < param2.letter)
 				return -1;
 
@@ -61,14 +62,14 @@ namespace com.google.finance
 		getRelativeMinutes(param1: number = -1): number
 		{
 			if (!this.posInInterval)
-				return this.refDataSeries.units[this.pos].relativeMinutes;
+				return notnull(this.refDataSeries).units[this.pos].relativeMinutes;
 
 			if (!this.posInInterval[param1])
 				return NaN;
 
 			let _loc2_ = this.posInInterval[param1].refDataSeries;
 			let _loc3_ = this.posInInterval[param1].position;
-			return _loc2_.getPointsInIntervalArray(param1)[_loc3_].relativeMinutes;
+			return notnull(_loc2_).getPointsInIntervalArray(param1)[_loc3_].relativeMinutes;
 		}
 	}
 }

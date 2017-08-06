@@ -74,11 +74,11 @@ module SecurityErrorEvents
 
 function cssColor(n: number, alpha = 1): string
 {
-	var s = Math.floor(n).toString(16);
+	let s = Math.floor(n).toString(16);
 	if (alpha >= 1)
 		return "#" + "000000".substr(s.length) + s;
 
-	var a = Math.floor(alpha * 255).toString(16);
+	let a = Math.floor(alpha * 255).toString(16);
 	return "#" + "00".substr(a.length) + "000000".substr(s.length) + s;
 }
 
@@ -90,9 +90,9 @@ function assert(cond: boolean)
 
 function getDefinitionByName(name: string): Function
 {
-	var container: any = window;
-	var parts = name.split(".");
-	for (var i = 0; i < parts.length; i++)
+	let container: any = window;
+	let parts = name.split(".");
+	for (let i = 0; i < parts.length; i++)
 		container = container[parts[i]];
 	return container;
 }
@@ -101,8 +101,8 @@ function getClassName(obj: any)
 {
 	return obj.constructor.name;
 	/*
-	var funcNameRegex = /function (.{1,})\(/;
-	var results = (funcNameRegex).exec(obj["constructor"].toString());
+	let funcNameRegex = /function (.{1,})\(/;
+	let results = (funcNameRegex).exec(obj["constructor"].toString());
 	return (results && results.length > 1) ? results[1] : "";
 	*/
 }
@@ -123,7 +123,7 @@ if (!Function.prototype.bind)
 {
 	Function.prototype.bind = function (oThis)
 	{
-		var aArgs = Array.prototype.slice.call(arguments, 1),
+		let aArgs = Array.prototype.slice.call(arguments, 1),
 			fToBind = this,
 			fNOP = function () { },
 			fBound = function ()

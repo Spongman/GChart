@@ -17,7 +17,7 @@ namespace com.google.finance
 			let _loc6_ = this.getOhlcYPos(param1, _loc4_);
 			let _loc7_ = this.getOhlcColor(_loc4_, param2[Math.max(param3 - 1, 0)]);
 
-			var gr = this.graphics;
+			let gr = this.graphics;
 			gr.lineStyle(1, _loc7_);
 
 			if (Math.abs(_loc6_.highY - _loc6_.lowY) <= 1)

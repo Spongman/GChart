@@ -188,7 +188,7 @@ namespace com.google.finance
 
 		toggleHandles(param1: boolean) 
 		{
-			return false;	// TODO (hitTestPoint)
+			//return false;	// TODO (hitTestPoint)
 			let visibility = param1;
 			if (visibility === this.currentHandlesVisibility)
 				return;

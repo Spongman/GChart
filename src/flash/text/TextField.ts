@@ -43,7 +43,7 @@
 		cacheAsBitmap: boolean;
 
 		setTextFormat(p: TextFormat, start: number = -1, end: number = -1) { }
-		getTextFormat(): TextFormat { return null; }
+		getTextFormat(): TextFormat|null { return null; }
 		set defaultTextFormat(value: TextFormat)
 		{
 			this.element.style.fontFamily = value.family || "Arial";

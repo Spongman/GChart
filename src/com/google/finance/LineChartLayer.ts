@@ -1,3 +1,5 @@
+/// <reference path="AbstractDrawingLayer.ts" />
+
 namespace com.google.finance
 {
 	// import flash.display.Sprite;

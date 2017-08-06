@@ -65,7 +65,7 @@ namespace com.google.finance
 				for (let _loc7_ = 0; _loc7_ < _loc6_.length; _loc7_++)
 				{
 					let _loc8_ = _loc6_[_loc7_].split(":");
-					var value: any = _loc8_[1];
+					let value: any = _loc8_[1];
 					if (!isNaN(value))
 						value = Number(value);
 					else if (value === "true")

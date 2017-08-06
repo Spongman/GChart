@@ -148,7 +148,7 @@ namespace com.google.finance
 			}
 			else
 			{
-				this.viewpoints.push(null);
+				this.viewpoints.push(null);	// really?
 			}
 			let _loc5_ = Utils.decodeObjects(com.google.finance.MainManager.paramsObj.single_viewpoints) as ViewPoint[];
 			for (let _loc6_ = 0; _loc6_ < _loc5_.length; _loc6_++)
@@ -468,7 +468,7 @@ namespace com.google.finance
 			if (_loc2_ === -1)
 				return;
 
-			var vp = this.viewpoints[_loc2_];
+			let vp = this.viewpoints[_loc2_];
 			if (!vp)
 				return;
 
@@ -585,7 +585,7 @@ namespace com.google.finance
 			}
 			else
 			{
-				var dataSeries = this.layersManager.getFirstDataSource();
+				let dataSeries = this.layersManager.getFirstDataSource();
 				if (!dataSeries)
 					return;
 				_loc3_ = dataSeries;

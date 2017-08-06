@@ -132,8 +132,9 @@ namespace com.google.finance
 		private getPosition(param1: SeriesPosition, param2: DataUnit[], param3: number, param4: Context): Position
 		{
 			let _loc5_ = new Position();
-			let _loc6_ = this.viewPoint.getXPos(param1.refDataSeries.units[param1.pos]);
-			let _loc7_ = this.getYPos(param4, param1.refDataSeries.units[param1.pos]);
+			let dataSeries = notnull(param1.refDataSeries);
+			let _loc6_ = this.viewPoint.getXPos(dataSeries.units[param1.pos]);
+			let _loc7_ = this.getYPos(param4, dataSeries.units[param1.pos]);
 			let _loc8_ = (this.viewPoint.maxy + this.viewPoint.miny) / 2;
 			if (this.positioning === IndependentObjectsLayer.POSITION_CHART)
 			{
@@ -170,7 +171,7 @@ namespace com.google.finance
 			while (_loc5_ >= 0)
 			{
 				let _loc6_ = param1[_loc5_];
-				_loc7_ = _loc6_.refDataSeries.units[_loc6_.pos].relativeMinutes;
+				_loc7_ = notnull(_loc6_.refDataSeries).units[_loc6_.pos].relativeMinutes;
 				if (_loc7_ < _loc4_)
 					return _loc5_;
 
@@ -237,7 +238,7 @@ namespace com.google.finance
 			for (let _loc5_ = 0; _loc5_ < param1.length; _loc5_++)
 			{
 				let _loc6_ = param1[_loc5_];
-				_loc7_ = _loc6_.refDataSeries.units[_loc6_.pos].relativeMinutes;
+				_loc7_ = notnull(_loc6_.refDataSeries).units[_loc6_.pos].relativeMinutes;
 				if (_loc7_ > _loc4_ && _loc6_.pos > 0)
 					return _loc5_;
 			}

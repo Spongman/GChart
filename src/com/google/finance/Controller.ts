@@ -210,7 +210,7 @@ namespace com.google.finance
 
 		createChartSizeChangeButton(param1: boolean) 
 		{
-			var showExpand = param1;
+			let showExpand = param1;
 			if (this.chartSizeChangeToolTip && this.contains(this.chartSizeChangeToolTip))
 				this.removeChild(this.chartSizeChangeToolTip);
 
@@ -218,7 +218,7 @@ namespace com.google.finance
 				this.removeChild(this.chartSizeChangeButton);
 
 			this.chartSizeChangeButton = new flash.display.SimpleButton("chartSizeChangeButton");
-			var buttonBitmap: flash.display.Bitmap;
+			let buttonBitmap: flash.display.Bitmap;
 			if (showExpand)
 				buttonBitmap = new Controller_ExpandIcon();
 			else
@@ -836,7 +836,7 @@ namespace com.google.finance
 			_loc4_ = 0;
 			while (_loc4_ < _loc3_.length)
 			{
-				var _loc7_ = _loc3_[_loc4_];
+				let _loc7_ = _loc3_[_loc4_];
 				if (_loc7_.bg.hitTestPoint(this.mouseX, this.mouseY, false) && !_loc7_.isAnimating())
 					com.google.finance.MainManager.mouseCursor.setCursor(MouseCursor.DRAGGABLE_CURSOR);
 
@@ -1375,7 +1375,7 @@ namespace com.google.finance
 			if (!this.stage)
 				return;
 
-			var stage = this.stage;
+			let stage = this.stage;
 			//var stage = document.body;
 
 			stage.addEventListener(KeyboardEvents.KEY_DOWN, flash.display.Stage.bind(this.onKeyDown, this));

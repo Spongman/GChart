@@ -21,7 +21,7 @@
 			{
 				this.handle = setInterval(() =>
 				{
-					var evt = new TimerEvent();
+					let evt = new TimerEvent();
 					this.fire(TimerEvents.TIMER, evt);
 				}, this.period);
 			}

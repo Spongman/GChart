@@ -64,9 +64,9 @@ namespace com.google.finance.indicator
 
 		static getParameterNames():string[] { return []; }
 
-		constructor(param1: ViewPoint, param2: DataSource)
+		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
-			super(param1, param2);
+			super(viewPoint, dataSource);
 			this.highlightCanvas = new flash.display.Sprite("highlightCanvas");
 			this.addChild(this.highlightCanvas);
 			this.textOutCanvas = new flash.display.Sprite("textOutCanvas");
@@ -128,6 +128,7 @@ namespace com.google.finance.indicator
 			let _loc9_ = Number.MAX_VALUE;
 			let _loc11_ = this.getYPos(param6, new IndicatorPoint(0, <DataUnit><any>null));	// TODO
 			let _loc12_ = param4;
+			const gr = this.graphics;
 			while (_loc12_ >= param3)
 			{
 				if (!isNaN(param1[param2].points[_loc12_].getValue()))
@@ -138,9 +139,9 @@ namespace com.google.finance.indicator
 
 					_loc13_ = !isNaN(_loc10_.weeklyXPos) ? _loc10_.weeklyXPos : param5.getXPos(_loc10_);
 					_loc14_ = this.getYPos(param6, param1[param2].points[_loc12_]);
-					this.graphics.lineStyle(1, this.getColor(param2, param1[param2].points[_loc12_].getValue()));
-					this.graphics.moveTo(_loc13_, _loc11_);
-					this.graphics.lineTo(_loc13_, _loc14_);
+					gr.lineStyle(1, this.getColor(param2, param1[param2].points[_loc12_].getValue()));
+					gr.moveTo(_loc13_, _loc11_);
+					gr.lineTo(_loc13_, _loc14_);
 				}
 				_loc12_--;
 			}
@@ -155,8 +156,9 @@ namespace com.google.finance.indicator
 			if (param7 === Const.WEEKLY && param8 !== Const.LINE_CHART)
 				_loc9_ = this.getWeeklyBarXPos(_loc10_, _loc9_);
 
-			this.graphics.lineStyle(1, this.indicatorValueTextArray[param2].textColor);
-			this.graphics.moveTo(!isNaN(_loc10_.weeklyXPos) ? Number(_loc10_.weeklyXPos) : param5.getXPos(_loc10_), this.getYPos(param6, param1[param2].points[param4]));
+			const gr = this.graphics;
+			gr.lineStyle(1, this.indicatorValueTextArray[param2].textColor);
+			gr.moveTo(!isNaN(_loc10_.weeklyXPos) ? Number(_loc10_.weeklyXPos) : param5.getXPos(_loc10_), this.getYPos(param6, param1[param2].points[param4]));
 			let _loc11_ = param4 - 1;
 			while (_loc11_ >= param3)
 			{
@@ -169,11 +171,11 @@ namespace com.google.finance.indicator
 					_loc12_ = !isNaN(_loc10_.weeklyXPos) ? _loc10_.weeklyXPos : param5.getXPos(_loc10_);
 					_loc13_ = this.getYPos(param6, param1[param2].points[_loc11_]);
 					if (_loc13_ < param5.miny)
-						this.graphics.moveTo(_loc12_, param5.miny);
+						gr.moveTo(_loc12_, param5.miny);
 					else if (_loc13_ > param5.maxy)
-						this.graphics.moveTo(_loc12_, param5.maxy);
+						gr.moveTo(_loc12_, param5.maxy);
 					else
-						this.graphics.lineTo(_loc12_, _loc13_);
+						gr.lineTo(_loc12_, _loc13_);
 				}
 				_loc11_--;
 			}
@@ -184,7 +186,8 @@ namespace com.google.finance.indicator
 			let _loc12_ = 0;
 			let _loc13_ = 0;
 			let _loc9_ = Number.MAX_VALUE;
-			this.graphics.lineStyle(1, this.indicatorValueTextArray[param2].textColor);
+			const gr = this.graphics;
+			gr.lineStyle(1, this.indicatorValueTextArray[param2].textColor);
 			let _loc11_ = param4;
 			while (_loc11_ >= param3)
 			{
@@ -196,8 +199,8 @@ namespace com.google.finance.indicator
 
 					_loc12_ = !isNaN(_loc10_.weeklyXPos) ? _loc10_.weeklyXPos : param5.getXPos(_loc10_);
 					_loc13_ = this.getYPos(param6, param1[param2].points[_loc11_]);
-					this.graphics.moveTo(_loc12_, this.viewPoint.maxy);
-					this.graphics.lineTo(_loc12_, _loc13_);
+					gr.moveTo(_loc12_, this.viewPoint.maxy);
+					gr.lineTo(_loc12_, _loc13_);
 				}
 				_loc11_--;
 			}
@@ -220,11 +223,12 @@ namespace com.google.finance.indicator
 			let _loc4_ = this.viewPoint.minx;
 			let _loc5_ = this.viewPoint.maxx;
 			let _loc6_ = 0;
-			param2.graphics.lineStyle(1, param1);
+			const gr = param2.graphics;
+			gr.lineStyle(1, param1);
 			do
 			{
-				param2.graphics.moveTo(_loc4_ + _loc6_ * this.dashSize, _loc3_);
-				param2.graphics.lineTo(_loc4_ + (_loc6_ + 1) * this.dashSize, _loc3_);
+				gr.moveTo(_loc4_ + _loc6_ * this.dashSize, _loc3_);
+				gr.lineTo(_loc4_ + (_loc6_ + 1) * this.dashSize, _loc3_);
 				_loc6_ = Number(_loc6_ + 2);
 			}
 			while (_loc4_ + _loc6_ * this.dashSize < _loc5_);
@@ -232,9 +236,10 @@ namespace com.google.finance.indicator
 
 		protected drawAHighlightDot(param1: number, param2: number, param3: number) 
 		{
-			this.highlightCanvas.graphics.lineStyle(5, param3, 1);
-			this.highlightCanvas.graphics.moveTo(param1, param2 - 0.2);
-			this.highlightCanvas.graphics.lineTo(param1, param2 + 0.2);
+			const gr = this.highlightCanvas.graphics;
+			gr.lineStyle(5, param3, 1);
+			gr.moveTo(param1, param2 - 0.2);
+			gr.lineTo(param1, param2 + 0.2);
 		}
 
 		set enabled(param1: string) 
@@ -367,9 +372,10 @@ namespace com.google.finance.indicator
 
 		protected drawAHighlightLine(param1: number, param2: number, param3: number, param4: number, param5: number) 
 		{
-			this.highlightCanvas.graphics.lineStyle(2, param5);
-			this.highlightCanvas.graphics.moveTo(param1, param2);
-			this.highlightCanvas.graphics.lineTo(param3, param4);
+			const gr = this.highlightCanvas.graphics;
+			gr.lineStyle(2, param5);
+			gr.moveTo(param1, param2);
+			gr.lineTo(param3, param4);
 		}
 
 		copyLastIndicatorPoint(param1: DataUnit, ...rest: DataSeries[]) 

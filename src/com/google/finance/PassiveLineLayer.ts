@@ -84,7 +84,8 @@ namespace com.google.finance
 			let _loc16_ = NaN;
 			let _loc7_ = param6.units;
 			let _loc8_ = param6.days;
-			param1.graphics.lineStyle(Const.LINE_CHART_LINE_THICKNESS, this.lineColor, Const.LINE_CHART_LINE_VISIBILITY);
+			const gr = param1.graphics;
+			gr.lineStyle(Const.LINE_CHART_LINE_THICKNESS, this.lineColor, Const.LINE_CHART_LINE_VISIBILITY);
 			let _loc9_ = param6.getNextDayStart(param3);
 			let _loc10_ = _loc8_[_loc9_];
 			while (_loc10_ > param2 && _loc7_[_loc10_].fake)
@@ -92,10 +93,10 @@ namespace com.google.finance
 
 			let _loc11_ = param4.getXPos(_loc7_[_loc10_]) + 1;
 			let _loc12_ = this.getYPos(param5, _loc7_[_loc8_[_loc9_]]);
-			param1.graphics.moveTo(_loc11_, this.viewPoint.maxy);
-			param1.graphics.lineStyle(0, 0, 0);
-			param1.graphics.lineTo(_loc11_, _loc12_);
-			param1.graphics.lineStyle(Const.LINE_CHART_LINE_THICKNESS, this.lineColor, Const.LINE_CHART_LINE_VISIBILITY);
+			gr.moveTo(_loc11_, this.viewPoint.maxy);
+			gr.lineStyle(0, 0, 0);
+			gr.lineTo(_loc11_, _loc12_);
+			gr.lineStyle(Const.LINE_CHART_LINE_THICKNESS, this.lineColor, Const.LINE_CHART_LINE_VISIBILITY);
 			let vp = this.viewPoint;
 			switch (vp.getDetailLevel())
 			{
@@ -113,7 +114,7 @@ namespace com.google.finance
 					while (_loc13_ >= param2 && _loc13_ > 0)
 					{
 						_loc12_ = this.getYPos(param5, _loc7_[_loc13_]);
-						param1.graphics.lineTo(_loc11_, _loc12_);
+						gr.lineTo(_loc11_, _loc12_);
 						_loc13_--;
 						_loc11_ = _loc11_ - _loc14_;
 					}
@@ -131,7 +132,7 @@ namespace com.google.finance
 						let _loc17_ = param6.units[param6.fridays[_loc16_]];
 						_loc11_ = vp.getXPos(_loc17_);
 						_loc12_ = this.getYPos(param5, _loc17_);
-						param1.graphics.lineTo(_loc11_, _loc12_);
+						gr.lineTo(_loc11_, _loc12_);
 						_loc16_ = _loc16_ - _loc15_.skip;
 					}
 					break;
@@ -168,16 +169,17 @@ namespace com.google.finance
 			let _loc14_ = param3.getXPos(_loc8_[_loc12_]);
 			let _loc15_ = param3.getSkipInterval(param6.count, param6.lastMinute);
 			let _loc16_ = param3.getIntervalLength(_loc15_.interval / 60);
+			const gr = param1.graphics;
 			while (_loc12_ >= _loc17_ && _loc12_ >= param4)
 			{
 				_loc11_ = this.localYOffset - (param7.points[_loc12_].value - param6.medPrice) * this.localYScale;
-				param1.graphics.lineTo(_loc14_, _loc11_);
+				gr.lineTo(_loc14_, _loc11_);
 				_loc12_--;
 				_loc14_ = _loc14_ - _loc16_;
 			}
 			_loc10_ = param3.getXPos(_loc8_[_loc17_]);
 			_loc11_ = this.getYPos(param6, _loc8_[_loc17_]);
-			param1.graphics.lineTo(_loc10_, _loc11_);
+			gr.lineTo(_loc10_, _loc11_);
 		}
 
 		private getTechnicalsNameElseQuote(param1: string): string

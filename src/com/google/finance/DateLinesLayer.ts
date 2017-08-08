@@ -385,7 +385,7 @@ namespace com.google.finance
 			for (let _loc8_ = 0; _loc8_ < param3.length; _loc8_++)
 			{
 				_loc9_ = this.viewPoint.getXPos(param3[_loc8_].dataUnit);
-				AbstractLayer.drawVerticalLine(param1, _loc9_, Const.DAY_LINE_COLOR, Const.DAY_LINE_ALPHA, _loc5_, _loc6_, ViewPoint.TICK_SIZE_BIG, this.tickPosition, param4 !== Const.DAILY);
+				//AbstractLayer.drawVerticalLine(param1, _loc9_, Const.DAY_LINE_COLOR, Const.DAY_LINE_ALPHA, _loc5_, _loc6_, ViewPoint.TICK_SIZE_BIG, this.tickPosition, param4 !== Const.DAILY);
 				if (this.viewPoint.bottomTextHeight > 0)
 				{
 					_loc10_ = this.viewPoint.getIntervalLength(param3[_loc8_].coveredMinutes);

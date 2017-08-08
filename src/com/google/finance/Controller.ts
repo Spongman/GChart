@@ -920,14 +920,15 @@ namespace com.google.finance
 
 		private drawSquare(param1: number, param2: number, param3: number, param4: number) 
 		{
-			this.graphics.clear();
-			this.graphics.beginFill(Const.SELECTING_FILL_COLOR, 0.4);
-			this.graphics.lineStyle(0, Const.SELECTING_LINE_COLOR, 1);
-			this.graphics.moveTo(param1, this.holderBounds.miny);
-			this.graphics.lineTo(param1, this.holderBounds.maxy);
-			this.graphics.lineTo(param3, this.holderBounds.maxy);
-			this.graphics.lineTo(param3, this.holderBounds.miny);
-			this.graphics.endFill();
+			const gr = this.graphics;
+			gr.clear();
+			gr.beginFill(Const.SELECTING_FILL_COLOR, 0.4);
+			gr.lineStyle(0, Const.SELECTING_LINE_COLOR, 1);
+			gr.moveTo(param1, this.holderBounds.miny);
+			gr.lineTo(param1, this.holderBounds.maxy);
+			gr.lineTo(param3, this.holderBounds.maxy);
+			gr.lineTo(param3, this.holderBounds.miny);
+			gr.endFill();
 		}
 
 		replaceBounds(param1: com.google.finance.Bounds, param2: com.google.finance.Bounds) 

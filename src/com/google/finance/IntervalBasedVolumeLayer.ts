@@ -53,9 +53,10 @@ namespace com.google.finance
 
 		private drawHorizontalLine(param1: number) 
 		{
-			this.graphics.lineStyle(0, Const.HORIZONTAL_GRID_COLOR, 1);
-			this.graphics.moveTo(this.viewPoint.minx + 1, param1);
-			this.graphics.lineTo(this.viewPoint.maxx - 1, param1);
+			const gr = this.graphics;
+			gr.lineStyle(0, Const.HORIZONTAL_GRID_COLOR, 1);
+			gr.moveTo(this.viewPoint.minx + 1, param1);
+			gr.lineTo(this.viewPoint.maxx - 1, param1);
 		}
 
 		private drawOneBar(param1: number, param2: number, param3: IViewPoint, param4: flash.display.Sprite, param5: number, param6: number = -1) 
@@ -65,12 +66,13 @@ namespace com.google.finance
 			else if (param2 < param3.miny)
 				param2 = param3.miny;
 
+			const gr = param4.graphics;
 			if (param6 !== -1)
-				this.graphics.beginFill(param6);
+				gr.beginFill(param6);
 
-			param4.graphics.drawRect(param1 - param5 / 2, param2, param5, param3.maxy - param2);
+			gr.drawRect(param1 - param5 / 2, param2, param5, param3.maxy - param2);
 			if (param6 !== -1)
-				param4.graphics.endFill();
+				gr.endFill();
 		}
 
 		protected drawOneLine(param1: number, param2: number, param3: IViewPoint, param4: flash.display.Sprite) 
@@ -80,8 +82,9 @@ namespace com.google.finance
 			else if (param2 < param3.miny)
 				param2 = param3.miny;
 
-			param4.graphics.moveTo(param1, param2);
-			param4.graphics.lineTo(param1, param3.maxy);
+			const gr = param4.graphics;
+			gr.moveTo(param1, param2);
+			gr.lineTo(param1, param3.maxy);
 		}
 
 		getContext(param1: Context, param2 = false) 
@@ -129,10 +132,11 @@ namespace com.google.finance
 			let _loc11_= 0;
 			let _loc12_ = NaN;
 			let _loc13_ = NaN;
-			let _loc15_= 0;
+			let _loc15_ = 0;
 			let _loc2_ = notnull(this.getDataSeries());
 			let _loc3_ = this.viewPoint;
-			this.graphics.clear();
+			const gr = this.graphics;
+			gr.clear();
 			let _loc4_ = _loc3_.getDetailLevelForTechnicalStyle();
 			let _loc5_ = Const.getDetailLevelInterval(_loc4_);
 			let _loc6_ = _loc2_.getPointsInIntervalArray(_loc5_);
@@ -157,9 +161,9 @@ namespace com.google.finance
 					if (!isNaN(_loc10_.open))
 					{
 						if (_loc10_.close >= _loc10_.open)
-							this.graphics.lineStyle(1, Const.POSITIVE_DIFFERENCE_COLOR);
+							gr.lineStyle(1, Const.POSITIVE_DIFFERENCE_COLOR);
 						else
-							this.graphics.lineStyle(1, Const.NEGATIVE_DIFFERENCE_COLOR);
+							gr.lineStyle(1, Const.NEGATIVE_DIFFERENCE_COLOR);
 
 						if (!_loc2_.minuteIsStartOfDataSession(_loc10_.dayMinute))
 						{
@@ -181,7 +185,7 @@ namespace com.google.finance
 			}
 			else
 			{
-				this.graphics.lineStyle(1, Const.LINE_CHART_LINE_COLOR);
+				gr.lineStyle(1, Const.LINE_CHART_LINE_COLOR);
 				_loc11_ = _loc8_;
 				while (_loc11_ >= _loc7_)
 				{
@@ -225,15 +229,16 @@ namespace com.google.finance
 			let _loc11_ = !isNaN(_loc10_.weeklyXPos) ? Number(_loc10_.weeklyXPos) : _loc5_.getXPos(_loc10_);
 			let _loc12_ = this.getYPos(_loc10_.volumes[_loc8_], _loc5_);
 			let _loc13_ = _loc5_.getDisplayManager().getEnabledChartLayer();
+			const gr = this.highlightCanvas.graphics;
 			if (Const.VOLUME_PLUS_ENABLED && Const.VOLUME_PLUS_CHART_TYPE.indexOf(_loc13_) !== -1)
 			{
-				this.highlightCanvas.graphics.lineStyle(5, Const.DOT_COLOR, 1);
-				this.highlightCanvas.graphics.moveTo(_loc11_, _loc12_ - 0.2);
-				this.highlightCanvas.graphics.lineTo(_loc11_, _loc12_ + 0.2);
+				gr.lineStyle(5, Const.DOT_COLOR, 1);
+				gr.moveTo(_loc11_, _loc12_ - 0.2);
+				gr.lineTo(_loc11_, _loc12_ + 0.2);
 			}
 			else
 			{
-				this.highlightCanvas.graphics.lineStyle(2, Const.VOLUME_HIGHLIGHT_COLOR, 1);
+				gr.lineStyle(2, Const.VOLUME_HIGHLIGHT_COLOR, 1);
 				this.drawOneLine(_loc11_, _loc12_, _loc5_, this.highlightCanvas);
 			}
 			param3[SpaceText.VOLUME_STR] = _loc10_.volumes[_loc8_];

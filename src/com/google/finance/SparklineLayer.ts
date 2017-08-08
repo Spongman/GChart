@@ -45,8 +45,9 @@ namespace com.google.finance
 			let _loc2_ = <SparklineViewPoint><any>this.viewPoint;
 			if (this.hasBackground)
 			{
+				const gr = this.graphics;
 				if (param1)
-					this.graphics.beginFill(this.bgColor, 1);
+					gr.beginFill(this.bgColor, 1);
 
 				let _loc3_ = notnull(this.getDataSeries());
 				_loc4_ = _loc2_.getMinuteXPos(_loc3_.getFirstRelativeMinute());
@@ -57,13 +58,13 @@ namespace com.google.finance
 				if (_loc5_ > _loc2_.my_maxx)
 					_loc5_ = _loc2_.my_maxx;
 
-				this.graphics.lineStyle(0, this.borderColor, 1);
-				this.graphics.moveTo(_loc4_, _loc2_.my_miny - 1);
-				this.graphics.lineTo(_loc4_, _loc2_.my_maxy - 1);
-				this.graphics.lineTo(_loc5_ - 1, _loc2_.my_maxy - 1);
-				this.graphics.lineTo(_loc5_ - 1, _loc2_.my_miny - 1);
+				gr.lineStyle(0, this.borderColor, 1);
+				gr.moveTo(_loc4_, _loc2_.my_miny - 1);
+				gr.lineTo(_loc4_, _loc2_.my_maxy - 1);
+				gr.lineTo(_loc5_ - 1, _loc2_.my_maxy - 1);
+				gr.lineTo(_loc5_ - 1, _loc2_.my_miny - 1);
 				if (param1)
-					this.graphics.endFill();
+					gr.endFill();
 			}
 		}
 
@@ -87,26 +88,27 @@ namespace com.google.finance
 			let _loc17_ = param4.minx;
 			let _loc18_ = param4.getXPos(_loc16_, _loc17_, _loc9_[param3]);
 			let _loc19_ = this.getYPos(_loc14_, _loc15_, _loc9_[param3]);
-			param1.graphics.moveTo(_loc18_, param4.maxy);
-			param1.graphics.lineStyle(0, 0, 0);
-			param1.graphics.lineTo(_loc18_, _loc19_);
-			param1.graphics.lineStyle(Const.LINE_CHART_LINE_THICKNESS, this.lineColor, Const.LINE_CHART_LINE_VISIBILITY);
+			const gr = param1.graphics;
+			gr.moveTo(_loc18_, param4.maxy);
+			gr.lineStyle(0, 0, 0);
+			gr.lineTo(_loc18_, _loc19_);
+			gr.lineStyle(Const.LINE_CHART_LINE_THICKNESS, this.lineColor, Const.LINE_CHART_LINE_VISIBILITY);
 			while (_loc13_ >= 0 && param5[_loc13_] >= param2)
 			{
 				_loc6_ = param4.getXPos(_loc16_, _loc17_, _loc9_[param5[_loc13_]]);
 				_loc7_ = this.getYPos(_loc14_, _loc15_, _loc9_[param5[_loc13_]]);
-				param1.graphics.lineTo(_loc6_, _loc7_);
+				gr.lineTo(_loc6_, _loc7_);
 				_loc13_ = _loc13_ - _loc12_;
 			}
 			if (_loc13_ >= 0)
 			{
 				_loc6_ = param4.getXPos(_loc16_, _loc17_, _loc9_[param5[_loc13_]]);
 				_loc7_ = this.getYPos(_loc14_, _loc15_, _loc9_[param5[_loc13_]]);
-				param1.graphics.lineTo(_loc6_, _loc7_);
+				gr.lineTo(_loc6_, _loc7_);
 			}
 			_loc6_ = param4.getXPos(_loc16_, _loc17_, _loc9_[param2]);
 			_loc7_ = this.getYPos(_loc14_, _loc15_, _loc9_[param2]);
-			param1.graphics.lineTo(_loc6_, _loc7_);
+			gr.lineTo(_loc6_, _loc7_);
 			return _loc6_;
 		}
 
@@ -121,20 +123,21 @@ namespace com.google.finance
 			if (_loc2_.sparkCount <= 20 * _loc3_.marketDayLength)
 				_loc4_ = _loc3_.days;
 
-			this.graphics.clear();
+			const gr = this.graphics;
+			gr.clear();
 			this.drawBackground(true);
-			this.graphics.beginFill(this.fillColor, 1);
+			gr.beginFill(this.fillColor, 1);
 			let _loc5_ = _loc3_.getRelativeMinuteIndex(_loc2_.getSparkLastMinute() + _loc2_.sparkButtonMinutes) + 1;
 			let _loc6_ = _loc3_.getRelativeMinuteIndex(_loc2_.getSparkFirstMinute() - _loc2_.sparkButtonMinutes);
 			_loc5_ = Math.min(_loc5_, _loc3_.units.length - 1);
 			_loc6_ = Math.max(_loc6_, 0);
 			this.getMaxRange(_loc6_, _loc5_, _loc4_);
 			let _loc7_ = this.drawLine(this, _loc6_, _loc5_, _loc2_, _loc4_);
-			this.graphics.lineStyle(0, 0, 0);
+			gr.lineStyle(0, 0, 0);
 			let _loc8_ = new flash.display.Point(_loc7_, _loc2_.my_maxy);
 			//this.globalToLocal(_loc8_);	// TODO: ?
-			this.graphics.lineTo(_loc8_.x, _loc8_.y);
-			this.graphics.endFill();
+			gr.lineTo(_loc8_.x, _loc8_.y);
+			gr.endFill();
 			this.drawBackground(false);
 		}
 

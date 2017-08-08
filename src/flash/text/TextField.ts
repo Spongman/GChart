@@ -36,7 +36,7 @@
 
 		appendText(p: string)
 		{
-			this.element.innerText += p;
+			this.element.textContent += p;
 		}
 
 		autoSize: string;
@@ -59,8 +59,8 @@
 		get height(): number { return this.element.offsetHeight; }
 		set height(value: number) { this.element.style.height = value + "px"; }
 
-		get text(): string { return this.element.innerText; }
-		set text(value: string) { this.element.innerText = value; }
+		get text(): string { return this.element.textContent || ""; }
+		set text(value: string) { this.element.textContent = value; }
 		get htmlText(): string { return this.element.innerHTML; }
 		set htmlText(value: string) { this.element.innerHTML = value; }
 

@@ -95,10 +95,11 @@ namespace com.google.finance
 
 		private renderBackground() 
 		{
-			this.graphics.lineStyle(2, 0x666666, 1);
-			this.graphics.beginFill(0xffffff, 1);
-			this.graphics.drawRoundRect(this.content.x - PinPointContentMovie.TEXT_FIELD_PADDING, this.content.y - PinPointContentMovie.TEXT_FIELD_PADDING, this.content.width + 2 * PinPointContentMovie.TEXT_FIELD_PADDING, this.content.height + 2 * PinPointContentMovie.TEXT_FIELD_PADDING, 10, 10);
-			this.graphics.endFill();
+			const gr = this.graphics;
+			gr.lineStyle(2, 0x666666, 1);
+			gr.beginFill(0xffffff, 1);
+			gr.drawRoundRect(this.content.x - PinPointContentMovie.TEXT_FIELD_PADDING, this.content.y - PinPointContentMovie.TEXT_FIELD_PADDING, this.content.width + 2 * PinPointContentMovie.TEXT_FIELD_PADDING, this.content.height + 2 * PinPointContentMovie.TEXT_FIELD_PADDING, 10, 10);
+			gr.endFill();
 		}
 
 		private renderContent() 

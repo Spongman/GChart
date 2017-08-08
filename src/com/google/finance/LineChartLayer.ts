@@ -231,11 +231,12 @@ namespace com.google.finance
 			if (param2 === 0)
 				return 0;
 
+			const gr = param1.graphics;
 			if (_loc8_[param2 - 1].dayMinute === _loc7_.marketCloseMinute)
 			{
 				_loc11_ = param3.getXPos(_loc8_[param2 - 1]);
 				_loc12_ = this.getYPos(param6, _loc8_[param2 - 1]);
-				param1.graphics.lineTo(_loc11_, _loc12_);
+				gr.lineTo(_loc11_, _loc12_);
 				return _loc11_;
 			}
 			let _loc13_ = 1;
@@ -254,10 +255,10 @@ namespace com.google.finance
 				_loc11_ = param3.getXPos(_loc8_[_loc17_]);
 				let _loc23_ = new flash.display.Point(_loc11_, this.viewPoint.maxy);
 				//this.globalToLocal(_loc23_);	// TODO: ?
-				param1.graphics.lineStyle(0, 0, 0);
-				param1.graphics.moveTo(_loc23_.x, _loc23_.y);
-				param1.graphics.lineTo(_loc23_.x, this.getYPos(param6, _loc8_[param2]));
-				param1.graphics.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
+				gr.lineStyle(0, 0, 0);
+				gr.moveTo(_loc23_.x, _loc23_.y);
+				gr.lineTo(_loc23_.x, this.getYPos(param6, _loc8_[param2]));
+				gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
 			}
 			while (param2 > _loc17_)
 				param2 = param2 - _loc13_;
@@ -273,7 +274,7 @@ namespace com.google.finance
 			while (param2 >= _loc16_ && param2 >= param4)
 			{
 				_loc12_ = this.getYPos(param6, _loc8_[param2]);
-				param1.graphics.lineTo(_loc19_, _loc12_);
+				gr.lineTo(_loc19_, _loc12_);
 				param2 = param2 - _loc13_;
 				if (param2 > _loc16_ && param2 > param4 && _loc22_ - _loc8_[param2 - 1].relativeMinutes === _loc21_)
 					param2--;
@@ -285,7 +286,7 @@ namespace com.google.finance
 			}
 			_loc11_ = param3.getXPos(_loc8_[_loc16_]);
 			_loc12_ = this.getYPos(param6, _loc8_[_loc16_]);
-			param1.graphics.lineTo(_loc11_, _loc12_);
+			gr.lineTo(_loc11_, _loc12_);
 			return _loc11_;
 		}
 
@@ -301,9 +302,10 @@ namespace com.google.finance
 			if (this.lastHighlightX !== _loc6_ || this.lastHighlightY !== _loc7_)
 			{
 				this.clearHighlight();
-				this.highlightCanvas.graphics.lineStyle(5, Const.DOT_COLOR, 1);
-				this.highlightCanvas.graphics.moveTo(_loc6_, _loc7_ - 0.2);
-				this.highlightCanvas.graphics.lineTo(_loc6_, _loc7_ + 0.2);
+				const gr = this.highlightCanvas.graphics;
+				gr.lineStyle(5, Const.DOT_COLOR, 1);
+				gr.moveTo(_loc6_, _loc7_ - 0.2);
+				gr.lineTo(_loc6_, _loc7_ + 0.2);
 				param3[SpaceText.POINT_STR] = _loc5_;
 				param3[SpaceText.EXTRA_TEXT_STR] = "";
 				param3[SpaceText.SETTER_STR] = this;
@@ -332,7 +334,8 @@ namespace com.google.finance
 			let _loc14_ = NaN;
 			let _loc6_ = this.getDataSeries();
 			let _loc7_ = _loc6_.units;
-			param1.graphics.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
+			const gr = param1.graphics;
+			gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
 			let _loc8_ = _loc6_.getNextDayStart(param3);
 			let _loc9_ = 1;
 			let _loc10_ = param4.minutePix * _loc6_.marketDayLength;
@@ -342,21 +345,21 @@ namespace com.google.finance
 			let _loc11_ = _loc7_[_loc6_.days[_loc8_]];
 			let _loc12_ = param4.getXPos(_loc11_) + 1;
 			let _loc13_ = this.getYPos(param5, _loc11_);
-			param1.graphics.moveTo(_loc12_, this.viewPoint.maxy);
-			param1.graphics.lineStyle(0, 0, 0);
-			param1.graphics.lineTo(_loc12_, _loc13_);
-			param1.graphics.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
+			gr.moveTo(_loc12_, this.viewPoint.maxy);
+			gr.lineStyle(0, 0, 0);
+			gr.lineTo(_loc12_, _loc13_);
+			gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
 			switch (param4.getDetailLevel())
 			{
 				case Const.INTRADAY:
 					while (_loc8_ >= 0 && _loc6_.days[_loc8_] >= param2)
 					{
-						param1.graphics.lineStyle(0, 0, 0);
+						gr.lineStyle(0, 0, 0);
 						_loc11_ = _loc7_[_loc6_.days[_loc8_]];
-						param1.graphics.lineTo(_loc12_, param4.maxy);
-						param1.graphics.lineTo(param4.getXPos(_loc11_), param4.maxy);
+						gr.lineTo(_loc12_, param4.maxy);
+						gr.lineTo(param4.getXPos(_loc11_), param4.maxy);
 						this.drawLineToDataUnit(param4, param1, param5, _loc11_);
-						param1.graphics.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
+						gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
 						_loc12_ = this.drawDayLine(param1, _loc6_.days[_loc8_], param4, param2, param3, param5);
 						_loc8_--;
 					}
@@ -398,7 +401,8 @@ namespace com.google.finance
 			if (_loc3_.points.length === 0)
 				return;
 
-			this.graphics.clear();
+			const gr = this.graphics;
+			gr.clear();
 			let _loc4_ = _loc3_.getRelativeMinuteIndex(_loc2_.getLastMinute());
 			if (_loc4_ < _loc3_.points.length - 1)
 				_loc4_ = _loc4_ + 1;
@@ -410,15 +414,15 @@ namespace com.google.finance
 			this.lineThickness = Const.LINE_CHART_LINE_THICKNESS;
 			this.lineColor = Const.LINE_CHART_LINE_COLOR;
 			this.lineVisibility = Const.LINE_CHART_LINE_VISIBILITY;
-			this.graphics.beginFill(Const.LINE_CHART_FILL_COLOR, Const.LINE_CHART_FILL_VISIBILITY);
+			gr.beginFill(Const.LINE_CHART_FILL_COLOR, Const.LINE_CHART_FILL_VISIBILITY);
 			this.localYOffset = _loc2_.miny + _loc2_.medPriceY + _loc2_.V_OFFSET;
 			this.localYScale = _loc2_.maxPriceRangeViewSize / param1.maxPriceRange;
 			let _loc6_ = this.drawLine(this, _loc5_, _loc4_, _loc2_, param1);
-			this.graphics.lineStyle(0, 0, 0);
+			gr.lineStyle(0, 0, 0);
 			let _loc7_ = new flash.display.Point(_loc6_, _loc2_.maxy);
 			//this.globalToLocal(_loc7_);	// TODO: ?
-			this.graphics.lineTo(_loc7_.x, _loc7_.y);
-			this.graphics.endFill();
+			gr.lineTo(_loc7_.x, _loc7_.y);
+			gr.endFill();
 		}
 
 		private getPointIndex(param1: DataSeries, param2: number): number

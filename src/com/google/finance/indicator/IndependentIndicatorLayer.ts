@@ -23,9 +23,9 @@ namespace com.google.finance.indicator
 
 		protected levelTextArray: flash.text.TextField[];
 
-		constructor(param1: ViewPoint, param2: DataSource)
+		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
-			super(param1, param2);
+			super(viewPoint, dataSource);
 			this.levelTextArray = [];
 			this.levelTextArray = [];
 			let _loc3_ = new flash.text.TextFormat("Verdana", 9);
@@ -38,8 +38,8 @@ namespace com.google.finance.indicator
 				_loc5_.defaultTextFormat = _loc3_;
 				_loc5_.text = "";
 				_loc5_.selectable = false;
-				_loc5_.x = param1.maxx - IndependentIndicatorLayer.LEVEL_TEXT_WIDTH;
-				_loc5_.y = param1.miny + (param1.maxy - param1.miny - 15) * (IndependentIndicatorLayer.LEVEL_CNT - 1 - _loc4_) / (IndependentIndicatorLayer.LEVEL_CNT - 1);
+				_loc5_.x = viewPoint.maxx - IndependentIndicatorLayer.LEVEL_TEXT_WIDTH;
+				_loc5_.y = viewPoint.miny + (viewPoint.maxy - viewPoint.miny - 15) * (IndependentIndicatorLayer.LEVEL_CNT - 1 - _loc4_) / (IndependentIndicatorLayer.LEVEL_CNT - 1);
 				this.textOutCanvas.addChild(_loc5_);
 				this.levelTextArray.push(_loc5_);
 				_loc4_++;
@@ -128,9 +128,10 @@ namespace com.google.finance.indicator
 
 		private drawHorizontalLine(param1: number) 
 		{
-			this.graphics.lineStyle(0, Const.HORIZONTAL_GRID_COLOR, 1);
-			this.graphics.moveTo(this.viewPoint.minx + 1, param1);
-			this.graphics.lineTo(this.viewPoint.maxx - 1, param1);
+			const gr = this.graphics;
+			gr.lineStyle(0, Const.HORIZONTAL_GRID_COLOR, 1);
+			gr.moveTo(this.viewPoint.minx + 1, param1);
+			gr.lineTo(this.viewPoint.maxx - 1, param1);
 		}
 
 		protected calculateLocalScaleMeters(context: Context) 

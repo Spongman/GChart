@@ -31,6 +31,7 @@ namespace com.google.finance
 			let _loc6_ = _loc3_.minx;
 			let _loc7_ = _loc6_ + 1;
 			let _loc8_ = _loc2_.firsts.length - 1;
+			const gr = param1.graphics;
 			while (_loc7_ > _loc6_ && _loc8_ >= 0)
 			{
 				let _loc9_ = _loc2_.units[_loc2_.firsts[_loc8_]];
@@ -38,9 +39,9 @@ namespace com.google.finance
 				if (_loc10_ % 3 === 0)
 				{
 					_loc7_ = _loc3_.getXPos(_loc4_, _loc6_, _loc9_);
-					param1.graphics.lineStyle(0, SparklineDateLinesLayer.DATE_LINES_COLOR, 1);
-					param1.graphics.moveTo(_loc7_, _loc5_);
-					param1.graphics.lineTo(_loc7_, _loc5_ - 4);
+					gr.lineStyle(0, SparklineDateLinesLayer.DATE_LINES_COLOR, 1);
+					gr.moveTo(_loc7_, _loc5_);
+					gr.lineTo(_loc7_, _loc5_ - 4);
 				}
 				_loc8_--;
 			}
@@ -56,7 +57,8 @@ namespace com.google.finance
 			if (this.getOneYearWidth() < SparklineDateLinesLayer.MIN_YEAR_WIDTH)
 				_loc3_ = 5;
 
-			param1.graphics.lineStyle(0, SparklineDateLinesLayer.DATE_LINES_COLOR, 1);
+			const gr = param1.graphics;
+			gr.lineStyle(0, SparklineDateLinesLayer.DATE_LINES_COLOR, 1);
 			let _loc4_ = _loc2_.years.length - 1;
 			let _loc5_ = this.viewPoint as SparklineViewPoint;
 			let _loc6_ = _loc5_.maxx;
@@ -73,8 +75,8 @@ namespace com.google.finance
 				let _loc12_ = _loc10_.exchangeDateInUTC;
 				if (_loc12_.getUTCFullYear() % _loc3_ === 0)
 				{
-					param1.graphics.moveTo(_loc11_, _loc9_);
-					param1.graphics.lineTo(_loc11_, _loc8_);
+					gr.moveTo(_loc11_, _loc9_);
+					gr.lineTo(_loc11_, _loc8_);
 					let _loc13_ = _loc11_ + ViewPoint.TEXT_HORIZONTAL_OFFSET;
 					let _loc14_ = _loc8_ - 15;
 
@@ -99,19 +101,19 @@ namespace com.google.finance
 					_loc15_.text = "" + _loc12_.getUTCFullYear();
 					let _loc16_ = _loc15_.width;
 					let _loc17_ = _loc15_.height;
-					param1.graphics.lineStyle(0, 0, 0);
-					param1.graphics.moveTo(_loc13_ + 2, _loc14_ + 2);
-					param1.graphics.beginFill(0xffffff, 80);
-					param1.graphics.lineTo(_loc13_ + 2, _loc14_ + _loc17_ - 2);
-					param1.graphics.lineTo(_loc13_ + _loc16_ - 2, _loc14_ + _loc17_ - 2);
-					param1.graphics.lineTo(_loc13_ + _loc16_ - 2, _loc14_ + 2);
-					param1.graphics.endFill();
-					param1.graphics.lineStyle(0, SparklineDateLinesLayer.DATE_LINES_COLOR, 1);
+					gr.lineStyle(0, 0, 0);
+					gr.moveTo(_loc13_ + 2, _loc14_ + 2);
+					gr.beginFill(0xffffff, 80);
+					gr.lineTo(_loc13_ + 2, _loc14_ + _loc17_ - 2);
+					gr.lineTo(_loc13_ + _loc16_ - 2, _loc14_ + _loc17_ - 2);
+					gr.lineTo(_loc13_ + _loc16_ - 2, _loc14_ + 2);
+					gr.endFill();
+					gr.lineStyle(0, SparklineDateLinesLayer.DATE_LINES_COLOR, 1);
 				}
 				else
 				{
-					param1.graphics.moveTo(_loc11_, _loc8_ - SparklineDateLinesLayer.SHORT_YEAR_LINE_HEIGHT);
-					param1.graphics.lineTo(_loc11_, _loc8_);
+					gr.moveTo(_loc11_, _loc8_ - SparklineDateLinesLayer.SHORT_YEAR_LINE_HEIGHT);
+					gr.lineTo(_loc11_, _loc8_);
 				}
 				_loc4_--;
 			}

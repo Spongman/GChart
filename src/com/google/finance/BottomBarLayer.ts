@@ -12,17 +12,18 @@ namespace com.google.finance
 
 		private drawRectangle(color: number, alpha: number, x1: number, y1: number, x2: number, y2: number) 
 		{
-			this.graphics.lineStyle(0, 0, 0);
-			this.graphics.beginFill(color, alpha);
-			this.graphics.drawRect(x1, y1, x2 - x1, y2 - y1);
+			const gr = this.graphics;
+			gr.lineStyle(0, 0, 0);
+			gr.beginFill(color, alpha);
+			gr.drawRect(x1, y1, x2 - x1, y2 - y1);
 			/*
-			this.graphics.moveTo(param3, param4);
-			this.graphics.lineTo(param5, param4);
-			this.graphics.lineTo(param5, param6);
-			this.graphics.lineTo(param3, param6);
-			this.graphics.lineTo(param3, param4);
+			gr.moveTo(param3, param4);
+			gr.lineTo(param5, param4);
+			gr.lineTo(param5, param6);
+			gr.lineTo(param3, param6);
+			gr.lineTo(param3, param4);
 			*/
-			this.graphics.endFill();
+			gr.endFill();
 		}
 
 		renderLayer(context: Context) 

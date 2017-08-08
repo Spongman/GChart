@@ -47,11 +47,12 @@ namespace com.google.finance
 		setInfo(param1: InfoDotInfo)
 		{
 			let _loc2_ = param1.quoteColor;
-			this.graphics.clear();
-			this.graphics.lineStyle(10, _loc2_, 1);
-			this.graphics.moveTo(0, 9);
-			this.graphics.lineTo(0.5, 9);
-			//this.graphics.endStroke();
+			const gr = this.graphics;
+			gr.clear();
+			gr.lineStyle(10, _loc2_, 1);
+			gr.moveTo(0, 9);
+			gr.lineTo(0.5, 9);
+			//gr.endStroke();
 			InfoDot.tickerFormat.color = _loc2_;
 			this.tickerText.defaultTextFormat = InfoDot.tickerFormat;
 			this.tickerText.x = this.tickerText.x + InfoDot.TEXT_SPACING;

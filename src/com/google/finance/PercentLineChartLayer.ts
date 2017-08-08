@@ -96,7 +96,8 @@ namespace com.google.finance
 			let _loc2_ = this.viewPoint;
 			let _loc3_ = this.getDataSeries();
 			let _loc4_ = _loc3_.points;
-			this.graphics.clear();
+			const gr = this.graphics;
+			gr.clear();
 			let _loc5_ = _loc3_.getRelativeMinuteIndex(_loc2_.getLastMinute()) + 1;
 			_loc5_ = Math.min(_loc5_, _loc4_.length - 1);
 			let _loc6_ = _loc3_.getRelativeMinuteIndex(_loc2_.getFirstMinute());
@@ -108,9 +109,9 @@ namespace com.google.finance
 			this.localStartPrice = this.calculatePercentChangeBase(_loc6_);
 			let _loc8_ = this.drawLine(this, _loc6_, _loc5_, _loc2_, param1);
 			let _loc9_ = new flash.display.Point(_loc8_, _loc2_.maxy);
-			this.graphics.lineStyle(0, 0, 0);
+			gr.lineStyle(0, 0, 0);
 			//this.globalToLocal(_loc9_);	// TODO:?
-			this.graphics.lineTo(_loc9_.x, _loc9_.y);
+			gr.lineTo(_loc9_.x, _loc9_.y);
 		}
 
 		highlightPoint(param1: Context, param2: number, param3: { [key: string]: any }) 
@@ -131,9 +132,10 @@ namespace com.google.finance
 
 			let _loc8_ = this.viewPoint.getMinuteXPos(_loc5_.relativeMinutes);
 			let _loc9_ = this.getYPos(param1, _loc5_);
-			this.highlightCanvas.graphics.lineStyle(5, this.lineColor, 1);
-			this.highlightCanvas.graphics.moveTo(_loc8_, _loc9_ - 0.2);
-			this.highlightCanvas.graphics.lineTo(_loc8_, _loc9_ + 0.2);
+			const gr = this.highlightCanvas.graphics;
+			gr.lineStyle(5, this.lineColor, 1);
+			gr.moveTo(_loc8_, _loc9_ - 0.2);
+			gr.lineTo(_loc8_, _loc9_ + 0.2);
 			if (param3["points"] === undefined)
 				param3["points"] = [];
 

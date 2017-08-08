@@ -47,6 +47,7 @@ namespace com.google.finance
 			let _loc17_ = param3.getXPos(_loc10_[_loc14_].point);
 			let _loc18_ = param3.getIntervalLength(param6 / 60);
 			_loc15_ = Utils.extendedMax(param7, _loc11_[param2 - 1]);
+			const gr = param1.graphics;
 			while (_loc14_ > _loc15_)
 			{
 				_loc13_ = param3.maxy - point.volume * this.verticalScale;
@@ -55,8 +56,8 @@ namespace com.google.finance
 				else if (_loc13_ < param3.miny)
 					_loc13_ = param3.miny;
 
-				param1.graphics.moveTo(_loc17_, _loc13_);
-				param1.graphics.lineTo(_loc17_, param3.maxy);
+				gr.moveTo(_loc17_, _loc13_);
+				gr.lineTo(_loc17_, param3.maxy);
 				_loc14_--;
 				_loc17_ = _loc17_ - _loc18_;
 			}
@@ -168,8 +169,9 @@ namespace com.google.finance
 			let _loc12_ = _loc11_.skip;
 			let _loc13_ = _loc11_.interval;
 			this.verticalScale = (param5.maxy - param5.miny - 6) / param6.maxVolume;
-			param1.graphics.clear();
-			param1.graphics.lineStyle(0, this.lineColor, 1);
+			const gr = param1.graphics;
+			gr.clear();
+			gr.lineStyle(0, this.lineColor, 1);
 			switch (_loc10_)
 			{
 				case Const.INTRADAY:
@@ -192,8 +194,8 @@ namespace com.google.finance
 						else if (_loc15_ < param5.miny)
 							_loc15_ = param5.miny;
 
-						param1.graphics.moveTo(_loc14_, _loc15_);
-						param1.graphics.lineTo(_loc14_, param5.maxy);
+						gr.moveTo(_loc14_, _loc15_);
+						gr.lineTo(_loc14_, param5.maxy);
 						_loc16_--;
 					}
 					break;
@@ -208,8 +210,8 @@ namespace com.google.finance
 						else if (_loc15_ < param5.miny)
 							_loc15_ = param5.miny;
 
-						param1.graphics.moveTo(_loc14_, _loc15_);
-						param1.graphics.lineTo(_loc14_, param5.maxy);
+						gr.moveTo(_loc14_, _loc15_);
+						gr.lineTo(_loc14_, param5.maxy);
 						_loc16_--;
 					}
 					break;

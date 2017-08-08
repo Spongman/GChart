@@ -70,6 +70,7 @@ namespace com.google.finance
 
 		private getYPos(context: Context, param2: number): number
 		{
+			assert(!isNaN(param2));
 			return this.localYOffset - this.localYScale * (param2 - context.medPrice);
 		}
 
@@ -223,11 +224,12 @@ namespace com.google.finance
 			if (param3[SpaceText.SETTER_STR])
 				param3[SpaceText.SETTER_STR].clearHighlight();
 
-			this.highlightCanvas.graphics.clear();
+			const gr = this.highlightCanvas.graphics;
+			gr.clear();
 			let _loc9_ = this.getDataSeries() === this.dataSource.afterHoursData ? Number(Const.AH_DOT_COLOR) : Const.DOT_COLOR;
-			this.highlightCanvas.graphics.lineStyle(5, _loc9_, 1);
-			this.highlightCanvas.graphics.moveTo(_loc7_, _loc8_ - 0.2);
-			this.highlightCanvas.graphics.lineTo(_loc7_, _loc8_ + 0.2);
+			gr.lineStyle(5, _loc9_, 1);
+			gr.moveTo(_loc7_, _loc8_ - 0.2);
+			gr.lineTo(_loc7_, _loc8_ + 0.2);
 			param3[SpaceText.POINT_STR] = _loc6_;
 			param3[SpaceText.EXTRA_TEXT_STR] = "";
 			param3[SpaceText.SETTER_STR] = this;

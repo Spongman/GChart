@@ -4,9 +4,9 @@ namespace com.google.finance
 {
 	export class AbstractDrawingLayer<T extends IViewPoint> extends AbstractLayer<T>
 	{
-		constructor(param1: T, param2: DataSource)
+		constructor(viewPoint: T, dataSource: DataSource)
 		{
-			super(param1, param2);
+			super(viewPoint, dataSource);
 		}
 
 		getContext(context: Context, param2 = false)

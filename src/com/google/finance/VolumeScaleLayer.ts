@@ -66,27 +66,28 @@ namespace com.google.finance
 					this.volumeLabel.appendText(_loc5_ + Messages.getMsg(Messages.WEEK_SHORT) + ")");
 					break;
 			}
-			this.graphics.clear();
+			const gr = this.graphics;
+			gr.clear();
 			if (!param1.maxVolume)
 			{
 				this.topScaleTextField.text = "";
 				this.midScaleTextField.text = "";
 				return;
 			}
-			this.graphics.lineStyle(0, 0x666666, 1);
+			gr.lineStyle(0, 0x666666, 1);
 			let _loc6_ = !!Const.INDICATOR_ENABLED ? Number(_loc3_.miny + Const.BOTTOM_VIEWPOINT_HEADER_HEIGHT) : _loc3_.miny;
 			if (Const.INDICATOR_ENABLED)
 			{
-				this.graphics.moveTo(_loc3_.maxx, _loc6_ + 1);
-				this.graphics.lineTo(_loc3_.maxx - 5, _loc6_ + 1);
+				gr.moveTo(_loc3_.maxx, _loc6_ + 1);
+				gr.lineTo(_loc3_.maxx - 5, _loc6_ + 1);
 			}
 			else
 			{
-				this.graphics.moveTo(_loc3_.maxx, _loc6_ + 3);
-				this.graphics.lineTo(_loc3_.maxx - 5, _loc6_ + 3);
+				gr.moveTo(_loc3_.maxx, _loc6_ + 3);
+				gr.lineTo(_loc3_.maxx - 5, _loc6_ + 3);
 			}
-			this.graphics.moveTo(_loc3_.maxx, (_loc6_ + _loc3_.maxy) / 2);
-			this.graphics.lineTo(_loc3_.maxx - 5, (_loc6_ + _loc3_.maxy) / 2);
+			gr.moveTo(_loc3_.maxx, (_loc6_ + _loc3_.maxy) / 2);
+			gr.lineTo(_loc3_.maxx - 5, (_loc6_ + _loc3_.maxy) / 2);
 			this.topScaleTextField.x = _loc3_.maxx - ViewPoint.TEXT_FIELD_WIDTH - 4;
 			this.topScaleTextField.y = _loc6_ + ViewPoint.TEXT_VERTICAL_OFFSET - 4;
 			this.midScaleTextField.x = _loc3_.maxx - ViewPoint.TEXT_FIELD_WIDTH - 4;

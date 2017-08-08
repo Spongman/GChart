@@ -1191,18 +1191,19 @@ namespace com.google.finance
 
 		private drawBorders()
 		{
-			this.bg.graphics.clear();
-			this.bg.graphics.beginFill(0xffffff, 1);
-			this.bg.graphics.drawRect(this.minx, this.miny, this.maxx - this.minx, this.maxy - this.miny);
-			this.bg.graphics.endFill();
-			this.bg.graphics.lineStyle(0, ViewPoint.BORDER_DARK_COLOR, 1);
-			this.bg.graphics.moveTo(this.minx - 1, this.miny);
-			this.bg.graphics.lineTo(this.maxx, this.miny);
-			this.bg.graphics.lineTo(this.maxx, this.maxy);
-			this.bg.graphics.lineStyle(0, ViewPoint.BORDER_LIGHT_COLOR, 1);
-			this.bg.graphics.lineTo(this.minx - 1, this.maxy);
-			this.bg.graphics.lineStyle(0, ViewPoint.BORDER_DARK_COLOR, 1);
-			this.bg.graphics.lineTo(this.minx - 1, this.miny);
+			const gr = this.bg.graphics;
+			gr.clear();
+			gr.beginFill(0xffffff, 1);
+			gr.drawRect(this.minx, this.miny, this.maxx - this.minx, this.maxy - this.miny);
+			gr.endFill();
+			gr.lineStyle(0, ViewPoint.BORDER_DARK_COLOR, 1);
+			gr.moveTo(this.minx - 1, this.miny);
+			gr.lineTo(this.maxx, this.miny);
+			gr.lineTo(this.maxx, this.maxy);
+			gr.lineStyle(0, ViewPoint.BORDER_LIGHT_COLOR, 1);
+			gr.lineTo(this.minx - 1, this.maxy);
+			gr.lineStyle(0, ViewPoint.BORDER_DARK_COLOR, 1);
+			gr.lineTo(this.minx - 1, this.miny);
 		}
 
 		clearPointInformation()

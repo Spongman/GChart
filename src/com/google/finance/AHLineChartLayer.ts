@@ -161,9 +161,10 @@ namespace com.google.finance
 			let vp = this.viewPoint;
 			let _loc7_ = vp.getXPos(_loc6_);
 			let _loc8_ = this.getYPos(context, _loc6_);
-			this.highlightCanvas.graphics.lineStyle(5, Const.AH_DOT_COLOR, 1);
-			this.highlightCanvas.graphics.moveTo(_loc7_, _loc8_ - 0.2);
-			this.highlightCanvas.graphics.lineTo(_loc7_, _loc8_ + 0.2);
+			const gr = this.highlightCanvas.graphics;
+			gr.lineStyle(5, Const.AH_DOT_COLOR, 1);
+			gr.moveTo(_loc7_, _loc8_ - 0.2);
+			gr.lineTo(_loc7_, _loc8_ + 0.2);
 			param3["point"] = _loc6_;
 			param3["setter"] = this;
 			param3["extraText"] = _loc5_.getSessionDisplayNameForMinute(_loc6_.dayMinute) + ": ";
@@ -199,24 +200,25 @@ namespace com.google.finance
 			_loc11_ = _loc11_ + (_loc7_ - _loc11_) % _loc10_;
 			let _loc12_ = vp.getXPos(_loc6_[_loc11_]);
 			let _loc13_ = this.getYPos(param4, _loc6_[_loc11_]);
-			param1.graphics.lineStyle(0, 0, 0);
-			param1.graphics.beginFill(Const.ECN_LINE_CHART_FILL_COLOR, Const.ECN_LINE_CHART_FILL_VISIBILITY);
-			param1.graphics.moveTo(_loc12_, this.viewPoint.maxy - 15);
-			param1.graphics.lineTo(_loc12_, _loc13_);
-			param1.graphics.lineStyle(Const.ECN_LINE_CHART_LINE_THICKNESS, Const.ECN_LINE_CHART_LINE_COLOR, Const.ECN_LINE_CHART_LINE_VISIBILITY);
+			const gr = param1.graphics;
+			gr.lineStyle(0, 0, 0);
+			gr.beginFill(Const.ECN_LINE_CHART_FILL_COLOR, Const.ECN_LINE_CHART_FILL_VISIBILITY);
+			gr.moveTo(_loc12_, this.viewPoint.maxy - 15);
+			gr.lineTo(_loc12_, _loc13_);
+			gr.lineStyle(Const.ECN_LINE_CHART_LINE_THICKNESS, Const.ECN_LINE_CHART_LINE_COLOR, Const.ECN_LINE_CHART_LINE_VISIBILITY);
 			let _loc14_ = _loc10_ * (this.viewPoint.minutePix * _loc5_);
 			let _loc15_ = _loc11_;
 			while (_loc15_ > _loc8_)
 			{
 				_loc13_ = this.getYPos(param4, _loc6_[_loc15_]);
-				param1.graphics.lineTo(_loc12_, _loc13_);
+				gr.lineTo(_loc12_, _loc13_);
 				_loc12_ = _loc12_ - _loc14_;
 				_loc15_ = _loc15_ - _loc10_;
 			}
-			param1.graphics.lineTo(_loc12_, _loc13_);
-			param1.graphics.lineStyle(0, 0, 0);
-			param1.graphics.lineTo(_loc12_, this.viewPoint.maxy - 15);
-			param1.graphics.endFill();
+			gr.lineTo(_loc12_, _loc13_);
+			gr.lineStyle(0, 0, 0);
+			gr.lineTo(_loc12_, this.viewPoint.maxy - 15);
+			gr.endFill();
 			this.regionsXLimits.addInterval(_loc12_, _loc9_);
 		}
 	}

@@ -26,6 +26,7 @@ namespace com.google.finance
 			let _loc12_ = _loc11_;
 			let _loc13_ = _loc9_.getIntervalLength(param6 / 60);
 			let _loc14_ = _loc7_;
+			const gr = param1.graphics;
 			while (_loc14_ > _loc8_)
 			{
 				let _loc15_ = _loc9_.maxy - _loc10_[_loc14_].volume * this.verticalScale;
@@ -34,8 +35,8 @@ namespace com.google.finance
 				else if (_loc15_ < _loc9_.miny)
 					_loc15_ = _loc9_.miny;
 
-				param1.graphics.moveTo(_loc11_, _loc15_);
-				param1.graphics.lineTo(_loc11_, _loc9_.maxy);
+				gr.moveTo(_loc11_, _loc15_);
+				gr.lineTo(_loc11_, _loc9_.maxy);
 				_loc11_ = _loc11_ - _loc13_;
 				_loc14_--;
 			}

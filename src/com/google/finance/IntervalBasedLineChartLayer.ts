@@ -16,6 +16,7 @@ namespace com.google.finance
 			let _loc13_= 0;
 			let _loc15_ = NaN;
 			let _loc16_ = NaN;
+			const gr = this.graphics;
 			switch (param1)
 			{
 				case Const.DAILY:
@@ -25,9 +26,9 @@ namespace com.google.finance
 						_loc8_ = this.viewPoint.getXPos(param3[param5]);
 						_loc9_ = this.getCloseYPos(param2, param3[param5]);
 						param5--;
-						this.graphics.moveTo(_loc8_, this.viewPoint.maxy);
-						this.graphics.lineStyle(0, 0, 0);
-						this.graphics.lineTo(_loc8_, _loc9_);
+						gr.moveTo(_loc8_, this.viewPoint.maxy);
+						gr.lineStyle(0, 0, 0);
+						gr.lineTo(_loc8_, _loc9_);
 					}
 					else
 					{
@@ -38,17 +39,17 @@ namespace com.google.finance
 						if (param5 < param4)
 							return param6;
 
-						this.graphics.moveTo(param6, this.viewPoint.maxy);
-						this.graphics.lineStyle(0, 0, 0);
-						this.graphics.lineTo(param6, param7);
+						gr.moveTo(param6, this.viewPoint.maxy);
+						gr.lineStyle(0, 0, 0);
+						gr.lineTo(param6, param7);
 					}
-					this.graphics.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
+					gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
 					_loc13_ = param5;
 					while (_loc13_ >= param4)
 					{
 						_loc8_ = this.viewPoint.getXPos(param3[_loc13_]);
 						_loc9_ = this.getCloseYPos(param2, param3[_loc13_]);
-						this.graphics.lineTo(_loc8_, _loc9_);
+						gr.lineTo(_loc8_, _loc9_);
 						_loc13_--;
 					}
 					return _loc8_;
@@ -63,28 +64,28 @@ namespace com.google.finance
 						return param6;
 
 					_loc8_ = this.viewPoint.getXPos(param3[param5]);
-					this.graphics.moveTo(_loc8_, this.viewPoint.maxy);
+					gr.moveTo(_loc8_, this.viewPoint.maxy);
 					_loc10_ = param5;
 					let _loc11_ = this.dataSource.visibleExtendedHours.length() === 0;
 					_loc12_ = this.dataSource.data.marketDayLength;
 					while (_loc10_ > param4)
 					{
-						this.graphics.lineStyle(0, 0, 0);
+						gr.lineStyle(0, 0, 0);
 						_loc8_ = this.viewPoint.getXPos(param3[_loc10_]);
 						_loc9_ = this.getCloseYPos(param2, param3[_loc10_]);
-						this.graphics.lineTo(_loc8_, this.viewPoint.maxy);
-						this.graphics.lineTo(_loc8_, _loc9_);
+						gr.lineTo(_loc8_, this.viewPoint.maxy);
+						gr.lineTo(_loc8_, _loc9_);
 						let _loc14_ = notnull(this.getDataSeries());
-						this.graphics.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
+						gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
 						while (_loc10_ > param4 && param3[_loc10_].dayMinute !== _loc14_.marketOpenMinute)
 						{
 							_loc10_--;
 							_loc8_ = this.viewPoint.getXPos(param3[_loc10_]);
 							_loc9_ = this.getCloseYPos(param2, param3[_loc10_]);
-							this.graphics.lineTo(_loc8_, _loc9_);
+							gr.lineTo(_loc8_, _loc9_);
 						}
-						this.graphics.lineStyle(0, 0, 0);
-						this.graphics.lineTo(_loc8_, this.viewPoint.maxy);
+						gr.lineStyle(0, 0, 0);
+						gr.lineTo(_loc8_, this.viewPoint.maxy);
 						_loc10_--;
 						if (_loc11_ && _loc10_ > param4)
 						{
@@ -94,13 +95,13 @@ namespace com.google.finance
 							{
 								_loc9_ = this.getCloseYPos(param2, param3[_loc10_]);
 								_loc8_ = this.viewPoint.getMinuteXPos(_loc16_ - 1);
-								this.graphics.lineTo(_loc8_, this.viewPoint.maxy);
-								this.graphics.lineTo(_loc8_, _loc9_);
-								this.graphics.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
+								gr.lineTo(_loc8_, this.viewPoint.maxy);
+								gr.lineTo(_loc8_, _loc9_);
+								gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
 								_loc8_ = this.viewPoint.getMinuteXPos(_loc15_ + 1);
-								this.graphics.lineTo(_loc8_, _loc9_);
-								this.graphics.lineStyle(0, 0, 0);
-								this.graphics.lineTo(_loc8_, this.viewPoint.maxy);
+								gr.lineTo(_loc8_, _loc9_);
+								gr.lineStyle(0, 0, 0);
+								gr.lineTo(_loc8_, this.viewPoint.maxy);
 							}
 						}
 					}
@@ -128,7 +129,8 @@ namespace com.google.finance
 			let _loc6_ = Number.MAX_VALUE;
 			let _loc7_ = NaN;
 			let _loc8_ = true;
-			this.graphics.clear();
+			const gr = this.graphics;
+			gr.clear();
 			do
 			{
 				let _loc9_ = Const.getDetailLevelInterval(_loc3_);
@@ -150,25 +152,25 @@ namespace com.google.finance
 							let _loc13_ = _loc12_[_loc12_.length - 1];
 							let _loc14_ = vp.getXPos(_loc13_);
 							let _loc15_ = this.getCloseYPos(context, _loc13_);
-							this.graphics.beginFill(Const.LINE_CHART_FILL_COLOR, Const.LINE_CHART_FILL_VISIBILITY);
-							this.graphics.moveTo(_loc14_, vp.maxy);
-							this.graphics.lineStyle(0, 0, 0);
-							this.graphics.lineTo(_loc14_, _loc15_);
+							gr.beginFill(Const.LINE_CHART_FILL_COLOR, Const.LINE_CHART_FILL_VISIBILITY);
+							gr.moveTo(_loc14_, vp.maxy);
+							gr.lineStyle(0, 0, 0);
+							gr.lineTo(_loc14_, _loc15_);
 							_loc14_ = vp.getXPos(_loc11_);
 							_loc15_ = this.getCloseYPos(context, _loc11_);
-							this.graphics.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
-							this.graphics.lineTo(_loc14_, _loc15_);
-							this.graphics.lineStyle(0, 0, 0);
-							this.graphics.lineTo(_loc14_, vp.maxy);
-							this.graphics.endFill();
+							gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
+							gr.lineTo(_loc14_, _loc15_);
+							gr.lineStyle(0, 0, 0);
+							gr.lineTo(_loc14_, vp.maxy);
+							gr.endFill();
 						}
 					}
-					this.graphics.beginFill(Const.LINE_CHART_FILL_COLOR, Const.LINE_CHART_FILL_VISIBILITY);
+					gr.beginFill(Const.LINE_CHART_FILL_COLOR, Const.LINE_CHART_FILL_VISIBILITY);
 					_loc6_ = this.drawLine(_loc3_, context, _loc10_, _loc4_, _loc5_, _loc6_, _loc7_);
 					_loc7_ = this.getCloseYPos(context, _loc10_[_loc4_]);
-					this.graphics.lineStyle(0, 0, 0);
-					this.graphics.lineTo(_loc6_, vp.maxy);
-					this.graphics.endFill();
+					gr.lineStyle(0, 0, 0);
+					gr.lineTo(_loc6_, vp.maxy);
+					gr.endFill();
 					_loc8_ = false;
 					_loc3_++;
 				}

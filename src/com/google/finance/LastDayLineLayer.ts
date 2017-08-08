@@ -15,8 +15,9 @@ namespace com.google.finance
 			let _loc11_ = NaN;
 			let _loc12_ = NaN;
 			let _loc2_ = this.dataSource.data;
-			this.graphics.clear();
-			this.graphics.lineStyle(0, Const.LAST_DAY_CLOSE_LINE_COLOR, 1);
+			const gr = this.graphics;
+			gr.clear();
+			gr.lineStyle(0, Const.LAST_DAY_CLOSE_LINE_COLOR, 1);
 			let _loc3_ = this.dataSource.data.units;
 			let _loc4_ = this.dataSource.data.days;
 			let _loc5_ = _loc3_[_loc4_[_loc4_.length - 2]];
@@ -37,8 +38,8 @@ namespace com.google.finance
 				_loc12_ = 0;
 				do
 				{
-					this.graphics.moveTo(_loc7_ + _loc12_ * this.dashSize, _loc11_);
-					this.graphics.lineTo(_loc7_ + (_loc12_ + 1) * this.dashSize, _loc11_);
+					gr.moveTo(_loc7_ + _loc12_ * this.dashSize, _loc11_);
+					gr.lineTo(_loc7_ + (_loc12_ + 1) * this.dashSize, _loc11_);
 					_loc12_ = Number(_loc12_ + 2);
 				}
 				while (_loc7_ + _loc12_ * this.dashSize < _loc8_);

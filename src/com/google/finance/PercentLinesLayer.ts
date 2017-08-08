@@ -22,10 +22,11 @@ namespace com.google.finance
 
 		protected drawZeroLine(param1: Context) 
 		{
-			this.graphics.lineStyle(0, Const.ZERO_PERCENT_LINE_COLOR, 1);
+			const gr = this.graphics;
+			gr.lineStyle(0, Const.ZERO_PERCENT_LINE_COLOR, 1);
 			let _loc2_ = this.getYPos(0, param1);
-			this.graphics.moveTo(this.viewPoint.minx + 1, _loc2_);
-			this.graphics.lineTo(this.viewPoint.maxx - 1, _loc2_);
+			gr.moveTo(this.viewPoint.minx + 1, _loc2_);
+			gr.lineTo(this.viewPoint.maxx - 1, _loc2_);
 		}
 
 		protected getMinLineValue(param1: Context): number

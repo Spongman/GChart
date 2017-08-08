@@ -50,9 +50,10 @@ namespace com.google.finance
 
 		private drawBackground() 
 		{
-			this.graphics.beginFill(0x339933, 1);
-			this.graphics.drawRect(0, 0, this.loadingText.width, this.loadingText.height);
-			this.graphics.endFill();
+			const gr = this.graphics;
+			gr.beginFill(0x339933, 1);
+			gr.drawRect(0, 0, this.loadingText.width, this.loadingText.height);
+			gr.endFill();
 		}
 	}
 }

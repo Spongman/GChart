@@ -596,13 +596,14 @@ namespace com.google.finance
 
 		drawBorders() 
 		{
-			this.bg.graphics.clear();
-			this.bg.graphics.beginFill(0xffffff);
-			this.bg.graphics.moveTo(this.my_minx, this.my_miny - this.topBorder);
-			this.bg.graphics.lineTo(this.my_maxx, this.my_miny - this.topBorder);
-			this.bg.graphics.lineTo(this.my_maxx, this.my_maxy);
-			this.bg.graphics.lineTo(this.my_minx, this.my_maxy);
-			this.bg.graphics.endFill();
+			const gr = this.bg.graphics;
+			gr.clear();
+			gr.beginFill(0xffffff);
+			gr.moveTo(this.my_minx, this.my_miny - this.topBorder);
+			gr.lineTo(this.my_maxx, this.my_miny - this.topBorder);
+			gr.lineTo(this.my_maxx, this.my_maxy);
+			gr.lineTo(this.my_minx, this.my_maxy);
+			gr.endFill();
 			this.textCanvas.graphics.clear();
 		}
 

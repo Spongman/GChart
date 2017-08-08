@@ -2,11 +2,6 @@
   "name": "GoogleChart",
   "version": "1.0.0",
   "description": "",
-  "main": "proxy.js",
-  "dependencies": {
-    "http-proxy": "^1.15.2",
-    "http-server": "^0.9.0"
-  },
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-api-proxy": "^1.0.0",

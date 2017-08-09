@@ -14,11 +14,6 @@ namespace com.google.finance.indicator
 		private period = 14;
 		private alphaNumber = 0.3333333333333333;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		static getParameterNames()
 		{
 			return KDJIndicatorLayer.PARAMETER_NAMES;

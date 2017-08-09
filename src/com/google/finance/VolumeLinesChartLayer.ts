@@ -13,9 +13,9 @@ namespace com.google.finance
 		protected originalDataSeries: com.google.finance.DataSeries;
 		protected verticalScale = 0;
 
-		constructor(param1: ViewPoint, param2: DataSource)
+		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
-			super(param1, param2);
+			super(viewPoint, dataSource);
 			this.addChild(this.highlightCanvas);
 		}
 

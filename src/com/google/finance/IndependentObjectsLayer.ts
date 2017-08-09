@@ -27,10 +27,10 @@ namespace com.google.finance
 		avoidObj: string;
 		positioning = IndependentObjectsLayer.POSITION_CHART;
 
-		constructor(param1: ViewPoint, param2: DataSource)
+		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
-			super(param1, param2);
-			(<ViewPoint><any>param1).addChildToTopCanvas(this.highlightCanvas);
+			super(viewPoint, dataSource);
+			(<ViewPoint><any>viewPoint).addChildToTopCanvas(this.highlightCanvas);
 		}
 
 		private resetCanvas() 

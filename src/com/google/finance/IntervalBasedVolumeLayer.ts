@@ -6,9 +6,9 @@ namespace com.google.finance
 
 		protected highlightCanvas = new flash.display.Sprite("highlightCanvas");
 
-		constructor(param1: ViewPoint, param2: DataSource)
+		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
-			super(param1, param2);
+			super(viewPoint, dataSource);
 			this.addChild(this.highlightCanvas);
 		}
 

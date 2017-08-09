@@ -14,11 +14,6 @@ namespace com.google.finance.indicator
 
 		private period = 20;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		static getParameterNames()
 		{
 			return CCIIndicatorLayer.PARAMETER_NAMES;

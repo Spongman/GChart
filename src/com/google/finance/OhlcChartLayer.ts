@@ -2,11 +2,6 @@ namespace com.google.finance
 {
 	export class OhlcChartLayer extends IntervalBasedBarChartLayer
 	{
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		protected drawBarAtDataUnit(param1: Context, param2: DataUnit[], param3: number) 
 		{
 			const _loc4_ = param2[param3];

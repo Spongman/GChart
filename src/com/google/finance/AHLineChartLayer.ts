@@ -9,11 +9,6 @@ namespace com.google.finance
 		private regionsXLimits: com.google.finance.IntervalSet;
 		private visibleSessionsTimes: com.google.finance.IntervalSet;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		protected getPoint(param1: DataSeries, param2: number): DataUnit
 		{
 			const _loc3_ = this.viewPoint.getMinuteOfX(param2);
@@ -40,7 +35,7 @@ namespace com.google.finance
 			const _loc3_ = this.dataSource.visibleExtendedHours;
 			for (let _loc4_ = _loc3_.length() - 1; _loc4_ >= 0; _loc4_--)
 			{
-				const _loc5_ = _loc3_.method_1(_loc4_);
+				const _loc5_ = _loc3_.getIntervalAt(_loc4_);
 				const _loc6_ = this.dataSource.afterHoursData.units[_loc5_.start];
 				const _loc7_ = this.dataSource.afterHoursData.units[_loc5_.end];
 				if (ViewPoint.sessionVisible(_loc6_, _loc7_, context))
@@ -57,7 +52,7 @@ namespace com.google.finance
 
 			for (let _loc4_ = 0; _loc4_ < _loc3_.length(); _loc4_++)
 			{
-				const _loc5_ = _loc3_.method_1(_loc4_);
+				const _loc5_ = _loc3_.getIntervalAt(_loc4_);
 				this.computeSessionMinMaxPrice(context, _loc5_.start, _loc5_.end);
 			}
 			return this.maxPrice !== 0 ? this.maxPrice - this.minPrice : 0;
@@ -131,7 +126,7 @@ namespace com.google.finance
 
 			for (let _loc3_ = 0; _loc3_ < this.visibleSessionsTimes.length(); _loc3_++)
 			{
-				const _loc4_ = this.visibleSessionsTimes.method_1(_loc3_);
+				const _loc4_ = this.visibleSessionsTimes.getIntervalAt(_loc3_);
 				this.drawAfterHoursSession(this, _loc4_.start, _loc4_.end, context);
 			}
 		}

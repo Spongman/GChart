@@ -8,23 +8,11 @@ namespace com.google.finance
 		//public dayPos: number;
 
 		active = false;
-		qname: string;
-		time: number;
-		exchangeDateInUTC: Date;
 		originalObject: any;
-		id: number;
-		posInInterval: SeriesPosition[] | null;
 
-		constructor(param1: number, param2: number, param3: SeriesPosition[] | null, param4: number, param5: Date, param6: number, param7: string)
+		constructor(pos: number, dayPos: number, public posInInterval: SeriesPosition[] | null, public time: number, public exchangeDateInUTC: Date, public id: number, public qname: string)
 		{
-			super(null, param1, param2);
-			//this.pos = param1;
-			//this.dayPos = param2;
-			this.posInInterval = param3;
-			this.time = param4;
-			this.exchangeDateInUTC = param5;
-			this.id = param6;
-			this.qname = param7;
+			super(null, pos, dayPos);
 		}
 
 		static compare(param1: StockAssociatedObject, param2: StockAssociatedObject): number

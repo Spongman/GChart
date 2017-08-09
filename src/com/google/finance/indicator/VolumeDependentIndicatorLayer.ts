@@ -6,11 +6,6 @@ namespace com.google.finance.indicator
 
 	export class VolumeDependentIndicatorLayer extends IndicatorLayer
 	{
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		protected getYPos(context: Context, param2: IndicatorPoint): number
 		{
 			return this.viewPoint.maxy - param2.getValue() * this.localYScale;

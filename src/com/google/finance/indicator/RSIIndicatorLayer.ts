@@ -12,11 +12,6 @@ namespace com.google.finance.indicator
 
 		private period = 9;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		static getParameterNames()
 		{
 			return RSIIndicatorLayer.PARAMETER_NAMES;

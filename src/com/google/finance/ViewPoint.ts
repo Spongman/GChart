@@ -13,12 +13,12 @@ namespace com.google.finance
 
 	export class SkipInterval
 	{
-		constructor(public skip: number, public interval: number) { }
+		constructor(public readonly skip: number, public readonly interval: number) { }
 	}
 
 	export class EventCallback
 	{
-		constructor(public func: { (p1: any): void }, public param: any) { }
+		constructor(public readonly func: { (p1: any): void }, public readonly param: any) { }
 	}
 
 	export interface IDataUnitContainer
@@ -33,7 +33,7 @@ namespace com.google.finance
 	{
 		name: string;
 
-		constructor(protected displayManager: com.google.finance.DisplayManager)
+		constructor(protected readonly displayManager: com.google.finance.DisplayManager)
 		{
 			super();
 		}
@@ -157,9 +157,9 @@ namespace com.google.finance
 	
 		display: string;
 
-		constructor(param1: com.google.finance.DisplayManager)
+		constructor(displayManager: com.google.finance.DisplayManager)
 		{
-			super(notnull(param1));
+			super(displayManager);
 
 			this.bg = new flash.display.Sprite("bg");
 			this.addChild(this.bg);
@@ -250,7 +250,7 @@ namespace com.google.finance
 
 		private trySnapping()
 		{
-			if (MainManager.paramsObj.snapping === "false")
+			if (!Boolean(MainManager.paramsObj.snapping))
 				return;
 
 			let dataSource = this.getBaseDataSource();
@@ -449,7 +449,7 @@ namespace com.google.finance
 				{
 					case Const.INTRADAY:
 						this.generateEventForAllSources(Const.GET_5D_DATA, _loc10_, param2);
-						if (MainManager.paramsObj.forceDisplayExtendedHours === "true" || MainManager.paramsObj.displayExtendedHours === "true")
+						if (Boolean(MainManager.paramsObj.forceDisplayExtendedHours) || Boolean(MainManager.paramsObj.displayExtendedHours))
 							this.generateEventForAllSources(Const.GET_AH_DATA, _loc10_);
 
 						if (this.getFirstMinute() === this.getOldestBaseMinute())
@@ -461,7 +461,7 @@ namespace com.google.finance
 					case Const.FIVE_MINUTES:
 						this.generateEventForAllSources(Const.GET_1Y_DATA, _loc10_);
 						this.generateEventForAllSources(Const.GET_10D_DATA, _loc10_, param2);
-						if (_loc9_ && (MainManager.paramsObj.forceDisplayExtendedHours === "true" || MainManager.paramsObj.displayExtendedHours === "true"))
+						if (_loc9_ && (Boolean(MainManager.paramsObj.forceDisplayExtendedHours) || Boolean(MainManager.paramsObj.displayExtendedHours)))
 						{
 							this.generateEventForAllSources(Const.GET_AH_DATA, _loc10_);
 							break;
@@ -470,7 +470,7 @@ namespace com.google.finance
 					case Const.HALF_HOUR:
 						this.generateEventForAllSources(Const.GET_1Y_DATA, _loc10_);
 						this.generateEventForAllSources(Const.GET_30D_DATA, _loc10_, param2);
-						if (_loc9_ && (MainManager.paramsObj.forceDisplayExtendedHours === "true" || MainManager.paramsObj.displayExtendedHours === "true"))
+						if (_loc9_ && (Boolean(MainManager.paramsObj.forceDisplayExtendedHours) || Boolean(MainManager.paramsObj.displayExtendedHours)))
 						{
 							this.generateEventForAllSources(Const.GET_AH_DATA, _loc10_);
 							break;

@@ -17,9 +17,9 @@ namespace com.google.finance
 		private minPriceLog: number;
 		private maxPriceLog: number;
 
-		constructor(param1: SparklineViewPoint, param2: DataSource)
+		constructor(viewPoint: SparklineViewPoint, dataSource: DataSource)
 		{
-			super(param1, param2);
+			super(viewPoint, dataSource);
 			this.lineColor = Const.LINE_CHART_LINE_COLOR;
 		}
 

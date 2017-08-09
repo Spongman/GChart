@@ -2,18 +2,12 @@ namespace com.google.finance
 {
 	export class DataManager
 	{
-		private endTime: number;
-		private startTime: number;
 		//private intId: number;
 
 		readonly dataSources: { [key: string]: DataSource } = {};
-		mainManager: com.google.finance.MainManager;
 
-		constructor(param1: com.google.finance.MainManager, param2 = NaN, param3 = NaN)
+		constructor(public readonly mainManager: com.google.finance.MainManager, private startTime = NaN, private endTime = NaN)
 		{
-			this.mainManager = param1;
-			this.startTime = param2;
-			this.endTime = param3;
 		}
 
 		addObject(param1: any) 

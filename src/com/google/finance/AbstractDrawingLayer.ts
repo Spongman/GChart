@@ -4,11 +4,6 @@ namespace com.google.finance
 {
 	export class AbstractDrawingLayer<T extends IViewPoint> extends AbstractLayer<T>
 	{
-		constructor(viewPoint: T, dataSource: DataSource)
-		{
-			super(viewPoint, dataSource);
-		}
-
 		getContext(context: Context, param2 = false)
 		{
 			return context;
@@ -61,7 +56,7 @@ namespace com.google.finance
 
 		protected getLastRealPointIndex(param1: DataUnit[]): number
 		{
-			if (MainManager.paramsObj.hasExtendedHours === "true" && param1[param1.length - 1].relativeMinutes !== 0)
+			if (Boolean(MainManager.paramsObj.hasExtendedHours) && param1[param1.length - 1].relativeMinutes !== 0)
 				return param1.length - 1;
 
 			return Utils.getLastRealPointIndex(param1);

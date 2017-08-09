@@ -7,9 +7,9 @@ namespace com.google.finance
 		private regionsXLimits: com.google.finance.IntervalSet;
 		private visibleSessionsTimes: com.google.finance.IntervalSet;
 
-		constructor(param1: ViewPoint, param2: DataSource)
+		constructor(viewPoint: ViewPoint, dataSoure: DataSource)
 		{
-			super(param1, param2);
+			super(viewPoint, dataSoure);
 			this.setEnabled(true);
 		}
 
@@ -76,7 +76,7 @@ namespace com.google.finance
 
 			for (let _loc5_ = 0; _loc5_ < this.visibleSessionsTimes.length(); _loc5_++)
 			{
-				const _loc6_ = this.visibleSessionsTimes.method_1(_loc5_);
+				const _loc6_ = this.visibleSessionsTimes.getIntervalAt(_loc5_);
 				this.drawAfterHoursSession(_loc6_.start, _loc6_.end, context, _loc4_);
 			}
 		}
@@ -97,7 +97,7 @@ namespace com.google.finance
 			const _loc4_ = this.dataSource.visibleExtendedHours;
 			for (let _loc5_ = _loc4_.length() - 1; _loc5_ >= 0; _loc5_--)
 			{
-				const _loc6_ = _loc4_.method_1(_loc5_);
+				const _loc6_ = _loc4_.getIntervalAt(_loc5_);
 				const _loc7_ = param2[_loc6_.start];
 				const _loc8_ = param2[_loc6_.end];
 				if (ViewPoint.sessionVisible(_loc7_, _loc8_, context))

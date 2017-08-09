@@ -17,17 +17,15 @@ namespace com.google.finance
 		private differentMarketSessionComparison: boolean;
 
 		layersManager: com.google.finance.LayersManager;
-		mainManager: MainManager;
 		mainController: com.google.finance.Controller;
 		spaceText: com.google.finance.SpaceText;
 		topBorderLayer: com.google.finance.BorderLayer;
 		
-		constructor(param1: com.google.finance.MainManager)
+		constructor(public readonly mainManager: com.google.finance.MainManager)
 		{
 			super();
-			this.mainManager = param1;
-			if (param1)
-				this.layersManager = param1.layersManager;
+			if (mainManager)
+				this.layersManager = mainManager.layersManager;
 		}
 
 		private computeRelativeTimesForPointsInIntervals(dataSource: DataSource) 
@@ -86,7 +84,7 @@ namespace com.google.finance
 			const _loc1_ = this.layersManager.config[com.google.finance.LayersManager.SINGLE].layers;
 			for (let _loc2_ = 0; _loc2_ < _loc1_.length; _loc2_++)
 			{
-				if (Const.OHLC_DEPENDENT_INDICATOR_NAMES.indexOf(_loc1_[_loc2_].name) !== -1 && _loc1_[_loc2_].enabled === "true")
+				if (Const.OHLC_DEPENDENT_INDICATOR_NAMES.indexOf(_loc1_[_loc2_].name) !== -1 && Boolean(_loc1_[_loc2_].enabled))
 					return true;
 			}
 			return false;
@@ -122,7 +120,7 @@ namespace com.google.finance
 		{
 			this.mainController = new com.google.finance.Controller(this.mainManager, this);
 			let _loc4_: SparklineViewPoint | null = null;
-			if (Const.SHOW_SPARKLINE === "true")
+			if (Boolean(Const.SHOW_SPARKLINE))
 			{
 				_loc4_ = new SparklineViewPoint(this.mainManager.dataManager, this);
 				_loc4_.my_minx = 0;
@@ -151,7 +149,7 @@ namespace com.google.finance
 			this.spaceText.y = 0;
 			this.spaceText.x = 0;
 			this.addChild(this.spaceText);
-			if (Const.SHOW_SPARKLINE === "true")
+			if (Boolean(Const.SHOW_SPARKLINE))
 			{
 				this.topBorderLayer = new com.google.finance.BorderLayer(this, notnull(_loc4_));
 				this.addChild(this.topBorderLayer);
@@ -181,7 +179,7 @@ namespace com.google.finance
 			for (let _loc3_ = 0; _loc3_ < _loc2_.length; _loc3_++)
 			{
 				if (_loc2_[_loc3_].name === param1)
-					return _loc2_[_loc3_].enabled === "true";
+					return Boolean(_loc2_[_loc3_].enabled);
 			}
 			return false;
 		}
@@ -440,7 +438,7 @@ namespace com.google.finance
 			);
 			this.viewpoints[Const.MAIN_VIEW_POINT].setNewSize(_loc3_);
 			this.viewpoints[Const.MAIN_VIEW_POINT].clearPointInformation();
-			if (Const.SHOW_SPARKLINE === "true")
+			if (Boolean(Const.SHOW_SPARKLINE))
 				this.topBorderLayer.update();
 		}
 
@@ -613,7 +611,7 @@ namespace com.google.finance
 			let _loc5_: StartEndPair | null = null;
 			let _loc6_ = dataSource.visibleExtendedHours.length() - 1;
 			if (_loc6_ !== -1)
-				_loc5_ = dataSource.visibleExtendedHours.method_1(_loc6_);
+				_loc5_ = dataSource.visibleExtendedHours.getIntervalAt(_loc6_);
 
 			const _loc7_ = _loc2_.units[_loc2_.units.length - 1];
 			let _loc8_ = notnull(_loc2_.getSessionForMinute(_loc7_.dayMinute));
@@ -666,7 +664,7 @@ namespace com.google.finance
 							this.positionAfterHoursTimes(_loc17_, _loc18_, _loc10_, _loc9_, _loc3_, _loc4_);
 							_loc10_ = _loc10_ - (_loc20_ + 1);
 							_loc6_--;
-							_loc5_ = dataSource.visibleExtendedHours.method_1(_loc6_);
+							_loc5_ = dataSource.visibleExtendedHours.getIntervalAt(_loc6_);
 							if (_loc5_)
 							{
 								_loc17_ = _loc5_.start;
@@ -781,13 +779,13 @@ namespace com.google.finance
 				let layer = _loc3_[_loc5_];
 				if (layer instanceof IntervalBasedChartManagerLayer)
 				{
-					if (com.google.finance.MainManager.paramsObj.displayExtendedHours === "true")
+					if (Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
 					{
 						if ((!_loc4_ || _loc4_.visibleExtendedHours.length() > 0) && param1 !== Const.LINE_CHART && layer.getEnabledLayerName() === Const.LINE_CHART)
 							this.setAfterHoursDisplay(false);
 					}
 					layer.setEnabledLayer(param1);
-					if (com.google.finance.MainManager.paramsObj.displayExtendedHours === "true")
+					if (Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
 					{
 						if ((!_loc4_ || _loc4_.visibleExtendedHours.length() === 0) && Const.CHART_STYLE_NAMES.indexOf(param1) !== -1)
 							this.setAfterHoursDisplay(true);

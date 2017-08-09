@@ -14,11 +14,6 @@ namespace com.google.finance
 
 		private additionalDistanceBetweenLines: number;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		private getLinePosAndLabelToFillGap(param1: number, param2: Context, param3: number): LabelPos
 		{
 			const _loc4_ = this.getValueForYPos(param1, param2);

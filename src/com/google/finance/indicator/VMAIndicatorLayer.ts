@@ -17,11 +17,6 @@ namespace com.google.finance.indicator
 
 		protected periods = [20];
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		static getParameterNames()
 		{
 			return VMAIndicatorLayer.PARAMETER_NAMES;

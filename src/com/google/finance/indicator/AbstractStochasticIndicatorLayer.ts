@@ -13,11 +13,6 @@ namespace com.google.finance.indicator
 		protected dPeriod = 3;
 		protected kPeriod = 14;
 
-		constructor(viewPoint: ViewPoint, dataSource: DataSource)
-		{
-			super(viewPoint, dataSource);
-		}
-
 		static getParameterNames()
 		{
 			return AbstractStochasticIndicatorLayer.PARAMETER_NAMES;

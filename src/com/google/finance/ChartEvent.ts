@@ -28,7 +28,7 @@ namespace com.google.finance
 		columns: string;
 		callbacks?: EventCallback[];
 
-		constructor(public type = ChartEventTypes.GENERIC)
+		constructor(public readonly type = ChartEventTypes.GENERIC)
 		{
 		}
 

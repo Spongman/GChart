@@ -84,18 +84,14 @@ namespace com.google.finance
 		private intervalButtons: com.google.finance.ui.TextButtonsGroup;
 		private isZh: boolean;
 
-		displayManager: com.google.finance.DisplayManager;
-		mainManager: com.google.finance.MainManager;
 		currentIntervalLevel: number;
 		currentZoomLevel: number;
 		
-		constructor(param1: com.google.finance.MainManager, param2: com.google.finance.DisplayManager)
+		constructor(public readonly mainManager: com.google.finance.MainManager, public readonly displayManager: com.google.finance.DisplayManager)
 		{
 			super();
 			this.listeners = [];
 			this.isZh = Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale());
-			this.mainManager = param1;
-			this.displayManager = param2;
 			this.mouseEnabled = true;
 			this.buttonTextFormat = new flash.text.TextFormat("Verdana", !!this.isZh ? 10 : 9, 204);
 			this.buttonTextFormat.underline = true;
@@ -107,7 +103,7 @@ namespace com.google.finance
 			this.windowTitleTextFormat.underline = false;
 			this.windowTitleTextFormat.bold = true;
 			this.separatorTextFormat = new flash.text.TextFormat("Verdana", 9, 0);
-			if (Const.INDICATOR_ENABLED && Const.CHART_TYPE_BUTTONS_ENABLED && param1.getQuoteType() === Const.COMPANY)
+			if (Const.INDICATOR_ENABLED && Const.CHART_TYPE_BUTTONS_ENABLED && mainManager.getQuoteType() === Const.COMPANY)
 				this.createChartTypeButtons();
 
 			this.createZoomButtons();
@@ -622,7 +618,7 @@ namespace com.google.finance
 			{
 				for (let _loc5_ = 0; _loc5_ < param2.visibleExtendedHours.length(); _loc5_++)
 				{
-					const _loc6_ = param2.visibleExtendedHours.method_1(_loc5_);
+					const _loc6_ = param2.visibleExtendedHours.getIntervalAt(_loc5_);
 					const _loc7_ = param2.afterHoursData.units[_loc6_.start];
 					const _loc8_ = param2.afterHoursData.units[_loc6_.end];
 					param1 = param1 - (_loc8_.dayMinute - _loc7_.dayMinute);
@@ -632,7 +628,7 @@ namespace com.google.finance
 			{
 				for (let _loc5_ = 0; _loc5_ < param2.hiddenExtendedHours.length(); _loc5_++)				
 				{
-					const _loc6_ = param2.hiddenExtendedHours.method_1(_loc5_);
+					const _loc6_ = param2.hiddenExtendedHours.getIntervalAt(_loc5_);
 					const _loc7_ = param2.afterHoursData.units[_loc6_.start];
 					const _loc8_ = param2.afterHoursData.units[_loc6_.end];
 					param1 = param1 + (_loc8_.dayMinute - _loc7_.dayMinute);
@@ -685,7 +681,7 @@ namespace com.google.finance
 		{
 			if (Const.INDICATOR_ENABLED && Const.REALTIME_CHART_ENABLED && this.mainManager.quote.indexOf("INDEXDJX") === -1)
 			{
-				this.isMarketOpen = com.google.finance.MainManager.paramsObj.isMarketOpenState === 1;
+				this.isMarketOpen = Number(com.google.finance.MainManager.paramsObj.isMarketOpenState) === 1;
 				this.stateRemainingMinutes = com.google.finance.MainManager.paramsObj.stateRemainingMinutes >= 0 ? com.google.finance.MainManager.paramsObj.stateRemainingMinutes : Number.MAX_VALUE;
 				this.delayedMinutes = com.google.finance.MainManager.paramsObj.delayedMinutes >= 0 ? com.google.finance.MainManager.paramsObj.delayedMinutes : 0;
 				this.pollingTimer = new flash.utils.Timer(Const.REALTIME_CHART_POLLING_INTERVAL);
@@ -946,7 +942,7 @@ namespace com.google.finance
 				const _loc5_ = EventFactory.getEvent(Const.GET_RT_DATA, _loc2_.quoteName, ChartEventTypes.POLLING);
 				this.mainManager.dataManager.eventHandler(_loc5_);
 			}
-			if (com.google.finance.MainManager.paramsObj.hasExtendedHours === "true" && _loc2_.afterHoursData.hasPointsInIntervalArray(Const.INTRADAY_INTERVAL) && this.shouldRequestAfterHoursData(this.isMarketOpen, this.stateRemainingMinutes, this.delayedMinutes, _loc3_))
+			if (Boolean(com.google.finance.MainManager.paramsObj.hasExtendedHours) && _loc2_.afterHoursData.hasPointsInIntervalArray(Const.INTRADAY_INTERVAL) && this.shouldRequestAfterHoursData(this.isMarketOpen, this.stateRemainingMinutes, this.delayedMinutes, _loc3_))
 			{
 				const _loc6_ = EventFactory.getEvent(Const.GET_RT_AH_DATA, _loc2_.quoteName, ChartEventTypes.POLLING);
 				this.mainManager.dataManager.eventHandler(_loc6_);
@@ -976,7 +972,7 @@ namespace com.google.finance
 					this.applyLastOrDefaultInterval(_loc4_, _loc3_);
 					return;
 				}
-				if (this.displayManager.getDetailLevel() < Const.DAILY && com.google.finance.MainManager.paramsObj.displayExtendedHours === "true")
+				if (this.displayManager.getDetailLevel() < Const.DAILY && Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
 				{
 					this.applyLastOrDefaultInterval(_loc4_, _loc3_);
 					return;
@@ -1127,7 +1123,7 @@ namespace com.google.finance
 
 			com.google.finance.MainManager.jsProxy.logIntervalButtonClick(_loc3_[_loc4_].logtext);
 			this.currentIntervalLevel = _loc4_;
-			if (com.google.finance.MainManager.paramsObj.displayExtendedHours === "true")
+			if (Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
 			{
 				if (this.currentIntervalLevel === Const.INTRADAY)
 					this.displayManager.toggleAllAfterHoursSessions(true);
@@ -1215,7 +1211,7 @@ namespace com.google.finance
 				return null;
 			}
 			const _loc9_ = this.displayManager.layersManager.getStyle();
-			if (_loc9_ === LayersManager.SINGLE && com.google.finance.MainManager.paramsObj.displayExtendedHours === "true")
+			if (_loc9_ === LayersManager.SINGLE && Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
 			{
 				let _loc18_: number;
 				let _loc19_: number;

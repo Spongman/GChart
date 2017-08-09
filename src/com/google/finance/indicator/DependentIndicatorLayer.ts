@@ -7,11 +7,6 @@ namespace com.google.finance.indicator
 
 	export class DependentIndicatorLayer extends IndicatorLayer
 	{
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		protected getYPos(param1: Context, param2: IndicatorPoint): number
 		{
 			return this.localYOffset - (param2.getLogValue(param1.verticalScaling) - this.localMedianValue) * this.localYScale;

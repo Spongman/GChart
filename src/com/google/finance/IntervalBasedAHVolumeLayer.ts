@@ -6,11 +6,6 @@ namespace com.google.finance
 	{
 		private regionsXLimits: com.google.finance.IntervalSet;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		highlightPoint(context: Context, param2: number, param3: { [key: string]: any }) 
 		{
 			this.clearHighlight();
@@ -57,7 +52,7 @@ namespace com.google.finance
 			
 			for (let _loc4_ = 0; _loc4_ < _loc3_.length(); _loc4_++)
 			{
-				const _loc5_ = _loc3_.method_1(_loc4_);
+				const _loc5_ = _loc3_.getIntervalAt(_loc4_);
 				const _loc6_ = _loc2_[_loc5_.start];
 				const _loc7_ = _loc2_[_loc5_.end];
 				if (ViewPoint.sessionVisible(_loc6_, _loc7_, context))

@@ -370,7 +370,7 @@ namespace com.google.finance
 
 			for (let _loc3_ = 0; _loc3_ < _loc2_; _loc3_++)
 			{
-				const _loc4_ = this.dataSessions.method_1(_loc3_);
+				const _loc4_ = this.dataSessions.getIntervalAt(_loc3_);
 				if (param1 >= _loc4_.start && param1 <= _loc4_.end)
 					return _loc3_;
 			}
@@ -413,7 +413,7 @@ namespace com.google.finance
 			const _loc2_ = this.dataSessions.length();
 			for (let _loc3_ = 0; _loc3_ < _loc2_; _loc3_++)
 			{
-				const _loc4_ = <MarketSessionPair>this.dataSessions.method_1(_loc3_);
+				const _loc4_ = <MarketSessionPair>this.dataSessions.getIntervalAt(_loc3_);
 				if (_loc4_.name === param1)
 					return _loc4_;
 			}

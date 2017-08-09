@@ -8,7 +8,7 @@ namespace flash.display
 		get mouseEnabled() { return this.element.classList.contains("mouseEnabled"); }
 		set mouseEnabled(value: boolean) { this.element.classList.toggle("mouseEnabled", value); }
 
-		constructor(public element: HTMLElement, name?: string)
+		constructor(public readonly element: HTMLElement, name?: string)
 		{
 			super(element, name);
 			element.classList.add("mouseEnabled");

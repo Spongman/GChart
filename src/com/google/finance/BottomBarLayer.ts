@@ -4,10 +4,10 @@ namespace com.google.finance
 	{
 		bottomTextHeight = 15;
 
-		constructor(param1: ViewPoint, param2: DataSource)
+		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
-			super(param1, param2);
-			param1.bottomTextHeight = this.bottomTextHeight;
+			super(viewPoint, dataSource);
+			viewPoint.bottomTextHeight = this.bottomTextHeight;
 		}
 
 		private drawRectangle(color: number, alpha: number, x1: number, y1: number, x2: number, y2: number) 

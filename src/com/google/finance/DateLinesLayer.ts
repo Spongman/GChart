@@ -23,11 +23,6 @@ namespace com.google.finance
 		topMargin = 0;
 		tickPosition = Const.TOP;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		getDayPixel(param1: ViewPoint, param2: DataSeries, param3: number): number
 		{
 			return (!!param1.getDisplayManager().isDifferentMarketSessionComparison() ? 1 : (param2.marketDayLength + param3)) * param1.minutePix;
@@ -51,7 +46,7 @@ namespace com.google.finance
 
 			for (let _loc4_ = 0; _loc4_ < _loc3_.length(); _loc4_++)
 			{
-				const _loc5_ = _loc3_.method_1(_loc4_);
+				const _loc5_ = _loc3_.getIntervalAt(_loc4_);
 				const _loc6_ = _loc5_.end;
 				const _loc7_ = _loc5_.start;
 				const _loc8_ = _loc2_.units[_loc7_].time;
@@ -313,7 +308,7 @@ namespace com.google.finance
 			const _loc15_ = ViewPoint.TEXT_FIELD_HEIGHT;
 			const _loc16_ = this.dataSource.getAllDataSessions(_loc6_, _loc5_.dayMinute);
 			let _loc17_ = _loc16_.length() - 1;
-			let _loc18_ = _loc16_.method_1(_loc17_);
+			let _loc18_ = _loc16_.getIntervalAt(_loc17_);
 			let _loc19_ = _loc5_.dayMinute;
 			const _loc20_ = new Date(_loc5_.exchangeDateInUTC.getTime());
 			while (_loc19_ > _loc6_)
@@ -335,7 +330,7 @@ namespace com.google.finance
 						if (_loc17_ < 0)
 							return;
 
-						_loc18_ = _loc16_.method_1(_loc17_);
+						_loc18_ = _loc16_.getIntervalAt(_loc17_);
 						_loc19_ = _loc18_.end;
 					}
 				}

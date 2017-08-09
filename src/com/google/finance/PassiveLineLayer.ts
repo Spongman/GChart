@@ -12,9 +12,9 @@ namespace com.google.finance
 		indicatorParams:any;	// any?
 		computer: Function;
 
-		constructor(param1: ViewPoint, param2: DataSource)
+		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
-			super(param1, param2);
+			super(viewPoint, dataSource);
 			this.lineColor = Const.LINE_CHART_LINE_COLOR;
 		}
 

@@ -7,13 +7,7 @@ namespace com.google.finance.ui
 
 	export class TextButtonsGroup extends com.google.finance.ui.ButtonsGroup
 	{
-		private currentButton: number;
-
-		constructor()
-		{
-			super();
-			this.currentButton = -1;
-		}
+		private currentButton: number = -1;
 
 		buttonPress(param1: Event) 
 		{

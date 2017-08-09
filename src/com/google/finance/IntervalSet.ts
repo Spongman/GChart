@@ -80,28 +80,28 @@ namespace com.google.finance
 			return _loc1_;
 		}
 
-		method_1(param1: number): StartEndPair
+		getIntervalAt(index: number): StartEndPair
 		{
-			return this.intervals[param1];
+			return this.intervals[index];
 		}
 
-		addPair(param1: StartEndPair) 
+		addPair(pair: StartEndPair) 
 		{
-			if (param1.start > param1.end)
+			if (pair.start > pair.end)
 				return;
 
 			let _loc2_: number = 0;
 			while (_loc2_ < this.intervals.length)
 			{
-				if (param1.end < this.intervals[_loc2_].start)
+				if (pair.end < this.intervals[_loc2_].start)
 				{
-					this.intervals.splice(_loc2_, 0, param1);
+					this.intervals.splice(_loc2_, 0, pair);
 					return;
 				}
-				if (param1.start <= this.intervals[_loc2_].end)
+				if (pair.start <= this.intervals[_loc2_].end)
 				{
-					param1.start = Math.min(param1.start, this.intervals[_loc2_].start);
-					param1.end = Math.max(param1.end, this.intervals[_loc2_].end);
+					pair.start = Math.min(pair.start, this.intervals[_loc2_].start);
+					pair.end = Math.max(pair.end, this.intervals[_loc2_].end);
 					this.intervals.splice(_loc2_, 1);
 				}
 				else
@@ -110,7 +110,7 @@ namespace com.google.finance
 				}
 			}
 			if (_loc2_ === this.intervals.length)
-				this.intervals.push(param1);
+				this.intervals.push(pair);
 		}
 
 		equals(param1: any): boolean

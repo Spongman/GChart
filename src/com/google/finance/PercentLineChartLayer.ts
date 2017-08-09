@@ -6,11 +6,6 @@ namespace com.google.finance
 	{
 		private localStartPrice = 0;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		protected calculatePercentChangeBase(param1 = 0): number
 		{
 			const _loc2_ = this.getDataSeries();

@@ -13,11 +13,6 @@ namespace com.google.finance
 		private associatedStockDividend: com.google.finance.StockDividend;
 
 
-		constructor()
-		{
-			super();
-		}
-
 		protected getTextColor(): number
 		{
 			return 0x66dd;

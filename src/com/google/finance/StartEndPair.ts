@@ -2,13 +2,8 @@ namespace com.google.finance
 {
 	export class StartEndPair
 	{
-		start: number;
-		end: number;
-
-		constructor(param1: number, param2: number)
+		constructor(public start: number, public end: number)
 		{
-			this.start = param1;
-			this.end = param2;
 		}
 
 		toString(): string

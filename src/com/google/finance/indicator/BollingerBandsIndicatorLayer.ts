@@ -15,11 +15,6 @@ namespace com.google.finance.indicator
 		private multiplier = 2;
 		private period = 20;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		static getParameterNames()
 		{
 			return BollingerBandsIndicatorLayer.PARAMETER_NAMES;

@@ -6,11 +6,6 @@ namespace com.google.finance
 	{
 		protected barWidth: number;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		protected abstract drawBarAtDataUnit(context: Context, param2: DataUnit[], param3: number):void;
 
 		renderLayer(context: Context) 

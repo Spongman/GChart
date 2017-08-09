@@ -43,12 +43,10 @@ namespace com.google.finance
 		private relativeMinutesState = DataSource.RELATIVE_MINUTES_NOT_READY;
 		private lastAbsTime: number;
 		private timezoneOffset: number;
-		private weekdayBitmap: number;
 		
 		visibleExtendedHours = new com.google.finance.IntervalSet();
 		readonly objects: { [key: string]: StockAssociatedObject[] } = {};
 		readonly events: { [key: string]: ChartEventTypes } = {};
-		quoteName: string;
 		readonly data = new com.google.finance.DataSeries();
 		tickerName: string;
 		readonly indicators: { [name: string]: Indicator } = {};
@@ -56,27 +54,23 @@ namespace com.google.finance
 		readonly afterHoursData = new com.google.finance.DataSeries();
 		technicalsName: string;
 		dataUnavailableOnServer: boolean = false;
-		displayName?: string;
 		intradayMinutesInterval = Const.INTRADAY_INTERVAL / Const.SEC_PER_MINUTE;
 		firstOpenRelativeMinutes = 0;
 
-		constructor(param1: string, param2 = 62, param3?: string)
+		constructor(public readonly quoteName: string, private readonly weekdayBitmap = 62, public displayName?: string)
 		{
-			this.quoteName = param1;
-			this.quoteType = Const.getQuoteType(param1);
-			if (param1.indexOf("@") !== -1)
+			this.quoteType = Const.getQuoteType(quoteName);
+			if (quoteName.indexOf("@") !== -1)
 			{
-				const _loc4_ = param1.split("@");
+				const _loc4_ = quoteName.split("@");
 				this.tickerName = _loc4_[0];
 				this.technicalsName = _loc4_[1];
 			}
 			else
 			{
-				this.tickerName = param1;
+				this.tickerName = quoteName;
 				this.technicalsName = "";
 			}
-			this.weekdayBitmap = param2;
-			this.displayName = param3;
 		}
 
 		private static unitsInDifferentDays(param1: DataUnit, param2: DataUnit | null): boolean
@@ -337,7 +331,7 @@ namespace com.google.finance
 
 			for (let _loc4_ = 0; _loc4_ < this.data.dataSessions.length(); _loc4_++)
 			{
-				_loc3_.addPair(this.data.dataSessions.method_1(_loc4_));
+				_loc3_.addPair(this.data.dataSessions.getIntervalAt(_loc4_));
 			}
 
 			if (param1 < this.data.marketOpenMinute)
@@ -527,7 +521,7 @@ namespace com.google.finance
 
 			for (let _loc7_ = param4; _loc7_ < param5; _loc7_++)
 			{
-				const _loc8_ = param3.dataSessions.method_1(_loc7_);
+				const _loc8_ = param3.dataSessions.getIntervalAt(_loc7_);
 				_loc9_ = Math.floor((_loc8_.end - _loc8_.start) / this.baseMinutesInterval) + 1;
 				switch (param6)
 				{

@@ -10,11 +10,6 @@ namespace com.google.finance
 
 		tickPosition = Const.TOP;
 		
-		constructor(viewPoint: SparklineViewPoint, dataSource: com.google.finance.DataSource)
-		{
-			super(viewPoint, dataSource);
-		}
-
 		private drawQuarterStarts(param1: flash.display.Sprite) 
 		{
 			const _loc2_ = this.dataSource.data;

@@ -4,12 +4,9 @@ namespace com.google.finance
 {
 	export class MarketSessionPair extends StartEndPair
 	{
-		name: string;
-
-		constructor(param1: number, param2: number, param3: string)
+		constructor(start: number, end: number, public name: string)
 		{
-			super(param1, param2);
-			this.name = param3;
+			super(start, end);
 		}
 
 		toString(): string

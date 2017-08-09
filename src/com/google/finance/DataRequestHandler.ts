@@ -12,21 +12,15 @@ namespace com.google.finance
 	{
 		private intervalId: number;
 		private readonly urlLoader = new flash.net.URLLoader();
-		private dataManager: com.google.finance.DataManager;
-		private url: string;
 		private tries: number = 0;
-		private event: com.google.finance.ChartEvent;
 
-		constructor(param1: com.google.finance.DataManager, param2: string, param3: com.google.finance.ChartEvent)
+		constructor(private readonly dataManager: com.google.finance.DataManager, private readonly url: string, private readonly event: com.google.finance.ChartEvent)
 		{
-			this.dataManager = param1;
-			this.event = param3;
-			this.url = param2;
 			this.initListeners();
-			if (param2)
+			if (url)
 			{
 				MainManager.console.dataLoading();
-				this.urlLoader.load(new flash.net.URLRequest(/*"https://finance.google.com" +*/ param2));
+				this.urlLoader.load(new flash.net.URLRequest(/*"https://finance.google.com" +*/ url));
 			}
 		}
 

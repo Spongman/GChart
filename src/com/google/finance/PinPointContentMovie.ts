@@ -28,10 +28,10 @@ namespace com.google.finance
 		private content = new flash.text.TextField();
 		private movieBottomY: number;
 
-		constructor(param1: ViewPoint)
+		constructor(viewPoint: ViewPoint)
 		{
 			super();
-			this.viewPoint = param1;
+			this.viewPoint = viewPoint;
 			this.content.defaultTextFormat = new flash.text.TextFormat("Arial", 11);
 			this.content.selectable = false;
 			this.content.addEventListener(MouseEvents.MOUSE_OVER, (param1: Event) =>

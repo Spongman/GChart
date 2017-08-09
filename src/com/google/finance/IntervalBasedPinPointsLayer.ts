@@ -24,11 +24,11 @@ namespace com.google.finance
 		private lastAbsoluteHeightMin: number;
 
 
-		constructor(param1: ViewPoint, param2: DataSource)
+		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
-			super(param1, param2);
-			this.pinPointContentMovie = new com.google.finance.PinPointContentMovie(param1);
-			param1.addChildToTopCanvas(this.pinPointContentMovie);
+			super(viewPoint, dataSource);
+			this.pinPointContentMovie = new com.google.finance.PinPointContentMovie(viewPoint);
+			viewPoint.addChildToTopCanvas(this.pinPointContentMovie);
 		}
 
 		private getDataUnit(param1: StockAssociatedObject, param2: number): DataUnit
@@ -224,7 +224,7 @@ namespace com.google.finance
 				_loc10_ = _loc10_ || param7[_loc11_].active || param7[_loc11_].forceExpandInGroup;
 			}
 			let _loc12_: number;
-			if (param6 > 1 && _loc10_ || Const.ENABLE_COMPACT_FLAGS === "false")
+			if (param6 > 1 && _loc10_ || !Boolean(Const.ENABLE_COMPACT_FLAGS))
 			{
 				_loc12_ = param8 + (param6 - 1) * IntervalBasedPinPointsLayer.FLAG_HEIGHT;
 				for (let _loc11_ = param5; _loc11_ < param5 + param6; _loc11_++)

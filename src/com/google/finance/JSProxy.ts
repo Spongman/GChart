@@ -10,7 +10,7 @@ namespace com.google.finance
 		private javascriptRequestMade = false;
 		private javascriptNotified = false;
 
-		constructor(private mainManager: com.google.finance.MainManager)
+		constructor(private readonly mainManager: com.google.finance.MainManager)
 		{
 			if (!com.google.finance.MainManager.paramsObj["disableExternalInterface"] && flash.external.ExternalInterface.available)
 			{
@@ -195,7 +195,7 @@ namespace com.google.finance
 			if (Const.DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1 || Const.VOLUME_DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1)
 			{
 				const _loc6_ = Const.DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1 ? Const.MAIN_VIEW_POINT_NAME : Const.BOTTOM_VIEW_POINT_NAME;
-				if (_loc5_[0] === "true")
+				if (Boolean(_loc5_[0]))
 				{
 					_loc4_.enableIndicatorConfig(param1, true);
 					_loc4_.enableIndicatorLayer(param1, _loc6_, true);
@@ -209,7 +209,7 @@ namespace com.google.finance
 			}
 			else if (Const.INDEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1)
 			{
-				if (_loc5_[0] === "true")
+				if (Boolean(_loc5_[0]))
 				{
 					if (!_loc4_.isIndicatorConfigEnabled(param1))
 					{
@@ -311,7 +311,7 @@ namespace com.google.finance
 
 			if (param1 === "displayVolume")
 			{
-				if (param2 === "false")
+				if (!Boolean(param2))
 					_loc3_.hideViewPoint("BottomViewPoint", "single");
 				else
 					_loc3_.unhideViewPoint("BottomViewPoint", "single");
@@ -320,7 +320,7 @@ namespace com.google.finance
 			}
 			if (param1 === "displayExtendedHours" && com.google.finance.MainManager.paramsObj.hasExtendedHours !== "false")
 			{
-				if (param2 === "true")
+				if (Boolean(param2))
 					_loc4_.setAfterHoursDisplay(true);
 				else
 					_loc4_.setAfterHoursDisplay(false);

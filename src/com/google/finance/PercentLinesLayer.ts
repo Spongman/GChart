@@ -7,11 +7,6 @@ namespace com.google.finance
 		private localYOffset: number;
 		private localYScale: number;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		private computeLocalVars(param1: Context) 
 		{
 			this.localYOffset = this.viewPoint.miny + ViewPoint.MIN_EDGE_DISTANCE / 2;

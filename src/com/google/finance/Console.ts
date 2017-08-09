@@ -7,18 +7,16 @@ namespace com.google.finance
 
 	export class Console extends flash.display.Sprite
 	{
-		private mainManager: MainManager;
 		private readonly loading = new com.google.finance.LoadingMessage();
 		private pendingLoadings = 0;
 		private t: flash.text.TextField;
 
-		constructor(param1: MainManager)
+		constructor(private readonly mainManager: MainManager)
 		{
 			super();
-			this.mainManager = param1;
 			this.loading.visible = false;
 			this.addChild(this.loading);
-			if (MainManager.paramsObj.debug === "true")
+			if (Boolean(MainManager.paramsObj.debug))
 			{
 				this.t = new flash.text.TextField();
 				this.t.width = 800;
@@ -29,7 +27,7 @@ namespace com.google.finance
 
 		println(param1: string) 
 		{
-			if (MainManager.paramsObj.debug === "true")
+			if (Boolean(MainManager.paramsObj.debug))
 				this.t.appendText(param1 + "\n");
 		}
 

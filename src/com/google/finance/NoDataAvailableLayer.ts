@@ -8,11 +8,6 @@ namespace com.google.finance
 	{
 		private text: flash.text.TextField;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1,param2);
-		}
-		
 		renderLayer(param1: Context) 
 		{
 			if (!this.text)

@@ -15,14 +15,14 @@ namespace com.google.finance
 		private topScaleTextField: flash.text.TextField;
 		private volumeLabel = new flash.text.TextField();
 
-		constructor(param1: ViewPoint, param2: DataSource)
+		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
-			super(param1, param2);
+			super(viewPoint, dataSource);
 			this.volumeLabel.defaultTextFormat = new flash.text.TextFormat("Verdana", 9, 0x999999);
 			this.volumeLabel.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			this.volumeLabel.selectable = false;
 			this.addChild(this.volumeLabel);
-			this.initTextFields(param1);
+			this.initTextFields(viewPoint);
 		}
 
 		private drawVolumeLines(param1: Context) 

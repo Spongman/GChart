@@ -14,9 +14,9 @@ namespace com.google.i18n.locale
 		private TOKENS = "GyMkSEahKHcLQdmsvzZ";
 		private patternParts: { text: string, type: number }[] = [];
 
-		constructor(param1 = false)
+		constructor(isUtc = false)
 		{
-			this.isUtc = !!param1 ? Boolean(param1) : false;
+			this.isUtc = !!isUtc ? Boolean(isUtc) : false;
 			for (let _loc2_ = 0; _loc2_ < this.TOKENS.length; _loc2_++)
 				this.tokensHash[this.TOKENS.substr(_loc2_, 1)] = true;
 		}

@@ -37,7 +37,6 @@ namespace com.google.finance
 		private static readonly LEFT_PADDING = 5;
 
 		private returnText = "";
-		private displayManager: com.google.finance.DisplayManager;
 		private dateEntryState: number;
 		private readonly negativeTextFormat = new flash.text.TextFormat("Verdana", 9, Const.NEGATIVE_DIFFERENCE_COLOR);
 		private infoDots: InfoDot[] = [];
@@ -54,10 +53,9 @@ namespace com.google.finance
 		startDate: com.google.finance.DateTextField;
 
 
-		constructor(param1: com.google.finance.DisplayManager)
+		constructor(private readonly displayManager: com.google.finance.DisplayManager)
 		{
 			super();
-			this.displayManager = param1;
 
 			this.bg.graphics.beginFill(0xffffff, 1);
 			this.bg.graphics.drawRect(0, 0, Const.MOVIE_WIDTH, Const.SPACE_HEIGHT + Const.INFO_TEXT_TOP_PADDING);
@@ -553,12 +551,12 @@ namespace com.google.finance
 			const _loc4_ = new com.google.finance.DateTextField();
 			_loc4_.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			_loc4_.backgroundColor = Const.DATE_HIGHLIGHTED_BACKGROUND_COLOR;
-			_loc4_.border = Const.ENABLE_CUSTOM_DATE_ENTRY === "true";
+			_loc4_.border = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
 			_loc4_.defaultTextFormat = this.blackText;
 			_loc4_.focusRect = _loc4_;
-			_loc4_.mouseEnabled = Const.ENABLE_CUSTOM_DATE_ENTRY === "true";
-			_loc4_.selectable = Const.ENABLE_CUSTOM_DATE_ENTRY === "true";
-			_loc4_.tabEnabled = Const.ENABLE_CUSTOM_DATE_ENTRY === "true";
+			_loc4_.mouseEnabled = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
+			_loc4_.selectable = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
+			_loc4_.tabEnabled = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
 			_loc4_.tabIndex = param3;
 			_loc4_.x = param1;
 			_loc4_.y = param2;

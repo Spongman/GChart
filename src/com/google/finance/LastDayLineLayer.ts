@@ -4,11 +4,6 @@ namespace com.google.finance
 	{
 		private dashSize = 7;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		private drawLine(param1: Context) 
 		{
 			//const _loc2_ = this.dataSource.data;

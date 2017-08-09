@@ -44,11 +44,9 @@ namespace com.google.finance
 
 		private readonly lineColors = [14432530, 0xff9900, 0x8000, 4801228, 0x990099];
 		private readonly comparedTickers: string[] = [];
-		private displayManager: com.google.finance.DisplayManager;
 		//TODO: layerClasses: (typeof flash.display.Sprite)[];
 		private readonly takenColors: { quote: string, color: number }[] = [];
 		private readonly dataSources: DataSource[] = [];
-		private mainManager: com.google.finance.MainManager;
 		private style_ = LayersManager.SINGLE;
 		private fullRedrawWithNextData_ = false;
 		private readonly refuseDataSources: { [key: string]: boolean } = {};
@@ -57,10 +55,8 @@ namespace com.google.finance
 		readonly config: { [key: string]: LayerConfig } = {};
 		layers: LayerInfo[] = [];
 
-		constructor(param1: com.google.finance.DisplayManager, param2: com.google.finance.MainManager)
+		constructor(private readonly displayManager: com.google.finance.DisplayManager, private readonly mainManager: com.google.finance.MainManager)
 		{
-			this.displayManager = param1;
-			this.mainManager = param2;
 			//TODO: this.registerLayerClasses();
 			this.displayManager.layersManager = this;
 			const _loc3_ = com.google.finance.MainManager.paramsObj;
@@ -276,7 +272,7 @@ namespace com.google.finance
 				if (_loc15_ === Const.CANDLE_STICK || _loc15_ === Const.OHLC_CHART)
 				{
 					_loc6_.toggleZoomIntervalButtons(Const.LINE_CHART, _loc15_);
-					if (com.google.finance.MainManager.paramsObj.displayExtendedHours === "true")
+					if (Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
 						this.displayManager.toggleAllAfterHoursSessions(_loc6_.currentIntervalLevel === Const.INTRADAY);
 				}
 			}
@@ -812,7 +808,7 @@ namespace com.google.finance
 				else
 					_loc7_ = !!Const.INDICATOR_ENABLED ? _loc4_.getDetailLevelForTechnicalStyle() : _loc4_.getDetailLevel();
 
-				if (_loc7_ === Const.INTRADAY && com.google.finance.MainManager.paramsObj.displayExtendedHours === "true")
+				if (_loc7_ === Const.INTRADAY && Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
 					this.displayManager.toggleAllAfterHoursSessions(true);
 			}
 			this.displayManager.windowResized(this.displayManager.stage.stageWidth, this.displayManager.stage.stageHeight);

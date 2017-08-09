@@ -14,11 +14,6 @@ namespace com.google.finance
 
 		private associatedDividend: com.google.finance.Dividend;
 		
-		constructor()
-		{
-			super();
-		}
-
 		protected getTextColor(): number
 		{
 			return 0x66dd;
@@ -68,7 +63,7 @@ namespace com.google.finance
 		{
 			let _loc3_ = false;
 			const _loc2_ = this.associatedDividend.amount;
-			if (Const.DISPLAY_DIVIDENDS_UNITS === "false")
+			if (!Boolean(Const.DISPLAY_DIVIDENDS_UNITS))
 			{
 				_loc3_ = !MainManager.paramsObj.companyCurrency || !this.associatedDividend.currency || MainManager.paramsObj.differentDividendCurrency;
 				const _loc4_ = this.associatedDividend.currency && _loc3_ ? this.associatedDividend.currency : "";

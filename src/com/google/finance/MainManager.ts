@@ -48,7 +48,7 @@ namespace com.google.finance
 			else
 				this.displayManager.toggleAllAfterHoursSessions(false, dataSource);
 
-			if (MainManager.paramsObj.forceDisplayExtendedHours === "true")
+			if (Boolean(MainManager.paramsObj.forceDisplayExtendedHours))
 				MainManager.paramsObj.forceDisplayExtendedHours = "false";
 
 			if (!this.displayManager.isDifferentMarketSessionComparison())
@@ -97,7 +97,7 @@ namespace com.google.finance
 		private needAfterHoursData(param1: string): ChartEvent | null
 		{
 			let _loc2_: ChartEvent | null = null;
-			if (param1 === this.quote && (MainManager.paramsObj.forceDisplayExtendedHours === "true" || MainManager.paramsObj.displayExtendedHours === "true"))
+			if (param1 === this.quote && (Boolean(MainManager.paramsObj.forceDisplayExtendedHours) || Boolean(MainManager.paramsObj.displayExtendedHours)))
 				_loc2_ = EventFactory.getEvent(Const.GET_AH_DATA, param1, ChartEventTypes.REQUIRED);
 
 			return _loc2_;
@@ -170,7 +170,7 @@ namespace com.google.finance
 			MainManager.paramsObj.displayExtendedHours = this.checkUndefined(MainManager.paramsObj.displayExtendedHours, "true");
 			MainManager.paramsObj.hasExtendedHours = this.checkUndefined(MainManager.paramsObj.hasExtendedHours, "false");
 			MainManager.paramsObj.displayExtendedHours = this.checkUndefined(MainManager.paramsObj.displayExtendedHours, "false");
-			if (MainManager.paramsObj.hasExtendedHours === "false")
+			if (!Boolean(MainManager.paramsObj.hasExtendedHours))
 				MainManager.paramsObj.displayExtendedHours = "false";
 
 			Const.INFO_TEXT_ALIGN = MainManager.paramsObj.infoTextAlign || Const.INFO_TEXT_ALIGN;
@@ -371,7 +371,7 @@ namespace com.google.finance
 
 		private shouldToggleAfterHours(param1: number): boolean
 		{
-			if (MainManager.paramsObj.forceDisplayExtendedHours === "true")
+			if (Boolean(MainManager.paramsObj.forceDisplayExtendedHours))
 				return true;
 
 			if (MainManager.paramsObj.displayExtendedHours !== "true" || this.layersManager.getStyle() !== com.google.finance.LayersManager.SINGLE)

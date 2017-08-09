@@ -4,11 +4,6 @@ namespace com.google.finance
 {
 	export class CandleStickChartLayer extends IntervalBasedBarChartLayer
 	{
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		protected drawBarAtDataUnit(context: Context, param2: DataUnit[], param3: number) 
 		{
 			let _loc9_ = false;

@@ -2,7 +2,7 @@ namespace flash.display
 {
 	export class DisplayObject
 	{
-		constructor(public element: HTMLElement, name?: string)
+		constructor(public readonly element: HTMLElement, public name?: string)
 		{
 			assert(!(<any>element).displayObject);
 			(<any>element).displayObject = this;
@@ -28,8 +28,6 @@ namespace flash.display
 			}
 			*/
 		}
-
-		name: string;
 
 		protected _graphics: Graphics;
 		get graphics(): Graphics

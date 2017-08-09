@@ -11,7 +11,7 @@ namespace flash.display
 		private _path = false;
 		private _pending = false;
 
-		constructor(private element: HTMLElement)
+		constructor(private readonly element: HTMLElement)
 		{
 			//this._context = context;
 		}

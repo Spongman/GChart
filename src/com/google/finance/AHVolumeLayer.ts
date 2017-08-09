@@ -9,11 +9,6 @@ namespace com.google.finance
 		protected regionsXLimits: com.google.finance.IntervalSet;
 		protected readonly maxVolumeCache: { [key: string]: number } = {};
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		private drawAfterHoursSession(param1: flash.display.Sprite, param2: DataSeries, param3: number, param4: number, param5: Context, param6: number) 
 		{
 			const _loc7_ = DataSource.getTimeIndex(param4, param2.units);
@@ -57,7 +52,7 @@ namespace com.google.finance
 			
 			for (let _loc11_ = 0; _loc11_ < _loc10_.length(); _loc11_++)
 			{
-				const _loc12_ = _loc10_.method_1(_loc11_);
+				const _loc12_ = _loc10_.getIntervalAt(_loc11_);
 				const _loc13_ = this.dataSource.afterHoursData.units[_loc12_.start];
 				const _loc14_ = this.dataSource.afterHoursData.units[_loc12_.end];
 				if (ViewPoint.sessionVisible(_loc13_, _loc14_, param6))
@@ -103,7 +98,7 @@ namespace com.google.finance
 			
 			for (let _loc8_ = 0; _loc8_ < _loc5_.length(); _loc8_++)
 			{
-				const _loc9_ = _loc5_.method_1(_loc8_);
+				const _loc9_ = _loc5_.getIntervalAt(_loc8_);
 				const _loc10_ = this.dataSource.afterHoursData.units[_loc9_.start];
 				const _loc11_ = this.dataSource.afterHoursData.units[_loc9_.end];
 				const _loc12_ = this.getMaxVolumeHashKey(_loc10_.time, _loc4_);

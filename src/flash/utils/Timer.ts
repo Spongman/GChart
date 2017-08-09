@@ -10,7 +10,7 @@
 	{
 		private handle?: number;
 
-		constructor(public period: number)
+		constructor(public readonly period: number)
 		{
 			super();
 		}

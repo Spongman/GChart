@@ -30,7 +30,6 @@ namespace com.google.finance
 		private passiveLayers: AbstractLayer<SparklineViewPoint>[] = [];
 		private sparkline: com.google.finance.SparklineLayer;
 		private readonly rightScrollButton = new flash.display.SimpleButton("rightScrollButton");
-		private dataManager: com.google.finance.DataManager;
 		private displayThresholds: { chartDays: number, sparkDays: number }[];
 		// private textCanvas: flash.display.Sprite;
 		private readonly scrollBg = new flash.display.Sprite("scrollBg");
@@ -55,11 +54,10 @@ namespace com.google.finance
 		readonly dateTextFormat = new flash.text.TextFormat("Verdana", 10, 0x6f6f6f);
 		topBorder = 0;
 
-		constructor(param1: com.google.finance.DataManager, param2: com.google.finance.DisplayManager)
+		constructor(private readonly dataManager: com.google.finance.DataManager, readonly displayManager: com.google.finance.DisplayManager)
 		{
-			super(param2);
+			super(displayManager);
 
-			this.dataManager = param1;
 			this.addChild(this.bg);
 			this.textCanvas = new flash.display.Sprite("textCanvas");
 			this.addChild(this.textCanvas);
@@ -236,10 +234,10 @@ namespace com.google.finance
 			this.scrollBg.width = this.maxx - this.minx;
 		}
 
-		replaceSparklineDataSource(param1: com.google.finance.DataSource) 
+		replaceSparklineDataSource(dataSource: com.google.finance.DataSource) 
 		{
-			this.sparkline.dataSource = param1;
-			this.graySparkline.dataSource = param1;
+			this.sparkline.dataSource = dataSource;
+			this.graySparkline.dataSource = dataSource;
 		}
 
 		zoomIn_Handler(param1: number, param2: number) 

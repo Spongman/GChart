@@ -9,9 +9,9 @@ namespace com.google.finance
 		private chartLayers: IntervalBasedChartLayer[] = [];
 		private enabledChartLayer: com.google.finance.IntervalBasedChartLayer | null;
 
-		constructor(param1: ViewPoint, param2: DataSource)
+		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
-			super(param1, param2);
+			super(viewPoint, dataSource);
 			if (!IntervalBasedChartManagerLayer.enabledChartLayerName)
 				IntervalBasedChartManagerLayer.enabledChartLayerName = Const.DEFAULT_CHART_STYLE_NAME;
 
@@ -19,7 +19,7 @@ namespace com.google.finance
 			{
 				const styleName = Const.CHART_STYLE_NAMES[_loc3_];
 				const className = getDefinitionByName("com.google.finance." + styleName) as typeof IntervalBasedChartLayer;
-				const chartLayer = new className(param1, param2);
+				const chartLayer = new className(viewPoint, dataSource);
 				chartLayer.name = styleName;
 				chartLayer.layerId = styleName;
 				chartLayer.setLayerName(styleName);

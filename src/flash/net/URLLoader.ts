@@ -2,7 +2,7 @@
 {
 	export class URLRequest
 	{
-		constructor(public url: string) { }
+		constructor(public readonly url: string) { }
 	}
 
 	export class URLLoader

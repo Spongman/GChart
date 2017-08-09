@@ -14,11 +14,6 @@ namespace com.google.finance.indicator
 
 		private period = 10;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		static getParameterNames()
 		{
 			return WilliamsPercentRIndicatorLayer.PARAMETER_NAMES;

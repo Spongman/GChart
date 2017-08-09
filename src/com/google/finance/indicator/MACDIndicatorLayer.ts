@@ -16,11 +16,6 @@ namespace com.google.finance.indicator
 		private longPeriod = 26;
 		private shortPeriod = 12;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		static getParameterNames()
 		{
 			return MACDIndicatorLayer.PARAMETER_NAMES;

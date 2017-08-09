@@ -11,11 +11,6 @@ namespace com.google.finance.indicator
 	{
 		private static readonly FAST_SLOW_RATIO = 3;
 
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		static getParameterNames()
 		{
 			return AbstractStochasticIndicatorLayer.getParameterNames();

@@ -2,11 +2,6 @@ namespace com.google.finance
 {
 	export class IntervalBasedLineChartLayer extends IntervalBasedChartLayer
 	{
-		constructor(param1: ViewPoint, param2: DataSource)
-		{
-			super(param1, param2);
-		}
-
 		private drawLine(param1: number, param2: Context, param3: DataUnit[], param4: number, param5: number, param6: number, param7: number): number
 		{
 			let _loc8_ = NaN;

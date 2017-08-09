@@ -9,7 +9,6 @@ namespace flash.display
 
 	export class Rectangle
 	{
-		constructor() { }
 	}
 
 	export class Sprite extends DisplayObjectContainer

@@ -35,7 +35,9 @@ namespace flash.display
 			return this._graphics || (this._graphics = new Graphics(this.element));
 		}
 
-		stage: Stage;
+		protected _stage: Stage;
+		get stage() { return this._stage; }
+		set stage(value: Stage) { this._stage = value; }
 
 		_x = 0;
 		get x(): number { return this._x; }
@@ -86,7 +88,12 @@ namespace flash.display
 			this.element.removeEventListener(type, listener);
 		}
 
-		hitTestPoint(x: number, y: number, shapeFlag = false): boolean { return false; }
+		hitTestPoint(x: number, y: number, shapeFlag = false): boolean
+		{
+			var pt = this.globalToLocal(new flash.display.Point(x, y));
+			return pt.x >= 0 && pt.x < this.width &&
+				pt.y >= 0 && pt.y < this.height;
+		}
 
 		globalToLocal(param1: flash.display.Point): flash.display.Point
 		{

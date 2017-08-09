@@ -198,7 +198,7 @@ namespace com.google.i18n.locale
 		private format1To12Hours(param1: number, param2: Date): string
 		{
 			const _loc3_ = !!this.isUtc ? param2.getUTCHours() : param2.getHours();
-			return this.padNumber(_loc3_ % 12, param1);
+			return this.padNumber(((_loc3_ + 11) % 12) + 1, param1);
 		}
 
 		private formatEra(param1: number, param2: Date): string

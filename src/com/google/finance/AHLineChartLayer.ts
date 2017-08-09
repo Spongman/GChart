@@ -7,7 +7,6 @@ namespace com.google.finance
 	export class AHLineChartLayer extends LineChartLayer
 	{
 		private regionsXLimits: com.google.finance.IntervalSet;
-
 		private visibleSessionsTimes: com.google.finance.IntervalSet;
 
 		constructor(param1: ViewPoint, param2: DataSource)
@@ -17,12 +16,12 @@ namespace com.google.finance
 
 		protected getPoint(param1: DataSeries, param2: number): DataUnit
 		{
-			let _loc3_ = this.viewPoint.getMinuteOfX(param2);
+			const _loc3_ = this.viewPoint.getMinuteOfX(param2);
 			let _loc4_ = param1.getRelativeMinuteIndex(_loc3_);
-			let _loc5_ = param1.units[_loc4_].time;
-			let _loc6_ = notnull(this.visibleSessionsTimes.getIntervalForValue(_loc5_));
-			let _loc7_ = DataSource.getTimeIndex(_loc6_.end, param1.units);
-			let _loc8_ = this.viewPoint.getSkipInterval().skip;
+			const _loc5_ = param1.units[_loc4_].time;
+			const _loc6_ = notnull(this.visibleSessionsTimes.getIntervalForValue(_loc5_));
+			const _loc7_ = DataSource.getTimeIndex(_loc6_.end, param1.units);
+			const _loc8_ = this.viewPoint.getSkipInterval().skip;
 			_loc4_ = _loc4_ - (_loc4_ - _loc7_) % _loc8_;
 			while (param1.units[_loc4_].fake && param1.units[_loc4_].time > _loc6_.start)
 				_loc4_--;
@@ -37,18 +36,15 @@ namespace com.google.finance
 
 		private getVisibleSessionsTimes(context: Context): com.google.finance.IntervalSet
 		{
-			let _loc2_ = new com.google.finance.IntervalSet();
-			let _loc3_ = this.dataSource.visibleExtendedHours;
-			let _loc4_ = _loc3_.length() - 1;
-			while (_loc4_ >= 0)
+			const _loc2_ = new com.google.finance.IntervalSet();
+			const _loc3_ = this.dataSource.visibleExtendedHours;
+			for (let _loc4_ = _loc3_.length() - 1; _loc4_ >= 0; _loc4_--)
 			{
-				let _loc5_ = _loc3_.method_1(_loc4_);
-				let _loc6_ = this.dataSource.afterHoursData.units[_loc5_.start];
-				let _loc7_ = this.dataSource.afterHoursData.units[_loc5_.end];
+				const _loc5_ = _loc3_.method_1(_loc4_);
+				const _loc6_ = this.dataSource.afterHoursData.units[_loc5_.start];
+				const _loc7_ = this.dataSource.afterHoursData.units[_loc5_.end];
 				if (ViewPoint.sessionVisible(_loc6_, _loc7_, context))
 					_loc2_.addInterval(_loc6_.time, _loc7_.time);
-
-				_loc4_--;
 			}
 			return _loc2_;
 		}
@@ -57,11 +53,11 @@ namespace com.google.finance
 		{
 			this.minPrice = Number.POSITIVE_INFINITY;
 			this.maxPrice = 0;
-			let _loc3_ = this.getVisibleSessionsTimes(context);
+			const _loc3_ = this.getVisibleSessionsTimes(context);
 
 			for (let _loc4_ = 0; _loc4_ < _loc3_.length(); _loc4_++)
 			{
-				let _loc5_ = _loc3_.method_1(_loc4_);
+				const _loc5_ = _loc3_.method_1(_loc4_);
 				this.computeSessionMinMaxPrice(context, _loc5_.start, _loc5_.end);
 			}
 			return this.maxPrice !== 0 ? this.maxPrice - this.minPrice : 0;
@@ -69,13 +65,13 @@ namespace com.google.finance
 
 		private computeSessionMinMaxPrice(context: Context, param2: number, param3: number) 
 		{
-			let _loc4_ = this.getDataSeries();
-			let _loc5_ = DataSource.getTimeIndex(param2, _loc4_.units);
-			let _loc6_ = DataSource.getTimeIndex(param3, _loc4_.units);
+			const _loc4_ = this.getDataSeries();
+			const _loc5_ = DataSource.getTimeIndex(param2, _loc4_.units);
+			const _loc6_ = DataSource.getTimeIndex(param3, _loc4_.units);
 
 			for (let _loc7_ = _loc5_; _loc7_ < _loc6_; _loc7_++)
 			{
-				let _loc8_ = _loc4_.units[_loc7_];
+				const _loc8_ = _loc4_.units[_loc7_];
 				if (_loc8_.close < this.minPrice)
 					this.minPrice = _loc8_.close;
 				else if (_loc8_.close > this.maxPrice)
@@ -85,19 +81,19 @@ namespace com.google.finance
 
 		getContext(context: Context, param2 = false) 
 		{
-			let _loc3_ = this.getDataSeries();
+			const _loc3_ = this.getDataSeries();
 			if (_loc3_.points.length === 0)
 				return context;
 
-			let _loc4_ = _loc3_.getFirstRelativeMinute();
+			const _loc4_ = _loc3_.getFirstRelativeMinute();
 			if (context.lastMinute < _loc4_)
 				return context;
 
 			if (this.viewPoint.getDetailLevel() > Const.INTRADAY)
 				return context;
 
-			let _loc5_ = this.computeMaxRange(context, param2);
-			let _loc6_ = this.getMediumPrice(context.lastMinute, context.count, _loc3_, context.verticalScaling);
+			/*const _loc5_ = */this.computeMaxRange(context, param2);
+			const _loc6_ = this.getMediumPrice(context.lastMinute, context.count, _loc3_, context.verticalScaling);
 			let _loc7_ = 0;
 			let _loc8_ = 0;
 			if (_loc6_.maxPrice === _loc6_.minPrice && !context.maxPrice && !context.minPrice)
@@ -105,24 +101,24 @@ namespace com.google.finance
 				_loc7_ = Math.min(_loc6_.minPrice, Const.DEFAULT_MAX_RANGE / 2);
 				_loc8_ = Const.DEFAULT_MAX_RANGE - _loc7_;
 			}
-			let _loc9_ = Utils.getLogScaledValue(_loc6_.minPrice - _loc7_, context.verticalScaling);
+			const _loc9_ = Utils.getLogScaledValue(_loc6_.minPrice - _loc7_, context.verticalScaling);
 			context.maxRangeLowerBound = Utils.extendedMin(_loc9_, context.maxRangeLowerBound);
-			let _loc10_ = Utils.getLogScaledValue(_loc6_.maxPrice + _loc8_, context.verticalScaling);
+			const _loc10_ = Utils.getLogScaledValue(_loc6_.maxPrice + _loc8_, context.verticalScaling);
 			context.maxRangeUpperBound = Utils.extendedMax(_loc10_, context.maxRangeUpperBound);
-			let _loc11_ = Utils.getLogScaledValue(_loc6_.minPrice, context.verticalScaling);
-			let _loc12_ = Utils.getLogScaledValue(_loc6_.maxPrice, context.verticalScaling);
+			const _loc11_ = Utils.getLogScaledValue(_loc6_.minPrice, context.verticalScaling);
+			const _loc12_ = Utils.getLogScaledValue(_loc6_.maxPrice, context.verticalScaling);
 			context.minPrice = Utils.extendedMin(_loc11_, context.minPrice);
 			context.maxPrice = Utils.extendedMax(_loc12_, context.maxPrice);
 			context.medPrice = (context.minPrice + context.maxPrice) / 2;
-			let _loc13_ = context.maxPrice - context.minPrice;
+			const _loc13_ = context.maxPrice - context.minPrice;
 			context.maxPriceRange = Utils.extendedMax(_loc13_, context.maxPriceRange);
-			console.log(Utils.appendObjectMembersAsStrings("context: ", context));
+			//console.log(Utils.appendObjectMembersAsStrings("context: ", context));
 			return context;
 		}
 
 		renderLayer(context: Context) 
 		{
-			let _loc2_ = this.getDataSeries();
+			const _loc2_ = this.getDataSeries();
 			if (_loc2_.points.length === 0)
 				return;
 
@@ -135,7 +131,7 @@ namespace com.google.finance
 
 			for (let _loc3_ = 0; _loc3_ < this.visibleSessionsTimes.length(); _loc3_++)
 			{
-				let _loc4_ = this.visibleSessionsTimes.method_1(_loc3_);
+				const _loc4_ = this.visibleSessionsTimes.method_1(_loc3_);
 				this.drawAfterHoursSession(this, _loc4_.start, _loc4_.end, context);
 			}
 		}
@@ -146,21 +142,21 @@ namespace com.google.finance
 			if (!this.regionsXLimits || this.regionsXLimits.length() === 0)
 				return;
 
-			let _loc4_ = this.regionsXLimits.getIntervalForValue(param2);
+			const _loc4_ = this.regionsXLimits.getIntervalForValue(param2);
 			if (!_loc4_)
 				return;
 
 			if (param3["setter"])
 				param3["setter"].clearHighlight();
 
-			let _loc5_ = this.getDataSeries();
+			const _loc5_ = this.getDataSeries();
 			if (!_loc5_)
 				return;
 
-			let _loc6_ = this.getPoint(_loc5_, param2);
+			const _loc6_ = this.getPoint(_loc5_, param2);
 			let vp = this.viewPoint;
-			let _loc7_ = vp.getXPos(_loc6_);
-			let _loc8_ = this.getYPos(context, _loc6_);
+			const _loc7_ = vp.getXPos(_loc6_);
+			const _loc8_ = this.getYPos(context, _loc6_);
 			const gr = this.highlightCanvas.graphics;
 			gr.lineStyle(5, Const.AH_DOT_COLOR, 1);
 			gr.moveTo(_loc7_, _loc8_ - 0.2);
@@ -181,12 +177,12 @@ namespace com.google.finance
 
 		private drawAfterHoursSession(param1: flash.display.Sprite, param2: number, param3: number, param4: Context) 
 		{
-			let _loc5_ = Const.INTRADAY_INTERVAL / 60;
-			let _loc6_ = this.dataSource.afterHoursData.units;
-			let _loc7_ = DataSource.getTimeIndex(param3, _loc6_);
-			let _loc8_ = DataSource.getTimeIndex(param2, _loc6_);
+			const _loc5_ = Const.INTRADAY_INTERVAL / 60;
+			const _loc6_ = this.dataSource.afterHoursData.units;
+			const _loc7_ = DataSource.getTimeIndex(param3, _loc6_);
+			const _loc8_ = DataSource.getTimeIndex(param2, _loc6_);
 			let vp = this.viewPoint;
-			let _loc9_ = vp.getXPos(_loc6_[_loc7_]);
+			const _loc9_ = vp.getXPos(_loc6_[_loc7_]);
 			let _loc10_ = 1;
 			while (this.viewPoint.minutePix * _loc5_ * _loc10_ < vp.POINTS_DISTANCE)
 				_loc10_ = _loc10_ * 2;
@@ -206,14 +202,12 @@ namespace com.google.finance
 			gr.moveTo(_loc12_, this.viewPoint.maxy - 15);
 			gr.lineTo(_loc12_, _loc13_);
 			gr.lineStyle(Const.ECN_LINE_CHART_LINE_THICKNESS, Const.ECN_LINE_CHART_LINE_COLOR, Const.ECN_LINE_CHART_LINE_VISIBILITY);
-			let _loc14_ = _loc10_ * (this.viewPoint.minutePix * _loc5_);
-			let _loc15_ = _loc11_;
-			while (_loc15_ > _loc8_)
+			const _loc14_ = _loc10_ * (this.viewPoint.minutePix * _loc5_);
+			for (let _loc15_ = _loc11_; _loc15_ > _loc8_; _loc15_ = _loc15_ - _loc10_)
 			{
 				_loc13_ = this.getYPos(param4, _loc6_[_loc15_]);
 				gr.lineTo(_loc12_, _loc13_);
 				_loc12_ = _loc12_ - _loc14_;
-				_loc15_ = _loc15_ - _loc10_;
 			}
 			gr.lineTo(_loc12_, _loc13_);
 			gr.lineStyle(0, 0, 0);

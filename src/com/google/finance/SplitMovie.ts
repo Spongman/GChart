@@ -1,4 +1,8 @@
 /// <reference path="../../../flash/display/Sprite.ts" />
+/// <reference path="SplitMovie_SplitArrowClass.ts" />
+/// <reference path="SplitMovie_SplitArrowSidewaysClass.ts" />
+/// <reference path="SplitMovie_SplitArrowSidewaysOverClass.ts" />
+/// <reference path="SplitMovie_SplitArrowOnOverClass.ts" />
 
 namespace com.google.finance
 {
@@ -17,49 +21,30 @@ namespace com.google.finance
 
 	export class SplitMovie extends flash.display.Sprite
 	{
-		protected textFormat: flash.text.TextFormat;
-
-		protected arrowOrientation: number;
-
-		private readonly SplitArrowClass = SplitMovie_SplitArrowClass;
-
-		private readonly SplitArrowSidewaysClass = SplitMovie_SplitArrowSidewaysClass;
-
-		protected arrow: flash.display.Bitmap;
-
-		private readonly SplitArrowSidewaysOverClass = SplitMovie_SplitArrowSidewaysOverClass;
-
-		protected detailsTextField: flash.text.TextField;
-
-		protected highlightCanvas: flash.display.Sprite;
-
-		protected text: flash.text.TextField;
+		private static readonly SplitArrowClass = SplitMovie_SplitArrowClass;
+		private static readonly SplitArrowSidewaysClass = SplitMovie_SplitArrowSidewaysClass;
+		private static readonly SplitArrowSidewaysOverClass = SplitMovie_SplitArrowSidewaysOverClass;
+		private static readonly SplitArrowOnOverClass = SplitMovie_SplitArrowOnOverClass;
 
 		private associatedSplit: com.google.finance.Split;
-
-		private readonly SplitArrowOnOverClass = SplitMovie_SplitArrowOnOverClass;
-
-		protected textColor: number;
-
-		protected arrowOnOver: flash.display.Bitmap;
-
-		protected previousText: string;
-
-		protected currentVisibleButton: flash.display.SimpleButton;
-
-		protected sidewaysButton: flash.display.SimpleButton;
-
-		protected arrowSidewaysOver: flash.display.Bitmap;
-
-		protected supportingLayer: AbstractLayer<ViewPoint>;
-
-		protected arrowSideways: flash.display.Bitmap;
-
-		protected detailsTextFormat: flash.text.TextFormat;
-
-		protected regularButton: flash.display.SimpleButton;
-
 		private persistentHide: boolean;
+		
+		protected textFormat = new flash.text.TextFormat("Verdana", 9, this.getTextColor(), true, false, false);
+		protected arrowOrientation = Const.DOWN;
+		protected arrow: flash.display.Bitmap;
+		protected readonly detailsTextField = new flash.text.TextField();
+		protected highlightCanvas: flash.display.Sprite;
+		protected text: flash.text.TextField;
+		protected textColor: number;
+		protected arrowOnOver: flash.display.Bitmap;
+		protected previousText: string;
+		protected currentVisibleButton: flash.display.SimpleButton;
+		protected sidewaysButton: flash.display.SimpleButton;
+		protected arrowSidewaysOver: flash.display.Bitmap;
+		protected supportingLayer: AbstractLayer<ViewPoint>;
+		protected arrowSideways: flash.display.Bitmap;
+		protected readonly detailsTextFormat = new flash.text.TextFormat("Arial", 11, 0, false, false, false);
+		protected regularButton: flash.display.SimpleButton;
 
 		constructor()
 		{
@@ -68,14 +53,10 @@ namespace com.google.finance
 			this.createButtons();
 			this.currentVisibleButton = this.attachRegularArrow();
 			this.regularButton.x = -this.regularButton.width / 2;
-			this.textFormat = new flash.text.TextFormat("Verdana", 9, this.getTextColor(), true, false, false);
-			this.detailsTextFormat = new flash.text.TextFormat("Arial", 11, 0, false, false, false);
-			this.detailsTextField = new flash.text.TextField();
 			this.detailsTextField.defaultTextFormat = this.detailsTextFormat;
 			this.detailsTextField.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			this.text = this.initTextField();
 			this.addChild(this.text);
-			this.arrowOrientation = Const.DOWN;
 			this.attachArrowListeners();
 			this.highlightCanvas = this;
 		}
@@ -98,20 +79,20 @@ namespace com.google.finance
 			else
 				this.detailsTextField.y = this.y - this.currentVisibleButton.height - this.detailsTextField.height;
 
-			let _loc2_ = this.detailsTextField.x - 2;
-			let _loc3_ = this.detailsTextField.y - 2;
-			let _loc4_ = this.detailsTextField.x + this.detailsTextField.width + 2;
-			let _loc5_ = this.detailsTextField.y + this.detailsTextField.height + 2;
+			const _loc2_ = this.detailsTextField.x - 2;
+			const _loc3_ = this.detailsTextField.y - 2;
+			const _loc4_ = this.detailsTextField.x + this.detailsTextField.width + 2;
+			const _loc5_ = this.detailsTextField.y + this.detailsTextField.height + 2;
 			let _loc6_ = -2;
-			let _loc7_ = this.supportingLayer.viewPoint.minx;
-			let _loc8_ = this.supportingLayer.viewPoint.maxx;
+			const _loc7_ = this.supportingLayer.viewPoint.minx;
+			const _loc8_ = this.supportingLayer.viewPoint.maxx;
 			if (_loc2_ < _loc7_)
 				_loc6_ = Number(_loc7_ - _loc2_ - 2);
 			else if (_loc4_ > _loc8_)
 				_loc6_ = Number(_loc8_ - _loc4_ - 2);
 
 			this.detailsTextField.x = this.detailsTextField.x + _loc6_;
-			let _loc9_ = this.highlightCanvas.graphics;
+			const _loc9_ = this.highlightCanvas.graphics;
 			_loc9_.lineStyle(0, this.textColor, 1);
 			_loc9_.beginFill(0xffffff, 1);
 			_loc9_.moveTo(_loc2_ + _loc6_, _loc3_);
@@ -152,7 +133,7 @@ namespace com.google.finance
 
 		getDateText(): string
 		{
-			let _loc1_ = this.associatedSplit.exchangeDateInUTC;
+			const _loc1_ = this.associatedSplit.exchangeDateInUTC;
 			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
 				return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeLocale.LONG_DATE_FORMAT, _loc1_, true);
 
@@ -179,7 +160,7 @@ namespace com.google.finance
 
 		private initTextField(): flash.text.TextField
 		{
-			let _loc1_ = new flash.text.TextField();
+			const _loc1_ = new flash.text.TextField();
 			_loc1_.autoSize = flash.text.TextFieldAutoSize.CENTER;
 			_loc1_.x = 0;
 			_loc1_.selectable = false;
@@ -218,10 +199,10 @@ namespace com.google.finance
 
 		protected initArrows() 
 		{
-			this.arrow = new this.SplitArrowClass();
-			this.arrowOnOver = new this.SplitArrowOnOverClass();
-			this.arrowSideways = new this.SplitArrowSidewaysClass();
-			this.arrowSidewaysOver = new this.SplitArrowSidewaysOverClass();
+			this.arrow = new SplitMovie.SplitArrowClass();
+			this.arrowOnOver = new SplitMovie.SplitArrowOnOverClass();
+			this.arrowSideways = new SplitMovie.SplitArrowSidewaysClass();
+			this.arrowSidewaysOver = new SplitMovie.SplitArrowSidewaysOverClass();
 		}
 
 		setObject(param1: StockAssociatedObject) 
@@ -244,7 +225,7 @@ namespace com.google.finance
 				return;
 
 			this.addChild(this.text);
-			let _loc2_ = param1 ? param1 : this.getShortText();
+			const _loc2_ = param1 ? param1 : this.getShortText();
 			if (this.text.text !== _loc2_)
 				this.text.text = _loc2_;
 		}

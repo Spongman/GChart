@@ -4,8 +4,8 @@ namespace flash.display
 	{
 		constructor(public element: HTMLElement, name?: string)
 		{
-			assert(!(<any>this.element).displayObject);
-			(<any>this.element).displayObject = this;
+			assert(!(<any>element).displayObject);
+			(<any>element).displayObject = this;
 
 			assert(!!element);
 			if (!element.parentElement)
@@ -34,12 +34,7 @@ namespace flash.display
 		protected _graphics: Graphics;
 		get graphics(): Graphics
 		{
-			let graphics = this._graphics;
-			if (graphics == null)
-			{
-				this._graphics = graphics = new Graphics(this.element);
-			}
-			return graphics;
+			return this._graphics || (this._graphics = new Graphics(this.element));
 		}
 
 		stage: Stage;

@@ -5,22 +5,16 @@ namespace com.google.finance
 
 	export class SparklineLayer extends AbstractLayer<SparklineViewPoint>
 	{
-		private realLIndex: number;
-
-		private realRIndex: number;
+		//private realLIndex: number;
+		//private realRIndex: number;
 
 		borderColor = 11184810;
-
 		hasShadow: boolean;
-
 		bgColor: number;
-
 		fillColor: number;
-
 		hasBackground: boolean;
 
 		private minPriceLog: number;
-
 		private maxPriceLog: number;
 
 		constructor(param1: SparklineViewPoint, param2: DataSource)
@@ -40,18 +34,16 @@ namespace com.google.finance
 
 		private drawBackground(param1: boolean) 
 		{
-			let _loc4_ = NaN;
-			let _loc5_ = NaN;
-			let _loc2_ = <SparklineViewPoint><any>this.viewPoint;
+			const _loc2_ = <SparklineViewPoint><any>this.viewPoint;
 			if (this.hasBackground)
 			{
 				const gr = this.graphics;
 				if (param1)
 					gr.beginFill(this.bgColor, 1);
 
-				let _loc3_ = notnull(this.getDataSeries());
-				_loc4_ = _loc2_.getMinuteXPos(_loc3_.getFirstRelativeMinute());
-				_loc5_ = _loc2_.getMinuteXPos(_loc3_.getLastRelativeMinute());
+				const _loc3_ = notnull(this.getDataSeries());
+				let _loc4_ = _loc2_.getMinuteXPos(_loc3_.getFirstRelativeMinute());
+				let _loc5_ = _loc2_.getMinuteXPos(_loc3_.getLastRelativeMinute());
 				if (_loc4_ < _loc2_.my_minx)
 					_loc4_ = _loc2_.my_minx;
 
@@ -70,24 +62,22 @@ namespace com.google.finance
 
 		private drawLine(param1: flash.display.Sprite, param2: number, param3: number, param4: SparklineViewPoint, param5: number[]): number
 		{
-			let _loc6_ = NaN;
-			let _loc7_ = NaN;
-			let _loc8_ = notnull(this.getDataSeries());
-			let _loc9_ = _loc8_.units;
-			let _loc10_ = _loc8_.days;
-			let _loc11_ = param3;
-			let _loc12_ = this.getSkipInterval(param5, _loc8_.units);
+			const _loc8_ = notnull(this.getDataSeries());
+			const _loc9_ = _loc8_.units;
+			//const _loc10_ = _loc8_.days;
+			//const _loc11_ = param3;
+			const _loc12_ = this.getSkipInterval(param5, _loc8_.units);
 			let _loc13_ = param5.length - 1;
 			while (_loc13_ >= 0 && param5[_loc13_] > param3)
 				_loc13_ = _loc13_ - _loc12_;
 
 			_loc13_ = Math.min(_loc13_ + _loc12_, param5.length - 1);
-			let _loc14_ = param4.maxy;
-			let _loc15_ = param4.miny;
-			let _loc16_ = param4.maxx;
-			let _loc17_ = param4.minx;
-			let _loc18_ = param4.getXPos(_loc16_, _loc17_, _loc9_[param3]);
-			let _loc19_ = this.getYPos(_loc14_, _loc15_, _loc9_[param3]);
+			const _loc14_ = param4.maxy;
+			const _loc15_ = param4.miny;
+			const _loc16_ = param4.maxx;
+			const _loc17_ = param4.minx;
+			const _loc18_ = param4.getXPos(_loc16_, _loc17_, _loc9_[param3]);
+			const _loc19_ = this.getYPos(_loc14_, _loc15_, _loc9_[param3]);
 			const gr = param1.graphics;
 			gr.moveTo(_loc18_, param4.maxy);
 			gr.lineStyle(0, 0, 0);
@@ -95,27 +85,27 @@ namespace com.google.finance
 			gr.lineStyle(Const.LINE_CHART_LINE_THICKNESS, this.lineColor, Const.LINE_CHART_LINE_VISIBILITY);
 			while (_loc13_ >= 0 && param5[_loc13_] >= param2)
 			{
-				_loc6_ = param4.getXPos(_loc16_, _loc17_, _loc9_[param5[_loc13_]]);
-				_loc7_ = this.getYPos(_loc14_, _loc15_, _loc9_[param5[_loc13_]]);
+				const _loc6_ = param4.getXPos(_loc16_, _loc17_, _loc9_[param5[_loc13_]]);
+				const _loc7_ = this.getYPos(_loc14_, _loc15_, _loc9_[param5[_loc13_]]);
 				gr.lineTo(_loc6_, _loc7_);
 				_loc13_ = _loc13_ - _loc12_;
 			}
 			if (_loc13_ >= 0)
 			{
-				_loc6_ = param4.getXPos(_loc16_, _loc17_, _loc9_[param5[_loc13_]]);
-				_loc7_ = this.getYPos(_loc14_, _loc15_, _loc9_[param5[_loc13_]]);
+				const _loc6_ = param4.getXPos(_loc16_, _loc17_, _loc9_[param5[_loc13_]]);
+				const _loc7_ = this.getYPos(_loc14_, _loc15_, _loc9_[param5[_loc13_]]);
 				gr.lineTo(_loc6_, _loc7_);
 			}
-			_loc6_ = param4.getXPos(_loc16_, _loc17_, _loc9_[param2]);
-			_loc7_ = this.getYPos(_loc14_, _loc15_, _loc9_[param2]);
+			const _loc6_ = param4.getXPos(_loc16_, _loc17_, _loc9_[param2]);
+			const _loc7_ = this.getYPos(_loc14_, _loc15_, _loc9_[param2]);
 			gr.lineTo(_loc6_, _loc7_);
 			return _loc6_;
 		}
 
 		renderLayer(param1?: Context) 
 		{
-			let _loc2_ = <SparklineViewPoint><any>this.viewPoint;
-			let _loc3_ = notnull(this.getDataSeries());
+			const _loc2_ = <SparklineViewPoint><any>this.viewPoint;
+			const _loc3_ = notnull(this.getDataSeries());
 			if (_loc3_.units.length === 0)
 				return;
 
@@ -132,9 +122,9 @@ namespace com.google.finance
 			_loc5_ = Math.min(_loc5_, _loc3_.units.length - 1);
 			_loc6_ = Math.max(_loc6_, 0);
 			this.getMaxRange(_loc6_, _loc5_, _loc4_);
-			let _loc7_ = this.drawLine(this, _loc6_, _loc5_, _loc2_, _loc4_);
+			const _loc7_ = this.drawLine(this, _loc6_, _loc5_, _loc2_, _loc4_);
 			gr.lineStyle(0, 0, 0);
-			let _loc8_ = new flash.display.Point(_loc7_, _loc2_.my_maxy);
+			const _loc8_ = new flash.display.Point(_loc7_, _loc2_.my_maxy);
 			//this.globalToLocal(_loc8_);	// TODO: ?
 			gr.lineTo(_loc8_.x, _loc8_.y);
 			gr.endFill();
@@ -143,7 +133,7 @@ namespace com.google.finance
 
 		private checkMinMax(param1: number) 
 		{
-			let _loc2_ = this.LogPreserveSign(param1);
+			const _loc2_ = this.LogPreserveSign(param1);
 			if (_loc2_ < this.minPriceLog)
 				this.minPriceLog = _loc2_;
 			else if (_loc2_ > this.maxPriceLog)
@@ -163,9 +153,9 @@ namespace com.google.finance
 
 		private getMaxRange(param1: number, param2: number, param3: number[]) 
 		{
-			let _loc4_ = notnull(this.getDataSeries());
-			let _loc5_ = _loc4_.units;
-			let _loc6_ = param2;
+			const _loc4_ = notnull(this.getDataSeries());
+			const _loc5_ = _loc4_.units;
+			//const _loc6_ = param2;
 			this.minPriceLog = Number.POSITIVE_INFINITY;
 			this.maxPriceLog = Number.NEGATIVE_INFINITY;
 			let _loc7_ = param3.length - 1;
@@ -187,9 +177,9 @@ namespace com.google.finance
 			if (param1.length < 2 || param2.length < 2)
 				return 1;
 
-			let _loc3_ = param1.length - 1;
-			let _loc4_ = param2[param1[_loc3_]].relativeMinutes - param2[param1[_loc3_ - 1]].relativeMinutes;
-			let _loc5_ = this.viewPoint.getIntervalLength(_loc4_);
+			const _loc3_ = param1.length - 1;
+			const _loc4_ = param2[param1[_loc3_]].relativeMinutes - param2[param1[_loc3_ - 1]].relativeMinutes;
+			const _loc5_ = this.viewPoint.getIntervalLength(_loc4_);
 			if (_loc5_ === 0)
 				return 1;
 

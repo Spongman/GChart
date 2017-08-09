@@ -3,47 +3,29 @@ namespace com.google.finance
 	export class DataUnit
 	{
 		logHigh: number;
-
 		duplicate = false;
-
 		time: number;
-
-		intervals: number[];
-
+		readonly intervals: number[] = [];
 		dayMinute: number;
-
 		logClose: number;
-
 		exchangeDateInUTC: Date;
-
-		volumes: { [key: number]: number };
-
+		readonly volumes: { [key: number]: number } = {};
 		fake = false;
-
-		coveredDays: number;
-
+		coveredDays: number = 0;
 		timezoneOffset: number;
-
 		logOpen: number;
-
 		relativeMinutes: number;
-
 		weeklyXPos: number;
-
 		logLow: number;
-
 		realtime = false;
 
 		constructor(public close: number, public high: number, public low: number, public open: number)
 		{
-			this.intervals = [];
-			this.volumes = {};
-			this.coveredDays = 0;
 		}
 
 		toString(): string
 		{
-			let _loc1_ = this.exchangeDateInUTC;
+			const _loc1_ = this.exchangeDateInUTC;
 			let _loc2_ = Utils.utcDateToString(_loc1_);
 			if (!isNaN(this.relativeMinutes))
 				_loc2_ = _loc2_ + ("[relMin:" + this.relativeMinutes + "]");

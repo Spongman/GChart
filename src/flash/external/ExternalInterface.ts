@@ -8,7 +8,7 @@
 		private static readonly callbacks: { [key: string]: Function } = {};
 		static addCallback(name: string, callback: Function)
 		{
-			console.log("ExternalInterface.addCallbac", name);
+			console.log("ExternalInterface.addCallback", name);
 			ExternalInterface.callbacks[name] = callback;
 		}
 		*/

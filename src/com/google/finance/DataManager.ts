@@ -3,18 +3,14 @@ namespace com.google.finance
 	export class DataManager
 	{
 		private endTime: number;
-
 		private startTime: number;
+		//private intId: number;
 
-		private intId: number;
-
-		dataSources: { [key: string]: DataSource };
-
+		readonly dataSources: { [key: string]: DataSource } = {};
 		mainManager: com.google.finance.MainManager;
 
 		constructor(param1: com.google.finance.MainManager, param2 = NaN, param3 = NaN)
 		{
-			this.dataSources = {};
 			this.mainManager = param1;
 			this.startTime = param2;
 			this.endTime = param3;
@@ -36,11 +32,10 @@ namespace com.google.finance
 
 		syncDataSources(dataSource: DataSource, param2: DisplayManager) 
 		{
-			let _loc4_ = 0;
 			let _loc13_ = false;
 			let _loc18_ = 0;
 			let _loc19_ = 0;
-			let _loc5_: DataSource[] = [];
+			const _loc5_: DataSource[] = [];
 			for (let _loc6_ in this.dataSources)
 			{
 				_loc13_ = this.dataSources[_loc6_].hasPendingEvents();
@@ -50,20 +45,20 @@ namespace com.google.finance
 			if (_loc5_.length === 0)
 				return;
 
-			let _loc7_ = dataSource.data;
-			let _loc8_ = _loc5_[0].data;
+			const _loc7_ = dataSource.data;
+			const _loc8_ = _loc5_[0].data;
 			let _loc9_ = _loc7_.days.length - 1;
 			let _loc10_ = _loc8_.days.length - 1;
 			let _loc11_ = false;
 			let _loc12_ = false;
 			while (_loc9_ > 0 && _loc10_ > 0)
 			{
-				let _loc14_ = _loc7_.units[_loc7_.days[_loc9_]];
-				let _loc15_ = _loc8_.units[_loc8_.days[_loc10_]];
-				let _loc16_ = Utils.compareUtcDates(_loc14_.exchangeDateInUTC, _loc15_.exchangeDateInUTC);
+				const _loc14_ = _loc7_.units[_loc7_.days[_loc9_]];
+				const _loc15_ = _loc8_.units[_loc8_.days[_loc10_]];
+				const _loc16_ = Utils.compareUtcDates(_loc14_.exchangeDateInUTC, _loc15_.exchangeDateInUTC);
 				if (_loc16_ < 0)
 				{
-					let _loc3_ = this.cloneDataUnitForTargetExchange(_loc15_, _loc14_, Const.DAILY_INTERVAL);
+					const _loc3_ = this.cloneDataUnitForTargetExchange(_loc15_, _loc14_, Const.DAILY_INTERVAL);
 					_loc7_.units.splice(_loc7_.days[_loc9_] + 1, 0, _loc3_);
 					_loc10_--;
 					_loc12_ = true;
@@ -72,12 +67,12 @@ namespace com.google.finance
 				{
 					for (let _loc4_ = 0; _loc4_ < _loc5_.length; _loc4_++)
 					{
-						let _loc17_ = _loc5_[_loc4_].data;
+						const _loc17_ = _loc5_[_loc4_].data;
 						if (_loc17_.days.length > _loc8_.days.length - _loc10_)
 						{
 							_loc18_ = _loc17_.days.length - (_loc8_.days.length - _loc10_);
 							_loc19_ = _loc17_.days[_loc18_];
-							let _loc3_ = this.cloneDataUnitForTargetExchange(_loc14_, _loc17_.units[_loc19_], Const.DAILY_INTERVAL);
+							const _loc3_ = this.cloneDataUnitForTargetExchange(_loc14_, _loc17_.units[_loc19_], Const.DAILY_INTERVAL);
 							_loc17_.units.splice(_loc19_ + 1, 0, _loc3_);
 						}
 					}
@@ -99,7 +94,7 @@ namespace com.google.finance
 			{
 				for (let _loc4_ = 0; _loc4_ < _loc5_.length; _loc4_++)
 				{
-					let _loc20_ = _loc5_[_loc4_];
+					const _loc20_ = _loc5_[_loc4_];
 					_loc20_.preCalculate(_loc20_.data);
 					param2.computeRelativeTimes(_loc20_);
 				}
@@ -139,7 +134,7 @@ namespace com.google.finance
 
 		private getQuoteData(param1: string, param2: string, param3: ChartEvent, param4: boolean) 
 		{
-			let _loc5_ = Utils.getSymbolFromTicker(param3.quote);
+			const _loc5_ = Utils.getSymbolFromTicker(param3.quote);
 			if (com.google.finance.MainManager.paramsObj[_loc5_ + "_data_" + param3.period] === "javascript")
 			{
 				com.google.finance.MainManager.jsProxy.getData(param3.quote, param3.period);
@@ -158,8 +153,8 @@ namespace com.google.finance
 					return;
 				}
 			}
-			let _loc6_ = this.getUrlString(param1, param2, param3);
-			let _loc7_ = new DataRequestHandler(this, _loc6_, param3);
+			const _loc6_ = this.getUrlString(param1, param2, param3);
+			/*const _loc7_ =*/ new DataRequestHandler(this, _loc6_, param3);
 		}
 
 		clearAllObjects(param1: string, param2: string) 
@@ -180,13 +175,13 @@ namespace com.google.finance
 
 		addData(param1: ChartEvent, param2: string) 
 		{
-			let _loc3_ = this.dataSources[param1.quote].addStream(param2, param1);
+			const _loc3_ = this.dataSources[param1.quote].addStream(param2, param1);
 			this.mainManager.dataIsHere(this.dataSources[param1.quote], _loc3_);
 		}
 
 		dataUnavailableOnServer(param1: string): boolean
 		{
-			let _loc2_ = this.dataSources[param1];
+			const _loc2_ = this.dataSources[param1];
 			if (!_loc2_)
 				return false;
 			return _loc2_.dataUnavailableOnServer;
@@ -199,7 +194,7 @@ namespace com.google.finance
 			let _loc6_ = "";
 			if (_loc4_.indexOf("@") !== -1)
 			{
-				let _loc8_ = _loc4_.split("@");
+				const _loc8_ = _loc4_.split("@");
 				_loc4_ = _loc8_[0];
 				_loc6_ = _loc8_[1];
 			}
@@ -239,8 +234,8 @@ namespace com.google.finance
 
 		cloneDataUnitForTargetExchange(param1: DataUnit, param2: DataUnit, param3: number): DataUnit
 		{
-			let _loc4_ = new DataUnit(param2.close);
-			let _loc5_ = Date.UTC(param1.exchangeDateInUTC.fullYearUTC, param1.exchangeDateInUTC.monthUTC, param1.exchangeDateInUTC.dateUTC, param2.dayMinute / 60, param2.dayMinute % 60);
+			const _loc4_ = new DataUnit(param2.close);
+			const _loc5_ = Date.UTC(param1.exchangeDateInUTC.fullYearUTC, param1.exchangeDateInUTC.monthUTC, param1.exchangeDateInUTC.dateUTC, param2.dayMinute / 60, param2.dayMinute % 60);
 			_loc4_.setExchangeDateInUTC(_loc5_, param2.timezoneOffset);
 			_loc4_.coveredDays = param1.coveredDays;
 			_loc4_.volumes[param3] = 0;

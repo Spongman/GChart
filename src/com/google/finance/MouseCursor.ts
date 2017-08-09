@@ -12,30 +12,22 @@ namespace com.google.finance
 	export class MouseCursor extends flash.display.Sprite
 	{
 		static readonly H_ARROWS = 4;
-
 		static readonly OPENED_HAND = 2;
-
 		static readonly DRAGGABLE_CURSOR = MouseCursor.OPENED_HAND;
-
 		static readonly HIDDEN = 0;
-
 		static readonly CLASSIC = 1;
-
 		static readonly V_ARROWS = 5;
-
 		static readonly CLOSED_HAND = 3;
 
-
-		private readonly CursorHorizontalArrows = MouseCursor_CursorHorizontalArrows;
+		/*
+		private static readonly CursorHorizontalArrows = MouseCursor_CursorHorizontalArrows;
+		private static readonly CursorOpenedHand = MouseCursor_CursorOpenedHand;
+		private static readonly CursorClosedHand = MouseCursor_CursorClosedHand;
+		*/
 
 		private displayObjectLockedOn: flash.display.DisplayObject | null;
-
-		private readonly CursorOpenedHand = MouseCursor_CursorOpenedHand;
-
-		private readonly CursorClosedHand = MouseCursor_CursorClosedHand;
-
+		
 		currentType: number;
-
 		cursor: flash.display.Bitmap;
 
 		constructor()
@@ -120,13 +112,13 @@ namespace com.google.finance
 				case MouseCursor.HIDDEN:
 					return;
 				case MouseCursor.OPENED_HAND:
-					this.cursor = new this.CursorOpenedHand();
+					this.cursor = new MouseCursor.CursorOpenedHand();
 					break;
 				case MouseCursor.CLOSED_HAND:
-					this.cursor = new this.CursorClosedHand();
+					this.cursor = new MouseCursor.CursorClosedHand();
 					break;
 				case MouseCursor.H_ARROWS:
-					this.cursor = new this.CursorHorizontalArrows();
+					this.cursor = new MouseCursor.CursorHorizontalArrows();
 			}
 			this.addChild(this.cursor);
 			this.onMouseMove(null);

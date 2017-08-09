@@ -155,7 +155,7 @@ function parseQueryString(str: string)
 		var key = decodeURIComponent(p[0]);
 		var value = decodeURIComponent(p[1]);
 		result[key] = value;
-		console.log("  " + key + " = " + value);
+		//console.log("  " + key + " = " + value);
 	}
 	return result;
 }

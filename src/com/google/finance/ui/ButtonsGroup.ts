@@ -13,41 +13,26 @@ namespace com.google.finance.ui
 	export class ButtonsGroup extends flash.display.Sprite
 	{
 		private static readonly DEFAULT_SPACING = 5;
-
 		private static readonly DEFAULT_SEPARATOR = "";
-
 		private static readonly DEFAULT_LEFT_PADDING = 0;
 
-
-		listenerObjects: flash.display.DisplayObject[];
-
-		buttons: flash.display.SimpleButton[];
-
-		spacing: number;
-
-		listenerFunctions: { (p1: any, text: string): void }[];
-
-		separatorTextFormat: flash.text.TextFormat;
-
-		leftPadding: number;
-
-		buttonTextFormat: flash.text.TextFormat;
-
 		private currentX: number;
-
 		private currentY: number;
 
-		separator: string;
-
+		listenerObjects: flash.display.DisplayObject[];
+		buttons: flash.display.SimpleButton[];
+		spacing = ButtonsGroup.DEFAULT_SPACING;
+		listenerFunctions: { (p1: any, text: string): void }[];
+		separatorTextFormat: flash.text.TextFormat;
+		leftPadding = ButtonsGroup.DEFAULT_LEFT_PADDING;
+		buttonTextFormat: flash.text.TextFormat;
+		separator = ButtonsGroup.DEFAULT_SEPARATOR;
 		selectedTextFormat: flash.text.TextFormat;
 
 		constructor()
 		{
 			super();
 			this.resetButtonsGroup();
-			this.separator = ButtonsGroup.DEFAULT_SEPARATOR;
-			this.spacing = ButtonsGroup.DEFAULT_SPACING;
-			this.leftPadding = ButtonsGroup.DEFAULT_LEFT_PADDING;
 		}
 
 		private getNextButtonPosition() 
@@ -68,10 +53,10 @@ namespace com.google.finance.ui
 		{
 			if (this.buttons.length > 0 && this.separator !== "")
 			{
-				let _loc6_ = this.putSeparator(this.currentX, this.currentY, this.separator);
+				const _loc6_ = this.putSeparator(this.currentX, this.currentY, this.separator);
 				this.currentX = this.currentX + _loc6_.width;
 			}
-			let _loc5_ = this.attachButton(param1, param2, param3, param4);
+			const _loc5_ = this.attachButton(param1, param2, param3, param4);
 			this.currentX = this.currentX + (_loc5_.width + this.spacing);
 			this.buttons.push(_loc5_);
 			_loc5_.addEventListener(MouseEvents.MOUSE_DOWN, (event) => { this.buttonPress(event); });
@@ -88,7 +73,7 @@ namespace com.google.finance.ui
 
 		private putSeparator(param1: number, param2: number, param3: string): flash.text.TextField
 		{
-			let _loc4_ = new flash.text.TextField();
+			const _loc4_ = new flash.text.TextField();
 			_loc4_.x = param1 - this.spacing / 2;
 			_loc4_.y = param2;
 			_loc4_.defaultTextFormat = this.separatorTextFormat;
@@ -101,15 +86,15 @@ namespace com.google.finance.ui
 
 		protected attachButton(param1: string, param2?: flash.text.TextFormat, param3 = NaN, param4 = NaN): flash.display.SimpleButton
 		{
-			let _loc5_ = new flash.display.SimpleButton();
-			let _loc6_ = this.getNextButtonPosition();
+			const _loc5_ = new flash.display.SimpleButton();
+			const _loc6_ = this.getNextButtonPosition();
 			_loc5_.x = _loc6_.x;
 			_loc5_.y = _loc6_.y;
 			_loc5_.useHandCursor = true;
-			let _loc8_ = new flash.text.TextField();
-			let _loc7_ = new flash.display.Sprite();
+			const _loc8_ = new flash.text.TextField();
+			const _loc7_ = new flash.display.Sprite();
 			_loc7_.addChild(_loc8_);
-			//let _loc7_ = _loc8_;
+			//const _loc7_ = _loc8_;
 			_loc8_.defaultTextFormat = !!param2 ? param2 : this.buttonTextFormat;
 			_loc8_.text = param1;
 			_loc8_.autoSize = flash.text.TextFieldAutoSize.LEFT;
@@ -130,7 +115,7 @@ namespace com.google.finance.ui
 
 		resetButtonsGroup() 
 		{
-			let _loc1_ = !!this.buttons ? this.buttons.length : 0;
+			const _loc1_ = !!this.buttons ? this.buttons.length : 0;
 			for (let _loc2_ = 0; _loc2_ < _loc1_; _loc2_++)
 			{
 				this.buttons[_loc2_].removeEventListener(MouseEvents.MOUSE_DOWN, this.buttonPress);
@@ -146,13 +131,13 @@ namespace com.google.finance.ui
 		buttonPress(param1: Event) 
 		{
 			let button = (<any>param1.currentTarget).displayObject as flash.display.SimpleButton;
-			let _loc2_ = (<flash.display.DisplayObjectContainer>button.upState).getChildAt(0) as flash.text.TextField;
-			let _loc3_ = this.getButtonIndex(_loc2_.text);
+			const _loc2_ = (<flash.display.DisplayObjectContainer>button.upState).getChildAt(0) as flash.text.TextField;
+			const _loc3_ = this.getButtonIndex(_loc2_.text);
 			if (_loc3_ !== -1)
 			{
 				for (let _loc4_ = 0; _loc4_ < this.listenerFunctions.length; _loc4_++)
 				{
-					let _loc5_ = this.listenerFunctions[_loc4_];
+					const _loc5_ = this.listenerFunctions[_loc4_];
 					_loc5_.call(this.listenerObjects[_loc4_], _loc2_.text);
 				}
 			}
@@ -173,8 +158,8 @@ namespace com.google.finance.ui
 
 		addPlainText(param1: string, param2 = NaN) 
 		{
-			let _loc3_ = this.getNextButtonPosition();
-			let _loc4_ = this.putSeparator(_loc3_.x, _loc3_.y, param1);
+			const _loc3_ = this.getNextButtonPosition();
+			const _loc4_ = this.putSeparator(_loc3_.x, _loc3_.y, param1);
 			if (!isNaN(param2))
 				this.currentX = this.currentX + param2;
 			else

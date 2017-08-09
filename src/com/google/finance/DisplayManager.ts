@@ -12,51 +12,42 @@ namespace com.google.finance
 
 	export class DisplayManager extends flash.display.Sprite
 	{
-		private firstResize: boolean;
-
-		layersManager: com.google.finance.LayersManager;
-
-		mainManager: MainManager;
-
-		mainController: com.google.finance.Controller;
-
-		private viewpoints: IViewPoint[];
-
-		spaceText: com.google.finance.SpaceText;
-
-		topBorderLayer: com.google.finance.BorderLayer;
-
+		private firstResize: boolean = true;
+		private viewpoints: IViewPoint[] = [];
 		private differentMarketSessionComparison: boolean;
 
+		layersManager: com.google.finance.LayersManager;
+		mainManager: MainManager;
+		mainController: com.google.finance.Controller;
+		spaceText: com.google.finance.SpaceText;
+		topBorderLayer: com.google.finance.BorderLayer;
+		
 		constructor(param1: com.google.finance.MainManager)
 		{
 			super();
-			this.viewpoints = [];
 			this.mainManager = param1;
-			this.firstResize = true;
 			if (param1)
 				this.layersManager = param1.layersManager;
 		}
 
 		private computeRelativeTimesForPointsInIntervals(dataSource: DataSource) 
 		{
-			let _loc2_ = dataSource.data.getPointsInIntervals();
-			let _loc3_ = dataSource.data.units;
-			let _loc4_: { [key: string]: number } = {};
+			const _loc2_ = dataSource.data.getPointsInIntervals();
+			const _loc3_ = dataSource.data.units;
+			const _loc4_: { [key: string]: number } = {};
 			for (let _loc5_ in _loc2_)
 			{
-				let _loc7_ = _loc2_[_loc5_];
+				const _loc7_ = _loc2_[_loc5_];
 				if (Number(_loc5_) === Const.FIVE_MINUTES && _loc7_[_loc7_.length - 1].dayMinute % 2 === 1)
 					_loc7_.splice(_loc7_.length - 1, 1);
 
 				_loc4_[_loc5_] = _loc7_.length - 1;
 			}
-			let _loc6_ = _loc3_.length - 1;
-			while (_loc6_ >= 0)
+			for (let _loc6_ = _loc3_.length - 1; _loc6_ >= 0; _loc6_--)				
 			{
 				for (let _loc5_ in _loc2_)
 				{
-					let _loc8_ = _loc2_[_loc5_];
+					const _loc8_ = _loc2_[_loc5_];
 					if (_loc4_[_loc5_] >= 0 && _loc8_[_loc4_[_loc5_]].time === _loc3_[_loc6_].time)
 					{
 						_loc8_[_loc4_[_loc5_]].relativeMinutes = _loc3_[_loc6_].relativeMinutes;
@@ -65,7 +56,7 @@ namespace com.google.finance
 					while (_loc4_[_loc5_] >= 0 && (_loc8_[_loc4_[_loc5_]].time > _loc3_[_loc6_].time || _loc6_ === 0))
 					{
 						let _loc9_ = notnull(dataSource.data.getSessionForMinute(_loc8_[_loc4_[_loc5_]].dayMinute));
-						let _loc10_ = _loc9_.end - _loc8_[_loc4_[_loc5_]].dayMinute;
+						const _loc10_ = _loc9_.end - _loc8_[_loc4_[_loc5_]].dayMinute;
 						if (_loc10_ < Number(_loc5_) / Const.SEC_PER_MINUTE)
 						{
 							if (_loc8_.length <= _loc4_[_loc5_] + 1)
@@ -87,13 +78,12 @@ namespace com.google.finance
 						_loc4_[_loc5_]--;
 					}
 				}
-				_loc6_--;
 			}
 		}
 
 		hasOhlcRequiredIndicator(): boolean
 		{
-			let _loc1_ = this.layersManager.config[com.google.finance.LayersManager.SINGLE].layers;
+			const _loc1_ = this.layersManager.config[com.google.finance.LayersManager.SINGLE].layers;
 			for (let _loc2_ = 0; _loc2_ < _loc1_.length; _loc2_++)
 			{
 				if (Const.OHLC_DEPENDENT_INDICATOR_NAMES.indexOf(_loc1_[_loc2_].name) !== -1 && _loc1_[_loc2_].enabled === "true")
@@ -106,8 +96,8 @@ namespace com.google.finance
 		{
 			if (Const.INDICATOR_ENABLED)
 			{
-				let _loc1_ = !this.layersManager ? null : this.layersManager.getFirstDataSource();
-				let _loc2_ = !_loc1_ ? null : _loc1_.data.getPointsInIntervalArray(Const.WEEKLY_INTERVAL);
+				const _loc1_ = !this.layersManager ? null : this.layersManager.getFirstDataSource();
+				const _loc2_ = !_loc1_ ? null : _loc1_.data.getPointsInIntervalArray(Const.WEEKLY_INTERVAL);
 				if (_loc2_)
 				{
 					for (let _loc3_ = 0; _loc3_ < _loc2_.length; _loc3_++)
@@ -120,10 +110,10 @@ namespace com.google.finance
 		{
 			for (let _loc1_ = 0; _loc1_ < this.viewpoints.length; _loc1_++)
 			{
-				let _loc3_ = this.viewpoints[_loc1_];
+				const _loc3_ = this.viewpoints[_loc1_];
 				_loc3_.clearPointInformation();
 			}
-			let _loc2_ = this.layersManager.getContextualStaticInfo();
+			const _loc2_ = this.layersManager.getContextualStaticInfo();
 			this.spaceText.setContextualStaticInfo(_loc2_);
 			this.resizeViewPoints(this.stage.stageWidth, this.stage.stageHeight);
 		}
@@ -150,10 +140,10 @@ namespace com.google.finance
 			{
 				this.viewpoints.push(null);	// really?
 			}
-			let _loc5_ = Utils.decodeObjects(com.google.finance.MainManager.paramsObj.single_viewpoints) as ViewPoint[];
+			const _loc5_ = Utils.decodeObjects(com.google.finance.MainManager.paramsObj.single_viewpoints) as ViewPoint[];
 			for (let _loc6_ = 0; _loc6_ < _loc5_.length; _loc6_++)
 			{
-				let _loc7_ = _loc5_[_loc6_];
+				const _loc7_ = _loc5_[_loc6_];
 				if (_loc7_.display !== "hidden")
 					this.addViewPoint("ViewPoint", _loc7_.name, this.stage.stageWidth, Number(_loc7_.height), Number(_loc7_.topMargin), param1, param2);
 			}
@@ -174,22 +164,20 @@ namespace com.google.finance
 		private positionAfterHoursTimes(param1: number, param2: number, param3: number, param4: number, param5: DataSeries, param6?: DataUnit[] | null)
 		{
 			let _loc7_ = param3;
-			let _loc8_ = param2;
-			while (_loc8_ >= param1)
+			for (let _loc8_ = param2; _loc8_ >= param1; _loc8_--)
 			{
-				let _loc9_ = param5.units[_loc8_];
+				const _loc9_ = param5.units[_loc8_];
 				_loc9_.relativeMinutes = _loc7_;
 				if (param6)
 					param6[_loc8_].relativeMinutes = _loc7_;
 
 				_loc7_ = _loc7_ - param4;
-				_loc8_--;
 			}
 		}
 
 		isIndicatorConfigEnabled(param1: string): boolean
 		{
-			let _loc2_ = this.layersManager.config[com.google.finance.LayersManager.SINGLE].layers;
+			const _loc2_ = this.layersManager.config[com.google.finance.LayersManager.SINGLE].layers;
 			for (let _loc3_ = 0; _loc3_ < _loc2_.length; _loc3_++)
 			{
 				if (_loc2_[_loc3_].name === param1)
@@ -200,7 +188,7 @@ namespace com.google.finance
 
 		getLayer(param1: string, param2: string, param3: DataSource): AbstractLayer<ViewPoint> | null
 		{
-			let _loc4_ = <ViewPoint>this.getViewPoint(param2);
+			const _loc4_ = <ViewPoint>this.getViewPoint(param2);
 			if (!_loc4_)
 				return null;
 			return _loc4_.getLayer(param1, param3);
@@ -208,7 +196,7 @@ namespace com.google.finance
 
 		makeBorderLayerTop() 
 		{
-			let _loc1_ = this.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
+			const _loc1_ = this.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
 			if (_loc1_)
 			{
 				this.addChildAt(_loc1_, this.numChildren - 1);
@@ -218,24 +206,23 @@ namespace com.google.finance
 
 		removeAllLayers(param1: number) 
 		{
-			let _loc2_ = this.viewpoints[param1];
+			const _loc2_ = this.viewpoints[param1];
 			_loc2_.removeAllLayers();
 		}
 
 		windowResized(param1: number, param2: number) 
 		{
-			let _loc7_ = 0;
-			let _loc3_ = new Bounds(0, 0, param1, Const.SPARKLINE_HEIGHT + 1);
-			let _loc4_ = this.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
+			const _loc3_ = new Bounds(0, 0, param1, Const.SPARKLINE_HEIGHT + 1);
+			const _loc4_ = this.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
 			if (_loc4_)
 				_loc4_.setNewSize(_loc3_);
-			let _loc5_ = this.getMainViewPoint().count;
+			const _loc5_ = this.getMainViewPoint().count;
 			this.resizeViewPoints(param1, param2);
 			this.mainController.updateChartSizeChangeButtonPosition();
 			if (this.firstResize)
 			{
 				this.firstResize = false;
-				let _loc6_ = this.layersManager.getFirstDataSource();
+				const _loc6_ = this.layersManager.getFirstDataSource();
 				if (!_loc6_)
 					return;
 
@@ -245,12 +232,10 @@ namespace com.google.finance
 				}
 				else
 				{
-					_loc7_ = 0;
-					while (_loc7_ < this.viewpoints.length)
+					for (let _loc7_ = 0; _loc7_ < this.viewpoints.length; _loc7_++)
 					{
-						let _loc8_ = this.viewpoints[_loc7_];
+						const _loc8_ = this.viewpoints[_loc7_];
 						_loc8_.setNewCount(_loc5_);
-						_loc7_++;
 					}
 					this.update();
 				}
@@ -264,12 +249,12 @@ namespace com.google.finance
 
 		protected extractInterdayPoints(param1: DataSeries): DataUnit[]
 		{
-			let _loc2_: DataUnit[] = [];
-			let _loc3_ = param1.marketCloseMinute;
-			let _loc4_ = param1.units;
+			const _loc2_: DataUnit[] = [];
+			const _loc3_ = param1.marketCloseMinute;
+			const _loc4_ = param1.units;
 			for (let _loc5_ = 0; _loc5_ < _loc4_.length; _loc5_++)
 			{
-				let _loc6_ = _loc4_[_loc5_];
+				const _loc6_ = _loc4_[_loc5_];
 				_loc6_.relativeMinutes = NaN;
 				if (_loc6_.dayMinute === _loc3_)
 					_loc2_.push(_loc6_);
@@ -279,24 +264,21 @@ namespace com.google.finance
 
 		animateToSelectedPin(param1: PinPoint) 
 		{
-			let _loc4_ = NaN;
-			let _loc5_ = NaN;
-			let _loc7_ = 0;
-			let _loc8_ = 0;
-			let _loc10_ = NaN;
 			if (!param1)
 				return;
 
-			let _loc2_ = this.layersManager.getFirstDataSource();
+			const _loc2_ = this.layersManager.getFirstDataSource();
 			if (!_loc2_)
 				return;
 
-			let _loc3_ = this.getMainViewPoint();
+			let _loc4_: number;
+			
+			const _loc3_ = this.getMainViewPoint();
 			if (Const.INDICATOR_ENABLED)
 			{
-				let _loc6_ = this.getEnabledChartLayer();
-				_loc7_ = _loc3_.getDetailLevelForTechnicalStyle();
-				_loc8_ = Const.getDetailLevelInterval(_loc7_);
+				const _loc6_ = this.getEnabledChartLayer();
+				let _loc7_ = _loc3_.getDetailLevelForTechnicalStyle();
+				let _loc8_ = Const.getDetailLevelInterval(_loc7_);
 				_loc4_ = param1.getRelativeMinutes(_loc8_);
 				if (_loc6_ === Const.LINE_CHART)
 				{
@@ -309,7 +291,7 @@ namespace com.google.finance
 							_loc4_ = param1.getRelativeMinutes(_loc8_);
 							continue;
 						}
-						let _loc9_ = {
+						const _loc9_ = {
 							"func": this.animateToSelectedPin,
 							"param": [param1]
 						};
@@ -322,6 +304,8 @@ namespace com.google.finance
 			{
 				_loc4_ = param1.getRelativeMinutes();
 			}
+
+			let _loc5_: number;
 			if (_loc4_ > _loc3_.getLastMinute())
 			{
 				_loc5_ = Number(_loc4_ + _loc3_.count / 3);
@@ -331,7 +315,7 @@ namespace com.google.finance
 			else if (_loc4_ <= _loc3_.getFirstMinute())
 			{
 				_loc5_ = Number(_loc4_ + _loc3_.count * 2 / 3);
-				_loc10_ = _loc3_.getOldestMinute();
+				const _loc10_ = _loc3_.getOldestMinute();
 				if (_loc5_ < _loc10_)
 					_loc5_ = Number(_loc10_ + _loc3_.count);
 			}
@@ -344,13 +328,13 @@ namespace com.google.finance
 
 		removeLayer(param1: string, param2: string, param3?: DataSource) 
 		{
-			let _loc4_ = <ViewPoint>this.getViewPoint(param2);
+			const _loc4_ = <ViewPoint>this.getViewPoint(param2);
 			_loc4_.removeLayer(param1, param3);
 		}
 
 		enableIndicatorConfig(param1: string, param2 = true) 
 		{
-			let _loc3_ = this.layersManager.config[com.google.finance.LayersManager.SINGLE].layers;
+			const _loc3_ = this.layersManager.config[com.google.finance.LayersManager.SINGLE].layers;
 			for (let _loc4_ = 0; _loc4_ < _loc3_.length; _loc4_++)
 			{
 				if (_loc3_[_loc4_].name === param1)
@@ -360,7 +344,7 @@ namespace com.google.finance
 
 		addLayer(param1: string, param2: string, param3: DataSource, param4: string): AbstractLayer<IViewPoint> | null
 		{
-			let _loc5_ = this.getViewPoint(param2);
+			const _loc5_ = this.getViewPoint(param2);
 			if (_loc5_)
 				return _loc5_.addLayer(param1, param3, param4);
 
@@ -369,7 +353,7 @@ namespace com.google.finance
 
 		getViewPoint(param1: string): IViewPoint | null
 		{
-			let _loc2_ = this.getViewPointPos(param1);
+			const _loc2_ = this.getViewPointPos(param1);
 			if (_loc2_ !== -1)
 				return this.viewpoints[_loc2_];
 
@@ -378,7 +362,7 @@ namespace com.google.finance
 
 		getMainViewPoint(): ViewPoint
 		{
-			let _loc2_ = this.getViewPointPos(Const.MAIN_VIEW_POINT_NAME);
+			const _loc2_ = this.getViewPointPos(Const.MAIN_VIEW_POINT_NAME);
 			if (_loc2_ === -1)
 				throw new Error();
 
@@ -387,9 +371,9 @@ namespace com.google.finance
 
 		protected getComparedDataSeries(): DataSeries[]
 		{
-			let _loc1_: DataSeries[] = [];
+			const _loc1_: DataSeries[] = [];
 			_loc1_.push(this.mainManager.dataManager.dataSources[this.mainManager.quote].data);
-			let _loc2_ = this.layersManager.getComparedTickers();
+			const _loc2_ = this.layersManager.getComparedTickers();
 			for (let _loc3_ = 0; _loc3_ < _loc2_.length; _loc3_++)
 			{
 				_loc1_.push(this.mainManager.dataManager.dataSources[_loc2_[_loc3_]].data);
@@ -399,7 +383,7 @@ namespace com.google.finance
 
 		getLayers(param1: string)
 		{
-			let _loc2_ = notnull(this.getViewPoint(param1));
+			const _loc2_ = notnull(this.getViewPoint(param1));
 			return _loc2_.getLayers();
 		}
 
@@ -408,21 +392,21 @@ namespace com.google.finance
 			if (param1 !== Const.MAIN_VIEW_POINT_NAME)
 				return;
 
-			let _loc3_ = this.getMainViewPoint();
-			let _loc4_ = _loc3_.getFirstDataUnit();
-			let _loc5_ = _loc3_.getLastDataUnit();
+			const _loc3_ = this.getMainViewPoint();
+			const _loc4_ = _loc3_.getFirstDataUnit();
+			const _loc5_ = _loc3_.getLastDataUnit();
 			if (!_loc4_ || !_loc5_)
 				return;
 
 			let _loc6_ = new Date(_loc4_.time);
-			let _loc7_ = new Date(_loc5_.time);
+			const _loc7_ = new Date(_loc5_.time);
 			if (_loc6_.getTime() >= _loc7_.getTime())
 				_loc6_ = new Date(_loc7_.getTime() - Const.MS_PER_DAY);
 
-			let _loc8_ = this.layersManager.getFirstDataSource();
+			const _loc8_ = this.layersManager.getFirstDataSource();
 			if (_loc8_)
 			{
-				let _loc9_ = this.getNumberOfDaysForCount(_loc3_.count, _loc3_.lastMinute, _loc8_);
+				const _loc9_ = this.getNumberOfDaysForCount(_loc3_.count, _loc3_.lastMinute, _loc8_);
 				com.google.finance.MainManager.jsProxy.HTMLnotify(_loc6_, _loc7_, _loc9_, _loc3_.count, param2);
 				com.google.finance.MainManager.jsProxy.setForceDisplayExtendedHours(_loc8_);
 			}
@@ -430,14 +414,13 @@ namespace com.google.finance
 
 		private resizeViewPoints(param1: number, param2: number) 
 		{
-			let _loc5_ = 0;
 			let _loc3_ = new Bounds(0, param2 - Const.SPARKLINE_HEIGHT, param1, param2);
-			let _loc4_ = this.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
+			const _loc4_ = this.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
 			if (_loc4_)
 				_loc4_.setNewSize(_loc3_);
 			param2 = _loc3_.miny - Const.SPARK_PADDING;
-			_loc5_ = this.viewpoints.length - 1;
-			while (_loc5_ >= 2)
+			let _loc5_: number;
+			for (_loc5_ = this.viewpoints.length - 1; _loc5_ >= 2; _loc5_--)
 			{
 				_loc3_ = new Bounds(
 					Const.BORDER_WIDTH,
@@ -447,7 +430,6 @@ namespace com.google.finance
 				);
 				this.viewpoints[_loc5_].setNewSize(_loc3_);
 				param2 = _loc3_.miny - (<ViewPoint>this.viewpoints[_loc5_]).topMargin;
-				_loc5_--;
 			}
 			this.spaceText.setSize(param1, Const.SPACE_HEIGHT + (<ViewPoint>this.viewpoints[_loc5_]).topMargin);
 			_loc3_ = new Bounds(
@@ -464,7 +446,7 @@ namespace com.google.finance
 
 		removeViewPoint(param1: string) 
 		{
-			let _loc2_ = this.getViewPointPos(param1);
+			const _loc2_ = this.getViewPointPos(param1);
 			if (_loc2_ === -1)
 				return;
 
@@ -494,14 +476,14 @@ namespace com.google.finance
 
 		addViewPoint(param1: string, param2: string, param3: number, param4: number, param5: number, param6: number, param7: number, param8?: IViewPoint): number
 		{
-			let _loc9_ = getDefinitionByName("com.google.finance." + param1) as typeof ViewPoint;
-			let _loc10_ = new Bounds(
+			const _loc9_ = getDefinitionByName("com.google.finance." + param1) as typeof ViewPoint;
+			const _loc10_ = new Bounds(
 				Const.BORDER_WIDTH,
 				param7 - param4 + param5,
 				param6 - Const.BORDER_WIDTH,
 				param7
 			);
-			let _loc11_ = new _loc9_(this);
+			const _loc11_ = new _loc9_(this);
 			this.addChild(_loc11_);
 			_loc11_.name = param2;
 			_loc11_.topMargin = param5;
@@ -523,7 +505,7 @@ namespace com.google.finance
 		{
 			for (let _loc2_ = 0; _loc2_ < this.viewpoints.length; _loc2_++)
 			{
-				let _loc3_ = this.viewpoints[_loc2_];
+				const _loc3_ = this.viewpoints[_loc2_];
 				_loc3_.lastMinute = param1;
 			}
 		}
@@ -535,20 +517,17 @@ namespace com.google.finance
 
 		getNumberOfDaysForCount(param1: number, param2: number, param3: DataSource): number
 		{
-			let _loc9_ = NaN;
-			let _loc10_ = NaN;
-			let _loc12_ = NaN;
 			if (this.differentMarketSessionComparison)
 				return param1;
 
-			let _loc4_ = param3.data;
-			let _loc5_ = param2 - param1;
+			const _loc4_ = param3.data;
+			const _loc5_ = param2 - param1;
 			let _loc6_ = 0;
 			let _loc7_ = param3.getEndOfDayDataUnitFor(param2);
 			let _loc8_ = DataSource.getMinuteMetaIndex(_loc7_.relativeMinutes, _loc4_.days, _loc4_.units);
 			if (_loc7_.coveredDays > 0)
 			{
-				_loc9_ = _loc7_.relativeMinutes - param2;
+				const _loc9_ = _loc7_.relativeMinutes - param2;
 				_loc6_ = Number(_loc6_ - Math.floor(_loc9_ / _loc4_.marketDayLength));
 			}
 			while (_loc7_.relativeMinutes > _loc5_ && _loc8_ > 0)
@@ -557,8 +536,8 @@ namespace com.google.finance
 				if (_loc8_ < 0)
 					break;
 
-				_loc10_ = _loc4_.units[_loc4_.days[_loc8_]].relativeMinutes;
-				let _loc11_ = param3.getEndOfDayDataUnitFor(_loc10_);
+				const _loc10_ = _loc4_.units[_loc4_.days[_loc8_]].relativeMinutes;
+				const _loc11_ = param3.getEndOfDayDataUnitFor(_loc10_);
 				if (_loc11_.relativeMinutes >= _loc5_)
 				{
 					if (_loc7_.coveredDays === 0)
@@ -568,7 +547,7 @@ namespace com.google.finance
 				}
 				else if (_loc7_.coveredDays > 0)
 				{
-					_loc12_ = _loc7_.relativeMinutes - _loc5_;
+					const _loc12_ = _loc7_.relativeMinutes - _loc5_;
 					_loc6_ = Number(_loc6_ + Math.floor(_loc12_ / _loc4_.marketDayLength));
 				}
 				_loc7_ = _loc11_;
@@ -590,11 +569,11 @@ namespace com.google.finance
 					return;
 				_loc3_ = dataSeries;
 			}
-			let _loc4_ = _loc3_.visibleExtendedHours.length();
-			let _loc5_ = _loc3_.hiddenExtendedHours.length();
+			const _loc4_ = _loc3_.visibleExtendedHours.length();
+			const _loc5_ = _loc3_.hiddenExtendedHours.length();
 			if (param1 === true && _loc5_ > 0 || param1 === false && _loc4_ > 0)
 			{
-				let _loc6_ = _loc3_.visibleExtendedHours;
+				const _loc6_ = _loc3_.visibleExtendedHours;
 				_loc3_.visibleExtendedHours = _loc3_.hiddenExtendedHours;
 				_loc3_.hiddenExtendedHours = _loc6_;
 			}
@@ -620,38 +599,29 @@ namespace com.google.finance
 
 		computeRelativeTimes(dataSource: DataSource) 
 		{
-			let _loc13_ = NaN;
-			let _loc14_ = 0;
-			let _loc15_ = NaN;
-			let _loc16_ = NaN;
-			let _loc17_ = NaN;
-			let _loc18_ = NaN;
-			let _loc19_ = NaN;
-			let _loc20_ = NaN;
 			if (this.differentMarketSessionComparison)
 				return;
 
 			dataSource.setRelativeMinutesState(DataSource.RELATIVE_MINUTES_READY);
-			let _loc2_ = dataSource.data;
+			const _loc2_ = dataSource.data;
 			if (_loc2_.units.length === 0)
 				return;
 
-			let _loc3_ = dataSource.afterHoursData;
-			let _loc4_ = !!Const.INDICATOR_ENABLED ? _loc3_.getPointsInIntervalArray(Const.INTRADAY_INTERVAL) : null;
+			const _loc3_ = dataSource.afterHoursData;
+			const _loc4_ = !!Const.INDICATOR_ENABLED ? _loc3_.getPointsInIntervalArray(Const.INTRADAY_INTERVAL) : null;
 			dataSource.firstOpenRelativeMinutes = 0;
 			let _loc5_: StartEndPair | null = null;
 			let _loc6_ = dataSource.visibleExtendedHours.length() - 1;
 			if (_loc6_ !== -1)
 				_loc5_ = dataSource.visibleExtendedHours.method_1(_loc6_);
 
-			let _loc7_ = _loc2_.units[_loc2_.units.length - 1];
+			const _loc7_ = _loc2_.units[_loc2_.units.length - 1];
 			let _loc8_ = notnull(_loc2_.getSessionForMinute(_loc7_.dayMinute));
-			let _loc9_ = dataSource.intradayMinutesInterval;
+			const _loc9_ = dataSource.intradayMinutesInterval;
 			let _loc10_ = 0;
-			let _loc12_ = _loc2_.units.length - 1;
-			while (_loc12_ > 0)
+			for (let _loc12_ = _loc2_.units.length - 1; _loc12_ > 0; _loc12_--)
 			{
-				let _loc11_ = _loc2_.units[_loc12_];
+				const _loc11_ = _loc2_.units[_loc12_];
 				_loc11_.relativeMinutes = _loc10_;
 				if (_loc11_.time >= Const.YEAR_2000 && _loc10_ < dataSource.firstOpenRelativeMinutes)
 					dataSource.firstOpenRelativeMinutes = _loc10_;
@@ -660,8 +630,8 @@ namespace com.google.finance
 				{
 					if (_loc12_ > 0)
 					{
-						_loc13_ = _loc11_.time - _loc2_.units[_loc12_ - 1].time;
-						_loc14_ = Math.floor(_loc13_ / (Const.DAILY_INTERVAL * 1000));
+						const _loc13_ = _loc11_.time - _loc2_.units[_loc12_ - 1].time;
+						const _loc14_ = Math.floor(_loc13_ / (Const.DAILY_INTERVAL * 1000));
 						if (_loc11_.coveredDays > _loc14_)
 							_loc11_.coveredDays = _loc14_;
 					}
@@ -676,22 +646,22 @@ namespace com.google.finance
 				}
 				else
 				{
-					_loc15_ = _loc11_.dayMinute - _loc8_.start;
+					const _loc15_ = _loc11_.dayMinute - _loc8_.start;
 					if (_loc15_ >= 0 && _loc15_ < _loc9_)
 					{
 						_loc10_ = _loc10_ - (_loc15_ + (_loc8_.start === _loc2_.marketOpenMinute ? 1 : 0));
-						_loc16_ = _loc2_.units[_loc12_ - 1].dayMinute;
+						const _loc16_ = _loc2_.units[_loc12_ - 1].dayMinute;
 						if (!isNaN(_loc16_))
 							_loc8_ = notnull(_loc2_.getSessionForMinute(_loc16_));
 					}
 					else if (_loc11_.dayMinute === _loc8_.end && _loc5_)
 					{
-						_loc17_ = _loc5_.start;
-						_loc18_ = _loc5_.end;
-						_loc19_ = Number(_loc3_.units[_loc17_].time);
+						let _loc17_ = _loc5_.start;
+						let _loc18_ = _loc5_.end;
+						let _loc19_ = Number(_loc3_.units[_loc17_].time);
 						while (_loc11_.time <= _loc19_)
 						{
-							_loc20_ = _loc3_.units[_loc18_].dayMinute - _loc3_.units[_loc17_].dayMinute;
+							const _loc20_ = _loc3_.units[_loc18_].dayMinute - _loc3_.units[_loc17_].dayMinute;
 							_loc11_.relativeMinutes = _loc11_.relativeMinutes - (_loc20_ + 1);
 							this.positionAfterHoursTimes(_loc17_, _loc18_, _loc10_, _loc9_, _loc3_, _loc4_);
 							_loc10_ = _loc10_ - (_loc20_ + 1);
@@ -715,7 +685,6 @@ namespace com.google.finance
 						_loc10_ = _loc10_ - _loc9_;
 					}
 				}
-				_loc12_--;
 			}
 			_loc2_.units[0].relativeMinutes = _loc10_;
 			if (_loc2_.units[0].time >= Const.YEAR_2000 && _loc10_ < dataSource.firstOpenRelativeMinutes)
@@ -727,13 +696,11 @@ namespace com.google.finance
 
 		enableIndicatorLayer(param1: string, param2: string, param3 = true) 
 		{
-			let _loc6_ = 0;
-			let _loc4_ = this.getViewPoint(param2);
+			const _loc4_ = this.getViewPoint(param2);
 			if (_loc4_)
 			{
-				let _loc5_ = _loc4_.getLayers();
-				_loc6_ = 0;
-				while (_loc6_ < _loc5_.length)
+				const _loc5_ = _loc4_.getLayers();
+				for (let _loc6_ = 0; _loc6_ < _loc5_.length; _loc6_++)
 				{
 					let layer = _loc5_[_loc6_];
 					if (layer instanceof google.finance.indicator.IndicatorLayer)
@@ -741,7 +708,6 @@ namespace com.google.finance
 						if (param1 === layer.getIndicatorName())
 							layer.setEnabled(param3);
 					}
-					_loc6_++;
 				}
 				this.update();
 			}
@@ -755,12 +721,6 @@ namespace com.google.finance
 		setAfterHoursDisplay(param1: boolean, param2?: DataSource) 
 		{
 			let _loc3_: DataSource | null;
-			let _loc6_: ChartEvent;
-			let _loc7_ = NaN;
-			let _loc8_: string;
-			let _loc9_ = false;
-			let _loc10_ = NaN;
-			let _loc11_ = 0;
 			if (param2)
 			{
 				_loc3_ = param2;
@@ -771,26 +731,26 @@ namespace com.google.finance
 				if (!_loc3_)
 					return;
 			}
-			let _loc4_ = _loc3_.visibleExtendedHours.length();
-			let _loc5_ = _loc3_.hiddenExtendedHours.length();
+			const _loc4_ = _loc3_.visibleExtendedHours.length();
+			const _loc5_ = _loc3_.hiddenExtendedHours.length();
 			if (param1 === true && _loc4_ + _loc5_ === 0)
 			{
-				let _loc6_ = EventFactory.getEvent(Const.GET_AH_DATA, _loc3_.quoteName, ChartEventTypes.OPTIONAL);
+				const _loc6_ = EventFactory.getEvent(Const.GET_AH_DATA, _loc3_.quoteName, ChartEventTypes.OPTIONAL);
 				this.mainManager.dataManager.expectEvent(_loc6_);
 				this.mainManager.dataManager.eventHandler(_loc6_);
 			}
 			else
 			{
-				_loc7_ = this.getDetailLevel();
-				_loc8_ = !!Const.INDICATOR_ENABLED ? this.getEnabledChartLayer() : "";
-				_loc9_ = _loc7_ === Const.INTRADAY || _loc8_ === Const.LINE_CHART && _loc7_ < Const.DAILY;
+				const _loc7_ = this.getDetailLevel();
+				const _loc8_ = !!Const.INDICATOR_ENABLED ? this.getEnabledChartLayer() : "";
+				const _loc9_ = _loc7_ === Const.INTRADAY || _loc8_ === Const.LINE_CHART && _loc7_ < Const.DAILY;
 				if (_loc9_ && this.layersManager.getStyle() === com.google.finance.LayersManager.SINGLE)
 				{
 					this.toggleAllAfterHoursSessions(param1, _loc3_);
 					if (_loc8_ === Const.CANDLE_STICK || _loc8_ === Const.OHLC_CHART)
 					{
-						_loc10_ = _loc3_.data.marketDayLength + 1;
-						_loc11_ = Const.INTERVAL_PERIODS[_loc7_].days;
+						const _loc10_ = _loc3_.data.marketDayLength + 1;
+						const _loc11_ = Const.INTERVAL_PERIODS[_loc7_].days;
 						this.mainController.jumpTo(0, _loc10_ * _loc11_);
 					}
 					else
@@ -804,7 +764,7 @@ namespace com.google.finance
 		protected setDiffMarketSessionRelativeMinutesState() 
 		{
 			this.mainManager.dataManager.dataSources[this.mainManager.quote].setRelativeMinutesState(DataSource.DMS_RELATIVE_MINUTES_READY);
-			let _loc1_ = this.layersManager.getComparedTickers();
+			const _loc1_ = this.layersManager.getComparedTickers();
 			for (let _loc2_ = 0; _loc2_ < _loc1_.length; _loc2_++)
 			{
 				this.mainManager.dataManager.dataSources[_loc1_[_loc2_]].setRelativeMinutesState(DataSource.DMS_RELATIVE_MINUTES_READY);
@@ -813,9 +773,9 @@ namespace com.google.finance
 
 		setEnabledChartLayer(param1: string) 
 		{
-			let _loc2_ = this.getMainViewPoint();
-			let _loc3_ = _loc2_.getLayers();
-			let _loc4_ = !!this.layersManager ? this.layersManager.getFirstDataSource() : null;
+			const _loc2_ = this.getMainViewPoint();
+			const _loc3_ = _loc2_.getLayers();
+			const _loc4_ = !!this.layersManager ? this.layersManager.getFirstDataSource() : null;
 			for (let _loc5_ = 0; _loc5_ < _loc3_.length; _loc5_++)
 			{
 				let layer = _loc3_[_loc5_];
@@ -839,18 +799,15 @@ namespace com.google.finance
 
 		computeRelativeTimesForDiffSessionComparison() 
 		{
-			let _loc9_ = 0;
 			this.setDiffMarketSessionRelativeMinutesState();
-			let _loc1_: DataUnit[] = [];
-			let _loc2_ = this.getComparedDataSeries();
+			const _loc1_: DataUnit[] = [];
+			const _loc2_ = this.getComparedDataSeries();
 			for (let _loc3_ = 0; _loc3_ < _loc2_.length; _loc3_++)
 			{
-				let _loc8_ = this.extractInterdayPoints(_loc2_[_loc3_]);
-				_loc9_ = 0;
-				while (_loc9_ < _loc8_.length)
+				const _loc8_ = this.extractInterdayPoints(_loc2_[_loc3_]);
+				for (let _loc9_ = 0; _loc9_ < _loc8_.length; _loc9_++)
 				{
 					_loc1_.push(_loc8_[_loc9_]);
-					_loc9_++;
 				}
 			}
 			if (_loc1_.length === 0)
@@ -858,27 +815,25 @@ namespace com.google.finance
 
 			_loc1_.sort(Utils.compareDataUnits);
 			let _loc4_ = 0;
-			let _loc5_ = _loc1_[_loc1_.length - 1];
+			const _loc5_ = _loc1_[_loc1_.length - 1];
 			let _loc6_ = new Date(_loc5_.exchangeDateInUTC.fullYearUTC, _loc5_.exchangeDateInUTC.monthUTC, _loc5_.exchangeDateInUTC.dateUTC);
-			let _loc7_ = _loc1_.length - 1;
-			while (_loc7_ >= 0)
+			for (let _loc7_ = _loc1_.length - 1; _loc7_ >= 0; _loc7_--)
 			{
-				let _loc10_ = _loc1_[_loc7_];
-				let _loc11_ = _loc10_.exchangeDateInUTC;
+				const _loc10_ = _loc1_[_loc7_];
+				const _loc11_ = _loc10_.exchangeDateInUTC;
 				if (_loc11_.dateUTC !== _loc6_.date || _loc11_.monthUTC !== _loc6_.month || _loc11_.fullYearUTC !== _loc6_.fullYear)
 				{
-					let _loc12_ = new Date(_loc11_.fullYearUTC, _loc11_.monthUTC, _loc11_.dateUTC);
-					let _loc13_ = this.mainManager ? this.mainManager.weekdayBitmap : Const.DEFAULT_WEEKDAY_BITMAP;
+					const _loc12_ = new Date(_loc11_.fullYearUTC, _loc11_.monthUTC, _loc11_.dateUTC);
+					const _loc13_ = this.mainManager ? this.mainManager.weekdayBitmap : Const.DEFAULT_WEEKDAY_BITMAP;
 					_loc4_ = _loc4_ - Utils.getWeekdaysDifference(_loc12_, _loc6_, _loc13_);
 					_loc6_ = _loc12_;
 				}
 				_loc10_.relativeMinutes = _loc4_;
-				_loc7_--;
 			}
 
 			for (let _loc3_ = 0; _loc3_ < _loc2_.length; _loc3_++)
 			{
-				let _loc8_ = _loc2_[_loc3_].units;
+				const _loc8_ = _loc2_[_loc3_].units;
 				if (_loc8_.length !== 0)
 				{
 					let _loc14_ = 0;
@@ -889,15 +844,13 @@ namespace com.google.finance
 					if (_loc14_ !== _loc8_.length)
 					{
 						_loc4_ = _loc8_[_loc14_].relativeMinutes;
-						_loc9_ = _loc14_ + 1;
-						while (_loc9_ < _loc8_.length)
+						for (let _loc9_ = _loc14_ + 1; _loc9_ < _loc8_.length; _loc9_++)
 						{
 							if (isNaN(_loc8_[_loc9_].relativeMinutes))
 								_loc8_[_loc9_].relativeMinutes = _loc4_;
 							else
 								_loc4_ = _loc8_[_loc9_].relativeMinutes;
 
-							_loc9_++;
 						}
 					}
 				}
@@ -906,8 +859,8 @@ namespace com.google.finance
 
 		setIndicatorInstanceArray(param1: string, param2: any[]) 
 		{
-			let _loc3_ = this.getMainViewPoint();
-			let _loc4_ = _loc3_.getLayers();
+			const _loc3_ = this.getMainViewPoint();
+			const _loc4_ = _loc3_.getLayers();
 			for (let _loc5_ = 0; _loc5_ < _loc4_.length; _loc5_++)
 			{
 				let layer = _loc4_[_loc5_];
@@ -917,10 +870,10 @@ namespace com.google.finance
 						layer.setIndicatorInstanceArray(param2);
 				}
 			}
-			let _loc6_ = this.getViewPoint(Const.BOTTOM_VIEW_POINT_NAME);
+			const _loc6_ = this.getViewPoint(Const.BOTTOM_VIEW_POINT_NAME);
 			if (_loc6_)
 			{
-				let _loc9_ = _loc6_.getLayers();
+				const _loc9_ = _loc6_.getLayers();
 
 				for (let _loc5_ = 0; _loc5_ < _loc9_.length; _loc5_++)
 				{
@@ -932,8 +885,8 @@ namespace com.google.finance
 					}
 				}
 			}
-			let _loc7_ = this.getViewPoint(param1);
-			let _loc8_ = !_loc7_ ? [] : _loc7_.getLayers();
+			const _loc7_ = this.getViewPoint(param1);
+			const _loc8_ = !_loc7_ ? [] : _loc7_.getLayers();
 
 			for (let _loc5_ = 0; _loc5_ < _loc8_.length; _loc5_++)
 			{
@@ -949,14 +902,12 @@ namespace com.google.finance
 
 		getDetailLevel(): number
 		{
-			let _loc3_ = NaN;
-			let _loc4_ = NaN;
-			let _loc1_ = this.getMainViewPoint();
-			let _loc2_ = !!Const.INDICATOR_ENABLED ? Number(_loc1_.getDetailLevelForTechnicalStyle()) : _loc1_.getDetailLevel();
+			const _loc1_ = this.getMainViewPoint();
+			const _loc2_ = !!Const.INDICATOR_ENABLED ? Number(_loc1_.getDetailLevelForTechnicalStyle()) : _loc1_.getDetailLevel();
 			if (_loc2_ === -1)
 			{
-				_loc3_ = Const.getDefaultDisplayDays();
-				_loc4_ = Const.getZoomLevel(Const.MARKET_DAY_LENGTH * _loc3_, Const.MARKET_DAY_LENGTH);
+				const _loc3_ = Const.getDefaultDisplayDays();
+				const _loc4_ = Const.getZoomLevel(Const.MARKET_DAY_LENGTH * _loc3_, Const.MARKET_DAY_LENGTH);
 				if (_loc4_ <= Const.SCALE_1Y)
 					return Const.WEEKLY;
 
@@ -970,14 +921,14 @@ namespace com.google.finance
 
 		getEnabledChartLayer(): string
 		{
-			let _loc1_ = this.getMainViewPoint();
-			let _loc2_ = _loc1_.getLayers();
+			const _loc1_ = this.getMainViewPoint();
+			const _loc2_ = _loc1_.getLayers();
 			for (let _loc3_ = 0; _loc3_ < _loc2_.length; _loc3_++)
 			{
 				if (_loc2_[_loc3_] instanceof IntervalBasedChartManagerLayer)
 					return (<IntervalBasedChartManagerLayer>_loc2_[_loc3_]).getEnabledLayerName();
 			}
-			let _loc4_ = IntervalBasedChartManagerLayer.getEnabledChartLayerName();
+			const _loc4_ = IntervalBasedChartManagerLayer.getEnabledChartLayerName();
 			return _loc4_ ? _loc4_ : Const.DEFAULT_CHART_STYLE_NAME;
 		}
 	}

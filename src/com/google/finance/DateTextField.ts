@@ -9,24 +9,15 @@ namespace com.google.finance
 	export class DateTextField extends flash.text.TextField
 	{
 		private static datePattern = /^ *(\d{4})( *[./-] *\d{1,2})?( *[./-] *\d{1,2})? *$/;
-
 		private static PARSEABLE_FORMAT = "yyyy-MM-dd";
-
 		private static LOCALIZED_FORMAT = "MMM dd, yyyy";
 
-
 		date: Date;
-
 		parsedDate: Date | null;
-
-		constructor()
-		{
-			super();
-		}
 
 		static newDateInUtc(param1: number, param2: number, param3: number): Date
 		{
-			let _loc4_ = new Date();
+			const _loc4_ = new Date();
 			_loc4_.setUTCFullYear(param1);
 			_loc4_.setUTCMonth(param2 - 1, param3);
 			_loc4_.setUTCHours(0, 0, 0, 0);
@@ -73,19 +64,19 @@ namespace com.google.finance
 		parseUtcDate(): boolean
 		{
 			this.parsedDate = null;
-			let _loc1_ = this.text.match(DateTextField.datePattern);
+			const _loc1_ = this.text.match(DateTextField.datePattern);
 			if (!_loc1_)
 				return false;
 
-			let _loc2_ = DateTextField.stringToNumberOrOne(_loc1_[1]);
+			const _loc2_ = DateTextField.stringToNumberOrOne(_loc1_[1]);
 			if (_loc2_ < 1900)
 				return false;
 
-			let _loc3_ = DateTextField.stringToNumberOrOne(_loc1_[2]);
+			const _loc3_ = DateTextField.stringToNumberOrOne(_loc1_[2]);
 			if (_loc3_ < 1 || _loc3_ > 12)
 				return false;
 
-			let _loc4_ = DateTextField.stringToNumberOrOne(_loc1_[3]);
+			const _loc4_ = DateTextField.stringToNumberOrOne(_loc1_[3]);
 			if (_loc4_ < 1 || _loc4_ > 31)
 				return false;
 

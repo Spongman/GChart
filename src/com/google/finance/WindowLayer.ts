@@ -7,42 +7,28 @@ namespace com.google.finance
 
 	export class WindowLayer extends AbstractDrawingLayer<SparklineViewPoint>
 	{
+		private static readonly SparkHandle = WindowLayer_SparkHandle;
+		private static readonly ScrollBarBg = WindowLayer_ScrollBarBg;
+		private static readonly SparkHandleActive = WindowLayer_SparkHandleActive;
+
 		private static MIN_WINDOW_WIDTH = 6;
 
-
-		private currentHandlesVisibility: boolean;
-
-		private readonly SparkHandle = WindowLayer_SparkHandle;
-
-		private sliderBg: flash.display.Sprite;
-
-		private readonly ScrollBarBg = WindowLayer_ScrollBarBg;
-
-		scrollSlider: com.google.finance.ScrollSlider;
-
-		leftHandle: com.google.finance.DraggableHandle;
-
-		initialX: number;
-
-		leftHandleXOffset = 0;
-
-		rightHandle: com.google.finance.DraggableHandle;
-
-		rightHandleXOffset = 0;
-
-		private readonly SparkHandleActive = WindowLayer_SparkHandleActive;
-
+		private currentHandlesVisibility: boolean = true;
+		private sliderBg = new flash.display.Sprite("sliderBg");
 		private leftX: number;
-
 		private rightX: number;
 
-		constructor(param1: SparklineViewPoint, param2: DataSource)
+		scrollSlider = new com.google.finance.ScrollSlider("scrollSlider");
+		initialX: number;
+		leftHandle: com.google.finance.DraggableHandle;
+		rightHandle: com.google.finance.DraggableHandle;
+		leftHandleXOffset = 0;
+		rightHandleXOffset = 0;
+
+		constructor(viewPoint: SparklineViewPoint, dataSource: DataSource)
 		{
-			super(param1, param2);
-			let viewPoint = param1;
-			let dataSource = param2;
-			this.sliderBg = new flash.display.Sprite("sliderBg");
-			let sliderBgBitmap = new this.ScrollBarBg();
+			super(viewPoint, dataSource);
+			let sliderBgBitmap = new WindowLayer.ScrollBarBg();
 			sliderBgBitmap.y = viewPoint.maxy - 1;
 			sliderBgBitmap.x = viewPoint.minx;
 			sliderBgBitmap.width = viewPoint.maxx - viewPoint.minx;
@@ -52,15 +38,14 @@ namespace com.google.finance
 			{
 				viewPoint.myController.mouseDownAction(Const.SCROLL_BG);
 			});
-			this.scrollSlider = new com.google.finance.ScrollSlider("scrollSlider");
 			this.addChild(this.scrollSlider);
 			this.scrollSlider.y = viewPoint.maxy - 1;
 			this.scrollSlider.x = viewPoint.minx;
-			this.rightHandle = new com.google.finance.DraggableHandle(this.SparkHandle, this.SparkHandleActive);
+			this.rightHandle = new com.google.finance.DraggableHandle(WindowLayer.SparkHandle, WindowLayer.SparkHandleActive);
 			this.rightHandle.y = Math.floor((viewPoint.maxy + viewPoint.miny) / 2 - this.rightHandle.height / 2);
 			this.rightHandle.x = viewPoint.minx;
 			this.addChild(this.rightHandle);
-			this.leftHandle = new com.google.finance.DraggableHandle(this.SparkHandle, this.SparkHandleActive);
+			this.leftHandle = new com.google.finance.DraggableHandle(WindowLayer.SparkHandle, WindowLayer.SparkHandleActive);
 			this.leftHandle.y = Math.floor((viewPoint.maxy + viewPoint.miny) / 2 - this.leftHandle.height / 2);
 			this.leftHandle.x = viewPoint.minx;
 			this.addChild(this.leftHandle);
@@ -95,21 +80,20 @@ namespace com.google.finance
 			{
 				viewPoint.myController.mouseDownAction(Const.RIGHT_HANDLE);
 			});
-			this.currentHandlesVisibility = true;
 			this.toggleHandles(false);
 		}
 
 		getLastDataUnit(): DataUnit
 		{
-			let _loc1_ = this.getHandleRightX();
-			let _loc2_ = this.viewPoint.dataSource.data;
-			let _loc3_ = this.viewPoint.getMinuteOfX(_loc1_);
+			const _loc1_ = this.getHandleRightX();
+			const _loc2_ = this.viewPoint.dataSource.data;
+			const _loc3_ = this.viewPoint.getMinuteOfX(_loc1_);
 			return _loc2_.units[_loc2_.getRelativeMinuteIndex(_loc3_)];
 		}
 
 		updateFixedElements() 
 		{
-			let _loc1_ = this.sliderBg.getChildAt(0) as flash.display.Bitmap;
+			const _loc1_ = this.sliderBg.getChildAt(0) as flash.display.Bitmap;
 			_loc1_.y = this.viewPoint.maxy - 1;
 			_loc1_.width = this.viewPoint.maxx - this.viewPoint.minx;
 			this.scrollSlider.y = this.viewPoint.maxy - 1;
@@ -139,10 +123,10 @@ namespace com.google.finance
 			if (!this.dataSource || this.dataSource.isEmpty())
 				return;
 
-			let _loc2_ = this.dataSource.data;
-			let _loc3_ = <SparklineViewPoint><any>this.viewPoint;
+			const _loc2_ = this.dataSource.data;
+			const _loc3_ = <SparklineViewPoint><any>this.viewPoint;
 			this.graphics.clear();
-			let _loc4_ = _loc2_.getRelativeMinuteIndex(_loc3_.getLastMinute());
+			//const _loc4_ = _loc2_.getRelativeMinuteIndex(_loc3_.getLastMinute());
 			let _loc5_ = Number(_loc2_.getRelativeMinuteIndex(_loc3_.getFirstMinute()) - 1);
 			if (_loc5_ < 0)
 				_loc5_ = 0;
@@ -216,23 +200,23 @@ namespace com.google.finance
 
 		getFirstDataUnit(): DataUnit
 		{
-			let _loc1_ = this.getHandleLeftX();
-			let _loc2_ = this.viewPoint.dataSource.data;
-			let _loc3_ = this.viewPoint.getMinuteOfX(_loc1_);
+			const _loc1_ = this.getHandleLeftX();
+			const _loc2_ = this.viewPoint.dataSource.data;
+			const _loc3_ = this.viewPoint.getMinuteOfX(_loc1_);
 			return _loc2_.units[_loc2_.getRelativeMinuteIndex(_loc3_) + 1];
 		}
 
 		handleReleased(param1: com.google.finance.DraggableHandle) 
 		{
 			let _loc7_ = NaN;
-			let _loc2_ = this.rightHandle.x + this.rightHandle.width / 2;
+			const _loc2_ = this.rightHandle.x + this.rightHandle.width / 2;
 			let _loc3_ = this.leftHandle.x + this.leftHandle.width / 2;
 			if (_loc2_ === _loc3_)
 				_loc3_ = _loc2_ - WindowLayer.MIN_WINDOW_WIDTH;
 
-			let _loc4_ = this.dataSource.data;
-			let _loc5_ = <SparklineViewPoint><any>this.viewPoint;
-			let _loc6_ = _loc5_.sparkCount * Math.abs(_loc2_ - _loc3_) / (_loc5_.maxx - _loc5_.minx);
+			//const _loc4_ = this.dataSource.data;
+			const _loc5_ = <SparklineViewPoint><any>this.viewPoint;
+			const _loc6_ = _loc5_.sparkCount * Math.abs(_loc2_ - _loc3_) / (_loc5_.maxx - _loc5_.minx);
 			switch (param1)
 			{
 				case this.leftHandle:

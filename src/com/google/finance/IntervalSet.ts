@@ -2,12 +2,7 @@ namespace com.google.finance
 {
 	export class IntervalSet
 	{
-		private intervals: StartEndPair[];
-
-		constructor()
-		{
-			this.intervals = [];
-		}
+		private intervals: StartEndPair[] = [];
 
 		getIntervalForValue(param1: number): StartEndPair | null
 		{
@@ -34,7 +29,7 @@ namespace com.google.finance
 			let _loc2_: StartEndPair | null = null;
 			for (let _loc3_ = 0; _loc3_ < this.intervals.length; _loc3_++)
 			{
-				let _loc4_ = this.intervals[_loc3_];
+				const _loc4_ = this.intervals[_loc3_];
 				if (_loc4_.start <= param1 && param1 <= _loc4_.end)
 					return _loc4_;
 
@@ -70,7 +65,7 @@ namespace com.google.finance
 
 		containsValue(param1: number): boolean
 		{
-			let _loc2_ = this.getIntervalForValue(param1);
+			const _loc2_ = this.getIntervalForValue(param1);
 			return !!_loc2_;
 		}
 
@@ -79,7 +74,7 @@ namespace com.google.finance
 			let _loc1_ = 0;
 			for (let _loc2_ = 0; _loc2_ < this.intervals.length; _loc2_++)
 			{
-				let _loc3_ = this.intervals[_loc2_];
+				const _loc3_ = this.intervals[_loc2_];
 				_loc1_ = Number(_loc1_ + (_loc3_.end - _loc3_.start));
 			}
 			return _loc1_;

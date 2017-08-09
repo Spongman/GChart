@@ -7,12 +7,11 @@ namespace com.google.finance
 	// import flash.display.DisplayObjectContainer;
 	// import flash.display.DisplayObject;
 
-	type Class = { new (): any };
+	//type Class = { new (): any };
 
 	export class Utils
 	{
 		private static localTzOffset: number;
-
 
 		static compareDataUnits(param1: DataUnit, param2: DataUnit): number
 		{
@@ -23,7 +22,7 @@ namespace com.google.finance
 		{
 			if (isNaN(Utils.localTzOffset))
 			{
-				let _loc1_ = new Date();
+				const _loc1_ = new Date();
 				Utils.localTzOffset = _loc1_.getTimezoneOffset();
 			}
 			return Utils.localTzOffset;
@@ -31,7 +30,7 @@ namespace com.google.finance
 
 		static getDateInTimezone(param1: Date, param2: number): number
 		{
-			let _loc3_ = Utils.newDateInTimezone(param1, param2);
+			const _loc3_ = Utils.newDateInTimezone(param1, param2);
 			return _loc3_.getUTCDate();
 		}
 
@@ -56,15 +55,15 @@ namespace com.google.finance
 				return [];
 
 			param1 = decodeURIComponent(param1);
-			let _loc2_: { [key: string]: string }[] = [];
-			let _loc3_ = param1.split(MainManager.paramsObj.objectSeparator);
+			const _loc2_: { [key: string]: string }[] = [];
+			const _loc3_ = param1.split(MainManager.paramsObj.objectSeparator);
 			for (let _loc4_ = 0; _loc4_ < _loc3_.length; _loc4_++)
 			{
-				let _loc5_: { [key: string]: string } = {};
-				let _loc6_ = _loc3_[_loc4_].split(MainManager.paramsObj.fieldSeparator);
+				const _loc5_: { [key: string]: string } = {};
+				const _loc6_ = _loc3_[_loc4_].split(MainManager.paramsObj.fieldSeparator);
 				for (let _loc7_ = 0; _loc7_ < _loc6_.length; _loc7_++)
 				{
-					let _loc8_ = _loc6_[_loc7_].split(":");
+					const _loc8_ = _loc6_[_loc7_].split(":");
 					let value: any = _loc8_[1];
 					if (!isNaN(value))
 						value = Number(value);
@@ -83,7 +82,7 @@ namespace com.google.finance
 
 		static getTickerParts(param1: string) 
 		{
-			let _loc2_ = param1.split(":");
+			const _loc2_ = param1.split(":");
 			let _loc3_ = String(_loc2_.shift());
 			let _loc4_ = _loc2_.join(":");
 			if (_loc4_ === "")
@@ -99,8 +98,6 @@ namespace com.google.finance
 
 		static binarySearch<T, T2, T3>(param1: T[], param2: T2, param3: { (p1: T, p2: T2, p3?: T3): number }, param4: T3): number
 		{
-			let _loc7_ = NaN;
-			let _loc8_ = NaN;
 			if (!param1 || param1.length === 0)
 				return -1;
 
@@ -114,8 +111,8 @@ namespace com.google.finance
 			let _loc6_ = param1.length - 1;
 			while (_loc5_ < _loc6_ - 1)
 			{
-				_loc7_ = Math.round((_loc5_ + _loc6_) / 2);
-				_loc8_ = param3.call(param4, param1[_loc7_], param2);
+				const _loc7_ = Math.round((_loc5_ + _loc6_) / 2);
+				const _loc8_ = param3.call(param4, param1[_loc7_], param2);
 				if (_loc8_ < 0)
 					_loc5_ = Number(_loc7_);
 				else if (_loc8_ > 0)
@@ -138,7 +135,7 @@ namespace com.google.finance
 
 		static newDateInTimezone(param1: Date, param2: number): Date
 		{
-			let _loc3_ = new Date(param1.getTime() + param2 * 60 * 1000);
+			const _loc3_ = new Date(param1.getTime() + param2 * 60 * 1000);
 			return _loc3_;
 		}
 
@@ -163,7 +160,7 @@ namespace com.google.finance
 
 		static getEndOfUTCDayTime(param1: Date): number
 		{
-			let _loc2_ = new Date(param1.getTime());
+			const _loc2_ = new Date(param1.getTime());
 			_loc2_.setUTCHours(23, 59, 0, 0);
 			return _loc2_.getTime();
 		}
@@ -216,7 +213,7 @@ namespace com.google.finance
 
 		static createLabel(param1: flash.display.Sprite, param2: string, param3: flash.text.TextFormat): flash.text.TextField
 		{
-			let _loc4_ = new flash.text.TextField();
+			const _loc4_ = new flash.text.TextField();
 			param1.addChild(_loc4_);
 			_loc4_.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			_loc4_.defaultTextFormat = param3;
@@ -257,8 +254,8 @@ namespace com.google.finance
 				if (Utils.IsWeekday(_loc5_, param3))
 					_loc4_++;
 			}
-			let _loc6_ = (param2.getTime() - param1.getTime()) / Const.MS_PER_DAY;
-			let _loc7_ = Math.floor(_loc6_ / Const.DAY_PER_WEEK) * _loc4_;
+			const _loc6_ = (param2.getTime() - param1.getTime()) / Const.MS_PER_DAY;
+			const _loc7_ = Math.floor(_loc6_ / Const.DAY_PER_WEEK) * _loc4_;
 			if (_loc6_ % Const.DAY_PER_WEEK === 0)
 				return _loc7_;
 
@@ -420,20 +417,18 @@ namespace com.google.finance
 
 		static getLastDayOfWeek(param1: number): number
 		{
-			let _loc2_ = Const.DAY_PER_WEEK - 1;
-			while (_loc2_ >= 0)
+			for (let _loc2_ = Const.DAY_PER_WEEK - 1; _loc2_ >= 0; _loc2_--)
 			{
 				if (Utils.IsWeekday(_loc2_, param1))
 					return _loc2_;
 
-				_loc2_--;
 			}
 			return Const.DEFAULT_LAST_MARKET_WEEKDAY;
 		}
 
 		static cloneObject<T>(param1: T): T
 		{
-			let _loc2_ = <T>{};
+			const _loc2_ = <T>{};
 			for (let _loc3_ in param1)
 			{
 				(<any>_loc2_)[_loc3_] = (<any>param1)[_loc3_]; // TODO
@@ -453,7 +448,7 @@ namespace com.google.finance
 		{
 			for (let _loc3_ = 0; _loc3_ < param2.length; _loc3_++)
 			{
-				let _loc4_ = param2[_loc3_];
+				const _loc4_ = param2[_loc3_];
 				if (_loc4_._type === "dividend" && _loc4_._amount_currency)
 				{
 					if (param1 && param1 !== _loc4_._amount_currency)

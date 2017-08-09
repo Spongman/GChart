@@ -20,18 +20,18 @@ namespace com.google.finance
 			if (param3["volumesetter"])
 				param3["volumesetter"].clearHighlight();
 
-			let _loc4_ = this.getDataSeries();
-			let _loc5_ = this.viewPoint;
-			let _loc6_ = this.findPointIndex(param2);
-			let _loc7_ = _loc5_.getDetailLevelForTechnicalStyle();
-			let _loc8_ = Const.getDetailLevelInterval(_loc7_);
-			let _loc9_ = _loc4_.getPointsInIntervalArray(_loc8_);
+			const _loc4_ = this.getDataSeries();
+			const _loc5_ = this.viewPoint;
+			const _loc6_ = this.findPointIndex(param2);
+			const _loc7_ = _loc5_.getDetailLevelForTechnicalStyle();
+			const _loc8_ = Const.getDetailLevelInterval(_loc7_);
+			const _loc9_ = _loc4_.getPointsInIntervalArray(_loc8_);
 			if (!_loc9_ || _loc6_ === -1)
 				return;
 
-			let _loc10_ = _loc9_[_loc6_];
-			let _loc11_ = _loc5_.getXPos(_loc10_);
-			let _loc12_ = this.getYPos(_loc10_.volumes[_loc8_], _loc5_);
+			const _loc10_ = _loc9_[_loc6_];
+			const _loc11_ = _loc5_.getXPos(_loc10_);
+			const _loc12_ = this.getYPos(_loc10_.volumes[_loc8_], _loc5_);
 			this.highlightCanvas.graphics.lineStyle(2, Const.VOLUME_HIGHLIGHT_COLOR, 1);
 			this.drawOneLine(_loc11_, _loc12_, _loc5_, this.highlightCanvas);
 			param3[SpaceText.VOLUME_STR] = _loc10_.volumes[_loc8_];
@@ -40,18 +40,16 @@ namespace com.google.finance
 
 		renderLayer(context: Context) 
 		{
-			let _loc8_ = NaN;
-			let _loc9_ = NaN;
 			this.graphics.clear();
 			let vp = this.viewPoint;
 			if (vp.getDetailLevelForTechnicalStyle() !== Const.INTRADAY)
 				return;
 
-			let _loc2_ = this.getDataSeries().getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
+			const _loc2_ = this.getDataSeries().getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
 			if (!_loc2_)
 				return;
 
-			let _loc3_ = this.dataSource.visibleExtendedHours;
+			const _loc3_ = this.dataSource.visibleExtendedHours;
 			if (_loc3_.length() === 0)
 				return;
 
@@ -59,13 +57,13 @@ namespace com.google.finance
 			
 			for (let _loc4_ = 0; _loc4_ < _loc3_.length(); _loc4_++)
 			{
-				let _loc5_ = _loc3_.method_1(_loc4_);
-				let _loc6_ = _loc2_[_loc5_.start];
-				let _loc7_ = _loc2_[_loc5_.end];
+				const _loc5_ = _loc3_.method_1(_loc4_);
+				const _loc6_ = _loc2_[_loc5_.start];
+				const _loc7_ = _loc2_[_loc5_.end];
 				if (ViewPoint.sessionVisible(_loc6_, _loc7_, context))
 				{
-					_loc8_ = vp.getXPos(_loc6_);
-					_loc9_ = vp.getXPos(_loc7_);
+					const _loc8_ = vp.getXPos(_loc6_);
+					const _loc9_ = vp.getXPos(_loc7_);
 					this.regionsXLimits.addInterval(_loc8_, _loc9_);
 				}
 			}

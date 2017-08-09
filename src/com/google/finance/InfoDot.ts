@@ -20,24 +20,18 @@ namespace com.google.finance
 
 	export class InfoDot extends flash.display.Sprite
 	{
-		private static readonly tickerFormat = new flash.text.TextFormat("Helvetica", 12, 0, true, false, false);
-
 		private static readonly TEXT_SPACING = 5;
-
+		private static readonly tickerFormat = new flash.text.TextFormat("Helvetica", 12, 0, true, false, false);
 		private static readonly valueFormat = new flash.text.TextFormat("Helvetica", 10, 0x999999, false, false, false);
 
-
-		private tickerText: flash.text.TextField;
-
-		private valueText: flash.text.TextField;
+		private readonly tickerText = new flash.text.TextField();
+		private readonly valueText = new flash.text.TextField();
 
 		constructor()
 		{
 			super();
-			this.tickerText = new flash.text.TextField();
 			this.tickerText.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			this.tickerText.selectable = false;
-			this.valueText = new flash.text.TextField();
 			this.valueText.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			this.valueText.selectable = false;
 			this.addChild(this.tickerText);
@@ -46,7 +40,7 @@ namespace com.google.finance
 
 		setInfo(param1: InfoDotInfo)
 		{
-			let _loc2_ = param1.quoteColor;
+			const _loc2_ = param1.quoteColor;
 			const gr = this.graphics;
 			gr.clear();
 			gr.lineStyle(10, _loc2_, 1);

@@ -33,11 +33,8 @@ namespace com.google.finance
 		ExtraFlagBorder: typeof flash.display.Bitmap;
 
 		private letter: flash.text.TextField;
-
 		private pinButton: flash.display.SimpleButton;
-
 		private activeOverlay: flash.display.Bitmap;
-
 		private object: com.google.finance.PinPoint | null;
 
 		constructor()
@@ -121,8 +118,8 @@ namespace com.google.finance
 		private initFlagComponents() 
 		{
 			this.pinButton = new flash.display.SimpleButton("pinButton");
-			let _loc1_ = new this.FlagImg();
-			let _loc2_ = new this.FlagOverImg();
+			const _loc1_ = new this.FlagImg();
+			const _loc2_ = new this.FlagOverImg();
 			this.pinButton.overState = _loc2_;
 			this.pinButton.downState = _loc2_;
 			this.pinButton.hitTestState = _loc1_;
@@ -149,7 +146,6 @@ namespace com.google.finance
 
 		setOrientation(param1: number) 
 		{
-			let _loc2_ = 0;
 			if (param1 === 1)
 			{
 				this.activeOverlay.scaleX = -1;
@@ -158,11 +154,9 @@ namespace com.google.finance
 				this.pinButton.x = 1;
 				this.flagline.x = -2;
 				this.letter.x = -14;
-				_loc2_ = 0;
-				while (_loc2_ < this.borders.length)
+				for (let _loc2_ = 0; _loc2_ < this.borders.length; _loc2_++)
 				{
 					this.borders[_loc2_].scaleX = -1;
-					_loc2_++;
 				}
 			}
 			else
@@ -173,11 +167,9 @@ namespace com.google.finance
 				this.pinButton.x = -1;
 				this.flagline.x = -1;
 				this.letter.x = 3;
-				_loc2_ = 0;
-				while (_loc2_ < this.borders.length)
+				for (let _loc2_ = 0; _loc2_ < this.borders.length; _loc2_++)
 				{
 					this.borders[_loc2_].scaleX = 1;
-					_loc2_++;
 				}
 			}
 		}

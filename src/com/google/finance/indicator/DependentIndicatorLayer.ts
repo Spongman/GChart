@@ -24,7 +24,7 @@ namespace com.google.finance.indicator
 
 		protected calculateLocalScaleMeters(context: Context) 
 		{
-			let _loc2_ = this.viewPoint;
+			const _loc2_ = this.viewPoint;
 			this.localYOffset = _loc2_.miny + _loc2_.medPriceY + _loc2_.V_OFFSET;
 			this.localYScale = _loc2_.maxPriceRangeViewSize / context.maxPriceRange;
 			this.localMedianValue = context.medPrice;

@@ -15,12 +15,11 @@ namespace com.google.finance.indicator
 		private static readonly PARAMETER_NAMES = ["period"];
 
 
-		protected periods: number[];
+		protected periods = [20];
 
 		constructor(param1: ViewPoint, param2: DataSource)
 		{
 			super(param1, param2);
-			this.periods = [20];
 		}
 
 		static getParameterNames()
@@ -55,27 +54,21 @@ namespace com.google.finance.indicator
 
 		computeIntervalIndicator(param1: number) 
 		{
-			let _loc3_ = NaN;
-			let _loc4_ = 0;
-			let _loc5_ = 0;
-			let _loc11_ = NaN;
 			if (this.indicator.hasInterval(param1))
 				return;
 
-			let _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
-			_loc4_ = 0;
-			while (_loc4_ < this.periods.length)
+			const _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
+			for (let _loc4_ = 0; _loc4_ < this.periods.length; _loc4_++)
 			{
-				let _loc9_ = new DataSeries();
-				_loc3_ = 0;
-				let _loc8_: number[] = [];
-				_loc5_ = 0;
-				while (_loc5_ < _loc2_.length)
+				const _loc9_ = new DataSeries();
+				let _loc3_ = 0;
+				const _loc8_: number[] = [];
+				for (let _loc5_ = 0; _loc5_ < _loc2_.length; _loc5_++)
 				{
-					let _loc10_ = _loc2_[_loc5_];
+					const _loc10_ = _loc2_[_loc5_];
 					if (!this.shouldSkip(_loc10_, _loc9_))
 					{
-						_loc11_ = _loc10_.volumes[param1];
+						const _loc11_ = _loc10_.volumes[param1];
 						if (_loc11_ === 0)
 						{
 							this.copyLastIndicatorPoint(_loc10_, _loc9_);
@@ -97,10 +90,8 @@ namespace com.google.finance.indicator
 							_loc9_.points.push(_loc7_);
 						}
 					}
-					_loc5_++;
 				}
 				this.indicator.setDataSeries(param1, _loc9_, _loc4_);
-				_loc4_++;
 			}
 		}
 

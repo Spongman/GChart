@@ -4,15 +4,12 @@ namespace com.google.finance
 	{
 		private static computeWeekly(param1: DataSeries, param2: DataSeries, param3: number) 
 		{
-			let _loc7_ = NaN;
-			let _loc8_ = NaN;
-			let _loc4_ = Const.WEEKLY_INTERVAL;
-			let _loc5_ = param3 / Const.WEEKLY_INTERVAL;
-			let _loc6_ = param1.fridays.length - 1;
-			while (_loc6_ >= 0)
+			const _loc4_ = Const.WEEKLY_INTERVAL;
+			const _loc5_ = param3 / Const.WEEKLY_INTERVAL;
+			for (let _loc6_ = param1.fridays.length - 1; _loc6_ >= 0; _loc6_ = _loc6_ - _loc5_)
 			{
-				_loc7_ = Number(_loc6_);
-				_loc8_ = 0;
+				let _loc7_ = Number(_loc6_);
+				let _loc8_ = 0;
 				param2.fridays.push(param2.points.length);
 				while (_loc7_ > _loc6_ - _loc5_ && _loc7_ >= 0)
 				{
@@ -23,7 +20,7 @@ namespace com.google.finance
 					_loc7_ = 0;
 
 
-				let _loc9_ = new indicator.VolumeIndicatorPoint(
+				const _loc9_ = new indicator.VolumeIndicatorPoint(
 					_loc8_,
 					(param1.units[param1.fridays[_loc6_]]).relativeMinutes,
 					(<indicator.IndicatorPoint>param1.points[param1.fridays[_loc6_]]).point,
@@ -31,21 +28,17 @@ namespace com.google.finance
 				);
 
 				param2.points.push(_loc9_);
-				_loc6_ = _loc6_ - _loc5_;
 			}
 		}
 
 		private static computeDaily(param1: DataSeries, param2: DataSeries, param3: number) 
 		{
-			let _loc7_ = NaN;
-			let _loc8_ = NaN;
-			let _loc4_ = Const.DAILY_INTERVAL;
-			let _loc5_ = param3 / Const.DAILY_INTERVAL;
-			let _loc6_ = param1.days.length - 1;
-			while (_loc6_ >= 0)
+			const _loc4_ = Const.DAILY_INTERVAL;
+			const _loc5_ = param3 / Const.DAILY_INTERVAL;
+			for (let _loc6_ = param1.days.length - 1; _loc6_ >= 0; _loc6_ = _loc6_ - _loc5_)
 			{
-				_loc7_ = Number(_loc6_);
-				_loc8_ = 0;
+				let _loc7_ = Number(_loc6_);
+				let _loc8_ = 0;
 				param2.days.push(param2.points.length);
 				while (_loc7_ > _loc6_ - _loc5_ && _loc7_ >= 0)
 				{
@@ -56,7 +49,7 @@ namespace com.google.finance
 					_loc7_ = 0;
 
 
-				let _loc9_ = new indicator.VolumeIndicatorPoint(
+				const _loc9_ = new indicator.VolumeIndicatorPoint(
 					_loc8_,
 					(param1.units[param1.days[_loc6_]]).relativeMinutes,
 					(<indicator.IndicatorPoint>param1.points[param1.days[_loc6_]]).point,
@@ -64,7 +57,6 @@ namespace com.google.finance
 				);
 
 				param2.points.push(_loc9_);
-				_loc6_ = _loc6_ - _loc5_;
 			}
 		}
 
@@ -73,7 +65,7 @@ namespace com.google.finance
 			if (param2.hasInterval(param1))
 				return;
 
-			let _loc4_ = new DataSeries();
+			const _loc4_ = new DataSeries();
 			if (param1 < Const.INTRADAY_INTERVAL)
 				return;
 
@@ -97,30 +89,22 @@ namespace com.google.finance
 
 		private static computeIntraday(param1: DataSeries, param2: DataSeries, param3: number) 
 		{
-			let _loc7_ = NaN;
-			let _loc8_ = NaN;
-			let _loc9_ = NaN;
-			let _loc10_ = NaN;
-			let _loc11_ = NaN;
-			let _loc4_ = Const.INTRADAY_INTERVAL;
-			let _loc5_ = param3 / Const.INTRADAY_INTERVAL;
-			let _loc6_ = param1.intradayRegions.length - 1;
-			while (_loc6_ >= 0)
+			const _loc4_ = Const.INTRADAY_INTERVAL;
+			const _loc5_ = param3 / Const.INTRADAY_INTERVAL;
+			for (let _loc6_ = param1.intradayRegions.length - 1; _loc6_ >= 0; _loc6_--)
 			{
-				_loc7_ = param1.intradayRegions[_loc6_].end;
-				_loc8_ = param1.intradayRegions[_loc6_].start;
+				const _loc7_ = param1.intradayRegions[_loc6_].end;
+				const _loc8_ = param1.intradayRegions[_loc6_].start;
 				param2.days.push(param2.points.length);
-				_loc9_ = _loc7_;
+				let _loc9_ = _loc7_;
 				while (_loc9_ >= _loc8_)
 				{
-					_loc10_ = _loc9_;
-					_loc11_ = 0;
-					while (_loc10_ > _loc9_ - _loc5_ && _loc10_ >= _loc8_)
+					let _loc11_ = 0;
+					for (let _loc10_ = _loc9_; _loc10_ > _loc9_ - _loc5_ && _loc10_ >= _loc8_; _loc10_--)
 					{
 						_loc11_ = Number(_loc11_ + param1.units[_loc10_].volumes[_loc4_]);
-						_loc10_--;
 					}
-					let _loc12_ = new indicator.VolumeIndicatorPoint(
+					const _loc12_ = new indicator.VolumeIndicatorPoint(
 						_loc11_,
 						param1.units[_loc9_].relativeMinutes,
 						(<indicator.IndicatorPoint>param1.points[_loc9_]).point,
@@ -129,7 +113,6 @@ namespace com.google.finance
 					param2.points.push(_loc12_);
 					_loc9_ = _loc9_ - _loc5_;
 				}
-				_loc6_--;
 			}
 		}
 	}

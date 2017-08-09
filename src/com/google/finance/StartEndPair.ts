@@ -3,7 +3,6 @@ namespace com.google.finance
 	export class StartEndPair
 	{
 		start: number;
-
 		end: number;
 
 		constructor(param1: number, param2: number)

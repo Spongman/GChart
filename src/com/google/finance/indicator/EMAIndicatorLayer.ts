@@ -22,28 +22,20 @@ namespace com.google.finance.indicator
 
 		computeIntervalIndicator(param1: number) 
 		{
-			let _loc3_ = NaN;
-			let _loc4_ = NaN;
-			let _loc5_= 0;
-			let _loc6_ = NaN;
-			let _loc7_= 0;
-			let _loc8_ = 0;
 			if (this.indicator.hasInterval(param1))
 				return;
 
-			let _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
-			_loc7_ = 0;
-			while (_loc7_ < this.periods.length)
+			const _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
+			for (let _loc7_ = 0; _loc7_ < this.periods.length; _loc7_++)
 			{
-				let _loc10_ = new DataSeries();
-				_loc3_ = NaN;
-				_loc4_ = 2 / (Number(this.periods[_loc7_]) + 1);
-				_loc6_ = 0;
-				_loc5_ = 0;
-				_loc8_ = 0;
-				while (_loc8_ < _loc2_.length)
+				const _loc10_ = new DataSeries();
+				let _loc3_ = NaN;
+				const _loc4_ = 2 / (Number(this.periods[_loc7_]) + 1);
+				let _loc6_ = 0;
+				let _loc5_ = 0;
+				for (let _loc8_ = 0; _loc8_ < _loc2_.length; _loc8_++)
 				{
-					let _loc11_ = _loc2_[_loc8_];
+					const _loc11_ = _loc2_[_loc8_];
 					if (!this.shouldSkip(_loc11_, _loc10_))
 					{
 						_loc5_ = _loc5_ + 1;
@@ -65,10 +57,8 @@ namespace com.google.finance.indicator
 						}
 						_loc10_.points.push(_loc9_);
 					}
-					_loc8_++;
 				}
 				this.indicator.setDataSeries(param1, _loc10_, _loc7_);
-				_loc7_++;
 			}
 		}
 

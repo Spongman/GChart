@@ -11,18 +11,13 @@ namespace com.google.finance
 		private static readonly ANIMATION_FRAME_LENGTH_MS = 40;
 		private static readonly MAX_STEPS = 10;
 
-
 		private intervalId: number;
-
 		private stepCount = 0;
-
-		private listeners: any[];
-
+		//private listeners: any[];
 		private amount = 0;
 
 		animate(param1: { (param1: flash.display.DisplayObject, param2: number, param3: boolean): void }[], param2: flash.display.DisplayObject[], param3 = NaN, param4 = false) 
 		{
-			let j = 0;
 			let lfunctions = param1;
 			let lobjects = param2;
 			let opt_stepCount = param3;

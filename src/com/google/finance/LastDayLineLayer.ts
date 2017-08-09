@@ -11,31 +11,28 @@ namespace com.google.finance
 
 		private drawLine(param1: Context) 
 		{
-			let _loc10_ = NaN;
-			let _loc11_ = NaN;
-			let _loc12_ = NaN;
-			let _loc2_ = this.dataSource.data;
+			//const _loc2_ = this.dataSource.data;
 			const gr = this.graphics;
 			gr.clear();
 			gr.lineStyle(0, Const.LAST_DAY_CLOSE_LINE_COLOR, 1);
-			let _loc3_ = this.dataSource.data.units;
-			let _loc4_ = this.dataSource.data.days;
-			let _loc5_ = _loc3_[_loc4_[_loc4_.length - 2]];
-			let _loc6_ = _loc3_[_loc3_.length - 1];
+			const _loc3_ = this.dataSource.data.units;
+			const _loc4_ = this.dataSource.data.days;
+			const _loc5_ = _loc3_[_loc4_[_loc4_.length - 2]];
+			const _loc6_ = _loc3_[_loc3_.length - 1];
 			if (Const.INDICATOR_ENABLED)
 			{
-				_loc10_ = _loc5_.getCloseLogValue(param1.verticalScaling);
+				const _loc10_ = _loc5_.getCloseLogValue(param1.verticalScaling);
 				if (_loc10_ > param1.maxPrice || _loc10_ < param1.minPrice)
 					return;
 			}
 			let vp = this.viewPoint;
-			let _loc7_ = vp.getXPos(_loc5_);
-			let _loc8_ = vp.getXPos(_loc6_);
-			let _loc9_ = vp.getDetailLevel();
+			const _loc7_ = vp.getXPos(_loc5_);
+			const _loc8_ = vp.getXPos(_loc6_);
+			const _loc9_ = vp.getDetailLevel();
 			if (_loc7_ < this.viewPoint.maxx && _loc9_ === Const.INTRADAY)
 			{
-				_loc11_ = this.getYPos(_loc5_, param1);
-				_loc12_ = 0;
+				const _loc11_ = this.getYPos(_loc5_, param1);
+				let _loc12_ = 0;
 				do
 				{
 					gr.moveTo(_loc7_ + _loc12_ * this.dashSize, _loc11_);

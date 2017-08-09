@@ -11,9 +11,7 @@ namespace com.google.finance.indicator
 	{
 		private static readonly PARAMETER_NAMES = ["period"];
 
-
 		private period = 14;
-
 		private alphaNumber = 0.3333333333333333;
 
 		constructor(param1: ViewPoint, param2: DataSource)
@@ -56,57 +54,49 @@ namespace com.google.finance.indicator
 
 		computeIntervalIndicator(param1: number) 
 		{
-			let _loc3_ = NaN;
-			let _loc4_ = NaN;
-			let _loc5_ = NaN;
-			let _loc6_ = 0;
-			let _loc7_ = 0;
 			if (this.indicator.hasInterval(param1))
 				return;
 
-			let _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
+			const _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
 			if (!_loc2_)
 				return;
 
 			let _loc8_ = NaN;
 			let _loc9_ = NaN;
 			let _loc10_ = NaN;
-			let _loc12_ = new DataSeries();
-			let _loc13_ = new DataSeries();
-			let _loc14_ = new DataSeries();
-			let _loc15_: DataUnit[] = [];
-			_loc6_ = 0;
-			while (_loc6_ < _loc2_.length)
+			const _loc12_ = new DataSeries();
+			const _loc13_ = new DataSeries();
+			const _loc14_ = new DataSeries();
+			const _loc15_: DataUnit[] = [];
+			for (let _loc6_ = 0; _loc6_ < _loc2_.length; _loc6_++)
 			{
-				let _loc16_ = _loc2_[_loc6_];
+				const _loc16_ = _loc2_[_loc6_];
 				if (!this.shouldSkip(_loc16_, _loc12_, _loc13_, _loc14_))
 				{
 					_loc15_.push(_loc16_);
 					if (_loc15_.length < this.period)
 					{
-						let _loc11_ = new IndicatorPoint(NaN, _loc16_);
+						const _loc11_ = new IndicatorPoint(NaN, _loc16_);
 						_loc12_.points.push(_loc11_);
 						_loc13_.points.push(_loc11_);
 						_loc14_.points.push(_loc11_);
 					}
 					else
 					{
-						_loc3_ = Number.NEGATIVE_INFINITY;
-						_loc4_ = Number.POSITIVE_INFINITY;
-						_loc7_ = 0;
-						while (_loc7_ < this.period)
+						let _loc3_ = Number.NEGATIVE_INFINITY;
+						let _loc4_ = Number.POSITIVE_INFINITY;
+						for (let _loc7_ = 0; _loc7_ < this.period; _loc7_++)
 						{
 							_loc3_ = Utils.extendedMax(_loc3_, _loc15_[_loc7_].high);
 							_loc4_ = Utils.extendedMin(_loc4_, _loc15_[_loc7_].low);
-							_loc7_++;
 						}
-						_loc5_ = (_loc16_.close - _loc4_) / (_loc3_ - _loc4_) * 100;
+						const _loc5_ = (_loc16_.close - _loc4_) / (_loc3_ - _loc4_) * 100;
 						if (isNaN(_loc8_))
 						{
-							let _loc11_ = new IndicatorPoint(_loc5_, _loc16_);
+							const _loc11_ = new IndicatorPoint(_loc5_, _loc16_);
 							_loc8_ = _loc5_;
 							_loc9_ = _loc5_;
-							_loc10_ = _loc5_;
+							_loc10_ = _loc5_;	// not used?
 							_loc12_.points.push(_loc11_);
 							_loc13_.points.push(_loc11_);
 							_loc14_.points.push(_loc11_);
@@ -127,7 +117,6 @@ namespace com.google.finance.indicator
 						_loc15_.shift();
 					}
 				}
-				_loc6_++;
 			}
 			this.indicator.setDataSeries(param1, _loc12_, 0);
 			this.indicator.setDataSeries(param1, _loc13_, 1);

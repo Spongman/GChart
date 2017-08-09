@@ -24,7 +24,7 @@ namespace com.google.finance
 
 		equals(param1: any): boolean
 		{
-			let _loc2_ = param1 as Bounds;
+			const _loc2_ = param1 as Bounds;
 			if (_loc2_)
 				return _loc2_.minx === this.minx && _loc2_.miny === this.miny && _loc2_.maxx === this.maxx && _loc2_.maxy === this.maxy;
 

@@ -7,22 +7,16 @@ namespace com.google.finance
 
 	export class ScrollSlider extends flash.display.Sprite
 	{
-		static readonly MIN_WIDTH = 18;
+		private static readonly MIN_WIDTH = 18;
+		private static readonly ScrollBarGrip = ScrollSlider_ScrollBarGrip;
+		private static readonly ScrollBarBg = ScrollSlider_ScrollBarBg;
 
-
-		private middle: flash.display.Bitmap;
-
-		private readonly ScrollBarGrip = ScrollSlider_ScrollBarGrip;
-
-		private readonly ScrollBarBg = ScrollSlider_ScrollBarBg;
-
-		private bg: flash.display.Bitmap;
+		private readonly middle = new ScrollSlider.ScrollBarGrip();
+		private readonly bg = new ScrollSlider.ScrollBarBg();
 
 		constructor(name?:string)
 		{
 			super(name);
-			this.middle = new this.ScrollBarGrip();
-			this.bg = new this.ScrollBarBg();
 			this.addChild(this.bg);
 			this.addChild(this.middle);
 		}

@@ -6,26 +6,19 @@ namespace com.google.finance
 
 	export class VolumeScaleLayer extends AbstractLayer<ViewPoint>
 	{
-		private maxPriceRange: number;
-
 		private static readonly LABEL_PADDING = 2;
 
-		private priceSkip: number;
-
+		//private maxPriceRange: number;
+		//private priceSkip: number;
+		//private averagePrice: number;
 		private midScaleTextField: flash.text.TextField;
-
-		private averagePrice: number;
-
 		private topScaleTextField: flash.text.TextField;
-
-		private volumeLabel: flash.text.TextField;
+		private volumeLabel = new flash.text.TextField();
 
 		constructor(param1: ViewPoint, param2: DataSource)
 		{
 			super(param1, param2);
-			this.volumeLabel = new flash.text.TextField();
-			let _loc3_ = new flash.text.TextFormat("Verdana", 9, 0x999999);
-			this.volumeLabel.defaultTextFormat = _loc3_;
+			this.volumeLabel.defaultTextFormat = new flash.text.TextFormat("Verdana", 9, 0x999999);
 			this.volumeLabel.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			this.volumeLabel.selectable = false;
 			this.addChild(this.volumeLabel);
@@ -35,7 +28,7 @@ namespace com.google.finance
 		private drawVolumeLines(param1: Context) 
 		{
 			let _loc2_ = 1000;
-			let _loc3_ = this.viewPoint;
+			const _loc3_ = this.viewPoint;
 			if (param1 && param1.maxVolume / 1000000 > 0.5)
 			{
 				this.volumeLabel.text = Messages.getMsg(Messages.VOLUME_LONG) + " (" + Messages.getMsg(Messages.MILLION_SHORT) + " / ";
@@ -46,8 +39,8 @@ namespace com.google.finance
 				this.volumeLabel.text = Messages.getMsg(Messages.VOLUME_LONG) + " (" + Messages.getMsg(Messages.THOUSAND_SHORT) + " / ";
 				_loc2_ = 1000;
 			}
-			let _loc4_ = !!Const.INDICATOR_ENABLED ? Number(_loc3_.getDetailLevelForTechnicalStyle()) : _loc3_.getDetailLevel();
-			let _loc5_ = !!Const.INDICATOR_ENABLED ? 1 : _loc3_.getSkipInterval().skip;
+			const _loc4_ = !!Const.INDICATOR_ENABLED ? Number(_loc3_.getDetailLevelForTechnicalStyle()) : _loc3_.getDetailLevel();
+			const _loc5_ = !!Const.INDICATOR_ENABLED ? 1 : _loc3_.getSkipInterval().skip;
 			switch (_loc4_)
 			{
 				case Const.INTRADAY:
@@ -75,7 +68,7 @@ namespace com.google.finance
 				return;
 			}
 			gr.lineStyle(0, 0x666666, 1);
-			let _loc6_ = !!Const.INDICATOR_ENABLED ? Number(_loc3_.miny + Const.BOTTOM_VIEWPOINT_HEADER_HEIGHT) : _loc3_.miny;
+			const _loc6_ = !!Const.INDICATOR_ENABLED ? Number(_loc3_.miny + Const.BOTTOM_VIEWPOINT_HEADER_HEIGHT) : _loc3_.miny;
 			if (Const.INDICATOR_ENABLED)
 			{
 				gr.moveTo(_loc3_.maxx, _loc6_ + 1);

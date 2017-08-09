@@ -12,30 +12,23 @@ namespace com.google.finance
 	{
 		private static readonly LOADING_TEXT_FORMAT = new flash.text.TextFormat("Helvetica", 12, 0xffffff);
 
-
+		private static readonly states = ["...", ".", ".."];
+		
 		private intervalId: number;
-
-		private states: string[];
-
-		private loadingText: flash.text.TextField;
+		private loadingText = new flash.text.TextField();
+		private currentState = -1;
 
 		padding = 3;
-
 		backgroundColor = 8439386;
-
-		private currentState: number;
 
 		constructor()
 		{
 			super();
-			this.loadingText = new flash.text.TextField();
-			this.states = ["...", ".", ".."];
 			this.loadingText.defaultTextFormat = LoadingMessage.LOADING_TEXT_FORMAT;
-			this.loadingText.appendText(Messages.getMsg(Messages.LOADING_MESSAGE) + "...");
+			//this.loadingText.appendText(Messages.getMsg(Messages.LOADING_MESSAGE) + LoadingMessage.states[0]);
 			this.loadingText.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			this.loadingText.x = 0;
 			this.loadingText.y = 0;
-			this.currentState = -1;
 			this.rollMessage();
 			this.addChild(this.loadingText);
 			this.drawBackground();
@@ -44,8 +37,8 @@ namespace com.google.finance
 
 		private rollMessage() 
 		{
-			this.currentState = (this.currentState + 1) % this.states.length;
-			this.loadingText.text = Messages.getMsg(Messages.LOADING_MESSAGE) + this.states[this.currentState];
+			this.currentState = (this.currentState + 1) % LoadingMessage.states.length;
+			this.loadingText.text = Messages.getMsg(Messages.LOADING_MESSAGE) + LoadingMessage.states[this.currentState];
 		}
 
 		private drawBackground() 

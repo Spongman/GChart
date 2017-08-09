@@ -7,8 +7,6 @@ namespace mx.utils
 
 	export class NameUtil
 	{
-		private static counter = 0;
-
 		static displayObjectToString(param1: flash.display.DisplayObject): string|null
 		{
 			let result: string|null = null;
@@ -39,19 +37,21 @@ namespace mx.utils
 		}
 
 		/*
+		private static counter = 0;
+		
 		static createUniqueName(param1): string
 		{
 			if (!param1)
 			{
 				return null;
 			}
-			let _loc2_ = this.getQualifiedClassName(param1);
-			let _loc3_ = _loc2_.indexOf("::");
+			const _loc2_ = this.getQualifiedClassName(param1);
+			const _loc3_ = _loc2_.indexOf("::");
 			if (_loc3_ !== -1)
 			{
 				_loc2_ = _loc2_.substr(_loc3_ + 2);
 			}
-			let _loc4_ = _loc2_.charCodeAt(_loc2_.length - 1);
+			const _loc4_ = _loc2_.charCodeAt(_loc2_.length - 1);
 			if (_loc4_ >= 48 && _loc4_ <= 57)
 			{
 				_loc2_ = _loc2_ + "_";

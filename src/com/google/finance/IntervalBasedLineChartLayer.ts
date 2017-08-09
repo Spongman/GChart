@@ -10,12 +10,6 @@ namespace com.google.finance
 		private drawLine(param1: number, param2: Context, param3: DataUnit[], param4: number, param5: number, param6: number, param7: number): number
 		{
 			let _loc8_ = NaN;
-			let _loc9_ = NaN;
-			let _loc10_= 0;
-			let _loc12_= 0;
-			let _loc13_= 0;
-			let _loc15_ = NaN;
-			let _loc16_ = NaN;
 			const gr = this.graphics;
 			switch (param1)
 			{
@@ -23,8 +17,8 @@ namespace com.google.finance
 				case Const.WEEKLY:
 					if (isNaN(param7))
 					{
-						_loc8_ = this.viewPoint.getXPos(param3[param5]);
-						_loc9_ = this.getCloseYPos(param2, param3[param5]);
+						const _loc8_ = this.viewPoint.getXPos(param3[param5]);
+						const _loc9_ = this.getCloseYPos(param2, param3[param5]);
 						param5--;
 						gr.moveTo(_loc8_, this.viewPoint.maxy);
 						gr.lineStyle(0, 0, 0);
@@ -44,13 +38,11 @@ namespace com.google.finance
 						gr.lineTo(param6, param7);
 					}
 					gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
-					_loc13_ = param5;
-					while (_loc13_ >= param4)
+					for (let _loc13_ = param5; _loc13_ >= param4; _loc13_--)
 					{
 						_loc8_ = this.viewPoint.getXPos(param3[_loc13_]);
-						_loc9_ = this.getCloseYPos(param2, param3[_loc13_]);
+						const _loc9_ = this.getCloseYPos(param2, param3[_loc13_]);
 						gr.lineTo(_loc8_, _loc9_);
-						_loc13_--;
 					}
 					return _loc8_;
 				case Const.INTRADAY:
@@ -65,23 +57,23 @@ namespace com.google.finance
 
 					_loc8_ = this.viewPoint.getXPos(param3[param5]);
 					gr.moveTo(_loc8_, this.viewPoint.maxy);
-					_loc10_ = param5;
-					let _loc11_ = this.dataSource.visibleExtendedHours.length() === 0;
-					_loc12_ = this.dataSource.data.marketDayLength;
+					let _loc10_ = param5;
+					const _loc11_ = this.dataSource.visibleExtendedHours.length() === 0;
+					const _loc12_ = this.dataSource.data.marketDayLength;
 					while (_loc10_ > param4)
 					{
 						gr.lineStyle(0, 0, 0);
 						_loc8_ = this.viewPoint.getXPos(param3[_loc10_]);
-						_loc9_ = this.getCloseYPos(param2, param3[_loc10_]);
+						const _loc9_ = this.getCloseYPos(param2, param3[_loc10_]);
 						gr.lineTo(_loc8_, this.viewPoint.maxy);
 						gr.lineTo(_loc8_, _loc9_);
-						let _loc14_ = notnull(this.getDataSeries());
+						const _loc14_ = notnull(this.getDataSeries());
 						gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
 						while (_loc10_ > param4 && param3[_loc10_].dayMinute !== _loc14_.marketOpenMinute)
 						{
 							_loc10_--;
 							_loc8_ = this.viewPoint.getXPos(param3[_loc10_]);
-							_loc9_ = this.getCloseYPos(param2, param3[_loc10_]);
+							const _loc9_ = this.getCloseYPos(param2, param3[_loc10_]);
 							gr.lineTo(_loc8_, _loc9_);
 						}
 						gr.lineStyle(0, 0, 0);
@@ -89,11 +81,11 @@ namespace com.google.finance
 						_loc10_--;
 						if (_loc11_ && _loc10_ > param4)
 						{
-							_loc15_ = param3[_loc10_].relativeMinutes;
-							_loc16_ = param3[_loc10_ + 1].relativeMinutes;
+							const _loc15_ = param3[_loc10_].relativeMinutes;
+							const _loc16_ = param3[_loc10_ + 1].relativeMinutes;
 							if (_loc16_ > _loc15_ + _loc12_)
 							{
-								_loc9_ = this.getCloseYPos(param2, param3[_loc10_]);
+								const _loc9_ = this.getCloseYPos(param2, param3[_loc10_]);
 								_loc8_ = this.viewPoint.getMinuteXPos(_loc16_ - 1);
 								gr.lineTo(_loc8_, this.viewPoint.maxy);
 								gr.lineTo(_loc8_, _loc9_);
@@ -117,7 +109,7 @@ namespace com.google.finance
 				return;
 
 			let vp = this.viewPoint;
-			let _loc2_ = notnull(this.getDataSeries());
+			const _loc2_ = notnull(this.getDataSeries());
 			this.localYOffset = vp.miny + vp.medPriceY + vp.V_OFFSET;
 			this.localYScale = vp.maxPriceRangeViewSize / context.maxPriceRange;
 			this.lineThickness = Const.LINE_CHART_LINE_THICKNESS;
@@ -125,7 +117,6 @@ namespace com.google.finance
 			this.lineVisibility = Const.LINE_CHART_LINE_VISIBILITY;
 			let _loc3_ = vp.getDetailLevelForTechnicalStyle();
 			let _loc4_= 0;
-			let _loc5_= 0;
 			let _loc6_ = Number.MAX_VALUE;
 			let _loc7_ = NaN;
 			let _loc8_ = true;
@@ -133,8 +124,8 @@ namespace com.google.finance
 			gr.clear();
 			do
 			{
-				let _loc9_ = Const.getDetailLevelInterval(_loc3_);
-				let _loc10_ = _loc2_.getPointsInIntervalArray(_loc9_);
+				const _loc9_ = Const.getDetailLevelInterval(_loc3_);
+				const _loc10_ = _loc2_.getPointsInIntervalArray(_loc9_);
 				if (!_loc10_ || _loc10_.length === 0)
 				{
 					_loc3_++;
@@ -142,14 +133,14 @@ namespace com.google.finance
 				else
 				{
 					_loc4_ = Math.max(_loc2_.getRelativeMinuteIndex(vp.getFirstMinute(), _loc10_) - 1, 0);
-					_loc5_ = Math.min(_loc2_.getRelativeMinuteIndex(vp.getLastMinute(), _loc10_) + 1, this.getLastRealPointIndex(_loc10_));
-					let _loc11_ = _loc10_[_loc10_.length - 1];
+					const _loc5_ = Math.min(_loc2_.getRelativeMinuteIndex(vp.getLastMinute(), _loc10_) + 1, this.getLastRealPointIndex(_loc10_));
+					const _loc11_ = _loc10_[_loc10_.length - 1];
 					if (_loc8_ && _loc3_ >= Const.DAILY && _loc5_ === _loc10_.length - 1 && _loc11_.relativeMinutes < vp.getLastMinute())
 					{
-						let _loc12_ = _loc2_.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
+						const _loc12_ = _loc2_.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
 						if (_loc12_ && _loc12_.length > 0)
 						{
-							let _loc13_ = _loc12_[_loc12_.length - 1];
+							const _loc13_ = _loc12_[_loc12_.length - 1];
 							let _loc14_ = vp.getXPos(_loc13_);
 							let _loc15_ = this.getCloseYPos(context, _loc13_);
 							gr.beginFill(Const.LINE_CHART_FILL_COLOR, Const.LINE_CHART_FILL_VISIBILITY);

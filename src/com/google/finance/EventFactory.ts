@@ -4,7 +4,7 @@ namespace com.google.finance
 	{
 		private static buildEvent(param1: number, param2: string, param3: string, param4: number, param5: string, param6: number = -1): ChartEvent
 		{
-			let _loc7_ = new ChartEvent(param1);
+			const _loc7_ = new ChartEvent(param1);
 			if (param6 !== -1)
 				_loc7_.detailType = param6;
 			else
@@ -22,7 +22,7 @@ namespace com.google.finance
 			let _loc4_: ChartEvent;
 			if (Const.INDICATOR_ENABLED)
 			{
-				let _loc5_ = MainManager.paramsObj && MainManager.paramsObj.delayedMinutes >= 0 ? MainManager.paramsObj.delayedMinutes : 0;
+				const _loc5_ = MainManager.paramsObj && MainManager.paramsObj.delayedMinutes >= 0 ? MainManager.paramsObj.delayedMinutes : 0;
 				switch (param1)
 				{
 					default:

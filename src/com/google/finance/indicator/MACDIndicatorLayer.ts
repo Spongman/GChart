@@ -12,11 +12,8 @@ namespace com.google.finance.indicator
 	{
 		private static readonly PARAMETER_NAMES = ["shortPeriod", "longPeriod", "emaPeriod"];
 
-
 		private emaPeriod = 9;
-
 		private longPeriod = 26;
-
 		private shortPeriod = 12;
 
 		constructor(param1: ViewPoint, param2: DataSource)
@@ -80,46 +77,38 @@ namespace com.google.finance.indicator
 
 		computeIntervalIndicator(param1: number) 
 		{
-			let _loc3_ = NaN;
-			let _loc4_ = NaN;
-			let _loc5_ = NaN;
-			let _loc6_ = NaN;
-			let _loc7_ = NaN;
-			let _loc8_ = 0;
 			if (this.indicator.hasInterval(param1))
 				return;
 
-			let _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
+			const _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
 			if (!_loc2_ || _loc2_.length === 0)
 				return;
 
-			let _loc11_ = new DataSeries();
-			let _loc12_ = new DataSeries();
-			let _loc13_ = new DataSeries();
-			_loc3_ = _loc2_[0].close;
-			_loc4_ = _loc3_;
-			_loc5_ = _loc3_ - _loc4_;
-			_loc6_ = _loc5_;
-			let _loc10_ = new IndicatorPoint(0, _loc2_[0]);
+			const _loc11_ = new DataSeries();
+			const _loc12_ = new DataSeries();
+			const _loc13_ = new DataSeries();
+			let _loc3_ = _loc2_[0].close;
+			let _loc4_ = _loc3_;
+			let _loc5_ = _loc3_ - _loc4_;
+			let _loc6_ = _loc5_;
+			const _loc10_ = new IndicatorPoint(0, _loc2_[0]);
 			_loc11_.points.push(_loc10_);
 			_loc12_.points.push(_loc10_);
 			_loc13_.points.push(_loc10_);
-			_loc8_ = 1;
-			while (_loc8_ < _loc2_.length)
+			for (let _loc8_ = 1; _loc8_ < _loc2_.length; _loc8_++)
 			{
-				let _loc14_ = _loc2_[_loc8_];
+				const _loc14_ = _loc2_[_loc8_];
 				if (!this.shouldSkip(_loc14_, _loc11_, _loc12_, _loc13_))
 				{
 					_loc3_ = (_loc3_ * (this.shortPeriod - 1) + _loc14_.close * 2) / (this.shortPeriod + 1);
 					_loc4_ = (_loc4_ * (this.longPeriod - 1) + _loc14_.close * 2) / (this.longPeriod + 1);
 					_loc5_ = _loc3_ - _loc4_;
 					_loc6_ = (_loc6_ * (this.emaPeriod - 1) + _loc5_ * 2) / (this.emaPeriod + 1);
-					_loc7_ = (!!Const.APPLY_CHINESE_STYLE_MACD ? 2 : 1) * (_loc5_ - _loc6_);
+					const _loc7_ = (!!Const.APPLY_CHINESE_STYLE_MACD ? 2 : 1) * (_loc5_ - _loc6_);
 					_loc11_.points.push(new IndicatorPoint(_loc5_, _loc14_));
 					_loc12_.points.push(new IndicatorPoint(_loc6_, _loc14_));
 					_loc13_.points.push(new IndicatorPoint(_loc7_, _loc14_));
 				}
-				_loc8_++;
 			}
 			this.indicator.setDataSeries(param1, _loc11_, 0);
 			this.indicator.setDataSeries(param1, _loc12_, 1);

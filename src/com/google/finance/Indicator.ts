@@ -2,17 +2,10 @@ namespace com.google.finance
 {
 	export class Indicator
 	{
-		intervals: number[];
+		private hash: { [key: string]: DataSeries[] } = {};
 
-		private hash: { [key: string]: DataSeries[] };
-
+		intervals: number[] = [];
 		clearAllOnAddData = false;
-
-		constructor()
-		{
-			this.intervals = [];
-			this.hash = {};
-		}
 
 		getDataSeriesArray(param1: number): DataSeries[]
 		{
@@ -35,7 +28,7 @@ namespace com.google.finance
 
 		getAllDataSeriesArray()
 		{
-			let _loc1_: DataSeries[] = [];
+			const _loc1_: DataSeries[] = [];
 			for (let _loc2_ = 0; _loc2_ < this.intervals.length; _loc2_++)
 			{
 				let ds = this.getDataSeries(this.intervals[_loc2_]);
@@ -47,22 +40,18 @@ namespace com.google.finance
 
 		clear(param1:number = 0) 
 		{
-			let _loc2_ = 0;
-			let _loc3_ = 0;
 			if (param1 === 0)
 			{
-				_loc2_ = 0;
-				while (_loc2_ < this.intervals.length)
+				for (let _loc2_ = 0; _loc2_ < this.intervals.length; _loc2_++)
 				{
 					delete this.hash["series" + this.intervals[_loc2_]];
-					_loc2_++;
 				}
 				this.intervals = [];
 			}
 			else
 			{
 				delete this.hash["series" + param1];
-				_loc3_ = this.intervals.indexOf(param1);
+				const _loc3_ = this.intervals.indexOf(param1);
 				if (_loc3_ !== -1)
 					this.intervals.splice(_loc3_, 1);
 			}

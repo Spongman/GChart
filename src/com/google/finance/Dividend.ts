@@ -5,9 +5,7 @@ namespace com.google.finance
 	export class Dividend extends StockAssociatedObject
 	{
 		currency: string;
-
 		amount: number;
-
 		yield: number;
 
 		constructor(param1: number, param2: number, param3: SeriesPosition[] | null, param4: number, param5: Date, param6: number, param7: string, param8: number, param9: string, param10: number)

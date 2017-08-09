@@ -455,7 +455,7 @@ namespace com.google.finance
 
 		static getZoomLevel(param1: number, param2: number): number
 		{
-			let _loc3_ = Const.SCALE_INTERVALS;
+			const _loc3_ = Const.SCALE_INTERVALS;
 			let _loc4_ = _loc3_.length - 1;
 			while (_loc3_[_loc4_].days * param2 < Math.floor(param1) && _loc4_ > 0)
 			{
@@ -488,7 +488,7 @@ namespace com.google.finance
 		{
 			if (Const.DEFAULT_DISPLAY_MINUTES !== -1)
 			{
-				let _loc2_ = !!param1 ? 1 : Const.MARKET_DAY_LENGTH;
+				const _loc2_ = !!param1 ? 1 : Const.MARKET_DAY_LENGTH;
 				return Const.DEFAULT_DISPLAY_MINUTES / _loc2_;
 			}
 			return Const.DEFAULT_DISPLAY_DAYS;

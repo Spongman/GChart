@@ -8,7 +8,6 @@ namespace com.google.finance
 	export class JSProxy
 	{
 		private javascriptRequestMade = false;
-
 		private javascriptNotified = false;
 
 		constructor(private mainManager: com.google.finance.MainManager)
@@ -33,7 +32,7 @@ namespace com.google.finance
 		addObject(param1: string, param2: string, param3: Date, param4: string, param5: number) 
 		{
 			param1 = Utils.adjustNasdToNasdaq(param1);
-			let _loc6_ = {
+			const _loc6_ = {
 				"_qname": param1,
 				"_type": param2,
 				"_date": param3,
@@ -45,7 +44,7 @@ namespace com.google.finance
 
 		removeLayerFromStyle(param1: LayerInfo, param2: string) 
 		{
-			let _loc3_ = this.mainManager.layersManager;
+			const _loc3_ = this.mainManager.layersManager;
 			_loc3_.removeLayerFromStyle(param1, param2);
 		}
 
@@ -119,7 +118,7 @@ namespace com.google.finance
 
 		importGVizData(param1: any, param2: string, param3: number) 
 		{
-			let _loc4_ = this.mainManager.layersManager.getFirstDataSource();
+			const _loc4_ = this.mainManager.layersManager.getFirstDataSource();
 			if (!_loc4_)
 				return;
 
@@ -131,8 +130,8 @@ namespace com.google.finance
 
 		updateLastPrice(param1: boolean, param2: number) 
 		{
-			let _loc3_ = this.mainManager.layersManager.getFirstDataSource();
-			let _loc4_ = this.mainManager.displayManager;
+			const _loc3_ = this.mainManager.layersManager.getFirstDataSource();
+			const _loc4_ = this.mainManager.displayManager;
 			if (!_loc3_)
 				return;
 
@@ -190,12 +189,12 @@ namespace com.google.finance
 
 		toggleIndicator(param1: string, param2: string) 
 		{
-			let _loc3_ = this.mainManager.layersManager;
-			let _loc4_ = this.mainManager.displayManager;
-			let _loc5_ = param2.split("*");
+			const _loc3_ = this.mainManager.layersManager;
+			const _loc4_ = this.mainManager.displayManager;
+			const _loc5_ = param2.split("*");
 			if (Const.DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1 || Const.VOLUME_DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1)
 			{
-				let _loc6_ = Const.DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1 ? Const.MAIN_VIEW_POINT_NAME : Const.BOTTOM_VIEW_POINT_NAME;
+				const _loc6_ = Const.DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1 ? Const.MAIN_VIEW_POINT_NAME : Const.BOTTOM_VIEW_POINT_NAME;
 				if (_loc5_[0] === "true")
 				{
 					_loc4_.enableIndicatorConfig(param1, true);
@@ -228,7 +227,7 @@ namespace com.google.finance
 					_loc3_.hideViewPoint(param1, LayersManager.SINGLE);
 					Const.MOVIE_HEIGHT = this.mainManager.stage.stageHeight;
 				}
-				let _loc7_ = _loc4_.getMainViewPoint();
+				const _loc7_ = _loc4_.getMainViewPoint();
 				if (_loc7_)
 					_loc7_.checkEvents();
 
@@ -271,9 +270,9 @@ namespace com.google.finance
 		{
 			if (this.mainManager.layersManager.getStyle() === LayersManager.SINGLE)
 			{
-				let _loc2_ = this.mainManager.displayManager;
-				let _loc3_ = _loc2_.getEnabledChartLayer();
-				let _loc4_ = param1 + "ChartLayer";
+				const _loc2_ = this.mainManager.displayManager;
+				const _loc3_ = _loc2_.getEnabledChartLayer();
+				const _loc4_ = param1 + "ChartLayer";
 				_loc2_.setEnabledChartLayer("");
 				_loc2_.mainController.toggleZoomIntervalButtons(_loc3_, _loc4_);
 				_loc2_.setEnabledChartLayer(_loc4_);
@@ -298,14 +297,14 @@ namespace com.google.finance
 
 		addLayerToStyle(param1: LayerInfo, param2: string) 
 		{
-			let _loc3_ = this.mainManager.layersManager;
+			const _loc3_ = this.mainManager.layersManager;
 			_loc3_.addLayerToStyle(param1, param2);
 		}
 
 		setParameter(param1: string, param2: string) 
 		{
-			let _loc3_ = this.mainManager.layersManager;
-			let _loc4_ = this.mainManager.displayManager;
+			const _loc3_ = this.mainManager.layersManager;
+			const _loc4_ = this.mainManager.displayManager;
 			com.google.finance.MainManager.paramsObj[param1] = param2;
 			if (param1 === "displayNewsPins")
 				Const.DISPLAY_NEWS_PINS = "true" === String(param2);
@@ -326,11 +325,11 @@ namespace com.google.finance
 				else
 					_loc4_.setAfterHoursDisplay(false);
 
-				let _loc5_ = _loc4_.getMainViewPoint();
+				const _loc5_ = _loc4_.getMainViewPoint();
 				if (_loc5_)
 					this.setJsCurrentViewParam("defaultDisplayMinutes", _loc5_.count);
 
-				let _loc6_ = _loc3_.getFirstDataSource();
+				const _loc6_ = _loc3_.getFirstDataSource();
 				if (_loc6_)
 					this.setForceDisplayExtendedHours(_loc6_);
 			}
@@ -343,8 +342,8 @@ namespace com.google.finance
 		addData(param1: string, param2: string, param3: string, param4: string, param5: string) 
 		{
 			param1 = Utils.adjustNasdToNasdaq(param1);
-			let _loc6_ = this.mainManager.dataManager;
-			let _loc7_ = EventFactory.getEvent(ChartEventTypes.GET_DATA, param1, ChartEventTypes.OPTIONAL);
+			const _loc6_ = this.mainManager.dataManager;
+			const _loc7_ = EventFactory.getEvent(ChartEventTypes.GET_DATA, param1, ChartEventTypes.OPTIONAL);
 			_loc6_.addData(_loc7_, decodeURIComponent(param3));
 			if (param5)
 				_loc6_.addData(_loc7_, decodeURIComponent(param5));
@@ -409,11 +408,11 @@ namespace com.google.finance
 
 		updateLastPriceInDataSeries(param1: DataSeries, param2: number): boolean
 		{
-			let _loc3_ = param1.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
-			let _loc4_ = Utils.getLastRealPointIndex(_loc3_);
+			const _loc3_ = param1.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
+			const _loc4_ = Utils.getLastRealPointIndex(_loc3_);
 			if (_loc4_ >= 0)
 			{
-				let _loc5_ = _loc3_[_loc4_];
+				const _loc5_ = _loc3_[_loc4_];
 				_loc5_.close = param2;
 				_loc5_.low = Utils.extendedMin(_loc5_.low, param2);
 				_loc5_.high = Utils.extendedMax(_loc5_.high, param2);
@@ -484,7 +483,7 @@ namespace com.google.finance
 
 		setForceDisplayExtendedHours(dataSource: DataSource) 
 		{
-			let _loc2_ = dataSource.visibleExtendedHours.length() !== 0;
+			const _loc2_ = dataSource.visibleExtendedHours.length() !== 0;
 			this.setJsCurrentViewParam("forceDisplayExtendedHours", _loc2_);
 		}
 

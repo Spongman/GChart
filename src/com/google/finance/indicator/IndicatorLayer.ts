@@ -86,7 +86,7 @@ namespace com.google.finance.indicator
 			this.indicatorValueTextArray = [];
 			for (let _loc3_ = 0; _loc3_ < IndicatorLayer.COLORS.length; _loc3_++)
 			{
-				let _loc4_ = new flash.text.TextField();
+				const _loc4_ = new flash.text.TextField();
 				_loc4_.selectable = false;
 				_loc4_.textColor = this.getColor(_loc3_);
 				_loc4_.defaultTextFormat = new flash.text.TextFormat(IndicatorLayer.INDICATOR_TEXT_FONT, IndicatorLayer.INDICATOR_TEXT_FONT_SIZE, _loc4_.textColor);
@@ -126,14 +126,14 @@ namespace com.google.finance.indicator
 			let _loc13_ = 0;
 			let _loc14_ = 0;
 			let _loc9_ = Number.MAX_VALUE;
-			let _loc11_ = this.getYPos(param6, new IndicatorPoint(0, <DataUnit><any>null));	// TODO
+			const _loc11_ = this.getYPos(param6, new IndicatorPoint(0, <DataUnit><any>null));	// TODO
 			let _loc12_ = param4;
 			const gr = this.graphics;
 			while (_loc12_ >= param3)
 			{
 				if (!isNaN(param1[param2].points[_loc12_].getValue()))
 				{
-					let _loc10_ = param1[param2].points[_loc12_].getPoint();
+					const _loc10_ = param1[param2].points[_loc12_].getPoint();
 					if (param7 === Const.WEEKLY && param8 !== Const.LINE_CHART)
 						_loc9_ = this.getWeeklyBarXPos(_loc10_, _loc9_);
 
@@ -193,7 +193,7 @@ namespace com.google.finance.indicator
 			{
 				if (!isNaN(param1[param2].points[_loc11_].getValue()))
 				{
-					let _loc10_ = param1[param2].points[_loc11_].getPoint();
+					const _loc10_ = param1[param2].points[_loc11_].getPoint();
 					if (param7 === Const.WEEKLY && param8 !== Const.LINE_CHART)
 						_loc9_ = this.getWeeklyBarXPos(_loc10_, _loc9_);
 
@@ -219,9 +219,9 @@ namespace com.google.finance.indicator
 			if (!param2)
 				param2 = this.medianLineCanvas;
 
-			let _loc3_ = this.localYOffset;
-			let _loc4_ = this.viewPoint.minx;
-			let _loc5_ = this.viewPoint.maxx;
+			const _loc3_ = this.localYOffset;
+			const _loc4_ = this.viewPoint.minx;
+			const _loc5_ = this.viewPoint.maxx;
 			let _loc6_ = 0;
 			const gr = param2.graphics;
 			gr.lineStyle(1, param1);
@@ -268,14 +268,14 @@ namespace com.google.finance.indicator
 				return;
 
 			this.clearHighlight();
-			let _loc4_ = this.viewPoint;
-			let _loc5_ = _loc4_.getDetailLevelForTechnicalStyle();
-			let _loc6_ = this.getIntervalText(_loc5_);
-			let _loc7_ = this.getDataSeriesArray(_loc5_);
+			const _loc4_ = this.viewPoint;
+			const _loc5_ = _loc4_.getDetailLevelForTechnicalStyle();
+			const _loc6_ = this.getIntervalText(_loc5_);
+			const _loc7_ = this.getDataSeriesArray(_loc5_);
 			if (!_loc7_)
 				return;
 
-			let _loc8_ = this.findPointIndex(param2);
+			const _loc8_ = this.findPointIndex(param2);
 			if (_loc8_ === -1)
 				return;
 
@@ -284,7 +284,7 @@ namespace com.google.finance.indicator
 				let point = _loc7_[_loc11_].points[_loc8_];
 				if (!point)
 					continue;	// TODO:
-				let _loc9_ = point.getPoint();
+				const _loc9_ = point.getPoint();
 				let _loc10_ = point.getValue();
 				if (!isNaN(_loc10_))
 				{
@@ -328,7 +328,7 @@ namespace com.google.finance.indicator
 		private doCopyLastIndicatorPoint(param1: DataUnit, param2: DataSeries[])
 		{
 			let _loc5_ = 0;
-			let _loc3_ = new IndicatorPoint(NaN, param1);
+			const _loc3_ = new IndicatorPoint(NaN, param1);
 			for (let _loc4_ = 0; _loc4_ < param2.length; _loc4_++)
 			{
 				_loc5_ = param2[_loc4_].points.length;
@@ -343,15 +343,15 @@ namespace com.google.finance.indicator
 
 		protected findPointIndex(param1: number): number
 		{
-			let _loc2_ = this.viewPoint;
-			let _loc3_ = this.originalDataSeries;
-			let _loc4_ = _loc2_.getDetailLevelForTechnicalStyle();
-			let _loc5_ = Const.getDetailLevelInterval(_loc4_);
-			let _loc6_ = _loc3_.getPointsInIntervalArray(_loc5_);
+			const _loc2_ = this.viewPoint;
+			const _loc3_ = this.originalDataSeries;
+			const _loc4_ = _loc2_.getDetailLevelForTechnicalStyle();
+			const _loc5_ = Const.getDetailLevelInterval(_loc4_);
+			const _loc6_ = _loc3_.getPointsInIntervalArray(_loc5_);
 			if (!_loc6_)
 				return -1;
 
-			let _loc7_ = _loc2_.getMinuteOfX(param1);
+			const _loc7_ = _loc2_.getMinuteOfX(param1);
 			let _loc8_ = _loc3_.getRelativeMinuteIndex(_loc7_, _loc6_);
 			if (_loc8_ === _loc6_.length - 2)
 			{
@@ -403,7 +403,7 @@ namespace com.google.finance.indicator
 		{
 			if (param1.duplicate)
 			{
-				let _loc3_ = new IndicatorPoint(NaN, param1);
+				const _loc3_ = new IndicatorPoint(NaN, param1);
 				for (let _loc4_ = 0; _loc4_ < rest.length; _loc4_++)
 				{
 					rest[_loc4_].points.push(_loc3_);
@@ -429,11 +429,11 @@ namespace com.google.finance.indicator
 				return;
 
 			this.graphics.clear();
-			let _loc2_ = this.viewPoint;
-			let _loc3_ = _loc2_.getDetailLevelForTechnicalStyle();
-			let _loc4_ = Const.getDetailLevelInterval(_loc3_);
-			let _loc5_ = this.originalDataSeries;
-			let _loc6_ = _loc5_.getPointsInIntervalArray(_loc4_);
+			const _loc2_ = this.viewPoint;
+			const _loc3_ = _loc2_.getDetailLevelForTechnicalStyle();
+			const _loc4_ = Const.getDetailLevelInterval(_loc3_);
+			const _loc5_ = this.originalDataSeries;
+			const _loc6_ = _loc5_.getPointsInIntervalArray(_loc4_);
 			if (!_loc6_)
 			{
 				if (this.indicatorNameText)
@@ -447,11 +447,11 @@ namespace com.google.finance.indicator
 				}
 				return;
 			}
-			let _loc7_ = this.getDataSeriesArray(_loc3_);
+			const _loc7_ = this.getDataSeriesArray(_loc3_);
 			if (!_loc7_)
 				return;
 
-			let _loc8_ = this.getIntervalText(_loc3_);
+			const _loc8_ = this.getIntervalText(_loc3_);
 			if (this.indicatorNameText)
 				this.indicatorNameText.text = this.getIndicatorNameText(_loc8_);
 
@@ -460,7 +460,7 @@ namespace com.google.finance.indicator
 			if (_loc9_ < _loc6_.length - 1)
 				_loc9_ = _loc9_ + 1;
 
-			let _loc10_ = this.getLastRealPointIndex(_loc6_);
+			const _loc10_ = this.getLastRealPointIndex(_loc6_);
 			if (_loc9_ > _loc10_)
 				_loc9_ = _loc10_;
 
@@ -468,7 +468,7 @@ namespace com.google.finance.indicator
 			if (_loc11_ < 0)
 				_loc11_ = 0;
 
-			let _loc12_ = this.viewPoint.getDisplayManager().getEnabledChartLayer();
+			const _loc12_ = this.viewPoint.getDisplayManager().getEnabledChartLayer();
 			for (let _loc13_ = 0; _loc13_ < _loc7_.length; _loc13_++)
 			{
 				let points = _loc7_[_loc13_].points;
@@ -478,7 +478,7 @@ namespace com.google.finance.indicator
 					_loc15_ = points.length - 1;	// TODO: never
 
 				let _loc16_ = _loc11_;
-				let _loc17_ = points.length;
+				const _loc17_ = points.length;
 				while (_loc16_ < _loc17_ && isNaN(points[_loc16_].getValue()))
 					_loc16_++;
 
@@ -517,9 +517,9 @@ namespace com.google.finance.indicator
 		getDataSeriesArray(param1: number, param2?: Context): DataSeries[] | null
 		{
 			let _loc6_ = 0;
-			let _loc3_ = Const.getDetailLevelInterval(param1);
-			let _loc4_ = this.originalDataSeries;
-			let _loc5_ = _loc4_.getPointsInIntervalArray(_loc3_);
+			const _loc3_ = Const.getDetailLevelInterval(param1);
+			const _loc4_ = this.originalDataSeries;
+			const _loc5_ = _loc4_.getPointsInIntervalArray(_loc3_);
 			if (!_loc5_ || _loc5_.length === 0)
 				return null;
 

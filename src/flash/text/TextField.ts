@@ -20,27 +20,29 @@
 
 	export class TextFormat
 	{
-		constructor(public family: string, public size = 0, public color = 0, public bold = false, public italic = false, public underline = false) { }
 		align: string;
+
+		constructor(public family: string, public size = 0, public color = 0, public bold = false, public italic = false, public underline = false) { }
 	}
 
 	export class TextField
 		extends flash.display.InteractiveObject
 	{
+		type: TextFieldType = TextFieldType.INPUT;
+		autoSize: string;
+		cacheAsBitmap: boolean;
+		selectable: boolean;
+		wordWrap: boolean;
+
 		constructor()
 		{
 			super(document.createElement("span"));
 		}
 
-		type: TextFieldType = TextFieldType.INPUT;
-
 		appendText(p: string)
 		{
 			this.element.textContent += p;
 		}
-
-		autoSize: string;
-		cacheAsBitmap: boolean;
 
 		setTextFormat(p: TextFormat, start: number = -1, end: number = -1) { }
 		getTextFormat(): TextFormat|null { return null; }
@@ -64,7 +66,7 @@
 		get htmlText(): string { return this.element.innerHTML; }
 		set htmlText(value: string) { this.element.innerHTML = value; }
 
-		_textColor: number;
+		private _textColor: number;
 		get textColor(): number { return this._textColor }
 		set textColor(value: number)
 		{
@@ -72,15 +74,12 @@
 			this.element.style.color = cssColor(value);
 		}
 
-		_textHeight: number;
+		private _textHeight: number;
 		get textHeight(): number { return this._textHeight; }
 		set textHeight(value: number)
 		{
 			this._textHeight = value;
 			this.element.style.fontSize = value + "pt";
 		}
-
-		selectable: boolean;
-		wordWrap: boolean;
 	}
 }

@@ -7,12 +7,11 @@ namespace com.google.finance
 
 	export class DraggableHandle extends flash.display.Sprite
 	{
-		button: flash.display.SimpleButton;
+		readonly button = new flash.display.SimpleButton();
 
 		constructor(param1: typeof flash.display.Bitmap, param2: typeof flash.display.Bitmap)
 		{
 			super();
-			this.button = new flash.display.SimpleButton();
 			this.button.overState = this.button.downState = new param2();
 			this.button.hitTestState = this.button.upState = new param1();
 			this.button.useHandCursor = false;

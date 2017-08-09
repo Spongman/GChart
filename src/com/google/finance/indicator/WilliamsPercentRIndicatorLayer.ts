@@ -47,24 +47,18 @@ namespace com.google.finance.indicator
 
 		computeIntervalIndicator(param1: number) 
 		{
-			let _loc3_ = NaN;
-			let _loc4_ = NaN;
-			let _loc5_ = NaN;
-			let _loc6_ = 0;
-			let _loc7_ = 0;
 			if (this.indicator.hasInterval(param1))
 				return;
 
-			let _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
+			const _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
 			if (!_loc2_)
 				return;
 
-			let _loc9_ = new DataSeries();
-			let _loc8_: DataUnit[] = [];
-			_loc6_ = 0;
-			while (_loc6_ < _loc2_.length)
+			const _loc9_ = new DataSeries();
+			const _loc8_: DataUnit[] = [];
+			for (let _loc6_ = 0; _loc6_ < _loc2_.length; _loc6_++)
 			{
-				let _loc10_ = _loc2_[_loc6_];
+				const _loc10_ = _loc2_[_loc6_];
 				if (!this.shouldSkip(_loc10_, _loc9_))
 				{
 					_loc8_.push(_loc10_);
@@ -74,18 +68,16 @@ namespace com.google.finance.indicator
 					}
 					else
 					{
-						_loc3_ = Number.NEGATIVE_INFINITY;
-						_loc4_ = Number.POSITIVE_INFINITY;
-						_loc7_ = 0;
-						while (_loc7_ < this.period)
+						let _loc3_ = Number.NEGATIVE_INFINITY;
+						let _loc4_ = Number.POSITIVE_INFINITY;
+						for (let _loc7_ = 0; _loc7_ < this.period; _loc7_++)
 						{
 							_loc3_ = Utils.extendedMax(_loc3_, _loc8_[_loc7_].high);
 							_loc4_ = Utils.extendedMin(_loc4_, _loc8_[_loc7_].low);
-							_loc7_++;
 						}
 						if (_loc3_ !== _loc4_)
 						{
-							_loc5_ = (_loc3_ - _loc10_.close) / (_loc3_ - _loc4_) * 100;
+							const _loc5_ = (_loc3_ - _loc10_.close) / (_loc3_ - _loc4_) * 100;
 							_loc9_.points.push(new IndicatorPoint(_loc5_, _loc10_));
 						}
 						else
@@ -95,7 +87,6 @@ namespace com.google.finance.indicator
 						_loc8_.shift();
 					}
 				}
-				_loc6_++;
 			}
 			this.indicator.setDataSeries(param1, _loc9_, 0);
 		}

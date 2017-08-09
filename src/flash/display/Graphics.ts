@@ -87,8 +87,8 @@ namespace flash.display
 				canvas.style.left = this._minx + "px";
 				canvas.style.top = this._miny + "px";
 				this._sized = true;
-				if (this._fill || this._path)
-					console.log("ensure during path");
+				//if (this._fill || this._path)
+				//	console.log("ensure during path");
 
 				context.lineWidth = this._thickness;
 				context.lineCap = (this._thickness > 4) ? "round" : "butt";
@@ -103,13 +103,13 @@ namespace flash.display
 				return;
 			}
 
-			if (this._fill || this._path)
-				console.log("ensure during path");
+			//if (this._fill || this._path)
+			//	console.log("ensure during path");
 
 			let oldminx = this._minx;
 			let oldminy = this._miny;
-			let oldmaxx = this._maxx;
-			let oldmaxy = this._maxy;
+			//let oldmaxx = this._maxx;
+			//let oldmaxy = this._maxy;
 
 			if (this._minx > minx)
 			{

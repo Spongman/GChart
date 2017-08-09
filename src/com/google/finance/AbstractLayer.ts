@@ -4,8 +4,6 @@ namespace com.google.finance
 {
 	export class AbstractLayer<T extends IViewPoint> extends flash.display.Sprite
 	{
-		private _dataSource: com.google.finance.DataSource;
-
 		layerId: string;
 		layerType: string;
 
@@ -16,7 +14,6 @@ namespace com.google.finance
 		lineVisibility: number;
 
 		hasText: boolean;
-
 		type: string;
 		
 		constructor(public viewPoint: T, public dataSource: com.google.finance.DataSource)

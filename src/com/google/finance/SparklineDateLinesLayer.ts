@@ -4,38 +4,33 @@ namespace com.google.finance
 	// import flash.text.TextField;
 	export class SparklineDateLinesLayer extends AbstractLayer<SparklineViewPoint>
 	{
-		tickPosition: number;
-
 		private static readonly MIN_YEAR_WIDTH = 50;
-
 		private static readonly DATE_LINES_COLOR = 13426124;
-
 		private static readonly SHORT_YEAR_LINE_HEIGHT = 5;
 
+		tickPosition = Const.TOP;
+		
 		constructor(viewPoint: SparklineViewPoint, dataSource: com.google.finance.DataSource)
 		{
 			super(viewPoint, dataSource);
-			this.tickPosition = Const.TOP;
 		}
 
 		private drawQuarterStarts(param1: flash.display.Sprite) 
 		{
-			let _loc10_ = NaN;
-			let _loc2_ = this.dataSource.data;
+			const _loc2_ = this.dataSource.data;
 			if (!_loc2_.units || _loc2_.firsts.length === 0)
 				return;
 
-			let _loc3_ = this.viewPoint;
-			let _loc4_ = _loc3_.maxx;
-			let _loc5_ = _loc3_.maxy;
-			let _loc6_ = _loc3_.minx;
+			const _loc3_ = this.viewPoint;
+			const _loc4_ = _loc3_.maxx;
+			const _loc5_ = _loc3_.maxy;
+			const _loc6_ = _loc3_.minx;
 			let _loc7_ = _loc6_ + 1;
-			let _loc8_ = _loc2_.firsts.length - 1;
 			const gr = param1.graphics;
-			while (_loc7_ > _loc6_ && _loc8_ >= 0)
+			for (let _loc8_ = _loc2_.firsts.length - 1; _loc7_ > _loc6_ && _loc8_ >= 0; _loc8_--)
 			{
-				let _loc9_ = _loc2_.units[_loc2_.firsts[_loc8_]];
-				_loc10_ = _loc9_.exchangeDateInUTC.getUTCMonth();
+				const _loc9_ = _loc2_.units[_loc2_.firsts[_loc8_]];
+				const _loc10_ = _loc9_.exchangeDateInUTC.getUTCMonth();
 				if (_loc10_ % 3 === 0)
 				{
 					_loc7_ = _loc3_.getXPos(_loc4_, _loc6_, _loc9_);
@@ -43,13 +38,12 @@ namespace com.google.finance
 					gr.moveTo(_loc7_, _loc5_);
 					gr.lineTo(_loc7_, _loc5_ - 4);
 				}
-				_loc8_--;
 			}
 		}
 
 		private drawYearStarts(param1: flash.display.Sprite) 
 		{
-			let _loc2_ = this.dataSource.data;
+			const _loc2_ = this.dataSource.data;
 			if (!_loc2_.units || _loc2_.years.length === 0)
 				return;
 
@@ -60,25 +54,25 @@ namespace com.google.finance
 			const gr = param1.graphics;
 			gr.lineStyle(0, SparklineDateLinesLayer.DATE_LINES_COLOR, 1);
 			let _loc4_ = _loc2_.years.length - 1;
-			let _loc5_ = this.viewPoint as SparklineViewPoint;
-			let _loc6_ = _loc5_.maxx;
-			let _loc7_ = _loc5_.minx;
-			let _loc8_ = _loc5_.maxy;
-			let _loc9_ = _loc5_.miny;
+			const _loc5_ = this.viewPoint as SparklineViewPoint;
+			const _loc6_ = _loc5_.maxx;
+			const _loc7_ = _loc5_.minx;
+			const _loc8_ = _loc5_.maxy;
+			const _loc9_ = _loc5_.miny;
 			let _loc11_: number;
 
 			let numTextFields = 0;
 			do
 			{
-				let _loc10_ = _loc2_.units[_loc2_.years[_loc4_]];
+				const _loc10_ = _loc2_.units[_loc2_.years[_loc4_]];
 				_loc11_ = _loc5_.getXPos(_loc6_, _loc7_, _loc10_);
-				let _loc12_ = _loc10_.exchangeDateInUTC;
+				const _loc12_ = _loc10_.exchangeDateInUTC;
 				if (_loc12_.getUTCFullYear() % _loc3_ === 0)
 				{
 					gr.moveTo(_loc11_, _loc9_);
 					gr.lineTo(_loc11_, _loc8_);
-					let _loc13_ = _loc11_ + ViewPoint.TEXT_HORIZONTAL_OFFSET;
-					let _loc14_ = _loc8_ - 15;
+					const _loc13_ = _loc11_ + ViewPoint.TEXT_HORIZONTAL_OFFSET;
+					const _loc14_ = _loc8_ - 15;
 
 					let _loc15_: flash.text.TextField;
 
@@ -99,8 +93,8 @@ namespace com.google.finance
 					_loc15_.y = _loc14_;
 					_loc15_.defaultTextFormat = _loc5_.dateTextFormat;
 					_loc15_.text = "" + _loc12_.getUTCFullYear();
-					let _loc16_ = _loc15_.width;
-					let _loc17_ = _loc15_.height;
+					const _loc16_ = _loc15_.width;
+					const _loc17_ = _loc15_.height;
 					gr.lineStyle(0, 0, 0);
 					gr.moveTo(_loc13_ + 2, _loc14_ + 2);
 					gr.beginFill(0xffffff, 80);
@@ -134,12 +128,12 @@ namespace com.google.finance
 
 		private getOneYearWidth(): number
 		{
-			let _loc1_ = this.dataSource.data;
+			const _loc1_ = this.dataSource.data;
 			if (_loc1_.years.length > 1)
 			{
-				let _loc2_ = _loc1_.units;
-				let _loc3_ = _loc1_.years.length - 1;
-				let _loc4_ = _loc2_[_loc1_.years[_loc3_]].relativeMinutes - _loc2_[_loc1_.years[_loc3_ - 1]].relativeMinutes;
+				const _loc2_ = _loc1_.units;
+				const _loc3_ = _loc1_.years.length - 1;
+				const _loc4_ = _loc2_[_loc1_.years[_loc3_]].relativeMinutes - _loc2_[_loc1_.years[_loc3_ - 1]].relativeMinutes;
 				return this.viewPoint.getIntervalLength(_loc4_);
 			}
 			return 250 * _loc1_.marketDayLength;

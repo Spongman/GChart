@@ -11,15 +11,10 @@ namespace com.google.finance
 	export class DataRequestHandler
 	{
 		private intervalId: number;
-
-		private urlLoader: flash.net.URLLoader;
-
+		private readonly urlLoader = new flash.net.URLLoader();
 		private dataManager: com.google.finance.DataManager;
-
 		private url: string;
-
-		private tries: number;
-
+		private tries: number = 0;
 		private event: com.google.finance.ChartEvent;
 
 		constructor(param1: com.google.finance.DataManager, param2: string, param3: com.google.finance.ChartEvent)
@@ -27,8 +22,6 @@ namespace com.google.finance
 			this.dataManager = param1;
 			this.event = param3;
 			this.url = param2;
-			this.urlLoader = new flash.net.URLLoader();
-			this.tries = 0;
 			this.initListeners();
 			if (param2)
 			{
@@ -65,11 +58,10 @@ namespace com.google.finance
 
 		private completeHandler(event: Event) 
 		{
-			let _loc5_ = 0;
-			//let _loc2_ = this.event.target as flash.net.URLLoader;
+			//const _loc2_ = this.event.target as flash.net.URLLoader;
 			clearInterval(this.intervalId);
-			let _loc3_ = this.dataManager.dataSources;
-			let _loc4_ = _loc3_[this.event.quote].addStream(decodeURIComponent(this.urlLoader.data), this.event);
+			const _loc3_ = this.dataManager.dataSources;
+			const _loc4_ = _loc3_[this.event.quote].addStream(decodeURIComponent(this.urlLoader.data), this.event);
 			switch (_loc4_)
 			{
 				case Const.ERROR:
@@ -87,8 +79,8 @@ namespace com.google.finance
 					{
 						for (let _loc5_ = 0; _loc5_ < this.event.callbacks.length; _loc5_++)
 						{
-							let _loc6_: { (p1: any): void } = this.event.callbacks[_loc5_].func;
-							let _loc7_ = this.event.callbacks[_loc5_].param;
+							const _loc6_: { (p1: any): void } = this.event.callbacks[_loc5_].func;
+							const _loc7_ = this.event.callbacks[_loc5_].param;
 							_loc6_.apply(this, _loc7_);
 						}
 					}

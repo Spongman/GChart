@@ -5,13 +5,10 @@ namespace com.google.finance
 
 	export class StockDividendMovie extends SplitMovie
 	{
-		private readonly DividendArrowSidewaysClass = StockDividendMovie_DividendArrowSidewaysClass;
-
-		private readonly DividendArrowOnOverClass = StockDividendMovie_DividendArrowOnOverClass;
-
-		private readonly DividendArrowClass = StockDividendMovie_DividendArrowClass;
-
-		private readonly DividendArrowSidewaysOverClass = StockDividendMovie_DividendArrowSidewaysOverClass;
+		private static readonly DividendArrowSidewaysClass = StockDividendMovie_DividendArrowSidewaysClass;
+		private static readonly DividendArrowOnOverClass = StockDividendMovie_DividendArrowOnOverClass;
+		private static readonly DividendArrowClass = StockDividendMovie_DividendArrowClass;
+		private static readonly DividendArrowSidewaysOverClass = StockDividendMovie_DividendArrowSidewaysOverClass;
 
 		private associatedStockDividend: com.google.finance.StockDividend;
 
@@ -28,10 +25,10 @@ namespace com.google.finance
 
 		protected initArrows() 
 		{
-			this.arrow = new this.DividendArrowClass();
-			this.arrowOnOver = new this.DividendArrowOnOverClass();
-			this.arrowSideways = new this.DividendArrowSidewaysClass();
-			this.arrowSidewaysOver = new this.DividendArrowSidewaysOverClass();
+			this.arrow = new StockDividendMovie.DividendArrowClass();
+			this.arrowOnOver = new StockDividendMovie.DividendArrowOnOverClass();
+			this.arrowSideways = new StockDividendMovie.DividendArrowSidewaysClass();
+			this.arrowSidewaysOver = new StockDividendMovie.DividendArrowSidewaysOverClass();
 		}
 
 		getDetailedText(): string
@@ -42,7 +39,7 @@ namespace com.google.finance
 			else
 				_loc1_ = Messages.getMsg(Messages.STOCK_DIVIDEND_TEXT);
 
-			let _loc2_ = _loc1_.concat("\n", Messages.getMsg(Messages.ADJUSTMENT_FACTOR_TEXT, this.associatedStockDividend.adjustmentFactor));
+			const _loc2_ = _loc1_.concat("\n", Messages.getMsg(Messages.ADJUSTMENT_FACTOR_TEXT, this.associatedStockDividend.adjustmentFactor));
 			return _loc2_;
 		}
 
@@ -61,7 +58,7 @@ namespace com.google.finance
 
 		getDateText(): string
 		{
-			let _loc1_ = this.associatedStockDividend.exchangeDateInUTC;
+			const _loc1_ = this.associatedStockDividend.exchangeDateInUTC;
 			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
 				return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeLocale.LONG_DATE_FORMAT, _loc1_, true);
 

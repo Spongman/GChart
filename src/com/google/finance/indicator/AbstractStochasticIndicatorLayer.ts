@@ -10,9 +10,7 @@ namespace com.google.finance.indicator
 	{
 		private static readonly PARAMETER_NAMES = ["kPeriod", "dPeriod"];
 
-
 		protected dPeriod = 3;
-
 		protected kPeriod = 14;
 
 		constructor(viewPoint: ViewPoint, dataSource: DataSource)

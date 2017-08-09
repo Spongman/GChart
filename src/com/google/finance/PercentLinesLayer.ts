@@ -5,7 +5,6 @@ namespace com.google.finance
 	export class PercentLinesLayer extends PriceLinesLayer
 	{
 		private localYOffset: number;
-
 		private localYScale: number;
 
 		constructor(param1: ViewPoint, param2: DataSource)
@@ -24,7 +23,7 @@ namespace com.google.finance
 		{
 			const gr = this.graphics;
 			gr.lineStyle(0, Const.ZERO_PERCENT_LINE_COLOR, 1);
-			let _loc2_ = this.getYPos(0, param1);
+			const _loc2_ = this.getYPos(0, param1);
 			gr.moveTo(this.viewPoint.minx + 1, _loc2_);
 			gr.lineTo(this.viewPoint.maxx - 1, _loc2_);
 		}
@@ -32,7 +31,7 @@ namespace com.google.finance
 		protected getMinLineValue(param1: Context): number
 		{
 			let _loc2_ = 0;
-			let _loc3_ = (this.inverseLogTransform(param1.minusVariation, param1.verticalScaling) - 1) * 100;
+			const _loc3_ = (this.inverseLogTransform(param1.minusVariation, param1.verticalScaling) - 1) * 100;
 			while (_loc2_ > _loc3_)
 				_loc2_ = Number(_loc2_ - this.distanceBetweenLines);
 
@@ -66,10 +65,9 @@ namespace com.google.finance
 
 		protected getValueForYPos(param1: number, param2: Context): number
 		{
-			let _loc3_ = NaN;
 			if (param2.verticalScaling === Const.LOG_VSCALE || param2.verticalScaling === Const.NEW_LOG_VSCALE)
 			{
-				_loc3_ = param2.localYAdjustment - (param1 - this.localYOffset) / this.localYScale + Utils.logTransform(1);
+				const _loc3_ = param2.localYAdjustment - (param1 - this.localYOffset) / this.localYScale + Utils.logTransform(1);
 				return (this.inverseLogTransform(_loc3_, param2.verticalScaling) - 1) * 100;
 			}
 			return (param2.localYAdjustment - (param1 - this.localYOffset) / this.localYScale) * 100;

@@ -42,8 +42,8 @@ namespace com.google.finance
 		protected getWeeklyBarXPos(param1: DataUnit, param2: number): number
 		{
 			let _loc3_ = (<ViewPoint><any>this.viewPoint).getXPos(param1);
-			let _loc4_ = this.dataSource.data.marketDayLength;
-			let _loc5_ = this.viewPoint.minutePix * _loc4_ * 4;
+			const _loc4_ = this.dataSource.data.marketDayLength;
+			const _loc5_ = this.viewPoint.minutePix * _loc4_ * 4;
 			if (param2 < _loc3_ + _loc5_)
 				_loc3_ = param2 - _loc5_;
 
@@ -53,7 +53,7 @@ namespace com.google.finance
 
 		getOldestMinute(): number
 		{
-			let _loc1_ = this.getDataSeries();
+			const _loc1_ = this.getDataSeries();
 			if (_loc1_)
 				return _loc1_.getFirstRelativeMinute();
 			return 0;
@@ -73,7 +73,7 @@ namespace com.google.finance
 
 		getNewestMinute(): number
 		{
-			let _loc1_ = this.getDataSeries();
+			const _loc1_ = this.getDataSeries();
 			if (_loc1_)
 				return _loc1_.getLastRelativeMinute();
 			return 0;

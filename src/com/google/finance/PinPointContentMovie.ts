@@ -17,31 +17,21 @@ namespace com.google.finance
 
 	export class PinPointContentMovie extends flash.display.Sprite
 	{
-		private static readonly TEXT_FIELD_PADDING= 8;
-
-		private static readonly MIN_CONTENT_WIDTH= 140;
-
-		private static readonly MAX_CONTENT_WIDTH= 250;
-
+		private static readonly TEXT_FIELD_PADDING = 8;
+		private static readonly MIN_CONTENT_WIDTH = 140;
+		private static readonly MAX_CONTENT_WIDTH = 250;
 
 		private movieLeftX: number;
-
 		private activePinPoint: com.google.finance.PinPoint | null;
-
-		private closeButton: flash.display.SimpleButton;
-
+		private closeButton = new flash.display.SimpleButton("closeButton");
 		private viewPoint: com.google.finance.ViewPoint;
-
-		private content: flash.text.TextField;
-
+		private content = new flash.text.TextField();
 		private movieBottomY: number;
 
 		constructor(param1: ViewPoint)
 		{
-			let opt_vp = <ViewPoint>param1;
 			super();
-			this.viewPoint = opt_vp;
-			this.content = new flash.text.TextField();
+			this.viewPoint = param1;
 			this.content.defaultTextFormat = new flash.text.TextFormat("Arial", 11);
 			this.content.selectable = false;
 			this.content.addEventListener(MouseEvents.MOUSE_OVER, (param1: Event) =>
@@ -60,7 +50,6 @@ namespace com.google.finance
 			*/
 			let BubbleCloseButton: { new (): any } = PinPointContentMovie_BubbleCloseButton;
 			let closeButtonBitmap = new BubbleCloseButton();
-			this.closeButton = new flash.display.SimpleButton("closeButton");
 			this.closeButton.overState = closeButtonBitmap;
 			this.closeButton.downState = closeButtonBitmap;
 			this.closeButton.hitTestState = closeButtonBitmap;
@@ -117,7 +106,7 @@ namespace com.google.finance
 				this.content.width = PinPointContentMovie.MIN_CONTENT_WIDTH;
 				this.content.wordWrap = true;
 			}
-			let _loc1_ = this.movieLeftX + this.content.width + 2 * PinPointContentMovie.TEXT_FIELD_PADDING - Const.MOVIE_WIDTH;
+			const _loc1_ = this.movieLeftX + this.content.width + 2 * PinPointContentMovie.TEXT_FIELD_PADDING - Const.MOVIE_WIDTH;
 			this.content.x = this.movieLeftX - Math.max(0, _loc1_);
 			this.content.y = Math.max(this.viewPoint.miny + PinPointContentMovie.TEXT_FIELD_PADDING + 2, this.movieBottomY - this.content.textHeight - 2 * PinPointContentMovie.TEXT_FIELD_PADDING);
 			this.addChild(this.content);
@@ -141,8 +130,8 @@ namespace com.google.finance
 			let _loc4_ = "";
 			if (param3)
 			{
-				let _loc5_ = "_GF_click(\'\', \'n-cn-\', \'" + encodeURIComponent(param1) + "\', \'\');";
-				let _loc6_ = "self.location=\'" + encodeURIComponent(param3) + "\';";
+				const _loc5_ = "_GF_click(\'\', \'n-cn-\', \'" + encodeURIComponent(param1) + "\', \'\');";
+				const _loc6_ = "self.location=\'" + encodeURIComponent(param3) + "\';";
 				_loc4_ = _loc4_ + ("<a href=\"javascript:" + _loc5_ + _loc6_ + "\">");
 				_loc4_ = _loc4_ + "<u><font color=\'#0000CC\' size=\'12\'>";
 			}
@@ -166,7 +155,7 @@ namespace com.google.finance
 
 		protected getDateHtml(param1: Date): string
 		{
-			let _loc2_ = !!Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()) ? "yyyy-MM-dd HH:mm" : "MMM dd, yyyy h:mma";
+			const _loc2_ = !!Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()) ? "yyyy-MM-dd HH:mm" : "MMM dd, yyyy h:mma";
 			return "<font color=\'#0B6CDE\'>" + com.google.i18n.locale.DateTimeLocale.formatDateTime(_loc2_, param1, true) + "</font>";
 		}
 
@@ -194,7 +183,7 @@ namespace com.google.finance
 		private getContentHtmlText(): string
 		{
 			let activePinPoint = notnull(this.activePinPoint);
-			let _loc1_ = activePinPoint.originalObject;
+			const _loc1_ = activePinPoint.originalObject;
 			let _loc2_ = this.getLetterHtml(activePinPoint.letter);
 			if (activePinPoint.exchangeDateInUTC)
 				_loc2_ = _loc2_ + (" " + this.getDateHtml(activePinPoint.exchangeDateInUTC));

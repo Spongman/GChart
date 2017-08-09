@@ -6,9 +6,7 @@ namespace com.google.finance
 	{
 		private static enabledChartLayerName: string | null;
 
-
-		private chartLayers: IntervalBasedChartLayer[];
-
+		private chartLayers: IntervalBasedChartLayer[] = [];
 		private enabledChartLayer: com.google.finance.IntervalBasedChartLayer | null;
 
 		constructor(param1: ViewPoint, param2: DataSource)
@@ -17,22 +15,21 @@ namespace com.google.finance
 			if (!IntervalBasedChartManagerLayer.enabledChartLayerName)
 				IntervalBasedChartManagerLayer.enabledChartLayerName = Const.DEFAULT_CHART_STYLE_NAME;
 
-			this.chartLayers = [];
 			for (let _loc3_ = 0; _loc3_ < Const.CHART_STYLE_NAMES.length; _loc3_++)
 			{
-				let _loc4_ = Const.CHART_STYLE_NAMES[_loc3_];
-				let _loc5_ = getDefinitionByName("com.google.finance." + _loc4_) as typeof IntervalBasedChartLayer;
-				let _loc6_ = new _loc5_(param1, param2);
-				_loc6_.name = _loc4_;
-				_loc6_.layerId = _loc4_;
-				_loc6_.setLayerName(_loc4_);
-				this.chartLayers.push(_loc6_);
-				if (_loc4_ === IntervalBasedChartManagerLayer.enabledChartLayerName)
+				const styleName = Const.CHART_STYLE_NAMES[_loc3_];
+				const className = getDefinitionByName("com.google.finance." + styleName) as typeof IntervalBasedChartLayer;
+				const chartLayer = new className(param1, param2);
+				chartLayer.name = styleName;
+				chartLayer.layerId = styleName;
+				chartLayer.setLayerName(styleName);
+				this.chartLayers.push(chartLayer);
+				if (styleName === IntervalBasedChartManagerLayer.enabledChartLayerName)
 				{
-					_loc6_.setEnabled(true);
-					this.enabledChartLayer = _loc6_;
+					chartLayer.setEnabled(true);
+					this.enabledChartLayer = chartLayer;
 				}
-				this.addChild(_loc6_);
+				this.addChild(chartLayer);
 			}
 		}
 
@@ -59,7 +56,7 @@ namespace com.google.finance
 			}
 			for (let _loc2_ = 0; _loc2_ < this.chartLayers.length; _loc2_++)
 			{
-				let _loc3_ = this.chartLayers[_loc2_];
+				const _loc3_ = this.chartLayers[_loc2_];
 				if (_loc3_.getLayerName() === param1)
 				{
 					_loc3_.setEnabled(true);

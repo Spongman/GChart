@@ -4,40 +4,24 @@ namespace com.google.finance
 	export class MainManager extends flash.display.Sprite
 	{
 		public static paramsObj: any;
-
 		public static jsProxy: com.google.finance.JSProxy;
-
 		public static console: com.google.finance.Console;
-
 		public static mouseCursor: com.google.finance.MouseCursor;
 
-
-		public quote: string;
-
-		public displayManager: com.google.finance.DisplayManager;
-
-		public layersManager: com.google.finance.LayersManager;
-
-		public dataManager: DataManager;
-
-		private defaultDays: number;
-
+		//private defaultDays: number;
 		private firstDataNotified = false;
-
-		private minZoomLevel: number;
-
+		//private minZoomLevel: number;
 		private endTime: number;
-
 		private startTime: number;
-
 		private quoteType: number;
-
-		public stickyArgs: string;
-
-		public url: string;
-
 		private waitSizeIntId: number;
 
+		public quote: string;
+		public displayManager: com.google.finance.DisplayManager;
+		public layersManager: com.google.finance.LayersManager;
+		public dataManager: DataManager;
+		public stickyArgs: string;
+		public url: string;
 		public weekdayBitmap: number;
 
 		constructor(stage: flash.display.Stage)
@@ -58,7 +42,7 @@ namespace com.google.finance
 			if (dataSource.countEvents(ChartEventTypes.REQUIRED) + dataSource.countEvents(ChartEventTypes.EXPECTED) > 0)
 				return;
 
-			let _loc3_ = this.displayManager.getDetailLevel();
+			const _loc3_ = this.displayManager.getDetailLevel();
 			if (this.shouldToggleAfterHours(_loc3_))
 				this.displayManager.toggleAllAfterHoursSessions(true, dataSource);
 			else
@@ -70,7 +54,7 @@ namespace com.google.finance
 			if (!this.displayManager.isDifferentMarketSessionComparison())
 				this.displayManager.computeRelativeTimes(dataSource);
 
-			let _loc4_ = this.layersManager.getFirstDataSource();
+			const _loc4_ = this.layersManager.getFirstDataSource();
 			if (_loc4_)
 			{
 				this.dataManager.syncDataSources(dataSource, this.displayManager);
@@ -90,7 +74,6 @@ namespace com.google.finance
 
 		private parseSettingString(param1: string, param2: number): (string | null)[] | null
 		{
-			let _loc4_ = 0;
 			let _loc3_: (string | null)[] | null = !!param1 ? param1.split(";") : null;
 			if (_loc3_)
 			{
@@ -100,13 +83,11 @@ namespace com.google.finance
 				}
 				else
 				{
-					_loc4_ = 0;
-					while (_loc4_ < _loc3_.length)
+					for (let _loc4_ = 0; _loc4_ < _loc3_.length; _loc4_++)
 					{
 						if (_loc3_[_loc4_] === "")
 							_loc3_[_loc4_] = null;
 
-						_loc4_++;
 					}
 				}
 			}
@@ -134,8 +115,8 @@ namespace com.google.finance
 			this.startTime = MainManager.paramsObj.startTime || NaN;
 			this.endTime = MainManager.paramsObj.endTime || NaN;
 			this.weekdayBitmap = MainManager.paramsObj.weekdayBitmap || Const.DEFAULT_WEEKDAY_BITMAP;
-			let _loc1_ = window.loaderInfo.url;
-			let _loc2_ = _loc1_.substring(0, _loc1_.indexOf("/finance/"));
+			const _loc1_ = window.loaderInfo.url;
+			const _loc2_ = _loc1_.substring(0, _loc1_.indexOf("/finance/"));
 			if (MainManager.paramsObj.u)
 			{
 				if (MainManager.paramsObj.u.indexOf("/finance/") === -1)
@@ -157,7 +138,7 @@ namespace com.google.finance
 			this.dataManager = new com.google.finance.DataManager(this, this.startTime, this.endTime);
 			this.displayManager.init(this.stage.stageWidth, this.stage.stageHeight);
 			this.layersManager = new com.google.finance.LayersManager(this.displayManager, this);
-			let _loc4_ = MainManager.paramsObj.compareTo && MainManager.paramsObj.compareToDiffMarketSessions && MainManager.paramsObj.compareToDiffMarketSessions.indexOf("1") !== -1;
+			const _loc4_ = MainManager.paramsObj.compareTo && MainManager.paramsObj.compareToDiffMarketSessions && MainManager.paramsObj.compareToDiffMarketSessions.indexOf("1") !== -1;
 			this.getQuote(this.quote, MainManager.paramsObj.displayName, Const.getDefaultDisplayDays(_loc4_), true);
 			this.addDefaultCompareToTickers();
 			MainManager.mouseCursor = new com.google.finance.MouseCursor();
@@ -170,7 +151,7 @@ namespace com.google.finance
 
 		private checkParameters()
 		{
-			let _loc1_ = MainManager.paramsObj.lineStyle || "IntervalBasedLine";
+			const _loc1_ = MainManager.paramsObj.lineStyle || "IntervalBasedLine";
 			Const.DEFAULT_CHART_STYLE_NAME = _loc1_ + "ChartLayer";
 			Const.INTRADAY_INTERVAL = MainManager.paramsObj.intradayInterval || Const.INTRADAY_INTERVAL;
 			Const.MIN_DISPLAY_DAYS = MainManager.paramsObj.minZoomDays || Const.MIN_DISPLAY_DAYS;
@@ -285,7 +266,7 @@ namespace com.google.finance
 		clearAllPins(param1: string) 
 		{
 			this.dataManager.clearAllObjects(param1, "newspin");
-			let _loc2_ = <ViewPoint>this.displayManager.getMainViewPoint();
+			const _loc2_ = <ViewPoint>this.displayManager.getMainViewPoint();
 			_loc2_.updateObjectLayers();
 		}
 
@@ -293,17 +274,17 @@ namespace com.google.finance
 		{
 			for (let _loc2_ = 0; _loc2_ < param1.length; _loc2_++)
 			{
-				let _loc4_ = param1[_loc2_];
+				const _loc4_ = param1[_loc2_];
 				this.dataManager.removeObject(_loc4_._quote, _loc4_._type, _loc4_._id.toString());
 			}
-			let _loc3_ = <ViewPoint>this.displayManager.getMainViewPoint();
+			const _loc3_ = <ViewPoint>this.displayManager.getMainViewPoint();
 			_loc3_.updateObjectLayers();
 		}
 
 		addObject(param1: any) 
 		{
 			this.dataManager.addObject(param1);
-			let _loc2_ = <ViewPoint>this.displayManager.getMainViewPoint();
+			const _loc2_ = <ViewPoint>this.displayManager.getMainViewPoint();
 			_loc2_.updateObjectLayers();
 		}
 
@@ -311,12 +292,12 @@ namespace com.google.finance
 		{
 			if (this.quote !== "" && MainManager.paramsObj.compareTo)
 			{
-				let _loc1_ = MainManager.paramsObj.compareTo.split(";");
-				let _loc2_ = this.parseSettingString(MainManager.paramsObj.compareToDisplayName, _loc1_.length);
-				let _loc3_ = this.parseSettingString(MainManager.paramsObj.compareToDiffMarketSessions, _loc1_.length);
+				const _loc1_ = MainManager.paramsObj.compareTo.split(";");
+				const _loc2_ = this.parseSettingString(MainManager.paramsObj.compareToDisplayName, _loc1_.length);
+				const _loc3_ = this.parseSettingString(MainManager.paramsObj.compareToDiffMarketSessions, _loc1_.length);
 				for (let _loc4_ = 0; _loc4_ < _loc1_.length; _loc4_++)
 				{
-					let _loc5_ = Utils.adjustNasdToNasdaq(_loc1_[_loc4_]);
+					const _loc5_ = Utils.adjustNasdToNasdaq(_loc1_[_loc4_]);
 					if (_loc5_ !== "" && _loc5_ !== this.quote)
 						this.addCompareTo(_loc5_, !_loc2_ ? undefined : _loc2_[_loc4_], _loc3_ && _loc3_[_loc4_] === "1");
 				}
@@ -325,10 +306,9 @@ namespace com.google.finance
 
 		getQuote(param1: string, param2?: string, param3 = NaN, param4: boolean = false) 
 		{
-			let _loc5_ = NaN;
-			let _loc8_ = NaN;
-			let _loc6_ = notnull(this.displayManager.getMainViewPoint());
-			let _loc7_ = this.layersManager.getFirstDataSource();
+			let _loc5_: number;
+			const _loc6_ = notnull(this.displayManager.getMainViewPoint());
+			const _loc7_ = this.layersManager.getFirstDataSource();
 			this.dataManager.checkDataSourceExistance(param1, param2);
 			if (!isNaN(param3))
 			{
@@ -336,7 +316,7 @@ namespace com.google.finance
 			}
 			else if (!isNaN(_loc6_.count) && _loc7_)
 			{
-				_loc8_ = !!this.displayManager.isDifferentMarketSessionComparison() ? 1 : _loc7_.data.marketDayLength;
+				const _loc8_ = !!this.displayManager.isDifferentMarketSessionComparison() ? 1 : _loc7_.data.marketDayLength;
 				_loc5_ = _loc6_.count / _loc8_;
 			}
 			else
@@ -351,7 +331,7 @@ namespace com.google.finance
 
 		private getQuoteForBarChart(param1: string, param2: number, param3: boolean)
 		{
-			let _loc4_ = EventFactory.getEvent(Const.GET_5D_DATA, param1, ChartEventTypes.REQUIRED);
+			const _loc4_ = EventFactory.getEvent(Const.GET_5D_DATA, param1, ChartEventTypes.REQUIRED);
 
 			let _loc7_: ChartEvent;
 			if (MainManager.paramsObj.sparklineType === Const.STATIC || param2 > Const.SCALE_INTERVALS[Const.SCALE_1Y].days)
@@ -405,7 +385,7 @@ namespace com.google.finance
 
 		changePrimaryTicker(param1: string, param2: string, param3: boolean = false) 
 		{
-			let _loc4_ = String(this.checkUndefined(param1, this.quote));
+			const _loc4_ = String(this.checkUndefined(param1, this.quote));
 			if (_loc4_ === this.quote)
 				return;
 
@@ -413,8 +393,8 @@ namespace com.google.finance
 			this.quoteType = Const.getQuoteType(this.quote);
 			this.dataManager.checkDataSourceExistance(this.quote, param2);
 			this.layersManager.replaceFirstDataSource(this.dataManager.dataSources[this.quote]);
-			let _loc5_ = this.layersManager.numComparedTickers() > 0 ? com.google.finance.LayersManager.COMPARISON : com.google.finance.LayersManager.SINGLE;
-			let _loc6_ = !!param3 ? com.google.finance.LayersManager.PERCENT : _loc5_;
+			const _loc5_ = this.layersManager.numComparedTickers() > 0 ? com.google.finance.LayersManager.COMPARISON : com.google.finance.LayersManager.SINGLE;
+			const _loc6_ = !!param3 ? com.google.finance.LayersManager.PERCENT : _loc5_;
 			this.layersManager.resetLayersForNewQuote(this.dataManager.dataSources[this.quote], _loc6_);
 			if (this.dataManager.dataSources[this.quote].isEmpty())
 			{
@@ -430,7 +410,7 @@ namespace com.google.finance
 		removeObject(param1: string, param2: string, param3: string) 
 		{
 			this.dataManager.removeObject(param1, param2, param3);
-			let _loc4_ = <ViewPoint>this.displayManager.getMainViewPoint();
+			const _loc4_ = <ViewPoint>this.displayManager.getMainViewPoint();
 			_loc4_.updateObjectLayers();
 		}
 
@@ -538,8 +518,8 @@ namespace com.google.finance
 
 		htmlClicked(param1: string, param2: number, param3?: string)
 		{
-			let _loc4_ = <PinPoint>this.dataManager.selectObject(param1, "newspin", param2, param3);
-			let _loc5_ = <ViewPoint>this.displayManager.getMainViewPoint();
+			const _loc4_ = <PinPoint>this.dataManager.selectObject(param1, "newspin", param2, param3);
+			const _loc5_ = <ViewPoint>this.displayManager.getMainViewPoint();
 			_loc5_.updateObjectLayers();
 			this.displayManager.animateToSelectedPin(_loc4_);
 		}

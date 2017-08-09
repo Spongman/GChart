@@ -10,7 +10,6 @@ namespace com.google.finance.indicator
 	{
 		private static readonly PARAMETER_NAMES = ["period"];
 
-
 		private period = 9;
 
 		constructor(param1: ViewPoint, param2: DataSource)
@@ -49,21 +48,20 @@ namespace com.google.finance.indicator
 			if (this.indicator.hasInterval(param1))
 				return;
 
-			let _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
+			const _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
 			if (!_loc2_ || _loc2_.length === 0)
 				return;
 
-			let _loc3_ = new DataSeries();
+			const _loc3_ = new DataSeries();
 			let _loc5_ = 0;
 			let _loc6_ = 0;
-			let _loc9_: number[] = [];
+			const _loc9_: number[] = [];
 			let _loc10_ = _loc2_[0].close;
-			let _loc8_ = new IndicatorPoint(NaN, _loc2_[0]);
+			const _loc8_ = new IndicatorPoint(NaN, _loc2_[0]);
 			_loc3_.points.push(_loc8_);
-			let _loc11_ = 1;
-			while (_loc11_ < _loc2_.length)
+			for (let _loc11_ = 1; _loc11_ < _loc2_.length; _loc11_++)
 			{
-				let _loc12_ = _loc2_[_loc11_];
+				const _loc12_ = _loc2_[_loc11_];
 				if (!this.shouldSkip(_loc12_, _loc3_))
 				{
 					let _loc7_ = _loc12_.close - _loc10_;
@@ -82,7 +80,7 @@ namespace com.google.finance.indicator
 					{
 						if (_loc5_ + _loc6_ !== 0)
 						{
-							let _loc4_ = _loc5_ / (_loc5_ + _loc6_) * 100;
+							const _loc4_ = _loc5_ / (_loc5_ + _loc6_) * 100;
 							_loc3_.points.push(new IndicatorPoint(_loc4_, _loc12_));
 						}
 						else
@@ -96,7 +94,6 @@ namespace com.google.finance.indicator
 							_loc6_ = _loc6_ + _loc7_;
 					}
 				}
-				_loc11_++;
 			}
 			this.indicator.setDataSeries(param1, _loc3_, 0);
 		}

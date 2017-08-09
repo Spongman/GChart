@@ -12,11 +12,11 @@ namespace com.google.finance
 		protected drawBarAtDataUnit(context: Context, param2: DataUnit[], param3: number) 
 		{
 			let _loc9_ = false;
-			let _loc4_ = param2[param3];
-			let _loc5_ = !isNaN(_loc4_.weeklyXPos) ? _loc4_.weeklyXPos : this.viewPoint.getXPos(_loc4_);
-			let _loc6_ = this.getOhlcYPos(context, _loc4_);
-			let _loc7_ = Math.abs(_loc6_.closeY - _loc6_.openY);
-			let _loc8_ = this.getCandleStickColor(_loc4_);
+			const _loc4_ = param2[param3];
+			const _loc5_ = !isNaN(_loc4_.weeklyXPos) ? _loc4_.weeklyXPos : this.viewPoint.getXPos(_loc4_);
+			const _loc6_ = this.getOhlcYPos(context, _loc4_);
+			//const _loc7_ = Math.abs(_loc6_.closeY - _loc6_.openY);
+			const _loc8_ = this.getCandleStickColor(_loc4_);
 			const gr = this.graphics;
 			gr.lineStyle(1, _loc8_);
 			if (!_loc4_.fake)
@@ -24,7 +24,7 @@ namespace com.google.finance
 				_loc9_ = _loc4_.close >= _loc4_.open;
 				if (Math.abs(_loc6_.closeY - _loc6_.openY) <= 1)
 				{
-					let _loc10_ = (_loc6_.closeY + _loc6_.openY) / 2;
+					const _loc10_ = (_loc6_.closeY + _loc6_.openY) / 2;
 					if (this.barWidth === 0)
 					{
 						gr.moveTo(_loc5_, _loc10_ - 0.5);

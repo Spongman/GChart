@@ -47,7 +47,7 @@ namespace com.google.finance
 
 		clearHighlight() 
 		{
-			this.highlightCanvas.graphics.clear();
+			this.highlightCanvas.graphics.clear(true);
 		}
 
 		private drawHorizontalLine(param1: number) 

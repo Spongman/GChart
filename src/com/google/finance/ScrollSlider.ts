@@ -1,4 +1,6 @@
 /// <reference path="../../../flash/display/Sprite.ts" />
+/// <reference path="ScrollSlider_ScrollBarGrip.ts" />
+/// <reference path="ScrollSlider_ScrollBarBg.ts" />
 
 namespace com.google.finance
 {
@@ -21,13 +23,19 @@ namespace com.google.finance
 			this.addChild(this.middle);
 		}
 
-		setWidth(param1: number) 
-		{
-			if (param1 < ScrollSlider.MIN_WIDTH)
-				param1 = ScrollSlider.MIN_WIDTH;
+		private _width:number;
 
-			this.middle.x = Math.floor(param1 / 2) - this.middle.width / 2;
-			this.bg.width = param1 - 2;
+		setWidth(width: number) 
+		{
+			if (width === this._width)
+				return;
+			this._width = width;
+
+			if (width < ScrollSlider.MIN_WIDTH)
+				width = ScrollSlider.MIN_WIDTH;
+
+			this.middle.x = Math.floor(width / 2) - this.middle.width / 2;
+			this.bg.width = width - 2;
 		}
 	}
 }

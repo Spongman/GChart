@@ -294,7 +294,7 @@ namespace com.google.finance
 		static removeAllChildren(param1: flash.display.DisplayObjectContainer) 
 		{
 			while (param1.numChildren > 0)
-				param1.removeChildAt(0);
+				param1.removeChildAt(param1.numChildren-1);
 		}
 
 		static compareNumbers(param1: number, param2: number): number

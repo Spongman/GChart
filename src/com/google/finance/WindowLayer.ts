@@ -1,3 +1,7 @@
+/// <reference path="WindowLayer_SparkHandle.ts" />
+/// <reference path="WindowLayer_ScrollBarBg.ts" />
+/// <reference path="WindowLayer_SparkHandleActive.ts" />
+
 namespace com.google.finance
 {
 	// import flash.display.Bitmap;

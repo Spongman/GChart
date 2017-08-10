@@ -558,7 +558,7 @@ namespace com.google.finance.indicator
 
 		clearHighlight() 
 		{
-			this.highlightCanvas.graphics.clear();
+			this.highlightCanvas.graphics.clear(true);
 		}
 
 		public setIndicatorInstanceArray(param1: any[])

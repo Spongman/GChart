@@ -59,7 +59,7 @@ namespace com.google.finance
 			if (this.contains(this.content))
 				this.removeChild(this.content);
 
-			this.graphics.clear();
+			this.graphics.clear(true);
 		}
 	}
 }

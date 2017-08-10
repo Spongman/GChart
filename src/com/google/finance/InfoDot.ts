@@ -40,9 +40,9 @@ namespace com.google.finance
 
 		setInfo(param1: InfoDotInfo)
 		{
-			const _loc2_ = param1.quoteColor;
+			let _loc2_ = param1.quoteColor;
 			const gr = this.graphics;
-			gr.clear();
+			gr.clear(true);
 			gr.lineStyle(10, _loc2_, 1);
 			gr.moveTo(0, 9);
 			gr.lineTo(0.5, 9);

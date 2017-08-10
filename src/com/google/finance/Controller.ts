@@ -834,10 +834,15 @@ namespace com.google.finance
 			gr.clear();
 			gr.beginFill(Const.SELECTING_FILL_COLOR, 0.4);
 			gr.lineStyle(0, Const.SELECTING_LINE_COLOR, 1);
+			gr.drawRect(
+				param1, this.holderBounds.miny,
+				param3 - param1, this.holderBounds.maxy - this.holderBounds.miny);
+			/*
 			gr.moveTo(param1, this.holderBounds.miny);
 			gr.lineTo(param1, this.holderBounds.maxy);
 			gr.lineTo(param3, this.holderBounds.maxy);
 			gr.lineTo(param3, this.holderBounds.miny);
+			*/
 			gr.endFill();
 		}
 

@@ -95,11 +95,17 @@ namespace com.google.finance
 			const _loc9_ = this.highlightCanvas.graphics;
 			_loc9_.lineStyle(0, this.textColor, 1);
 			_loc9_.beginFill(0xffffff, 1);
+			_loc9_.drawRect(
+				_loc2_ + _loc6_, _loc3_,
+				_loc4_ - _loc2_, _loc5_ - _loc3_
+			);
+			/*
 			_loc9_.moveTo(_loc2_ + _loc6_, _loc3_);
 			_loc9_.lineTo(_loc4_ + _loc6_, _loc3_);
 			_loc9_.lineTo(_loc4_ + _loc6_, _loc5_);
 			_loc9_.lineTo(_loc2_ + _loc6_, _loc5_);
 			_loc9_.lineTo(_loc2_ + _loc6_, _loc3_);
+			*/
 			_loc9_.endFill();
 		}
 
@@ -150,7 +156,7 @@ namespace com.google.finance
 			catch (ae /*:ArgumentError*/)
 			{
 			}
-			this.highlightCanvas.graphics.clear();
+			this.highlightCanvas.graphics.clear(true);
 		}
 
 		setSupportingLayer(param1: AbstractLayer<ViewPoint>) 

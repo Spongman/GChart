@@ -88,7 +88,7 @@ namespace com.google.finance
 
 		clearHighlight() 
 		{
-			this.highlightCanvas.graphics.clear();
+			this.highlightCanvas.graphics.clear(true);
 		}
 
 		isEnabled(): boolean
@@ -219,8 +219,8 @@ namespace com.google.finance
 				param3[SpaceText.SETTER_STR].clearHighlight();
 
 			const gr = this.highlightCanvas.graphics;
-			gr.clear();
-			const _loc9_ = this.getDataSeries() === this.dataSource.afterHoursData ? Number(Const.AH_DOT_COLOR) : Const.DOT_COLOR;
+			gr.clear(true);
+			let _loc9_ = this.getDataSeries() === this.dataSource.afterHoursData ? Number(Const.AH_DOT_COLOR) : Const.DOT_COLOR;
 			gr.lineStyle(5, _loc9_, 1);
 			gr.moveTo(_loc7_, _loc8_ - 0.2);
 			gr.lineTo(_loc7_, _loc8_ + 0.2);

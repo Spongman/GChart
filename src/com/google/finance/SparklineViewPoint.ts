@@ -551,10 +551,16 @@ namespace com.google.finance
 			const gr = this.bg.graphics;
 			gr.clear();
 			gr.beginFill(0xffffff);
+			gr.drawRect(
+				this.my_minx, this.my_miny - this.topBorder,
+				this.my_maxx - this.my_minx, this.my_maxy - (this.my_miny - this.topBorder)
+			)
+			/*
 			gr.moveTo(this.my_minx, this.my_miny - this.topBorder);
 			gr.lineTo(this.my_maxx, this.my_miny - this.topBorder);
 			gr.lineTo(this.my_maxx, this.my_maxy);
 			gr.lineTo(this.my_minx, this.my_maxy);
+			*/
 			gr.endFill();
 			this.textCanvas.graphics.clear();
 		}

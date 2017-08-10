@@ -1,4 +1,8 @@
 /// <reference path="SplitMovie.ts" />
+/// <reference path="DividendMovie_DividendArrowClass.ts" />
+/// <reference path="DividendMovie_DividendArrowOnOverClass.ts" />
+/// <reference path="DividendMovie_DividendArrowSidewaysClass.ts" />
+/// <reference path="DividendMovie_DividendArrowSidewaysOverClass.ts" />
 
 namespace com.google.finance
 {

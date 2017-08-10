@@ -32,6 +32,7 @@ namespace flash.display
 				if (graphics._pending)
 				{
 					graphics._pending = false;
+					graphics.endFill();
 					graphics.endStroke();
 				}
 			}
@@ -196,6 +197,7 @@ namespace flash.display
 
 		beginFill(color: number, alpha = 1)
 		{
+			this.endFill();
 			this.endStroke();
 
 			this.ensureCanvas();
@@ -289,7 +291,7 @@ namespace flash.display
 
 		private endStroke()
 		{
-			this.endFill();
+			//this.endFill();
 			if (this._path)
 			{
 				this.flushOps();
@@ -304,7 +306,11 @@ namespace flash.display
 			if (!this._context)
 				return;
 
-			this.endStroke();
+			this._fill = false;
+			this._path = false;
+			this._ops.length = 0;
+			//this.endFill();
+			//this.endStroke();
 
 			this._context.clearRect(0, 0, this._context.canvas.width, this._context.canvas.height);
 		}

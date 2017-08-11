@@ -61,12 +61,12 @@ namespace com.google.finance
 			let controller = viewPoint.myController;
 			this.leftHandle.addEventListener(MouseEvents.ROLL_OVER, () =>
 			{
-				MainManager.mouseCursor.setCursor(MouseCursor.H_ARROWS);
+				MainManager.mouseCursor.setCursor(MouseCursors.H_ARROWS);
 			});
 			this.leftHandle.addEventListener(MouseEvents.ROLL_OUT, () =>
 			{
-				if (controller.getState() !== Controller.DRAGGING_LEFT_HANDLE)
-					MainManager.mouseCursor.setCursor(MouseCursor.CLASSIC);
+				if (controller.getState() !== ControllerStates.DRAGGING_LEFT_HANDLE)
+					MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 			});
 			this.leftHandle.addEventListener(MouseEvents.MOUSE_DOWN, () =>
 			{
@@ -74,12 +74,12 @@ namespace com.google.finance
 			});
 			this.rightHandle.addEventListener(MouseEvents.ROLL_OVER, () =>
 			{
-				MainManager.mouseCursor.setCursor(MouseCursor.H_ARROWS);
+				MainManager.mouseCursor.setCursor(MouseCursors.H_ARROWS);
 			});
 			this.rightHandle.addEventListener(MouseEvents.ROLL_OUT, () =>
 			{
-				if (controller.getState() !== Controller.DRAGGING_RIGHT_HANDLE)
-					MainManager.mouseCursor.setCursor(MouseCursor.CLASSIC);
+				if (controller.getState() !== ControllerStates.DRAGGING_RIGHT_HANDLE)
+					MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 			});
 			this.rightHandle.addEventListener(MouseEvents.MOUSE_DOWN, () =>
 			{

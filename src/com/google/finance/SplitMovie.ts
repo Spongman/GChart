@@ -141,9 +141,9 @@ namespace com.google.finance
 		{
 			const _loc1_ = this.associatedSplit.exchangeDateInUTC;
 			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
-				return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeLocale.LONG_DATE_FORMAT, _loc1_, true);
+				return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.LONG_DATE_FORMAT, _loc1_, true);
 
-			return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeLocale.MEDIUM_DATE_FORMAT, _loc1_, true);
+			return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.MEDIUM_DATE_FORMAT, _loc1_, true);
 		}
 
 		hideDetails() 
@@ -240,7 +240,7 @@ namespace com.google.finance
 		{
 			this.currentVisibleButton.addEventListener(MouseEvents.MOUSE_OVER, (param1: Event) =>
 			{
-				MainManager.mouseCursor.setCursor(MouseCursor.CLASSIC);
+				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.currentVisibleButton);
 				this.showDetails();
 			});

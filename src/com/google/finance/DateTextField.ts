@@ -56,7 +56,7 @@ namespace com.google.finance
 		displayDateInLocalizedFormat() 
 		{
 			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
-				this.text = com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeLocale.LONG_DATE_FORMAT, this.date, true);
+				this.text = com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.LONG_DATE_FORMAT, this.date, true);
 			else
 				this.text = com.google.i18n.locale.DateTimeLocale.formatDateTime(DateTextField.LOCALIZED_FORMAT, this.date, true);
 		}

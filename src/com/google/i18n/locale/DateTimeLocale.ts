@@ -1,27 +1,32 @@
 namespace com.google.i18n.locale
 {
+	export enum DateTimeFormats
+	{
+		FULL_DATE_FORMAT = 0,
+		LONG_DATE_FORMAT = 1,
+		MEDIUM_DATE_FORMAT = 2,
+		SHORT_DATE_FORMAT = 3,
+		FULL_TIME_FORMAT = 4,
+		LONG_TIME_FORMAT = 5,
+		MEDIUM_TIME_FORMAT = 6,
+		SHORT_TIME_FORMAT = 7,
+		FULL_DATETIME_FORMAT = 8,
+		LONG_DATETIME_FORMAT = 9,
+		MEDIUM_DATETIME_FORMAT = 10,
+		SHORT_DATETIME_FORMAT = 11,
+	}
+
 	export class DateTimeLocale
 	{
-		static readonly SHORT_DATE_FORMAT = 3;
-		static readonly SHORT_TIME_FORMAT = 7;
-		static readonly FULL_DATETIME_FORMAT = 8;
-		static readonly SHORT_DATETIME_FORMAT = 11;
-		static readonly MEDIUM_DATE_FORMAT = 2;
-		static readonly MEDIUM_TIME_FORMAT = 6;
-		static readonly LONG_DATE_FORMAT = 1;
-		static readonly LONG_TIME_FORMAT = 5;
+
 		static readonly DATE_TIME_CONSTANTS = "DateTimeConstants";
-		static readonly MEDIUM_DATETIME_FORMAT = 10;
-		static readonly FULL_DATE_FORMAT = 0;
-		static readonly FULL_TIME_FORMAT = 4;
-		static readonly LONG_DATETIME_FORMAT = 9;
 
 		static readonly constantsRepository: { [key: string]: { [key: string]: any } } = {};
 
 		private static activeLocale: string;
 		
 
-		static getStandardDateTimeFormatter(param1: number, param2 = false): DateTimeFormat
+		static getStandardDateTimeFormatter(param1: DateTimeFormats, param2 = false): DateTimeFormat
 		{
 			const _loc3_ = new DateTimeFormat(param2);
 			_loc3_.applyStandardPattern(param1);

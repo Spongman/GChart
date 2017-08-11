@@ -10,6 +10,13 @@ namespace com.google.finance
 	// import flash.events.MouseEvent;
 	// import flash.events.Event;
 
+	export enum PinOrientations
+	{
+		RIGHT_ORIENTATION = 0,
+		LEFT_ORIENTATION = 1,
+	}
+
+
 	export class PinPointMovie extends flash.display.Sprite
 	{
 		static readonly MAX_SHOWN_GROUP_COUNT = 7;
@@ -64,7 +71,7 @@ namespace com.google.finance
 			});
 			this.pinButton.addEventListener(MouseEvents.MOUSE_OVER, (param1: Event) =>
 			{
-				MainManager.mouseCursor.setCursor(MouseCursor.CLASSIC);
+				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.pinButton);
 				this.letter.defaultTextFormat = this.object && this.object.active ? PinPointMovie.overActiveTextFormat : PinPointMovie.overPassiveTextFormat;
 			});
@@ -144,9 +151,9 @@ namespace com.google.finance
 			this.pinPointContentMovie = param1;
 		}
 
-		setOrientation(param1: number) 
+		setOrientation(param1: PinOrientations) 
 		{
-			if (param1 === 1)
+			if (param1 === PinOrientations.LEFT_ORIENTATION)
 			{
 				this.activeOverlay.scaleX = -1;
 				this.activeOverlay.x = 1;
@@ -155,9 +162,7 @@ namespace com.google.finance
 				this.flagline.x = -2;
 				this.letter.x = -14;
 				for (let _loc2_ = 0; _loc2_ < this.borders.length; _loc2_++)
-				{
 					this.borders[_loc2_].scaleX = -1;
-				}
 			}
 			else
 			{
@@ -168,9 +173,7 @@ namespace com.google.finance
 				this.flagline.x = -1;
 				this.letter.x = 3;
 				for (let _loc2_ = 0; _loc2_ < this.borders.length; _loc2_++)
-				{
 					this.borders[_loc2_].scaleX = 1;
-				}
 			}
 		}
 

@@ -21,7 +21,7 @@ namespace com.google.finance
 			this.content.selectable = false;
 			this.content.addEventListener(MouseEvents.MOUSE_OVER, (param1: Event) =>
 			{
-				MainManager.mouseCursor.setCursor(MouseCursor.CLASSIC);
+				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.content);
 			});
 			this.content.addEventListener(MouseEvents.MOUSE_OUT, (param1: Event) =>

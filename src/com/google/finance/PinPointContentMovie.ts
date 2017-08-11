@@ -36,7 +36,7 @@ namespace com.google.finance
 			this.content.selectable = false;
 			this.content.addEventListener(MouseEvents.MOUSE_OVER, (param1: Event) =>
 			{
-				MainManager.mouseCursor.setCursor(MouseCursor.CLASSIC);
+				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.content);
 			});
 			this.content.addEventListener(MouseEvents.MOUSE_OUT, (param1: Event) =>
@@ -57,7 +57,7 @@ namespace com.google.finance
 			this.closeButton.useHandCursor = true;
 			this.closeButton.addEventListener(MouseEvents.MOUSE_OVER, (param1: Event) =>
 			{
-				MainManager.mouseCursor.setCursor(MouseCursor.CLASSIC);
+				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.closeButton);
 			});
 			this.closeButton.addEventListener(MouseEvents.MOUSE_OUT, (param1: Event) =>
@@ -150,7 +150,8 @@ namespace com.google.finance
 
 		protected escapeHtml(param1: string): string
 		{
-			return XML(new XMLNode(XMLNodeType.TEXT_NODE, param1)).toXMLString();
+			throw new Error("not implemented");
+			//TODO: return XML(new XMLNode(XMLNodeType.TEXT_NODE, param1)).toXMLString();
 		}
 
 		protected getDateHtml(param1: Date): string

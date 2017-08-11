@@ -4,8 +4,6 @@ namespace com.google.finance
 	{
 		private static readonly FLAG_HEIGHT = 14;
 		private static readonly MIN_FLAGS_DIST = 10;
-		private static readonly RIGHT_ORIENTATION = 0;
-		private static readonly LEFT_ORIENTATION = 1;
 		private static readonly FLAG_POLE_HEIGHT = 10;
 		/*
 		private static readonly LEFT_SIDE_OFFSET = 4;
@@ -169,13 +167,13 @@ namespace com.google.finance
 
 			if (_loc7_.length > 0)
 			{
-				const _loc13_: number[] = [];
+				const _loc13_: PinOrientations[] = [];
 				for (let _loc14_ = _loc7_.length - 1; _loc14_ >= 0; _loc14_--)
 				{
-					if ((_loc13_.length === 0 || _loc13_[_loc13_.length - 1] === PinPointsLayer.LEFT_ORIENTATION) && _loc9_[_loc14_] + (_loc7_.length - _loc14_) * PinPointsLayer.MIN_FLAGS_DIST > this.viewPoint.maxx)
-						_loc13_.push(PinPointsLayer.LEFT_ORIENTATION);
+					if ((_loc13_.length === 0 || _loc13_[_loc13_.length - 1] === PinOrientations.LEFT_ORIENTATION) && _loc9_[_loc14_] + (_loc7_.length - _loc14_) * PinPointsLayer.MIN_FLAGS_DIST > this.viewPoint.maxx)
+						_loc13_.push(PinOrientations.LEFT_ORIENTATION);
 					else
-						_loc13_.push(PinPointsLayer.RIGHT_ORIENTATION);
+						_loc13_.push(PinOrientations.RIGHT_ORIENTATION);
 
 				}
 				_loc13_.reverse();
@@ -186,7 +184,7 @@ namespace com.google.finance
 			}
 		}
 
-		private renderFlag(param1: number, param2: number, param3: number, param4: PinPoint, param5?: PinPoint, param6 = 1) 
+		private renderFlag(param1: number, param2: PinOrientations, param3: number, param4: PinPoint, param5?: PinPoint, param6 = 1) 
 		{
 			const _loc7_ = this.getPinPointMovieClip(param4);
 			this.addChild(_loc7_);
@@ -217,14 +215,13 @@ namespace com.google.finance
 			return _loc5_.units[_loc4_];
 		}
 
-		private renderFlagsGroup(param1: Context, param2: number, param3: number, param4: number, param5: number, param6: number, param7: PinPoint[], param8: number, param9: number) 
+		private renderFlagsGroup(param1: Context, param2: number, param3: number, param4: number, param5: number, param6: number, param7: PinPoint[], param8: number, param9: PinOrientations) 
 		{
 			this.lastAbsoluteHeightMin = param4 - param8 + PinPointsLayer.FLAG_HEIGHT;
 			let _loc10_ = false;
 			for (let _loc11_ = param5; _loc11_ < param5 + param6; _loc11_++)
-			{
 				_loc10_ = _loc10_ || param7[_loc11_].active || param7[_loc11_].forceExpandInGroup;
-			}
+
 			if (param6 > 1 && _loc10_ || !Boolean(Const.ENABLE_COMPACT_FLAGS))
 			{
 				const _loc12_ = param8 + (param6 - 1) * PinPointsLayer.FLAG_HEIGHT;

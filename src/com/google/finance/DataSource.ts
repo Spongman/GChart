@@ -8,20 +8,26 @@ namespace com.google.finance
 		}
 	}
 
+	enum ColumnTypes
+	{
+		COL_DATE_TYPE = 1,
+		COL_CLOSE_TYPE = 2,
+		COL_HIGH_TYPE = 3,
+		COL_LOW_TYPE = 4,
+		COL_OPEN_TYPE = 5,
+		COL_VOLUME_TYPE = 6,
+		COL_CDAYS_TYPE = 7,
+	}
+
 	export class DataSource
 	{
-		private static readonly COL_CLOSE_TYPE = 2;
-		private static readonly COL_DATE_TYPE = 1;
-		private static readonly COL_VOLUME_TYPE = 6;
-		private static readonly COL_HIGH_TYPE = 3;
-		private static readonly COL_OPEN_TYPE = 5;
+
+		
 		private static readonly COLUMNS_STR = "COLUMNS";
 		private static readonly INTERVAL_STR = "INTERVAL";
 		private static readonly MARKET_CLOSE_MINUTE_STR = "MARKET_CLOSE_MINUTE";
-		private static readonly COL_CDAYS_TYPE = 7;
 		private static readonly DATA_SESSIONS_STR = "DATA_SESSIONS";
 		private static readonly TIMEZONE_OFFSET_STR = "TIMEZONE_OFFSET";
-		private static readonly COL_LOW_TYPE = 4;
 		private static readonly EXCHANGE_STR = "EXCHANGE";
 		private static readonly MARKET_OPEN_MINUTE_STR = "MARKET_OPEN_MINUTE";
 		private static readonly DATA_STR = "DATA";
@@ -218,7 +224,7 @@ namespace com.google.finance
 			if (param2.detailType !== ChartEventStyles.GET_RT_DATA && param2.detailType !== ChartEventStyles.GET_RT_AH_DATA)
 			{
 				const _loc15_ = _loc6_[DataSource.COLUMNS_STR].split(",");
-				if (_loc15_.indexOf(this.columnNames[DataSource.COL_OPEN_TYPE]) !== -1 && _loc15_.indexOf(this.columnNames[DataSource.COL_HIGH_TYPE]) !== -1 && _loc15_.indexOf(this.columnNames[DataSource.COL_LOW_TYPE]) !== -1)
+				if (_loc15_.indexOf(this.columnNames[ColumnTypes.COL_OPEN_TYPE]) !== -1 && _loc15_.indexOf(this.columnNames[ColumnTypes.COL_HIGH_TYPE]) !== -1 && _loc15_.indexOf(this.columnNames[ColumnTypes.COL_LOW_TYPE]) !== -1)
 					this.eventOhlcDone(param2.getEventName());
 				else
 					this.eventDone(param2.getEventName());
@@ -329,9 +335,7 @@ namespace com.google.finance
 			const _loc3_ = new com.google.finance.IntervalSet();
 
 			for (let _loc4_ = 0; _loc4_ < this.data.dataSessions.length(); _loc4_++)
-			{
 				_loc3_.addPair(this.data.dataSessions.getIntervalAt(_loc4_));
-			}
 
 			if (param1 < this.data.marketOpenMinute)
 				_loc3_.addInterval(param1, this.data.marketOpenMinute);
@@ -353,9 +357,9 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		private getColumnTypes(param1: string): number[]
+		private getColumnTypes(param1: string): ColumnTypes[]
 		{
-			const _loc2_: number[] = [];
+			const _loc2_: ColumnTypes[] = [];
 			const _loc3_ = param1.split(",");
 			for (let _loc4_ = 0; _loc4_ < _loc3_.length; _loc4_++)
 			{
@@ -363,7 +367,6 @@ namespace com.google.finance
 				{
 					if (_loc3_[_loc4_] === this.columnNames[_loc5_])
 						_loc2_[_loc4_] = _loc5_ + 1;
-
 				}
 			}
 			return _loc2_;
@@ -1487,12 +1490,12 @@ namespace com.google.finance
 			}
 		}
 
-		private getDataUnitNoValidation(param1: string[], param2: number[], param3: { [key: string]: string }): DataUnit
+		private getDataUnitNoValidation(param1: string[], param2: ColumnTypes[], param3: { [key: string]: string }): DataUnit
 		{
 			const _loc4_ = new DataUnit(NaN, NaN, NaN, NaN);
 			for (let _loc5_ = 0; _loc5_ < param2.length; _loc5_++)
 			{
-				if (param2[_loc5_] === DataSource.COL_DATE_TYPE)
+				if (param2[_loc5_] === ColumnTypes.COL_DATE_TYPE)
 				{
 					let _loc6_: number;
 					if (isNaN(Number(param1[_loc5_])))
@@ -1507,29 +1510,29 @@ namespace com.google.finance
 					}
 					_loc4_.setDate(_loc6_, this.timezoneOffset);
 				}
-				else if (param2[_loc5_] === DataSource.COL_CLOSE_TYPE)
+				else if (param2[_loc5_] === ColumnTypes.COL_CLOSE_TYPE)
 				{
 					_loc4_.close = Number(param1[_loc5_]);
 				}
-				else if (param2[_loc5_] === DataSource.COL_OPEN_TYPE)
+				else if (param2[_loc5_] === ColumnTypes.COL_OPEN_TYPE)
 				{
 					_loc4_.open = Number(param1[_loc5_]);
 				}
-				else if (param2[_loc5_] === DataSource.COL_LOW_TYPE)
+				else if (param2[_loc5_] === ColumnTypes.COL_LOW_TYPE)
 				{
 					_loc4_.low = Number(param1[_loc5_]);
 				}
-				else if (param2[_loc5_] === DataSource.COL_HIGH_TYPE)
+				else if (param2[_loc5_] === ColumnTypes.COL_HIGH_TYPE)
 				{
 					_loc4_.high = Number(param1[_loc5_]);
 				}
-				else if (param2[_loc5_] === DataSource.COL_VOLUME_TYPE)
+				else if (param2[_loc5_] === ColumnTypes.COL_VOLUME_TYPE)
 				{
 					// TODO
 					_loc4_.volumes[Number(param3[DataSource.INTERVAL_STR])] = Number(param1[_loc5_]);
 					_loc4_.intervals.push(this.baseInterval);
 				}
-				else if (param2[_loc5_] === DataSource.COL_CDAYS_TYPE)
+				else if (param2[_loc5_] === ColumnTypes.COL_CDAYS_TYPE)
 				{
 					_loc4_.coveredDays = Number(param1[_loc5_]);
 				}

@@ -19,22 +19,25 @@ namespace com.google.finance
 	// import flash.events.KeyboardEvent;
 	// import com.google.i18n.locale.DateTimeLocale;
 
+	export enum ControllerStates
+	{
+		NOTHING = 0,
+		DRAGGING = 1,
+		SELECTING = 2,
+		ZOOMING_OUT = 3,
+		SCROLLING = 4,
+		DRAGGING_LEFT_HANDLE = 5,
+		DRAGGING_RIGHT_HANDLE = 6,
+		PRESSING_LEFT = 7,
+		PRESSING_RIGHT = 8,
+		WINDOW = 9,
+		PRESSING_PAGE_LEFT = 10,
+		PRESSING_PAGE_RIGHT = 11,
+		DRAGGING_SPARKLINE = 12,
+	}
+
 	export class Controller extends flash.display.Sprite
 	{
-		static DRAGGING_SPARKLINE = 12;
-		static SELECTING = 2;
-		static PRESSING_LEFT = 7;
-		static DRAGGING = 1;
-		static PRESSING_PAGE_RIGHT = 11;
-		static SCROLLING = 4;
-		static NOTHING = 0;
-		static DRAGGING_LEFT_HANDLE = 5;
-		static PRESSING_PAGE_LEFT = 10;
-		static DRAGGING_RIGHT_HANDLE = 6;
-		static PRESSING_RIGHT = 8;
-		static ZOOMING_OUT = 3;
-		static WINDOW = 9;
-
 		private static NOTIFY_TIMEOUT = 500;
 
 		private PAGING_AREA_WIDTH = 100;
@@ -69,7 +72,7 @@ namespace com.google.finance
 		private selectedTextFormat: flash.text.TextFormat;
 		private holderBounds: com.google.finance.Bounds = new com.google.finance.Bounds(Number.MAX_VALUE, Number.MAX_VALUE, 0, 0);
 		private chartTypeText: flash.text.TextField;
-		private state = Controller.NOTHING
+		private state = ControllerStates.NOTHING
 		private intervalText: flash.text.TextField;
 		private chartSizeChangeButton: flash.display.SimpleButton;
 		private customZoomEndDate: Date;
@@ -167,7 +170,7 @@ namespace com.google.finance
 			this.addChild(this.chartSizeChangeToolTip);
 			this.chartSizeChangeButton.addEventListener(MouseEvents.MOUSE_OVER, (param1: Event): void =>
 			{
-				MainManager.mouseCursor.setCursor(MouseCursor.CLASSIC);
+				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.chartSizeChangeButton);
 				this.chartSizeChangeToolTip.renderMovie(this.chartSizeChangeButton.x - 5, this.chartSizeChangeButton.y, !!showExpand ? Messages.getMsg(Messages.LARGE_CHART) : Messages.getMsg(Messages.SMALL_CHART));
 
@@ -405,7 +408,7 @@ namespace com.google.finance
 
 		syncZoomLevel(param1?: boolean)
 		{
-			if (this.state === Controller.SCROLLING)
+			if (this.state === ControllerStates.SCROLLING)
 				return;
 
 			if (this.displayManager.isDifferentMarketSessionComparison())
@@ -451,24 +454,24 @@ namespace com.google.finance
 			//const _loc5_ = this.mainManager.layersManager;
 			switch (this.state)
 			{
-				case Controller.SELECTING:
+				case ControllerStates.SELECTING:
 					this.drawSquare(this.initialXMouse, this.initialYMouse, this.mouseX, this.mouseY);
 					break;
-				case Controller.DRAGGING:
+				case ControllerStates.DRAGGING:
 					this.displayManager.showContextualStaticInfo();
 					this.changeListenersOffset(this.mouseX - this.initialXMouse);
 					this.checkSparklinePositioning();
 					break;
-				case Controller.NOTHING:
+				case ControllerStates.NOTHING:
 					if (this.hitTestInsideBounds(this.mouseX, this.mouseY) && !_loc2_.isAnimating())
 					{
 						const _loc12_ = this.highlightPoints();
 						this.displayManager.spaceText.setPointInfo(_loc12_);
-						com.google.finance.MainManager.mouseCursor.setCursor(MouseCursor.OPENED_HAND);
+						com.google.finance.MainManager.mouseCursor.setCursor(MouseCursors.OPENED_HAND);
 						break;
 					}
 					if (_loc3_.windowLayer && param1.target !== _loc3_.windowLayer.leftHandle.button.element && param1.target !== _loc3_.windowLayer.rightHandle.button.element)
-						com.google.finance.MainManager.mouseCursor.setCursor(MouseCursor.CLASSIC);
+						com.google.finance.MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 
 					this.clearAllHighlights();
 					this.displayManager.showContextualStaticInfo();
@@ -479,11 +482,11 @@ namespace com.google.finance
 					}
 					_loc3_.toggleHandles(false);
 					break;
-				case Controller.DRAGGING_SPARKLINE:
-					this.mouseCursor.setCursor(MouseCursor.CLOSED_HAND);
+				case ControllerStates.DRAGGING_SPARKLINE:
+					this.mouseCursor.setCursor(MouseCursors.CLOSED_HAND);
 					_loc3_.moveSparklineBy_Handler(this.initialXMouse - this.mouseX);
 					break;
-				case Controller.SCROLLING:
+				case ControllerStates.SCROLLING:
 					this.displayManager.showContextualStaticInfo();
 					//const _loc6_ = _loc3_.windowLayer.getLeftX();
 					//const _loc7_ = _loc3_.windowLayer.getRightX();
@@ -518,15 +521,15 @@ namespace com.google.finance
 					this.stopContinuousPaging();
 					this.moveListenersByOffsets();
 					break;
-				case Controller.DRAGGING_LEFT_HANDLE:
-					this.mouseCursor.setCursor(MouseCursor.H_ARROWS);
+				case ControllerStates.DRAGGING_LEFT_HANDLE:
+					this.mouseCursor.setCursor(MouseCursors.H_ARROWS);
 					_loc3_.windowLayer.initialX = this.initialXMouse;
 					_loc3_.windowLayer.leftHandleXOffset = this.initialXMouse - this.mouseX;
 					_loc3_.windowLayer.renderLayer();
 					this.displayManager.spaceText.setTimePeriod(_loc3_.windowLayer);
 					break;
-				case Controller.DRAGGING_RIGHT_HANDLE:
-					this.mouseCursor.setCursor(MouseCursor.H_ARROWS);
+				case ControllerStates.DRAGGING_RIGHT_HANDLE:
+					this.mouseCursor.setCursor(MouseCursors.H_ARROWS);
 					_loc3_.windowLayer.initialX = this.initialXMouse;
 					_loc3_.windowLayer.rightHandleXOffset = this.initialXMouse - this.mouseX;
 					_loc3_.windowLayer.renderLayer();
@@ -693,7 +696,7 @@ namespace com.google.finance
 		onMouseLeave(param1: Event) 
 		{
 			com.google.finance.MainManager.jsProxy.setChartFocus(false);
-			com.google.finance.MainManager.mouseCursor.setCursor(MouseCursor.CLASSIC);
+			com.google.finance.MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 			this.clearAllHighlights();
 			this.displayManager.showContextualStaticInfo();
 		}
@@ -704,7 +707,7 @@ namespace com.google.finance
 			const _loc2_ = <SparklineViewPoint><any>this.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
 			switch (this.state)
 			{
-				case Controller.SELECTING:
+				case ControllerStates.SELECTING:
 					const _loc5_ = Math.min(this.initialXMouse, this.mouseX);
 					const _loc6_ = Math.max(this.initialXMouse, this.mouseX);
 					for (let _loc4_ = 0; _loc4_ < this.listeners.length; _loc4_++)
@@ -714,15 +717,15 @@ namespace com.google.finance
 					this.listenersNotifyHtml();
 					this.graphics.clear();
 					break;
-				case Controller.ZOOMING_OUT:
-				case Controller.PRESSING_LEFT:
-				case Controller.PRESSING_RIGHT:
-				case Controller.PRESSING_PAGE_RIGHT:
-				case Controller.PRESSING_PAGE_LEFT:
+				case ControllerStates.ZOOMING_OUT:
+				case ControllerStates.PRESSING_LEFT:
+				case ControllerStates.PRESSING_RIGHT:
+				case ControllerStates.PRESSING_PAGE_RIGHT:
+				case ControllerStates.PRESSING_PAGE_LEFT:
 					clearInterval(this.intId);
 					break;
-				case Controller.DRAGGING:
-				case Controller.SCROLLING:
+				case ControllerStates.DRAGGING:
+				case ControllerStates.SCROLLING:
 					clearInterval(this.intId);
 					_loc2_.moveSparklineBy_Handler(this.cumulativeXOffset + this.pagingAmount);
 					_loc2_.commitSparklineOffset_Handler();
@@ -738,16 +741,16 @@ namespace com.google.finance
 						break;
 					}
 					break;
-				case Controller.DRAGGING_LEFT_HANDLE:
+				case ControllerStates.DRAGGING_LEFT_HANDLE:
 					_loc2_.windowLayer.handleReleased(_loc2_.windowLayer.leftHandle);
 					break;
-				case Controller.DRAGGING_RIGHT_HANDLE:
+				case ControllerStates.DRAGGING_RIGHT_HANDLE:
 					_loc2_.windowLayer.handleReleased(_loc2_.windowLayer.rightHandle);
 					break;
-				case Controller.WINDOW:
+				case ControllerStates.WINDOW:
 					return;
 			}
-			this.mouseCursor.setCursor(MouseCursor.CLASSIC);
+			this.mouseCursor.setCursor(MouseCursors.CLASSIC);
 			const _loc3_ = this.displayManager.getViewPoints();
 			for (let _loc4_ = 0; _loc4_ < _loc3_.length; _loc4_++)
 			{
@@ -756,7 +759,7 @@ namespace com.google.finance
 					com.google.finance.MainManager.mouseCursor.setCursor(MouseCursor.DRAGGABLE_CURSOR);
 			}
 			this.displayManager.topBorderLayer.update();
-			this.state = Controller.NOTHING;
+			this.state = ControllerStates.NOTHING;
 			this.MOUSE_DOWN = false;
 		}
 
@@ -1151,7 +1154,7 @@ namespace com.google.finance
 			return _loc1_;
 		}
 
-		getState(): number
+		getState(): ControllerStates
 		{
 			return this.state;
 		}
@@ -1324,7 +1327,7 @@ namespace com.google.finance
 			switch (param1)
 			{
 				case ControllerComponents.SCROLL_BAR:
-					this.state = Controller.SCROLLING;
+					this.state = ControllerStates.SCROLLING;
 					this.cumulativeXOffset = 0;
 					this.pagingAmount = 0;
 					const _loc3_ = _loc2_.windowLayer.getLeftX();
@@ -1346,24 +1349,24 @@ namespace com.google.finance
 					}
 					break;
 				case ControllerComponents.LEFT_BUTTON:
-					this.state = Controller.PRESSING_LEFT;
+					this.state = ControllerStates.PRESSING_LEFT;
 					clearInterval(this.intId);
 					this.intId = setInterval(() => { this.notifyListenersToMove(Directions.BACKWARD * this.BUTTON_MOVEBY_AMOUNT); }, 20);
 					break;
 				case ControllerComponents.RIGHT_BUTTON:
-					this.state = Controller.PRESSING_RIGHT;
+					this.state = ControllerStates.PRESSING_RIGHT;
 					clearInterval(this.intId);
 					this.intId = setInterval(() => { this.notifyListenersToMove(Directions.FORWARD * this.BUTTON_MOVEBY_AMOUNT); }, 20);
 					break;
 				case ControllerComponents.LEFT_HANDLE:
-					this.state = Controller.DRAGGING_LEFT_HANDLE;
+					this.state = ControllerStates.DRAGGING_LEFT_HANDLE;
 					this.MOUSE_DOWN = true;
-					this.mouseCursor.setCursor(MouseCursor.H_ARROWS);
+					this.mouseCursor.setCursor(MouseCursors.H_ARROWS);
 					return;
 				case ControllerComponents.RIGHT_HANDLE:
-					this.state = Controller.DRAGGING_RIGHT_HANDLE;
+					this.state = ControllerStates.DRAGGING_RIGHT_HANDLE;
 					this.MOUSE_DOWN = true;
-					this.mouseCursor.setCursor(MouseCursor.H_ARROWS);
+					this.mouseCursor.setCursor(MouseCursors.H_ARROWS);
 					return;
 			}
 			if (!this.hitTestInsideBounds(this.mouseX, this.mouseY))
@@ -1373,19 +1376,19 @@ namespace com.google.finance
 			this.clearAllHighlights();
 			if (this.CTRL_DOWN && this.SHIFT_DOWN)
 			{
-				this.state = Controller.ZOOMING_OUT;
+				this.state = ControllerStates.ZOOMING_OUT;
 				clearInterval(this.intId);
 				this.intId = setInterval(() => { this.zoomStuff(Directions.BACKWARD, this.stage.mouseX); }, 20);
 				return;
 			}
 			if (this.SHIFT_DOWN)
 			{
-				this.state = Controller.SELECTING;
-				this.mouseCursor.setCursor(MouseCursor.CLASSIC);
+				this.state = ControllerStates.SELECTING;
+				this.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				return;
 			}
-			this.mouseCursor.setCursor(MouseCursor.CLOSED_HAND);
-			this.state = Controller.DRAGGING;
+			this.mouseCursor.setCursor(MouseCursors.CLOSED_HAND);
+			this.state = ControllerStates.DRAGGING;
 		}
 	}
 }

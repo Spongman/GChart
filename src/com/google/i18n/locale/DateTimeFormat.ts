@@ -2,125 +2,125 @@
 
 namespace com.google.i18n.locale
 {
+	enum PatternPartTypes
+	{
+		QUOTED_STRING = 0,
+		FIELD = 1,
+		LITERAL = 2,
+	}
+
+	class PatternPart
+	{
+		constructor(public text:string, public type:PatternPartTypes) {}
+	}
+	
 	export class DateTimeFormat
 	{
-		static readonly QUOTED_STRING = 0;
-		static readonly FIELD = 1;
-		static readonly LITERAL = 2;
-
 		private tokensHash: { [key: string]: boolean } = {};
-		private isUtc: boolean;
 		private symbols: { [key: string]: any } = DateTimeLocale.getResource(DateTimeLocale.getLocale());
 		private TOKENS = "GyMkSEahKHcLQdmsvzZ";
-		private patternParts: { text: string, type: number }[] = [];
+		private patternParts: PatternPart[] = [];
 
-		constructor(isUtc = false)
+		constructor(private isUtc = false)
 		{
-			this.isUtc = !!isUtc ? Boolean(isUtc) : false;
 			for (let _loc2_ = 0; _loc2_ < this.TOKENS.length; _loc2_++)
 				this.tokensHash[this.TOKENS.substr(_loc2_, 1)] = true;
 		}
 
-		applyPattern(param1: string) 
+		applyPattern(pattern: string) 
 		{
 			let _loc5_ = 0;
 			let _loc2_ = 0;
-			const _loc3_ = param1.length;
-			while (_loc2_ < param1.length)
+			const _loc3_ = pattern.length;
+			while (_loc2_ < pattern.length)
 			{
 				_loc5_ = _loc2_;
-				while (_loc5_ < _loc3_ && !this.tokensHash[param1.substr(_loc5_, 1)])
+				while (_loc5_ < _loc3_ && !this.tokensHash[pattern.substr(_loc5_, 1)])
 					_loc5_++;
 
 				if (_loc5_ !== _loc2_)
 				{
-					const _loc4_ = param1.substring(_loc2_, _loc5_);
-					this.patternParts.push({
-						"text": _loc4_,
-						"type": DateTimeFormat.LITERAL
-					});
+					const _loc4_ = pattern.substring(_loc2_, _loc5_);
+					this.patternParts.push(new PatternPart(_loc4_, PatternPartTypes.LITERAL));
 				}
 				_loc2_ = _loc5_;
-				while (_loc5_ < _loc3_ && this.tokensHash[param1.substr(_loc5_, 1)] && param1.charAt(_loc5_) === param1.charAt(_loc2_))
+				while (_loc5_ < _loc3_ && this.tokensHash[pattern.substr(_loc5_, 1)] && pattern.charAt(_loc5_) === pattern.charAt(_loc2_))
 					_loc5_++;
 
 				if (_loc5_ !== _loc2_)
 				{
-					const _loc4_ = param1.substring(_loc2_, _loc5_);
-					this.patternParts.push({
-						"text": _loc4_,
-						"type": DateTimeFormat.FIELD
-					});
+					const _loc4_ = pattern.substring(_loc2_, _loc5_);
+					this.patternParts.push(new PatternPart(_loc4_, PatternPartTypes.FIELD));
 				}
 				_loc2_ = _loc5_;
 			}
 		}
 
-		private formatField(param1: string, param2: Date): string
+		private formatField(field: string, param2: Date): string
 		{
-			const _loc3_ = param1.length;
-			switch (param1.charAt(0))
+			const fieldLength = field.length;
+			switch (field.charAt(0))
 			{
 				case "G":
-					return this.formatEra(_loc3_, param2);
+					return this.formatEra(fieldLength, param2);
 				case "y":
-					return this.formatYear(_loc3_, param2);
+					return this.formatYear(fieldLength, param2);
 				case "M":
-					return this.formatMonth(_loc3_, param2);
+					return this.formatMonth(fieldLength, param2);
 				case "k":
-					return this.format24Hours(_loc3_, param2);
+					return this.format24Hours(fieldLength, param2);
 				case "S":
-					return this.formatFractionalSeconds(_loc3_, param2);
+					return this.formatFractionalSeconds(fieldLength, param2);
 				case "E":
-					return this.formatDayOfWeek(_loc3_, param2);
+					return this.formatDayOfWeek(fieldLength, param2);
 				case "a":
-					return this.formatAmPm(_loc3_, param2);
+					return this.formatAmPm(fieldLength, param2);
 				case "h":
-					return this.format1To12Hours(_loc3_, param2);
+					return this.format1To12Hours(fieldLength, param2);
 				case "K":
-					return this.format0To11Hours(_loc3_, param2);
+					return this.format0To11Hours(fieldLength, param2);
 				case "H":
-					return this.format0To23Hours(_loc3_, param2);
+					return this.format0To23Hours(fieldLength, param2);
 				case "c":
-					return this.formatStandaloneDay(_loc3_, param2);
+					return this.formatStandaloneDay(fieldLength, param2);
 				case "L":
-					return this.formatStandaloneMonth(_loc3_, param2);
+					return this.formatStandaloneMonth(fieldLength, param2);
 				case "Q":
-					return this.formatQuarter(_loc3_, param2);
+					return this.formatQuarter(fieldLength, param2);
 				case "d":
-					return this.formatDate(_loc3_, param2);
+					return this.formatDate(fieldLength, param2);
 				case "m":
-					return this.formatMinutes(_loc3_, param2);
+					return this.formatMinutes(fieldLength, param2);
 				case "s":
-					return this.formatSeconds(_loc3_, param2);
+					return this.formatSeconds(fieldLength, param2);
 				case "v":
-					return this.formatGMT(_loc3_, param2);
+					return this.formatGMT(fieldLength, param2);
 				case "z":
-					return this.formatGMT(_loc3_, param2);
+					return this.formatGMT(fieldLength, param2);
 				case "Z":
-					return this.formatTimeZoneRFC(_loc3_, param2);
+					return this.formatTimeZoneRFC(fieldLength, param2);
 				default:
 					return "";
 			}
 		}
 
-		private formatStandaloneMonth(param1: number, param2: Date): string
+		private formatStandaloneMonth(fieldLength: number, param2: Date): string
 		{
-			const _loc3_ = !!this.isUtc ? param2.getUTCMonth() : param2.getMonth();
-			switch (param1)
+			const month = this.isUtc ? param2.getUTCMonth() : param2.getMonth();
+			switch (fieldLength)
 			{
 				case 5:
-					return (<any>this.symbols).STANDALONENARROWMONTHS[_loc3_];
+					return (<any>this.symbols).STANDALONENARROWMONTHS[month];
 				case 4:
-					return (<any>this.symbols).STANDALONEMONTHS[_loc3_];
+					return (<any>this.symbols).STANDALONEMONTHS[month];
 				case 3:
-					return (<any>this.symbols).STANDALONESHORTMONTHS[_loc3_];
+					return (<any>this.symbols).STANDALONESHORTMONTHS[month];
 				default:
-					return this.padNumber(_loc3_ + 1, param1);
+					return this.padNumber(month + 1, fieldLength);
 			}
 		}
 
-		applyStandardPattern(param1: number) 
+		applyStandardPattern(param1: DateTimeFormats)
 		{
 			let _loc2_: string;
 			if (param1 < 4)
@@ -131,54 +131,54 @@ namespace com.google.i18n.locale
 				_loc2_ = (<any>this.symbols).DATEFORMATS[param1 - 8] + " " + (<any>this.symbols).TIMEFORMATS[param1 - 8];
 			else
 			{
-				this.applyStandardPattern(DateTimeLocale.MEDIUM_DATETIME_FORMAT);
+				this.applyStandardPattern(DateTimeFormats.MEDIUM_DATETIME_FORMAT);
 				return;
 			}
 			this.applyPattern(_loc2_);
 		}
 
-		private formatMonth(param1: number, param2: Date): string
+		private formatMonth(fieldLength: number, param2: Date): string
 		{
-			const _loc3_ = !!this.isUtc ? param2.getUTCMonth() : param2.getMonth();
-			switch (param1)
+			const month = this.isUtc ? param2.getUTCMonth() : param2.getMonth();
+			switch (fieldLength)
 			{
 				case 5:
-					return (<any>this.symbols).NARROWMONTHS[_loc3_];
+					return (<any>this.symbols).NARROWMONTHS[month];
 				case 4:
-					return (<any>this.symbols).MONTHS[_loc3_];
+					return (<any>this.symbols).MONTHS[month];
 				case 3:
-					return (<any>this.symbols).SHORTMONTHS[_loc3_];
+					return (<any>this.symbols).SHORTMONTHS[month];
 				default:
-					return this.padNumber(_loc3_ + 1, param1);
+					return this.padNumber(month + 1, fieldLength);
 			}
 		}
 
-		private formatDate(param1: number, param2: Date): string
+		private formatDate(fieldLength: number, date: Date): string
 		{
-			const _loc3_ = !!this.isUtc ? param2.getUTCDate() : param2.getDate();
-			return this.padNumber(_loc3_, param1);
+			const day = this.isUtc ? date.getUTCDate() : date.getDate();
+			return this.padNumber(day, fieldLength);
 		}
 
-		private formatSeconds(param1: number, param2: Date): string
+		private formatSeconds(fieldLength: number, date: Date): string
 		{
-			return this.padNumber(param2.getSeconds(), param1);
+			return this.padNumber(date.getSeconds(), fieldLength);
 		}
 
-		private formatYear(param1: number, param2: Date): string
+		private formatYear(fieldLength: number, date: Date): string
 		{
-			const _loc3_ = !!this.isUtc ? param2.getUTCFullYear() : param2.getFullYear();
-			return param1 === 2 ? this.padNumber(_loc3_ % 100, 2) : String(_loc3_);
+			const year = this.isUtc ? date.getUTCFullYear() : date.getFullYear();
+			return fieldLength === 2 ? this.padNumber(year % 100, 2) : String(year);
 		}
 
-		private format24Hours(param1: number, param2: Date): string
+		private format24Hours(fieldLength: number, date: Date): string
 		{
-			const _loc3_ = !!this.isUtc ? param2.getUTCHours() : param2.getHours();
-			return this.padNumber(_loc3_, param1);
+			const hour = this.isUtc ? date.getUTCHours() : date.getHours();
+			return this.padNumber(hour, fieldLength);
 		}
 
-		private formatGMT(param1: number, param2: Date): string
+		private formatGMT(fieldLength: number, date: Date): string
 		{
-			let _loc3_ = param2.getTimezoneOffset();
+			let _loc3_ = date.getTimezoneOffset();
 			const _loc4_: string[] = [];
 			if (_loc3_ > 0)
 			{
@@ -195,23 +195,23 @@ namespace com.google.i18n.locale
 			return _loc4_.join("");
 		}
 
-		private format1To12Hours(param1: number, param2: Date): string
+		private format1To12Hours(fieldLength: number, date: Date): string
 		{
-			const _loc3_ = !!this.isUtc ? param2.getUTCHours() : param2.getHours();
-			return this.padNumber(((_loc3_ + 11) % 12) + 1, param1);
+			const hour = this.isUtc ? date.getUTCHours() : date.getHours();
+			return this.padNumber(((hour + 11) % 12) + 1, fieldLength);
 		}
 
-		private formatEra(param1: number, param2: Date): string
+		private formatEra(fieldLength: number, date: Date): string
 		{
-			const _loc3_ = !!this.isUtc ? param2.getUTCFullYear() > 0 ? 1 : 0 : param2.getFullYear() > 0 ? 1 : 0;
-			return param1 >= 4 ? (<any>this.symbols).ERANAMES[_loc3_] : (<any>this.symbols).ERAS[_loc3_];
+			const year = this.isUtc ? date.getUTCFullYear() > 0 ? 1 : 0 : date.getFullYear() > 0 ? 1 : 0;
+			return fieldLength >= 4 ? (<any>this.symbols).ERANAMES[year] : (<any>this.symbols).ERAS[year];
 		}
 
-		private formatTimeZoneRFC(param1: number, param2: Date): string
+		private formatTimeZoneRFC(fieldLength: number, date: Date): string
 		{
-			if (param1 < 4)
+			if (fieldLength < 4)
 			{
-				let _loc3_ = param2.getTimezoneOffset();
+				let _loc3_ = date.getTimezoneOffset();
 				let _loc4_ = "-";
 				if (_loc3_ < 0)
 				{
@@ -221,70 +221,70 @@ namespace com.google.i18n.locale
 				_loc3_ = _loc3_ / 3 * 5 + _loc3_ % 60;
 				return _loc4_ + this.padNumber(_loc3_, 4);
 			}
-			return this.formatGMT(param1, param2);
+			return this.formatGMT(fieldLength, date);
 		}
 
-		private format0To23Hours(param1: number, param2: Date): string
+		private format0To23Hours(fieldLength: number, date: Date): string
 		{
-			const _loc3_ = !!this.isUtc ? param2.getUTCHours() : param2.getHours();
-			return this.padNumber(_loc3_, param1);
+			const hour = this.isUtc ? date.getUTCHours() : date.getHours();
+			return this.padNumber(hour, fieldLength);
 		}
 
-		private formatFractionalSeconds(param1: number, param2: Date): string
+		private formatFractionalSeconds(fieldLength: number, date: Date): string
 		{
-			const _loc3_ = param2.getTime() % 1000 / 1000;
-			return String(_loc3_);
+			const seconds = date.getTime() % 1000 / 1000;
+			return String(seconds);
 		}
 
-		private formatAmPm(param1: number, param2: Date): string
+		private formatAmPm(fieldLength: number, date: Date): string
 		{
-			const _loc3_ = !!this.isUtc ? param2.getUTCHours() : param2.getHours();
-			return (<any>this.symbols).AMPMS[_loc3_ >= 12 && _loc3_ < 24 ? 1 : 0];	// TODO
+			const hour = this.isUtc ? date.getUTCHours() : date.getHours();
+			return (<any>this.symbols).AMPMS[hour >= 12 && hour < 24 ? 1 : 0];	// TODO
 		}
 
-		private formatMinutes(param1: number, param2: Date): string
+		private formatMinutes(fieldLength: number, date: Date): string
 		{
-			const _loc3_ = !!this.isUtc ? param2.getUTCMinutes() : param2.getMinutes();
-			return this.padNumber(_loc3_, param1);
+			const minute = this.isUtc ? date.getUTCMinutes() : date.getMinutes();
+			return this.padNumber(minute, fieldLength);
 		}
 
-		private format0To11Hours(param1: number, param2: Date): string
+		private format0To11Hours(fieldLength: number, date: Date): string
 		{
-			const _loc3_ = !!this.isUtc ? param2.getUTCHours() : param2.getHours();
-			return this.padNumber(_loc3_ % 12, param1);
+			const hour = this.isUtc ? date.getUTCHours() : date.getHours();
+			return this.padNumber(hour % 12, fieldLength);
 		}
 
-		private formatStandaloneDay(param1: number, param2: Date): string
+		private formatStandaloneDay(fieldLength: number, date: Date): string
 		{
-			const _loc3_ = !!this.isUtc ? param2.getUTCDay() : param2.getDay();
-			switch (param1)
+			const day = this.isUtc ? date.getUTCDay() : date.getDay();
+			switch (fieldLength)
 			{
 				case 5:
-					return (<any>this.symbols).STANDALONENARROWWEEKDAYS[_loc3_];
+					return (<any>this.symbols).STANDALONENARROWWEEKDAYS[day];
 				case 4:
-					return (<any>this.symbols).STANDALONEWEEKDAYS[_loc3_];
+					return (<any>this.symbols).STANDALONEWEEKDAYS[day];
 				case 3:
-					return (<any>this.symbols).STANDALONESHORTWEEKDAYS[_loc3_];
+					return (<any>this.symbols).STANDALONESHORTWEEKDAYS[day];
 				default:
-					return this.padNumber(_loc3_, 1);
+					return this.padNumber(day, 1);
 			}
 		}
 
-		private formatQuarter(param1: number, param2: Date): string
+		private formatQuarter(fieldLength: number, date: Date): string
 		{
-			const _loc3_ = !!this.isUtc ? param2.getUTCMonth() : param2.getMonth();
-			const _loc4_ = Math.floor(_loc3_ / 3);
-			return param1 < 4 ? (<any>this.symbols).SHORTQUARTERS[_loc4_] : (<any>this.symbols).QUARTERS[_loc4_];
+			const month = this.isUtc ? date.getUTCMonth() : date.getMonth();
+			const quarter = Math.floor(month / 3);
+			return fieldLength < 4 ? (<any>this.symbols).SHORTQUARTERS[quarter] : (<any>this.symbols).QUARTERS[quarter];
 		}
 
-		format(param1: Date): string
+		format(date: Date): string
 		{
 			const _loc2_: string[] = [];
 			for (let _loc3_ = 0; _loc3_ < this.patternParts.length; _loc3_++)
 			{
 				const _loc4_ = this.patternParts[_loc3_].text;
-				if (DateTimeFormat.FIELD === this.patternParts[_loc3_].type)
-					_loc2_.push(this.formatField(_loc4_, param1));
+				if (PatternPartTypes.FIELD === this.patternParts[_loc3_].type)
+					_loc2_.push(this.formatField(_loc4_, date));
 				else
 					_loc2_.push(_loc4_);
 			}
@@ -303,10 +303,10 @@ namespace com.google.i18n.locale
 			return _loc5_ + _loc3_;
 		}
 
-		private formatDayOfWeek(param1: number, param2: Date): string
+		private formatDayOfWeek(fieldLength: number, date: Date): string
 		{
-			const _loc3_ = !!this.isUtc ? param2.getUTCDay() : param2.getDay();
-			return param1 >= 4 ? (<any>this.symbols).WEEKDAYS[_loc3_] : (<any>this.symbols).SHORTWEEKDAYS[_loc3_];
+			const day = this.isUtc ? date.getUTCDay() : date.getDay();
+			return fieldLength >= 4 ? (<any>this.symbols).WEEKDAYS[day] : (<any>this.symbols).SHORTWEEKDAYS[day];
 		}
 	}
 }

@@ -9,16 +9,20 @@ namespace com.google.finance
 	// import flash.display.Bitmap;
 	// import flash.ui.Mouse;
 
+	export enum MouseCursors
+	{
+		H_ARROWS = 4,
+		OPENED_HAND = 2,
+		HIDDEN = 0,
+		CLASSIC = 1,
+		V_ARROWS = 5,
+		CLOSED_HAND = 3,
+	}
+
 	export class MouseCursor extends flash.display.Sprite
 	{
-		static readonly H_ARROWS = 4;
-		static readonly OPENED_HAND = 2;
-		static readonly DRAGGABLE_CURSOR = MouseCursor.OPENED_HAND;
-		static readonly HIDDEN = 0;
-		static readonly CLASSIC = 1;
-		static readonly V_ARROWS = 5;
-		static readonly CLOSED_HAND = 3;
-
+		static readonly DRAGGABLE_CURSOR = MouseCursors.OPENED_HAND;
+		
 		/*
 		private static readonly CursorHorizontalArrows = MouseCursor_CursorHorizontalArrows;
 		private static readonly CursorOpenedHand = MouseCursor_CursorOpenedHand;
@@ -33,15 +37,15 @@ namespace com.google.finance
 		constructor()
 		{
 			super();
-			this.currentType = MouseCursor.CLASSIC;
+			this.currentType = MouseCursors.CLASSIC;
 			this.mouseEnabled = false;
 			//this.cursor = new this.CursorOpenedHand();
-			this.setCursor(MouseCursor.OPENED_HAND);
+			this.setCursor(MouseCursors.OPENED_HAND);
 		}
 
 		onMouseLeave(param1: Event) 
 		{
-			this.setCursor(MouseCursor.CLASSIC);
+			this.setCursor(MouseCursors.CLASSIC);
 		}
 
 		initListeners() 
@@ -66,19 +70,19 @@ namespace com.google.finance
 			switch (param1)
 			{
 				default:
-				case MouseCursor.CLASSIC:
+				case MouseCursors.CLASSIC:
 					this.element.style.cursor = "auto";
 					break;
-				case MouseCursor.HIDDEN:
+				case MouseCursors.HIDDEN:
 					this.element.style.cursor = "none";
 					break;
-				case MouseCursor.OPENED_HAND:
+				case MouseCursors.OPENED_HAND:
 					this.element.style.cursor = "grab";
 					break;
-				case MouseCursor.CLOSED_HAND:
+				case MouseCursors.CLOSED_HAND:
 					this.element.style.cursor = "grabbing";
 					break;
-				case MouseCursor.H_ARROWS:
+				case MouseCursors.H_ARROWS:
 					this.element.style.cursor = "ew-resize";
 					break;
 			}
@@ -106,19 +110,19 @@ namespace com.google.finance
 			}
 			switch (type)
 			{
-				case MouseCursor.CLASSIC:
+				case MouseCursors.CLASSIC:
 					Mouse.show();
 					return;
-				case MouseCursor.HIDDEN:
+				case MouseCursors.HIDDEN:
 					return;
-				case MouseCursor.OPENED_HAND:
-					this.cursor = new MouseCursor.CursorOpenedHand();
+				case MouseCursors.OPENED_HAND:
+					this.cursor = new MouseCursors.CursorOpenedHand();
 					break;
-				case MouseCursor.CLOSED_HAND:
-					this.cursor = new MouseCursor.CursorClosedHand();
+				case MouseCursors.CLOSED_HAND:
+					this.cursor = new MouseCursors.CursorClosedHand();
 					break;
-				case MouseCursor.H_ARROWS:
-					this.cursor = new MouseCursor.CursorHorizontalArrows();
+				case MouseCursors.H_ARROWS:
+					this.cursor = new MouseCursors.CursorHorizontalArrows();
 			}
 			this.addChild(this.cursor);
 			this.onMouseMove(null);

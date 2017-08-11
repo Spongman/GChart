@@ -633,7 +633,7 @@ namespace com.google.finance
 				this.sparkline.borderColor = 0xffffff;
 				this.passiveLayers.push(this.sparkline);
 				this.windowMask = this.createSparklineMask();
-				this.sparkline.mask = this.windowMask;
+				// TODO: this.sparkline.mask = this.windowMask;
 				const _loc2_ = new SparklineDateLinesLayer(this, param1);
 				_loc2_.textCanvas = this.textCanvas;
 				this.addChild(_loc2_);

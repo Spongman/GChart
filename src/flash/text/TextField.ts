@@ -22,7 +22,7 @@
 	{
 		align: string;
 
-		constructor(public family: string, public size = 0, public color = 0, public bold = false, public italic = false, public underline = false) { }
+		constructor(public family: string = "Arial", public size = 0, public color = 0, public bold = false, public italic = false, public underline = false) { }
 	}
 
 	export class TextField

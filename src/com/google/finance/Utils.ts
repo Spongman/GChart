@@ -83,7 +83,7 @@ namespace com.google.finance
 		static getTickerParts(param1: string) 
 		{
 			const _loc2_ = param1.split(":");
-			let _loc3_ = String(_loc2_.shift());
+			let _loc3_ = _loc2_.shift()!;	// TODO: check undefined
 			let _loc4_ = _loc2_.join(":");
 			if (_loc4_ === "")
 			{
@@ -294,7 +294,7 @@ namespace com.google.finance
 		static removeAllChildren(param1: flash.display.DisplayObjectContainer) 
 		{
 			while (param1.numChildren > 0)
-				param1.removeChildAt(0);
+				param1.removeChildAt(param1.numChildren-1);
 		}
 
 		static compareNumbers(param1: number, param2: number): number

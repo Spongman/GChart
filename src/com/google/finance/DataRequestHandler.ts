@@ -58,15 +58,15 @@ namespace com.google.finance
 			const _loc4_ = _loc3_[this.event.quote].addStream(decodeURIComponent(this.urlLoader.data), this.event);
 			switch (_loc4_)
 			{
-				case Const.ERROR:
+				case AddStreamResults.ERROR:
 					this.setUpDataReload();
 					break;
-				case Const.NOTHING:
+				case AddStreamResults.NOTHING:
 					MainManager.console.dataLoaded();
 					_loc3_[this.event.quote].dataUnavailableOnServer = true;
 					break;
-				case Const.FIRST_DATA:
-				case Const.ADDED_DATA:
+				case AddStreamResults.FIRST_DATA:
+				case AddStreamResults.ADDED_DATA:
 					MainManager.console.dataLoaded();
 					this.dataManager.mainManager.dataIsHere(_loc3_[this.event.quote], _loc4_);
 					if (this.event.callbacks)

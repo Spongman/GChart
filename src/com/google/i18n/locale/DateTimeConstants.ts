@@ -21,7 +21,6 @@ namespace com.google.i18n.locale
 			"FIRSTWEEKCUTOFFDAY":2
 		};
 
-		private static staticInitialized = DateTimeConstants.staticInitializer();
 		 
 		
 		static register(param1:Function) : boolean
@@ -30,7 +29,7 @@ namespace com.google.i18n.locale
 			return true;
 		}
 		
-		private static staticInitializer() : boolean
+		private static _staticConstructor = (function ()
 		{
 			let consts: { [key: string]: any } = DateTimeConstants.DateTimeConstants_en;
 			consts["STANDALONENARROWMONTHS"] = DateTimeConstants.DateTimeConstants_en.NARROWMONTHS;
@@ -40,6 +39,6 @@ namespace com.google.i18n.locale
 			consts["STANDALONESHORTWEEKDAYS"] = DateTimeConstants.DateTimeConstants_en.SHORTWEEKDAYS;
 			consts["STANDALONENARROWWEEKDAYS"] = DateTimeConstants.DateTimeConstants_en.NARROWWEEKDAYS;
 			return true;
-		}
+		})();
 	}
 }

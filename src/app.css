@@ -14,13 +14,16 @@ body {
 	overflow: hidden;
 
 	position: absolute;
-	top: 8px;
-	left: 8px;
-	bottom: 8px;
-	right: 8px;
+	top: 45px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
 }
 
-div, canvas, img, span {
+#stage canvas,
+#stage div,
+#stage img,
+#stage span {
 	position: absolute;
 	pointer-events: none;
 	display: inline-block;
@@ -73,6 +76,7 @@ canvas {
 	top: 0;
 	left: 0;
 	z-index: -1;
+	aborder: 1px solid red;
 }
 
 .pending {

@@ -19,7 +19,7 @@ namespace com.google.finance
 			this.addChild(this.highlightCanvas);
 		}
 
-		private drawDayLine(param1: flash.display.Sprite, param2: number, param3: ViewPoint, param4: com.google.finance.DataSeries, param5: number, param6: number, param7: number, param8: number, param9: Context): number
+		private drawDayLine(param1: flash.display.Sprite, param2: number, viewPoint: ViewPoint, param4: com.google.finance.DataSeries, param5: number, param6: number, param7: number, param8: number, param9: Context): number
 		{
 			const _loc10_ = param4.points;
 			const _loc11_ = param4.days;
@@ -31,20 +31,20 @@ namespace com.google.finance
 				_loc14_ = param8;
 
 			let point = <indicator.VolumeIndicatorPoint>param4.points[_loc14_];
-			let _loc17_ = param3.getXPos(_loc10_[_loc14_].point);
-			const _loc18_ = param3.getIntervalLength(param6 / 60);
+			let _loc17_ = viewPoint.getXPos(_loc10_[_loc14_].point);
+			const _loc18_ = viewPoint.getIntervalLength(param6 / 60);
 			const _loc15_ = Utils.extendedMax(param7, _loc11_[param2 - 1]);
 			const gr = param1.graphics;
 			while (_loc14_ > _loc15_)
 			{
-				let _loc13_ = param3.maxy - point.volume * this.verticalScale;
-				if (param3.maxy - _loc13_ < 1 && param3.maxy - _loc13_ > 0)
-					_loc13_ = param3.maxy - 1;
-				else if (_loc13_ < param3.miny)
-					_loc13_ = param3.miny;
+				let _loc13_ = viewPoint.maxy - point.volume * this.verticalScale;
+				if (viewPoint.maxy - _loc13_ < 1 && viewPoint.maxy - _loc13_ > 0)
+					_loc13_ = viewPoint.maxy - 1;
+				else if (_loc13_ < viewPoint.miny)
+					_loc13_ = viewPoint.miny;
 
 				gr.moveTo(_loc17_, _loc13_);
-				gr.lineTo(_loc17_, param3.maxy);
+				gr.lineTo(_loc17_, viewPoint.maxy);
 				_loc14_--;
 				_loc17_ = _loc17_ - _loc18_;
 			}
@@ -142,59 +142,59 @@ namespace com.google.finance
 			return _loc1_.getFirstRelativeMinute();
 		}
 
-		protected drawLines(param1: flash.display.Sprite, param2: com.google.finance.DataSeries, param3: number, param4: number, param5: ViewPoint, param6: Context) 
+		protected drawLines(param1: flash.display.Sprite, param2: com.google.finance.DataSeries, param3: number, param4: number, viewPoint: ViewPoint, param6: Context) 
 		{
 			const _loc7_ = <indicator.VolumeIndicatorPoint[]>param2.points;
 			//const _loc8_ = param2.days;
 			let _loc9_ = param2.getNextDayStart(param4);
-			const _loc10_ = param5.getDetailLevel();
-			const _loc11_ = param5.getSkipInterval();
+			const _loc10_ = viewPoint.getDetailLevel();
+			const _loc11_ = viewPoint.getSkipInterval();
 			//const _loc12_ = _loc11_.skip;
 			const _loc13_ = _loc11_.interval;
-			this.verticalScale = (param5.maxy - param5.miny - 6) / param6.maxVolume;
+			this.verticalScale = (viewPoint.maxy - viewPoint.miny - 6) / param6.maxVolume;
 			const gr = param1.graphics;
 			gr.clear();
 			gr.lineStyle(0, this.lineColor, 1);
 			switch (_loc10_)
 			{
-				case Const.INTRADAY:
+				case Intervals.INTRADAY:
 					while (param2.days[_loc9_] > param3 && _loc9_ >= 0)
 					{
-						this.drawDayLine(param1, _loc9_, param5, param2, _loc10_, _loc13_, param3, param4, param6);
+						this.drawDayLine(param1, _loc9_, viewPoint, param2, _loc10_, _loc13_, param3, param4, param6);
 						_loc9_--;
 					}
 					break;
-				case Const.DAILY:
+				case Intervals.DAILY:
 					{
 						//_loc14_ = param5.getXPos(_loc7_[_loc16_].point);
 						//_loc17_ = param5.minutePix * (this.dataSource.data.marketDayLength + 1);
 						for (let _loc16_ = param4; _loc16_ > param3 && _loc16_ >= 0; _loc16_--)
 						{
-							let _loc15_ = this.getYPos(param5, _loc7_[_loc16_]);
-							const _loc14_ = param5.getXPos(_loc7_[_loc16_].point);
-							if (param5.maxy - _loc15_ < 1 && param5.maxy - _loc15_ > 0)
-								_loc15_ = param5.maxy - 1;
-							else if (_loc15_ < param5.miny)
-								_loc15_ = param5.miny;
+							let _loc15_ = this.getYPos(viewPoint, _loc7_[_loc16_]);
+							const _loc14_ = viewPoint.getXPos(_loc7_[_loc16_].point);
+							if (viewPoint.maxy - _loc15_ < 1 && viewPoint.maxy - _loc15_ > 0)
+								_loc15_ = viewPoint.maxy - 1;
+							else if (_loc15_ < viewPoint.miny)
+								_loc15_ = viewPoint.miny;
 
 							gr.moveTo(_loc14_, _loc15_);
-							gr.lineTo(_loc14_, param5.maxy);
+							gr.lineTo(_loc14_, viewPoint.maxy);
 						}
 					}
 					break;
-				case Const.WEEKLY:
+				case Intervals.WEEKLY:
 					{
 						for (let _loc16_ = param4; _loc16_ > param3 && _loc16_ >= 0; _loc16_--)
 						{
-							const _loc14_ = param5.getXPos(_loc7_[_loc16_].point);
-							let _loc15_ = this.getYPos(param5, _loc7_[_loc16_]);
-							if (param5.maxy - _loc15_ < 1 && param5.maxy - _loc15_ > 0)
-								_loc15_ = param5.maxy - 1;
-							else if (_loc15_ < param5.miny)
-								_loc15_ = param5.miny;
+							const _loc14_ = viewPoint.getXPos(_loc7_[_loc16_].point);
+							let _loc15_ = this.getYPos(viewPoint, _loc7_[_loc16_]);
+							if (viewPoint.maxy - _loc15_ < 1 && viewPoint.maxy - _loc15_ > 0)
+								_loc15_ = viewPoint.maxy - 1;
+							else if (_loc15_ < viewPoint.miny)
+								_loc15_ = viewPoint.miny;
 
 							gr.moveTo(_loc14_, _loc15_);
-							gr.lineTo(_loc14_, param5.maxy);
+							gr.lineTo(_loc14_, viewPoint.maxy);
 						}
 					}
 					break;

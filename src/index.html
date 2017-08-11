@@ -7,6 +7,26 @@
 	<link rel="stylesheet" href="app.css" type="text/css" />
 </head>
 <body>
+	<div id="compares">
+		<label><input type="checkbox" name="INDEXDJX:.DJI"/> Dow Jones</label>
+		<label><input type="checkbox" name="INDEXNASDAQ:.IXIC"/> Nasdaq</label>
+		<label><input type="checkbox" name="NASDAQ:AAPL"/> AAPL</label>
+		<label><input type="checkbox" name="NASDAQ:BIDU"/> BIDU</label>
+		<label><input type="checkbox" name="NASDAQ:MSFT"/> MSFT</label>
+	</div>
+	<div id="parameters">
+		<label><input class="setParameter" type="checkbox" checked="checked" name="displayVolume"/> Volume</label>
+		<label><input class="setParameter" type="checkbox" checked="checked" name="displayExtendedHours"/> Extended Hours</label>
+		<select class="setParameter" name="verticalScaling">
+			<option selected="selected">Linear</option>
+			<option>Logarithmic</option>
+		</select>
+		<select id="lineStyle">
+			<option value="IntervalBasedLine">Line</option>
+			<option value="CandleStick">CandleStick</option>
+			<option value="OhlcInt" selected="selected">OHLC</option>
+		</select>
+	</div>
 
 	<div id="stage"></div>
 
@@ -26,6 +46,33 @@
 			eltStage.callAsFunction("enableIndicator", ["FastStochastic", "true*14*3"]);
 			eltStage.callAsFunction("enableIndicator", ["SlowStochastic", "true*14*3"]);
 		}, 2000);
+
+		document.querySelectorAll("#compares input").forEach(function (e) {
+			e.addEventListener("click", function (event) {
+				if (e.checked)
+					eltStage.callAsFunction("addCompareTo", [e.name, e.name.split(':')[1]]);
+				else
+					eltStage.callAsFunction("removeCompareTo", [e.name]);
+			})
+		});
+		document.querySelectorAll("#parameters input.setParameter").forEach(function (e) {
+			e.addEventListener("click", function (event) {
+				eltStage.callAsFunction("setParameter", [e.name, e.checked]);
+			})
+		});
+
+		document.querySelectorAll("#parameters select.setParameter").forEach(function (e) {
+			e.addEventListener("change", function (event) {
+				eltStage.callAsFunction("setParameter", [e.name, e.value]);
+			})
+		});
+
+		document.querySelectorAll("#lineStyle").forEach(function (e) {
+			e.addEventListener("change", function (event) {
+				eltStage.callAsFunction("setLineStyle", [e.value]);
+			})
+		});		
+
 	</script>
 
 </body>

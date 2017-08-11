@@ -1,3 +1,7 @@
+/// <reference path="WindowLayer_SparkHandle.ts" />
+/// <reference path="WindowLayer_ScrollBarBg.ts" />
+/// <reference path="WindowLayer_SparkHandleActive.ts" />
+
 namespace com.google.finance
 {
 	// import flash.display.Bitmap;
@@ -28,6 +32,7 @@ namespace com.google.finance
 		constructor(viewPoint: SparklineViewPoint, dataSource: DataSource)
 		{
 			super(viewPoint, dataSource);
+
 			let sliderBgBitmap = new WindowLayer.ScrollBarBg();
 			sliderBgBitmap.y = viewPoint.maxy - 1;
 			sliderBgBitmap.x = viewPoint.minx;
@@ -36,7 +41,7 @@ namespace com.google.finance
 			this.addChild(this.sliderBg);
 			this.sliderBg.addEventListener(MouseEvents.CLICK, () =>
 			{
-				viewPoint.myController.mouseDownAction(Const.SCROLL_BG);
+				viewPoint.myController.mouseDownAction(ControllerComponents.SCROLL_BG);
 			});
 			this.addChild(this.scrollSlider);
 			this.scrollSlider.y = viewPoint.maxy - 1;
@@ -51,7 +56,7 @@ namespace com.google.finance
 			this.addChild(this.leftHandle);
 			this.scrollSlider.addEventListener(MouseEvents.MOUSE_DOWN, () =>
 			{
-				viewPoint.myController.mouseDownAction(Const.SCROLL_BAR);
+				viewPoint.myController.mouseDownAction(ControllerComponents.SCROLL_BAR);
 			});
 			let controller = viewPoint.myController;
 			this.leftHandle.addEventListener(MouseEvents.ROLL_OVER, () =>
@@ -65,7 +70,7 @@ namespace com.google.finance
 			});
 			this.leftHandle.addEventListener(MouseEvents.MOUSE_DOWN, () =>
 			{
-				viewPoint.myController.mouseDownAction(Const.LEFT_HANDLE);
+				viewPoint.myController.mouseDownAction(ControllerComponents.LEFT_HANDLE);
 			});
 			this.rightHandle.addEventListener(MouseEvents.ROLL_OVER, () =>
 			{
@@ -78,7 +83,7 @@ namespace com.google.finance
 			});
 			this.rightHandle.addEventListener(MouseEvents.MOUSE_DOWN, () =>
 			{
-				viewPoint.myController.mouseDownAction(Const.RIGHT_HANDLE);
+				viewPoint.myController.mouseDownAction(ControllerComponents.RIGHT_HANDLE);
 			});
 			this.toggleHandles(false);
 		}

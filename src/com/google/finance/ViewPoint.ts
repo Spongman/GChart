@@ -77,7 +77,7 @@ namespace com.google.finance
 		abstract getLastMinute(): number;
 
 		abstract getFirstDataUnit(): DataUnit | null;
-		abstract getLastDataUnit(param1: DataSeries): DataUnit | null;
+		abstract getLastDataUnit(dataSeries: DataSeries): DataUnit | null;
 
 		abstract getLastNotVisibleDataUnit(): DataUnit | null;
 
@@ -284,12 +284,12 @@ namespace com.google.finance
 			this.descriptiveLayers = [];
 		}
 
-		protected getQuoteType(): number
+		protected getQuoteType(): QuoteTypes
 		{
 			if (this.myController)
 				return this.myController.mainManager.getQuoteType();
 
-			return Const.COMPANY;
+			return QuoteTypes.COMPANY;
 		}
 
 		getSnapLevel(): number
@@ -297,15 +297,15 @@ namespace com.google.finance
 			const _loc1_ = notnull(this.getBaseDataSource()).data;
 			const _loc2_ = this.minutePix * _loc1_.marketDayLength;
 			if (_loc2_ > 40)
-				return Const.SNAP_DAY;
+				return Snaps.SNAP_DAY;
 
 			if (_loc2_ > 15)
-				return Const.SNAP_WEEK;
+				return Snaps.SNAP_WEEK;
 
 			if (_loc2_ * 20 > 40)
-				return Const.SNAP_MONTH;
+				return Snaps.SNAP_MONTH;
 
-			return Const.SNAP_YEAR;
+			return Snaps.SNAP_YEAR;
 		}
 
 		static addTextField(param1: flash.display.Sprite, param2: string, param3: number, param4: number, param5: number, param6: number, param7: string, param8: flash.text.TextFormat, param9?: string): flash.text.TextField
@@ -437,62 +437,62 @@ namespace com.google.finance
 			const _loc5_ = DataSource.getMinuteMetaIndex(this.lastMinute - this.count, _loc3_.data.days, _loc3_.data.units);
 			const _loc6_ = DataSource.getMinuteMetaIndex(this.lastMinute, _loc3_.data.days, _loc3_.data.units);
 			if (_loc4_ - _loc6_ <= Const.INTRADAY_DAYS && _loc6_ - _loc5_ <= Const.INTRADAY_DAYS)
-				this.generateEventForAllSources(Const.GET_5D_DATA);
+				this.generateEventForAllSources(ChartEventStyles.GET_5D_DATA);
 
 			const _loc7_ = _loc4_ - _loc5_;
 			if (Const.INDICATOR_ENABLED && !this.displayManager.isDifferentMarketSessionComparison())
 			{
 				const _loc8_ = param1 >= 0 ? param1 : this.getDetailLevelForTechnicalStyle();
 				_loc9_ = !this.myController || this.myController.currentIntervalLevel === -1;
-				const _loc10_ = this.displayManager.hasOhlcRequiredIndicator() || !_loc9_ ? Number(ChartEventTypes.OHLC_REQUIRED) : ChartEventTypes.OPTIONAL;
+				const _loc10_ = this.displayManager.hasOhlcRequiredIndicator() || !_loc9_ ? ChartEventPriorities.OHLC_REQUIRED : ChartEventPriorities.OPTIONAL;
 				switch (_loc8_)
 				{
-					case Const.INTRADAY:
-						this.generateEventForAllSources(Const.GET_5D_DATA, _loc10_, param2);
+					case Intervals.INTRADAY:
+						this.generateEventForAllSources(ChartEventStyles.GET_5D_DATA, _loc10_, param2);
 						if (Boolean(MainManager.paramsObj.forceDisplayExtendedHours) || Boolean(MainManager.paramsObj.displayExtendedHours))
-							this.generateEventForAllSources(Const.GET_AH_DATA, _loc10_);
+							this.generateEventForAllSources(ChartEventStyles.GET_AH_DATA, _loc10_);
 
 						if (this.getFirstMinute() === this.getOldestBaseMinute())
 						{
-							this.generateEventForAllSources(Const.GET_1Y_DATA, _loc10_);
+							this.generateEventForAllSources(ChartEventStyles.GET_1Y_DATA, _loc10_);
 							break;
 						}
 						break;
-					case Const.FIVE_MINUTES:
-						this.generateEventForAllSources(Const.GET_1Y_DATA, _loc10_);
-						this.generateEventForAllSources(Const.GET_10D_DATA, _loc10_, param2);
+					case Intervals.FIVE_MINUTES:
+						this.generateEventForAllSources(ChartEventStyles.GET_1Y_DATA, _loc10_);
+						this.generateEventForAllSources(ChartEventStyles.GET_10D_DATA, _loc10_, param2);
 						if (_loc9_ && (Boolean(MainManager.paramsObj.forceDisplayExtendedHours) || Boolean(MainManager.paramsObj.displayExtendedHours)))
 						{
-							this.generateEventForAllSources(Const.GET_AH_DATA, _loc10_);
+							this.generateEventForAllSources(ChartEventStyles.GET_AH_DATA, _loc10_);
 							break;
 						}
 						break;
-					case Const.HALF_HOUR:
-						this.generateEventForAllSources(Const.GET_1Y_DATA, _loc10_);
-						this.generateEventForAllSources(Const.GET_30D_DATA, _loc10_, param2);
+					case Intervals.HALF_HOUR:
+						this.generateEventForAllSources(ChartEventStyles.GET_1Y_DATA, _loc10_);
+						this.generateEventForAllSources(ChartEventStyles.GET_30D_DATA, _loc10_, param2);
 						if (_loc9_ && (Boolean(MainManager.paramsObj.forceDisplayExtendedHours) || Boolean(MainManager.paramsObj.displayExtendedHours)))
 						{
-							this.generateEventForAllSources(Const.GET_AH_DATA, _loc10_);
+							this.generateEventForAllSources(ChartEventStyles.GET_AH_DATA, _loc10_);
 							break;
 						}
 						break;
-					case Const.DAILY:
-						this.generateEventForAllSources(Const.GET_1Y_DATA, _loc10_, param2);
+					case Intervals.DAILY:
+						this.generateEventForAllSources(ChartEventStyles.GET_1Y_DATA, _loc10_, param2);
 						break;
-					case Const.WEEKLY:
-						this.generateEventForAllSources(Const.GET_5Y_DATA, _loc10_, param2);
+					case Intervals.WEEKLY:
+						this.generateEventForAllSources(ChartEventStyles.GET_5Y_DATA, _loc10_, param2);
 						break;
 				}
 			}
 			else
 			{
 				if (this.displayManager.isDifferentMarketSessionComparison())
-					this.generateEventForAllSources(Const.GET_5Y_DATA);
+					this.generateEventForAllSources(ChartEventStyles.GET_5Y_DATA);
 
-				this.generateEventForAllSources(Const.GET_1Y_DATA);
+				this.generateEventForAllSources(ChartEventStyles.GET_1Y_DATA);
 			}
 			if (_loc7_ >= Const.DAILY_DAYS)
-				this.generateEventForAllSources(Const.GET_40Y_DATA);
+				this.generateEventForAllSources(ChartEventStyles.GET_40Y_DATA);
 		}
 
 		getDetailLevelForDifferentMarketSessionComparison(param1 = NaN, param2 = NaN): number
@@ -510,9 +510,9 @@ namespace com.google.finance
 				_loc4_ = this.count;
 
 			if (_loc4_ - _loc3_ <= Const.DAILY_DAYS)
-				return Const.DAILY;
+				return Intervals.DAILY;
 
-			return Const.WEEKLY;
+			return Intervals.WEEKLY;
 		}
 
 		getLayers(): AbstractLayer<IViewPoint>[]
@@ -535,16 +535,16 @@ namespace com.google.finance
 			{
 				default:
 					throw new Error();
-				case Const.SNAP_DAY:
+				case Snaps.SNAP_DAY:
 					_loc4_ = _loc3_.days;
 					break;
-				case Const.SNAP_WEEK:
+				case Snaps.SNAP_WEEK:
 					_loc4_ = _loc3_.fridays;
 					break;
-				case Const.SNAP_MONTH:
+				case Snaps.SNAP_MONTH:
 					_loc4_ = _loc3_.firsts;
 					break;
-				case Const.SNAP_YEAR:
+				case Snaps.SNAP_YEAR:
 					_loc4_ = _loc3_.years;
 					break;
 			}
@@ -637,10 +637,10 @@ namespace com.google.finance
 			return _loc1_;
 		}
 
-		zoomingAnimation_ticker(param1: ViewPoint, param2: number, param3: boolean)
+		zoomingAnimation_ticker(viewPoint: ViewPoint, param2: number, param3: boolean)
 		{
-			const _loc4_ = param1.zoomingInitialState;
-			const _loc5_ = notnull(param1.zoomingFinalState);
+			const _loc4_ = viewPoint.zoomingInitialState;
+			const _loc5_ = notnull(viewPoint.zoomingFinalState);
 			const _loc6_ = Utils.cloneObject(_loc4_);
 			for (let _loc7_ in _loc4_)
 			{
@@ -650,11 +650,11 @@ namespace com.google.finance
 					_loc6_[_loc7_] = _loc8_;
 				}
 			}
-			param1.zoomInMinutes_Handler(_loc6_);
+			viewPoint.zoomInMinutes_Handler(_loc6_);
 			if (param2 === 0)
 			{
-				param1.HTMLnotify(param3);
-				param1.zoomingFinalState = null;
+				viewPoint.HTMLnotify(param3);
+				viewPoint.zoomingFinalState = null;
 			}
 			this.displayManager.showContextualStaticInfo();
 		}
@@ -745,21 +745,21 @@ namespace com.google.finance
 			if (_loc7_ <= Const.INTRADAY_DAYS * _loc10_)
 			{
 				if (_loc8_.intervalDataContainsTime(_loc12_, Const.INTRADAY_INTERVAL) || _loc8_.intervalDataPreceedsTime(_loc12_, Const.INTRADAY_INTERVAL))
-					return Const.INTRADAY;
+					return Intervals.INTRADAY;
 
 				if (_loc8_.intervalDataContainsTime(_loc12_, Const.DAILY_INTERVAL, Const.INTRADAY_INTERVAL))
-					return Const.DAILY;
+					return Intervals.DAILY;
 
-				return Const.WEEKLY;
+				return Intervals.WEEKLY;
 			}
 			if (_loc7_ <= Const.DAILY_DAYS * _loc9_)
 			{
 				if (_loc8_.intervalDataContainsTime(_loc12_, Const.INTRADAY_INTERVAL, Const.DAILY_INTERVAL) || _loc8_.intervalDataPreceedsTime(_loc12_, Const.DAILY_INTERVAL))
-					return Const.DAILY;
+					return Intervals.DAILY;
 
-				return Const.WEEKLY;
+				return Intervals.WEEKLY;
 			}
-			return Const.WEEKLY;
+			return Intervals.WEEKLY;
 		}
 
 		getFirstDataUnit(): DataUnit | null
@@ -798,17 +798,17 @@ namespace com.google.finance
 
 			const _loc5_ = this.getQuoteType();
 			const _loc6_ = this.getBaseDataSource();
-			if (_loc5_ === Const.COMPANY)
+			if (_loc5_ === QuoteTypes.COMPANY)
 			{
 				if (_loc6_)
 				{
 					const _loc9_ = _loc6_.data.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
 					if (_loc9_ && _loc9_.length > 0 && Math.abs(_loc3_ - _loc4_) <= Math.abs(_loc9_[0].relativeMinutes) + 1)
-						return Const.INTRADAY;
+						return Intervals.INTRADAY;
 
 					const _loc10_ = _loc6_.data.getPointsInIntervalArray(Const.FIVE_MINUTE_INTERVAL);
 					if (_loc10_ && _loc10_.length > 0 && Math.abs(_loc3_ - _loc4_) <= Math.abs(_loc10_[0].relativeMinutes) + 1)
-						return Const.FIVE_MINUTES;
+						return Intervals.FIVE_MINUTES;
 				}
 				else if (Const.DEFAULT_CHART_STYLE_NAME !== Const.LINE_CHART)
 				{
@@ -817,16 +817,16 @@ namespace com.google.finance
 			}
 			const _loc7_ = Math.abs(_loc3_ - _loc4_) / (this.getMarketDayLength() + 1) + 1;
 			const _loc8_: DataSeries | null = !!_loc6_ ? _loc6_.data : null;
-			if (_loc7_ <= Const.FIVE_MINUTE_DAYS && _loc5_ === Const.COMPANY && !(_loc8_ && _loc8_.hasNoPointsInIntervalArray(Const.FIVE_MINUTE_INTERVAL)))
-				return Const.FIVE_MINUTES;
+			if (_loc7_ <= Const.FIVE_MINUTE_DAYS && _loc5_ === QuoteTypes.COMPANY && !(_loc8_ && _loc8_.hasNoPointsInIntervalArray(Const.FIVE_MINUTE_INTERVAL)))
+				return Intervals.FIVE_MINUTES;
 
-			if (_loc7_ <= Const.HALF_HOUR_DAYS && _loc5_ === Const.COMPANY && !(_loc8_ && _loc8_.hasNoPointsInIntervalArray(Const.HALF_HOUR_INTERVAL)))
-				return Const.HALF_HOUR;
+			if (_loc7_ <= Const.HALF_HOUR_DAYS && _loc5_ === QuoteTypes.COMPANY && !(_loc8_ && _loc8_.hasNoPointsInIntervalArray(Const.HALF_HOUR_INTERVAL)))
+				return Intervals.HALF_HOUR;
 
 			if (_loc7_ <= Const.DAILY_DAYS && !(_loc8_ && _loc8_.hasNoPointsInIntervalArray(Const.DAILY_INTERVAL)))
-				return Const.DAILY;
+				return Intervals.DAILY;
 
-			return Const.WEEKLY;
+			return Intervals.WEEKLY;
 		}
 
 		protected getMarketDayLength(): number
@@ -859,18 +859,18 @@ namespace com.google.finance
 			{
 				const _loc4_ = this.getDetailLevelForTechnicalStyle(param1);
 				const _loc5_ = this.getDetailLevelForTechnicalStyle(param2);
-				if (_loc5_ >= Const.DAILY && _loc4_ < Const.DAILY)
+				if (_loc5_ >= Intervals.DAILY && _loc4_ < Intervals.DAILY)
 					this.displayManager.toggleAllAfterHoursSessions(false);
-				else if (_loc4_ >= Const.DAILY && _loc5_ < Const.DAILY)
+				else if (_loc4_ >= Intervals.DAILY && _loc5_ < Intervals.DAILY)
 					this.displayManager.toggleAllAfterHoursSessions(true);
 			}
 			else
 			{
 				const _loc4_ = this.getDetailLevel(param1);
 				const _loc5_ = this.getDetailLevel(param2);
-				if (_loc5_ > Const.INTRADAY && _loc4_ === Const.INTRADAY)
+				if (_loc5_ > Intervals.INTRADAY && _loc4_ === Intervals.INTRADAY)
 					this.displayManager.toggleAllAfterHoursSessions(false);
-				else if (_loc4_ > Const.INTRADAY && _loc5_ === Const.INTRADAY)
+				else if (_loc4_ > Intervals.INTRADAY && _loc5_ === Intervals.INTRADAY)
 					this.displayManager.toggleAllAfterHoursSessions(true);
 			}
 		}
@@ -903,8 +903,8 @@ namespace com.google.finance
 				const _loc10_ = _loc9_.data.getFirstRelativeMinute();
 				if (_loc3_ < _loc10_)
 				{
-					if (Const.getZoomLevel(this.count, _loc9_.data.marketDayLength) >= Const.SCALE_5D)
-						this.generateEvent(Const.GET_1Y_DATA, _loc9_);
+					if (Const.getZoomLevel(this.count, _loc9_.data.marketDayLength) >= ScaleTypes.SCALE_5D)
+						this.generateEvent(ChartEventStyles.GET_1Y_DATA, _loc9_);
 				}
 			}
 			const _loc5_ = Math.abs(this.getOldestBaseMinute());
@@ -954,10 +954,10 @@ namespace com.google.finance
 			const _loc4_ = this.POINTS_DISTANCE * _loc3_ / this.unitsPerUnit;
 			switch (param1)
 			{
-				case Const.BACKWARD:
+				case Directions.BACKWARD:
 					this.zoomIn_Handler(this.minx - _loc4_, this.maxx);
 					break;
-				case Const.FORWARD:
+				case Directions.FORWARD:
 					this.zoomIn_Handler(this.minx + _loc4_, this.maxx);
 					break;
 			}
@@ -1078,14 +1078,14 @@ namespace com.google.finance
 			}
 			switch (_loc5_)
 			{
-				case Const.INTRADAY:
+				case Intervals.INTRADAY:
 					while (_loc3_ * _loc6_ * _loc4_ < this.POINTS_DISTANCE)
 						_loc6_ = Number(_loc6_ * 2);
 
 					return new SkipInterval(_loc6_, _loc6_ * Const.INTRADAY_INTERVAL);
-				case Const.DAILY:
+				case Intervals.DAILY:
 					return new SkipInterval(1, Const.DAILY_INTERVAL);
-				case Const.WEEKLY:
+				case Intervals.WEEKLY:
 					const _loc7_ = _loc3_ * 5 * this.getMarketDayLength();
 					while (_loc6_ * _loc7_ < this.POINTS_DISTANCE)
 						_loc6_ = Number(_loc6_ * 2);
@@ -1115,9 +1115,9 @@ namespace com.google.finance
 
 			const _loc2_ = this.getDetailLevelForTechnicalStyle(this.count, param1);
 			const _loc3_ = this.getDetailLevelForTechnicalStyle();
-			if (_loc3_ >= Const.DAILY && _loc2_ < Const.DAILY)
+			if (_loc3_ >= Intervals.DAILY && _loc2_ < Intervals.DAILY)
 				this.displayManager.toggleAllAfterHoursSessions(false);
-			else if (_loc2_ >= Const.DAILY && _loc3_ < Const.DAILY)
+			else if (_loc2_ >= Intervals.DAILY && _loc3_ < Intervals.DAILY)
 				this.displayManager.toggleAllAfterHoursSessions(true);
 		}
 

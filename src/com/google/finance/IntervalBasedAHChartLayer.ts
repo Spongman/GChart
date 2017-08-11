@@ -62,7 +62,7 @@ namespace com.google.finance
 			let vp = <ViewPoint>this.viewPoint;
 			const _loc2_ = vp.getDetailLevelForTechnicalStyle();
 			const _loc3_ = vp.getDisplayManager().getEnabledChartLayer();
-			if (_loc2_ >= Const.DAILY || _loc2_ !== Const.INTRADAY && _loc3_ !== Const.LINE_CHART)
+			if (_loc2_ >= Intervals.DAILY || _loc2_ !== Intervals.INTRADAY && _loc3_ !== Const.LINE_CHART)
 				return;
 
 			const _loc4_ = this.getDataSeries().getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
@@ -102,7 +102,6 @@ namespace com.google.finance
 				const _loc8_ = param2[_loc6_.end];
 				if (ViewPoint.sessionVisible(_loc7_, _loc8_, context))
 					_loc3_.addInterval(_loc7_.time, _loc8_.time);
-
 			}
 			return _loc3_;
 		}

@@ -81,11 +81,11 @@ namespace com.google.finance
 			this.setDateEntryState(SpaceText.DISPLAY_DATES);
 		}
 
-		setReturnInfo(param1: ViewPoint) 
+		setReturnInfo(viewPoint: ViewPoint) 
 		{
-			const _loc2_ = param1.getLastNotVisibleDataUnit();
-			const _loc3_ = param1.getLastDataUnit();
-			const _loc4_ = param1.getBaseDataSource();
+			const _loc2_ = viewPoint.getLastNotVisibleDataUnit();
+			const _loc3_ = viewPoint.getLastDataUnit();
+			const _loc4_ = viewPoint.getBaseDataSource();
 			this.clearComparisonInfo();
 			this.returnText = this.getReturnText(_loc2_, _loc3_, _loc4_);
 			this.updateInfoText();
@@ -467,7 +467,8 @@ namespace com.google.finance
 			this.startDate.displayDateInParseableFormat();
 			this.endDate.type = flash.text.TextFieldType.INPUT;
 			this.endDate.displayDateInParseableFormat();
-			param1.target.setSelection(0, 10);
+			//param1.target.setSelection(0, 10);	// TODO
+			(<HTMLInputElement>param1.target).setSelectionRange(0, 10);
 			this.positionInfoText();
 		}
 
@@ -494,7 +495,7 @@ namespace com.google.finance
 			if (!this.endDate.parsedDate)
 				return false;
 			// TODO: !this.startDate.parsedDate ?
-			return (Utils.compareUtcDates(this.endDate.date, this.endDate.parsedDate) !== 0 || Utils.compareUtcDates(this.startDate.date, this.startDate.parsedDate) !== 0) && Utils.compareUtcDates(this.startDate.parsedDate, this.endDate.parsedDate) <= 0;
+			return (Utils.compareUtcDates(this.endDate.date, this.endDate.parsedDate) !== 0 || Utils.compareUtcDates(this.startDate.date, notnull(this.startDate.parsedDate)) !== 0) && Utils.compareUtcDates(notnull(this.startDate.parsedDate), this.endDate.parsedDate) <= 0;
 		}
 
 		resetInfoText() 

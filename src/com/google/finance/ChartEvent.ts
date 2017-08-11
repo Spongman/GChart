@@ -3,26 +3,31 @@ namespace com.google.finance
 	export enum ChartEventTypes
 	{
 		GENERIC = 0,
-		EXPECTED = 0,
 		GET_DATA = 1,
+		GET_AH_DATA = 2,
+		GET_MUTF_DATA = 3,
+		GET_RT_DATA = 4,
+		GET_RT_AH_DATA = 5,
+	}
+
+	export enum ChartEventPriorities
+	{
+		EXPECTED = 0,
 		REQUIRED = 1,
 		OPTIONAL = 2,
-		GET_AH_DATA = 2,
 		DONE = 3,
-		GET_MUTF_DATA = 3,
 		OHLC_REQUIRED = 4,
-		GET_RT_DATA = 4,
 		OHLC_DONE = 5,
-		GET_RT_AH_DATA = 5,
 		POLLING = 6,
-	}
+	}	
+
 
 	export class ChartEvent
 	{
 		quote: string;
 		interval: string;
 		period: string;
-		priority: number;
+		priority: ChartEventPriorities;
 		startTime: string;
 		detailType: number|null;
 		columns: string;

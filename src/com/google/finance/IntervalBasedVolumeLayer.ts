@@ -33,15 +33,14 @@ namespace com.google.finance
 				if (Math.abs(_loc6_ - _loc5_[_loc7_].relativeMinutes) > Math.abs(_loc6_ - _loc5_[_loc7_ + 1].relativeMinutes))
 					_loc7_++;
 			}
-			if (_loc3_ === Const.WEEKLY)
+			if (_loc3_ === Intervals.WEEKLY)
 			{
 				while (_loc7_ + 1 < _loc5_.length && _loc5_[_loc7_ + 1].weeklyXPos <= param1)
 					_loc7_++;
 			}
 			while (_loc7_ > 0 && (_loc5_[_loc7_].fake || _loc5_[_loc7_].duplicate || _loc5_[_loc7_].volumes[_loc4_] === 0))
-			{
 				_loc7_--;
-			}
+
 			return _loc7_;
 		}
 
@@ -115,7 +114,6 @@ namespace com.google.finance
 				_loc12_ = Const.VOLUME_SCALES[_loc11_];
 				if (Math.floor(_loc10_ / _loc12_) < 10)
 					break;
-
 			}
 			const _loc13_ = (Math.floor(_loc10_ / _loc12_) + 1) * _loc12_;
 			param1.maxVolume = Utils.extendedMax(param1.maxVolume, _loc13_);
@@ -158,7 +156,7 @@ namespace com.google.finance
 						if (!_loc2_.minuteIsStartOfDataSession(_loc10_.dayMinute))
 						{
 							let _loc12_: number;
-							if (_loc4_ === Const.WEEKLY && _loc9_ !== Const.LINE_CHART)
+							if (_loc4_ === Intervals.WEEKLY && _loc9_ !== Const.LINE_CHART)
 							{
 								_loc12_ = this.getWeeklyBarXPos(_loc10_, _loc14_);
 								_loc14_ = _loc12_;
@@ -182,7 +180,7 @@ namespace com.google.finance
 					if (!_loc2_.minuteIsStartOfDataSession(_loc10_.dayMinute))
 					{
 						let _loc12_: number;
-						if (_loc4_ === Const.WEEKLY && _loc9_ !== Const.LINE_CHART)
+						if (_loc4_ === Intervals.WEEKLY && _loc9_ !== Const.LINE_CHART)
 						{
 							_loc12_ = this.getWeeklyBarXPos(_loc10_, _loc14_);
 							_loc14_ = _loc12_;

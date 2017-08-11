@@ -148,7 +148,7 @@ namespace com.google.finance
 
 		generateEvent(param1: number, param2: com.google.finance.DataSource) 
 		{
-			const _loc3_ = EventFactory.getEvent(param1, param2.quoteName, ChartEventTypes.OPTIONAL);
+			const _loc3_ = EventFactory.getEvent(param1, param2.quoteName, ChartEventPriorities.OPTIONAL);
 			this.dataManager.expectEvent(_loc3_);
 			this.dataManager.eventHandler(_loc3_);
 		}
@@ -406,7 +406,7 @@ namespace com.google.finance
 
 		setController(param1: com.google.finance.Controller) 
 		{
-			param1.addControlListener(this, Const.BOTTOM);
+			param1.addControlListener(this, TickPositions.BOTTOM);
 			this.myController = param1;
 		}
 
@@ -469,10 +469,10 @@ namespace com.google.finance
 			switch (param1.currentTarget)
 			{
 				case this.leftScrollButton.element:
-					this.myController.mouseDownAction(Const.LEFT_BUTTON);
+					this.myController.mouseDownAction(ControllerComponents.LEFT_BUTTON);
 					break;
 				case this.rightScrollButton.element:
-					this.myController.mouseDownAction(Const.RIGHT_BUTTON);
+					this.myController.mouseDownAction(ControllerComponents.RIGHT_BUTTON);
 					break;
 			}
 		}
@@ -534,7 +534,7 @@ namespace com.google.finance
 					this.sparkLastMinute = 0;
 
 				if (_loc4_ === this.displayThresholds.length - 1)
-					this.generateEvent(Const.GET_40Y_DATA, this.dataSource);
+					this.generateEvent(ChartEventStyles.GET_40Y_DATA, this.dataSource);
 
 				this.redraw();
 			}
@@ -551,10 +551,16 @@ namespace com.google.finance
 			const gr = this.bg.graphics;
 			gr.clear();
 			gr.beginFill(0xffffff);
+			gr.drawRect(
+				this.my_minx, this.my_miny - this.topBorder,
+				this.my_maxx - this.my_minx, this.my_maxy - (this.my_miny - this.topBorder)
+			)
+			/*
 			gr.moveTo(this.my_minx, this.my_miny - this.topBorder);
 			gr.lineTo(this.my_maxx, this.my_miny - this.topBorder);
 			gr.lineTo(this.my_maxx, this.my_maxy);
 			gr.lineTo(this.my_minx, this.my_maxy);
+			*/
 			gr.endFill();
 			this.textCanvas.graphics.clear();
 		}
@@ -661,7 +667,7 @@ namespace com.google.finance
 			else if (_loc3_ < this.getOldestMinute())
 			{
 				_loc2_ = this.getOldestMinute() + this.sparkCount - this.sparkLastMinute;
-				this.generateEvent(Const.GET_40Y_DATA, this.dataSource);
+				this.generateEvent(ChartEventStyles.GET_40Y_DATA, this.dataSource);
 			}
 			const _loc5_ = this.displayManager.layersManager.getFirstDataSource();
 			if (this.myController.currentIntervalLevel !== -1 && _loc5_)

@@ -28,9 +28,8 @@ namespace com.google.finance
 		private resetCanvas() 
 		{
 			for (let _loc1_ = 0; _loc1_ < this.movies.length; _loc1_++)
-			{
 				this.removeChild(this.movies[_loc1_]);
-			}
+
 			this.movies.splice(0);
 		}
 
@@ -99,17 +98,16 @@ namespace com.google.finance
 							const _loc13_ = context[this.avoidObj][_loc8_];
 							if (_loc13_.x === _loc12_.x)
 							{
-								_loc13_.setOrientation(Const.SIDEWAYS + _loc11_.orientation);
-								_loc12_.setOrientation(Const.SIDEWAYS + _loc11_.orientation);
+								_loc13_.setOrientation(Orientations.SIDEWAYS + _loc11_.orientation);
+								_loc12_.setOrientation(Orientations.SIDEWAYS + _loc11_.orientation);
 							}
 						}
 					}
 				}
 			}
 			for (let _loc9_ = this.activeMovies; _loc9_ < this.movies.length; _loc9_++)
-			{
 				this.removeChild(this.movies[_loc9_]);
-			}
+
 			this.movies.splice(this.activeMovies);
 		}
 
@@ -125,12 +123,12 @@ namespace com.google.finance
 				if (_loc7_ > this.viewPoint.miny + 40)
 				{
 					_loc4_.y = _loc7_ - IntervalBasedIndependentObjectsLayer.OBJECT_DISTANCE;
-					_loc4_.orientation = Const.DOWN;
+					_loc4_.orientation = Orientations.DOWN;
 				}
 				else
 				{
 					_loc4_.y = _loc7_ + IntervalBasedIndependentObjectsLayer.OBJECT_DISTANCE;
-					_loc4_.orientation = Const.UP;
+					_loc4_.orientation = Orientations.UP;
 				}
 			}
 			else if (this.positioning === IntervalBasedIndependentObjectsLayer.POSITION_BOTTOM)
@@ -141,7 +139,7 @@ namespace com.google.finance
 					_loc10_ = Number(_loc9_.bottomTextHeight);
 
 				_loc4_.y = this.viewPoint.maxy - _loc10_;
-				_loc4_.orientation = Const.DOWN;
+				_loc4_.orientation = Orientations.DOWN;
 			}
 			_loc4_.x = _loc6_;
 			return _loc4_;
@@ -197,10 +195,10 @@ namespace com.google.finance
 				switch (param1.originalObject._orientation)
 				{
 					case "down":
-						param2.orientation = Const.DOWN;
+						param2.orientation = Orientations.DOWN;
 						break;
 					case "up":
-						param2.orientation = Const.UP;
+						param2.orientation = Orientations.UP;
 						break;
 				}
 			}

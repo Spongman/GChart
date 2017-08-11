@@ -9,12 +9,12 @@ namespace com.google.finance
 		protected regionsXLimits: com.google.finance.IntervalSet;
 		protected readonly maxVolumeCache: { [key: string]: number } = {};
 
-		private drawAfterHoursSession(param1: flash.display.Sprite, param2: DataSeries, param3: number, param4: number, param5: Context, param6: number) 
+		private drawAfterHoursSession(param1: flash.display.Sprite, dataSeries: DataSeries, param3: number, param4: number, param5: Context, param6: number) 
 		{
-			const _loc7_ = DataSource.getTimeIndex(param4, param2.units);
-			const _loc8_ = DataSource.getTimeIndex(param3, param2.units);
+			const _loc7_ = DataSource.getTimeIndex(param4, dataSeries.units);
+			const _loc8_ = DataSource.getTimeIndex(param3, dataSeries.units);
 			const _loc9_ = this.viewPoint;
-			const _loc10_ = <indicator.VolumeIndicatorPoint[]>param2.points;
+			const _loc10_ = <indicator.VolumeIndicatorPoint[]>dataSeries.points;
 			let _loc11_ = _loc9_.getXPos(_loc10_[_loc7_].point);
 			const _loc12_ = _loc11_;
 			const _loc13_ = _loc9_.getIntervalLength(param6 / 60);
@@ -39,7 +39,7 @@ namespace com.google.finance
 			return param1 + "-" + param2;
 		}
 
-		protected drawLines(param1: flash.display.Sprite, param2: DataSeries, param3: number, param4: number, param5: IViewPoint, param6: Context) 
+		protected drawLines(param1: flash.display.Sprite, dataSeries: DataSeries, param3: number, param4: number, param5: IViewPoint, param6: Context) 
 		{
 			const _loc7_ = (<ViewPoint>param5).getSkipInterval();
 			//const _loc8_ = _loc7_.skip;
@@ -59,7 +59,7 @@ namespace com.google.finance
 				{
 					const _loc15_ = _loc13_.time;
 					const _loc16_ = _loc14_.time;
-					this.drawAfterHoursSession(this, param2, _loc15_, _loc16_, param6, _loc9_);
+					this.drawAfterHoursSession(this, dataSeries, _loc15_, _loc16_, param6, _loc9_);
 				}
 			}
 		}
@@ -89,7 +89,7 @@ namespace com.google.finance
 		protected getMaxVolume(param1: number, param2: number, param3: boolean): number
 		{
 			const _loc4_ = this.viewPoint.getSkipInterval(param2, param1).interval;
-			if (_loc4_ >= Const.DAILY)
+			if (_loc4_ >= Intervals.DAILY)
 				return 0;
 
 			const _loc5_ = this.dataSource.visibleExtendedHours;
@@ -109,9 +109,7 @@ namespace com.google.finance
 					let _loc15_ = 0;
 					
 					for (let _loc16_ = _loc14_; _loc16_ < _loc13_; _loc16_++)
-					{
 						_loc15_ = Math.max((<indicator.VolumeIndicatorPoint>_loc7_.points[_loc16_]).volume, _loc15_);
-					}
 
 					if (_loc13_ > _loc14_)
 						this.maxVolumeCache[_loc12_] = _loc15_;

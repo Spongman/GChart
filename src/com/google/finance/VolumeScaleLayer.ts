@@ -43,19 +43,19 @@ namespace com.google.finance
 			const _loc5_ = !!Const.INDICATOR_ENABLED ? 1 : _loc3_.getSkipInterval().skip;
 			switch (_loc4_)
 			{
-				case Const.INTRADAY:
+				case Intervals.INTRADAY:
 					this.volumeLabel.appendText(_loc5_ * (Const.INTRADAY_INTERVAL / 60) + Messages.getMsg(Messages.MINUTES_SHORT) + ")");
 					break;
-				case Const.FIVE_MINUTES:
+				case Intervals.FIVE_MINUTES:
 					this.volumeLabel.appendText(_loc5_ * (Const.FIVE_MINUTE_INTERVAL / 60) + Messages.getMsg(Messages.MINUTES_SHORT) + ")");
 					break;
-				case Const.HALF_HOUR:
+				case Intervals.HALF_HOUR:
 					this.volumeLabel.appendText(_loc5_ * (Const.HALF_HOUR_INTERVAL / 60) + Messages.getMsg(Messages.MINUTES_SHORT) + ")");
 					break;
-				case Const.DAILY:
+				case Intervals.DAILY:
 					this.volumeLabel.appendText(_loc5_ + Messages.getMsg(Messages.DAY_SHORT) + ")");
 					break;
-				case Const.WEEKLY:
+				case Intervals.WEEKLY:
 					this.volumeLabel.appendText(_loc5_ + Messages.getMsg(Messages.WEEK_SHORT) + ")");
 					break;
 			}

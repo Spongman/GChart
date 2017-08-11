@@ -139,7 +139,7 @@ if (!Function.prototype.bind)
 			// Function.prototype doesn't have a prototype property
 			fNOP.prototype = this.prototype;
 		}
-		fBound.prototype = new fNOP();
+		fBound.prototype = new (<any>fNOP)();
 
 		return fBound;
 	};

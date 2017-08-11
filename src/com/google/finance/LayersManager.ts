@@ -273,7 +273,7 @@ namespace com.google.finance
 				{
 					_loc6_.toggleZoomIntervalButtons(Const.LINE_CHART, _loc15_);
 					if (Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
-						this.displayManager.toggleAllAfterHoursSessions(_loc6_.currentIntervalLevel === Const.INTRADAY);
+						this.displayManager.toggleAllAfterHoursSessions(_loc6_.currentIntervalLevel === Intervals.INTRADAY);
 				}
 			}
 			else
@@ -331,7 +331,7 @@ namespace com.google.finance
 			switch (param1.name)
 			{
 				case "SimpleMovingAverage":
-					return param1.name + "-" + param1.length;
+					return param1.name + "-" + (<any>param1).length;	// TODO
 				case "IndependentObjectsLayer":
 					return "Objects" + (<IndependentObjectsLayer>param1).renderObj;
 				case "IntervalBasedIndependentObjectsLayer":
@@ -344,10 +344,8 @@ namespace com.google.finance
 		private removeAllLayers(param1: IViewPoint[]) 
 		{
 			for (let _loc2_ = 0; _loc2_ < param1.length; _loc2_++)
-			{
-				const _loc3_ = param1[_loc2_];
-				_loc3_.removeAllLayers();
-			}
+				param1[_loc2_].removeAllLayers();
+
 			this.layers = [];
 		}
 
@@ -396,9 +394,7 @@ namespace com.google.finance
 			{
 				const _loc5_ = this.layers[_loc3_];
 				if (this.getLayerId(_loc5_) === _loc4_ && _loc5_.vp === param1.vp && (!param2 || param2 === _loc5_.ds)) // TODO:_loc5_.dataSource?
-				{
 					return _loc3_;
-				}
 			}
 			return -1;
 		}
@@ -420,9 +416,7 @@ namespace com.google.finance
 			if (this.style_ === param2)
 			{
 				for (let _loc3_ = 0; _loc3_ < this.dataSources.length; _loc3_++)
-				{
 					this.addLayer(param1, this.dataSources[_loc3_]);
-				}
 			}
 			this.displayManager.update();
 		}
@@ -808,7 +802,7 @@ namespace com.google.finance
 				else
 					_loc7_ = !!Const.INDICATOR_ENABLED ? _loc4_.getDetailLevelForTechnicalStyle() : _loc4_.getDetailLevel();
 
-				if (_loc7_ === Const.INTRADAY && Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
+				if (_loc7_ === Intervals.INTRADAY && Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
 					this.displayManager.toggleAllAfterHoursSessions(true);
 			}
 			this.displayManager.windowResized(this.displayManager.stage.stageWidth, this.displayManager.stage.stageHeight);

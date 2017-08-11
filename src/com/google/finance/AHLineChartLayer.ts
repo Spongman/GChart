@@ -9,19 +9,19 @@ namespace com.google.finance
 		private regionsXLimits: com.google.finance.IntervalSet;
 		private visibleSessionsTimes: com.google.finance.IntervalSet;
 
-		protected getPoint(param1: DataSeries, param2: number): DataUnit
+		protected getPoint(dataSeries: DataSeries, param2: number): DataUnit
 		{
 			const _loc3_ = this.viewPoint.getMinuteOfX(param2);
-			let _loc4_ = param1.getRelativeMinuteIndex(_loc3_);
-			const _loc5_ = param1.units[_loc4_].time;
+			let _loc4_ = dataSeries.getRelativeMinuteIndex(_loc3_);
+			const _loc5_ = dataSeries.units[_loc4_].time;
 			const _loc6_ = notnull(this.visibleSessionsTimes.getIntervalForValue(_loc5_));
-			const _loc7_ = DataSource.getTimeIndex(_loc6_.end, param1.units);
+			const _loc7_ = DataSource.getTimeIndex(_loc6_.end, dataSeries.units);
 			const _loc8_ = this.viewPoint.getSkipInterval().skip;
 			_loc4_ = _loc4_ - (_loc4_ - _loc7_) % _loc8_;
-			while (param1.units[_loc4_].fake && param1.units[_loc4_].time > _loc6_.start)
+			while (dataSeries.units[_loc4_].fake && dataSeries.units[_loc4_].time > _loc6_.start)
 				_loc4_--;
 
-			return param1.units[_loc4_];
+			return dataSeries.units[_loc4_];
 		}
 
 		getDataSeries(context?: Context): DataSeries
@@ -84,7 +84,7 @@ namespace com.google.finance
 			if (context.lastMinute < _loc4_)
 				return context;
 
-			if (this.viewPoint.getDetailLevel() > Const.INTRADAY)
+			if (this.viewPoint.getDetailLevel() > Intervals.INTRADAY)
 				return context;
 
 			/*const _loc5_ = */this.computeMaxRange(context, param2);
@@ -161,7 +161,7 @@ namespace com.google.finance
 			param3["extraText"] = _loc5_.getSessionDisplayNameForMinute(_loc6_.dayMinute) + ": ";
 		}
 
-		protected getMediumPrice(param1: number, param2: number, param3: DataSeries, param4: string) 
+		protected getMediumPrice(param1: number, param2: number, dataSeries: DataSeries, param4: string) 
 		{
 			return {
 				"medPrice": 0,

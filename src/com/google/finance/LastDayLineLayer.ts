@@ -24,7 +24,7 @@ namespace com.google.finance
 			const _loc7_ = vp.getXPos(_loc5_);
 			const _loc8_ = vp.getXPos(_loc6_);
 			const _loc9_ = vp.getDetailLevel();
-			if (_loc7_ < this.viewPoint.maxx && _loc9_ === Const.INTRADAY)
+			if (_loc7_ < this.viewPoint.maxx && _loc9_ === Intervals.INTRADAY)
 			{
 				const _loc11_ = this.getYPos(_loc5_, param1);
 				let _loc12_ = 0;

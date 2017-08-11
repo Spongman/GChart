@@ -51,10 +51,16 @@ namespace com.google.finance
 					_loc5_ = _loc2_.my_maxx;
 
 				gr.lineStyle(0, this.borderColor, 1);
+				gr.drawRect(
+					_loc4_, _loc2_.my_miny - 1,
+					_loc5_ - _loc4_ - 1, _loc2_.my_maxy - _loc2_.my_miny
+				)
+				/*
 				gr.moveTo(_loc4_, _loc2_.my_miny - 1);
 				gr.lineTo(_loc4_, _loc2_.my_maxy - 1);
 				gr.lineTo(_loc5_ - 1, _loc2_.my_maxy - 1);
 				gr.lineTo(_loc5_ - 1, _loc2_.my_miny - 1);
+				*/
 				if (param1)
 					gr.endFill();
 			}

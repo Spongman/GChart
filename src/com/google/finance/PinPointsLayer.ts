@@ -33,7 +33,7 @@ namespace com.google.finance
 		{
 			let _loc5_ = 1;
 			const _loc6_ = param2[param3];
-			if (param4 === Const.INTRADAY)
+			if (param4 === Intervals.INTRADAY)
 			{
 				while (param3 + _loc5_ < param2.length && param2[param3 + _loc5_].pos === _loc6_.pos && param2[param3 + _loc5_].refDataSeries === _loc6_.refDataSeries)
 					_loc5_++;
@@ -212,7 +212,7 @@ namespace com.google.finance
 			else if (_loc3_.interval >= Const.DAILY_INTERVAL)
 				_loc4_ = Number(param1.dayPos);
 			else
-				_loc4_ = Number(param1.pos + (param1.dayPos - param1.pos) % _loc3_.skip);
+				_loc4_ = Number(param1.pos + (notnull(param1.dayPos) - param1.pos) % _loc3_.skip);
 
 			return _loc5_.units[_loc4_];
 		}

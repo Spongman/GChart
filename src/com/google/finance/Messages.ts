@@ -43,7 +43,6 @@ namespace com.google.finance
 		static readonly SPLIT_TEXT = 42;
 		static readonly SMALL_CHART = 5;
 		static readonly VMA = 57;
-		private static readonly MESSAGES = ["Type", "Line", "Candlestick", "OHLC", "Large chart", "Small chart", "Zoom", "1d", "5d", "1m", "3m", "6m", "YTD", "1y", "5y", "10y", "Max", "All", "Price", "Open", "Close", "High", "Low", "Volume", "Vol", "thous", "mil", "k", "k", "m", "m", "min", "h", "d", "wk", "$", "\\u00A2", ["Dividend: ", 1, ""], ["Dividend: ", 1, " (", 2, ")"], "Stock Dividend", ["Stock Dividend: ", 1, ""], ["Adjustment Factor: ", 1, ""], ["Split: ", 1, ""], "Loading", "No data available", "Premarket", "After hours", "Interval", "2min", "5min", "30min", "1d", "1w", "daily", "weekly", ["SMA(", 1, "):", 2, ""], ["EMA(", 1, "):", 2, ""], ["VMA(", 1, "):", 2, ""], ["RSI(", 1, ")"], ["RSI:", 1, ""], ["BIAS(", 1, ")"], ["BIAS:", 1, ""], ["W%R(", 1, ")"], ["%R:", 1, ""], ["MACD(", 1, ",", 2, ",", 3, ")"], ["MACD:", 1, ""], ["EMA:", 1, ""], ["DIFF:", 1, ""], ["DEA:", 1, ""], ["Divergence:", 1, ""], ["KDJ(", 1, ")"], ["K:", 1, ""], ["D:", 1, ""], ["J:", 1, ""], ["BOLL(", 1, ")"], ["MID:", 1, ""], ["UPPER:", 1, ""], ["LOWER:", 1, ""], ["FSTO(", 1, ",", 2, ")"], ["SSTO(", 1, ",", 2, ")"], ["%K:", 1, ""], ["%D:", 1, ""], ["CCI(", 1, ")"], ["CCI:", 1, ""], ["SMA(", 1, ",", 2, "):", 3, ""], ["EMA(", 1, ",", 2, "):", 3, ""], ["VMA(", 1, ",", 2, "):", 3, ""], ["RSI(", 1, ",", 2, ")"], ["BIAS(", 1, ",", 2, ")"], ["W%R(", 1, ",", 2, ")"], ["MACD(", 1, ",", 2, ",", 3, ",", 4, ")"], ["KDJ(", 1, ",", 2, ")"], ["BOLL(", 1, ",", 2, ")"], ["FSTO(", 1, ",", 2, ",", 3, ")"], ["SSTO(", 1, ",", 2, ",", 3, ")"], ["CCI(", 1, ",", 2, ")"], ""];
 		static readonly INTERVAL_1_DAY = 51;
 		static readonly PREMARKET = 45;
 		static readonly VOLUME_LONG = 23;
@@ -99,7 +98,8 @@ namespace com.google.finance
 		static readonly VOLUME_SHORT = 24;
 		static readonly LINE = 1;
 		static readonly INTERVAL_DAILY = 53;
-
+		private static readonly MESSAGES = ["Type", "Line", "Candlestick", "OHLC", "Large chart", "Small chart", "Zoom", "1d", "5d", "1m", "3m", "6m", "YTD", "1y", "5y", "10y", "Max", "All", "Price", "Open", "Close", "High", "Low", "Volume", "Vol", "thous", "mil", "k", "k", "m", "m", "min", "h", "d", "wk", "$", "\\u00A2", ["Dividend: ", 1, ""], ["Dividend: ", 1, " (", 2, ")"], "Stock Dividend", ["Stock Dividend: ", 1, ""], ["Adjustment Factor: ", 1, ""], ["Split: ", 1, ""], "Loading", "No data available", "Premarket", "After hours", "Interval", "2min", "5min", "30min", "1d", "1w", "daily", "weekly", ["SMA(", 1, "):", 2, ""], ["EMA(", 1, "):", 2, ""], ["VMA(", 1, "):", 2, ""], ["RSI(", 1, ")"], ["RSI:", 1, ""], ["BIAS(", 1, ")"], ["BIAS:", 1, ""], ["W%R(", 1, ")"], ["%R:", 1, ""], ["MACD(", 1, ",", 2, ",", 3, ")"], ["MACD:", 1, ""], ["EMA:", 1, ""], ["DIFF:", 1, ""], ["DEA:", 1, ""], ["Divergence:", 1, ""], ["KDJ(", 1, ")"], ["K:", 1, ""], ["D:", 1, ""], ["J:", 1, ""], ["BOLL(", 1, ")"], ["MID:", 1, ""], ["UPPER:", 1, ""], ["LOWER:", 1, ""], ["FSTO(", 1, ",", 2, ")"], ["SSTO(", 1, ",", 2, ")"], ["%K:", 1, ""], ["%D:", 1, ""], ["CCI(", 1, ")"], ["CCI:", 1, ""], ["SMA(", 1, ",", 2, "):", 3, ""], ["EMA(", 1, ",", 2, "):", 3, ""], ["VMA(", 1, ",", 2, "):", 3, ""], ["RSI(", 1, ",", 2, ")"], ["BIAS(", 1, ",", 2, ")"], ["W%R(", 1, ",", 2, ")"], ["MACD(", 1, ",", 2, ",", 3, ",", 4, ")"], ["KDJ(", 1, ",", 2, ")"], ["BOLL(", 1, ",", 2, ")"], ["FSTO(", 1, ",", 2, ",", 3, ")"], ["SSTO(", 1, ",", 2, ",", 3, ")"], ["CCI(", 1, ",", 2, ")"], ""];
+		
 		static getMsg(param1: number, ...rest: any[]): string
 		{
 			if (isNaN(param1))
@@ -112,9 +112,8 @@ namespace com.google.finance
 			const _loc4_ = _loc3_.length;
 			
 			for (let _loc5_ = 1; _loc5_ < _loc4_; _loc5_ += 2)
-			{
 				_loc3_[_loc5_] = rest[Number(_loc3_[_loc5_]) - 1];
-			}
+
 			return _loc3_.join("");
 		}
 

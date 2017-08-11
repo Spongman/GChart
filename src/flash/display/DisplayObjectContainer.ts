@@ -8,6 +8,16 @@ namespace flash.display
 		children: DisplayObject[] = [];
 		get numChildren() { return this.children.length; }
 
+		get stage() { return this._stage; }
+		set stage(value: Stage)
+		{
+			if (this._stage === value)
+				return;
+			this._stage = value;
+			for (var i = 0; i < this.children.length; i++)
+				this.children[i].stage = value;
+		}
+		
 		private prepareChild(child: DisplayObject)
 		{
 			assert(!!child && !!child.element);
@@ -94,8 +104,8 @@ namespace flash.display
 			return this.getChildIndex(child) >= 0;
 		}
 
-		_width: number;
-		_height: number;
+		private _width: number;
+		private _height: number;
 
 		get width()
 		{

@@ -1,3 +1,8 @@
+/// <reference path="StockDividendMovie_DividendArrowSidewaysClass.ts" />
+/// <reference path="StockDividendMovie_DividendArrowOnOverClass.ts" />
+/// <reference path="StockDividendMovie_DividendArrowClass.ts" />
+/// <reference path="StockDividendMovie_DividendArrowSidewaysOverClass.ts" />
+
 namespace com.google.finance
 {
 	// import flash.text.TextFieldAutoSize;

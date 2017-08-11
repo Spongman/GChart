@@ -28,13 +28,13 @@ namespace com.google.finance
 			gr.moveTo(x, param5 + 1);
 			switch (param8)
 			{
-				case Const.BOTTOM:
+				case TickPositions.BOTTOM:
 					gr.lineStyle(0, color, alpha);
 					gr.lineTo(x, param6 - param7);
 					gr.lineStyle(0, Const.BOTTOM_TICK_COLOR, 1);
 					gr.lineTo(x, param6);
 					break;
-				case Const.TOP:
+				case TickPositions.TOP:
 					gr.lineStyle(0, Const.TOP_TICK_COLOR, 1);
 					gr.lineTo(x, param5 + 1 + param7);
 					if (param9)

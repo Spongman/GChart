@@ -42,7 +42,7 @@ namespace com.google.finance
 		{
 			let _loc2_ = param1.quoteColor;
 			const gr = this.graphics;
-			gr.clear(true);
+			gr.clear();
 			gr.lineStyle(10, _loc2_, 1);
 			gr.moveTo(0, 9);
 			gr.lineTo(0.5, 9);

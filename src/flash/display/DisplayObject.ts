@@ -2,7 +2,9 @@ namespace flash.display
 {
 	export class DisplayObject
 	{
-		constructor(public readonly element: HTMLElement, public name?: string)
+		public name: string;
+
+		constructor(public readonly element: HTMLElement, name?: string)
 		{
 			assert(!(<any>element).displayObject);
 			(<any>element).displayObject = this;
@@ -14,8 +16,8 @@ namespace flash.display
 				document.body.appendChild(element);
 			}
 
-			name = name ? name + ":" : "";
-			element.setAttribute("name", name + getClassName(this));
+			this.name = (name ? name + ":" : "") + getClassName(this);
+			element.setAttribute("name", this.name);
 
 			/*
 			try

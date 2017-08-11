@@ -30,7 +30,7 @@ namespace com.google.finance
 		private persistentHide: boolean;
 		
 		protected textFormat = new flash.text.TextFormat("Verdana", 9, this.getTextColor(), true, false, false);
-		protected arrowOrientation = Const.DOWN;
+		protected arrowOrientation = Orientations.DOWN;
 		protected arrow: flash.display.Bitmap;
 		protected readonly detailsTextField = new flash.text.TextField();
 		protected highlightCanvas: flash.display.Sprite;
@@ -114,20 +114,20 @@ namespace com.google.finance
 			return this.associatedSplit.newShares + ":" + this.associatedSplit.oldShares;
 		}
 
-		setOrientation(param1: number) 
+		setOrientation(param1: Orientations) 
 		{
 			this.checkArrowChange(param1);
 			if (this.currentVisibleButton)
 			{
 				switch (param1)
 				{
-					case Const.UP:
-					case Const.SIDEWAYS_UP:
+					case Orientations.UP:
+					case Orientations.SIDEWAYS_UP:
 						this.currentVisibleButton.scaleY = -1;
 						this.text.y = this.arrow.height - 3;
 						break;
-					case Const.DOWN:
-					case Const.SIDEWAYS_DOWN:
+					case Orientations.DOWN:
+					case Orientations.SIDEWAYS_DOWN:
 						this.currentVisibleButton.scaleY = 1;
 						this.currentVisibleButton.y = -this.arrow.height;
 						this.text.y = -this.arrow.height + 2 - this.text.height;
@@ -156,7 +156,7 @@ namespace com.google.finance
 			catch (ae /*:ArgumentError*/)
 			{
 			}
-			this.highlightCanvas.graphics.clear(true);
+			this.highlightCanvas.graphics.clear();
 		}
 
 		setSupportingLayer(param1: AbstractLayer<ViewPoint>) 
@@ -276,12 +276,12 @@ namespace com.google.finance
 
 		private checkArrowChange(param1: number) 
 		{
-			if ((this.arrowOrientation === Const.UP || this.arrowOrientation === Const.DOWN) && (param1 === Const.SIDEWAYS_UP || param1 === Const.SIDEWAYS_DOWN))
+			if ((this.arrowOrientation === Orientations.UP || this.arrowOrientation === Orientations.DOWN) && (param1 === Orientations.SIDEWAYS_UP || param1 === Orientations.SIDEWAYS_DOWN))
 			{
 				this.currentVisibleButton = this.attachSidewaysArrow();
 				this.positionSidewaysArrow();
 			}
-			if ((this.arrowOrientation === Const.SIDEWAYS_UP || this.arrowOrientation === Const.SIDEWAYS_DOWN) && (param1 === Const.UP || param1 === Const.DOWN))
+			if ((this.arrowOrientation === Orientations.SIDEWAYS_UP || this.arrowOrientation === Orientations.SIDEWAYS_DOWN) && (param1 === Orientations.UP || param1 === Orientations.DOWN))
 			{
 				this.currentVisibleButton = this.attachRegularArrow();
 				this.positionRegularArrow();

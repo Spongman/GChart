@@ -98,6 +98,7 @@ namespace com.google.finance
 					this.intervals.splice(_loc2_, 0, pair);
 					return;
 				}
+				
 				if (pair.start <= this.intervals[_loc2_].end)
 				{
 					pair.start = Math.min(pair.start, this.intervals[_loc2_].start);

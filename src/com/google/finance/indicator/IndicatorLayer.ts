@@ -101,15 +101,15 @@ namespace com.google.finance.indicator
 		{
 			switch (param1)
 			{
-				case Const.INTRADAY:
+				case Intervals.INTRADAY:
 					return "2m";
-				case Const.FIVE_MINUTES:
+				case Intervals.FIVE_MINUTES:
 					return "5m";
-				case Const.HALF_HOUR:
+				case Intervals.HALF_HOUR:
 					return "30m";
-				case Const.DAILY:
+				case Intervals.DAILY:
 					return "1d";
-				case Const.WEEKLY:
+				case Intervals.WEEKLY:
 					return "1w";
 				default:
 					return "";
@@ -121,7 +121,7 @@ namespace com.google.finance.indicator
 			return this.indicatorName;
 		}
 
-		private renderHistogramLine(param1: DataSeries[], param2: number, param3: number, param4: number, param5: ViewPoint, param6: Context, param7: number, param8: string) 
+		private renderHistogramLine(param1: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, param6: Context, param7: number, param8: string) 
 		{
 			let _loc13_ = 0;
 			let _loc14_ = 0;
@@ -134,10 +134,10 @@ namespace com.google.finance.indicator
 				if (!isNaN(param1[param2].points[_loc12_].getValue()))
 				{
 					const _loc10_ = param1[param2].points[_loc12_].getPoint();
-					if (param7 === Const.WEEKLY && param8 !== Const.LINE_CHART)
+					if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
 						_loc9_ = this.getWeeklyBarXPos(_loc10_, _loc9_);
 
-					_loc13_ = !isNaN(_loc10_.weeklyXPos) ? _loc10_.weeklyXPos : param5.getXPos(_loc10_);
+					_loc13_ = !isNaN(_loc10_.weeklyXPos) ? _loc10_.weeklyXPos : viewPoint.getXPos(_loc10_);
 					_loc14_ = this.getYPos(param6, param1[param2].points[_loc12_]);
 					gr.lineStyle(1, this.getColor(param2, param1[param2].points[_loc12_].getValue()));
 					gr.moveTo(_loc13_, _loc11_);
@@ -147,33 +147,33 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		private renderSingleLine(param1: DataSeries[], param2: number, param3: number, param4: number, param5: ViewPoint, param6: Context, param7: number, param8: string) 
+		private renderSingleLine(param1: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, param6: Context, param7: number, param8: string) 
 		{
 			let _loc12_ = 0;
 			let _loc13_ = 0;
 			let _loc9_ = Number.MAX_VALUE;
 			let _loc10_ = param1[param2].points[param4].getPoint();
-			if (param7 === Const.WEEKLY && param8 !== Const.LINE_CHART)
+			if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
 				_loc9_ = this.getWeeklyBarXPos(_loc10_, _loc9_);
 
 			const gr = this.graphics;
 			gr.lineStyle(1, this.indicatorValueTextArray[param2].textColor);
-			gr.moveTo(!isNaN(_loc10_.weeklyXPos) ? Number(_loc10_.weeklyXPos) : param5.getXPos(_loc10_), this.getYPos(param6, param1[param2].points[param4]));
+			gr.moveTo(!isNaN(_loc10_.weeklyXPos) ? Number(_loc10_.weeklyXPos) : viewPoint.getXPos(_loc10_), this.getYPos(param6, param1[param2].points[param4]));
 			let _loc11_ = param4 - 1;
 			while (_loc11_ >= param3)
 			{
 				if (!isNaN(param1[param2].points[_loc11_].getValue()))
 				{
 					_loc10_ = param1[param2].points[_loc11_].getPoint();
-					if (param7 === Const.WEEKLY && param8 !== Const.LINE_CHART)
+					if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
 						_loc9_ = this.getWeeklyBarXPos(_loc10_, _loc9_);
 
-					_loc12_ = !isNaN(_loc10_.weeklyXPos) ? _loc10_.weeklyXPos : param5.getXPos(_loc10_);
+					_loc12_ = !isNaN(_loc10_.weeklyXPos) ? _loc10_.weeklyXPos : viewPoint.getXPos(_loc10_);
 					_loc13_ = this.getYPos(param6, param1[param2].points[_loc11_]);
-					if (_loc13_ < param5.miny)
-						gr.moveTo(_loc12_, param5.miny);
-					else if (_loc13_ > param5.maxy)
-						gr.moveTo(_loc12_, param5.maxy);
+					if (_loc13_ < viewPoint.miny)
+						gr.moveTo(_loc12_, viewPoint.miny);
+					else if (_loc13_ > viewPoint.maxy)
+						gr.moveTo(_loc12_, viewPoint.maxy);
 					else
 						gr.lineTo(_loc12_, _loc13_);
 				}
@@ -181,7 +181,7 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		private renderHistogramLineFromBottom(param1: DataSeries[], param2: number, param3: number, param4: number, param5: ViewPoint, param6: Context, param7: number, param8: string) 
+		private renderHistogramLineFromBottom(param1: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, param6: Context, param7: number, param8: string) 
 		{
 			let _loc12_ = 0;
 			let _loc13_ = 0;
@@ -194,10 +194,10 @@ namespace com.google.finance.indicator
 				if (!isNaN(param1[param2].points[_loc11_].getValue()))
 				{
 					const _loc10_ = param1[param2].points[_loc11_].getPoint();
-					if (param7 === Const.WEEKLY && param8 !== Const.LINE_CHART)
+					if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
 						_loc9_ = this.getWeeklyBarXPos(_loc10_, _loc9_);
 
-					_loc12_ = !isNaN(_loc10_.weeklyXPos) ? _loc10_.weeklyXPos : param5.getXPos(_loc10_);
+					_loc12_ = !isNaN(_loc10_.weeklyXPos) ? _loc10_.weeklyXPos : viewPoint.getXPos(_loc10_);
 					_loc13_ = this.getYPos(param6, param1[param2].points[_loc11_]);
 					gr.moveTo(_loc12_, this.viewPoint.maxy);
 					gr.lineTo(_loc12_, _loc13_);
@@ -358,7 +358,7 @@ namespace com.google.finance.indicator
 				if (Math.abs(_loc7_ - _loc6_[_loc8_].relativeMinutes) > Math.abs(_loc7_ - _loc6_[_loc8_ + 1].relativeMinutes))
 					_loc8_++;
 			}
-			if (_loc4_ === Const.WEEKLY)
+			if (_loc4_ === Intervals.WEEKLY)
 			{
 				while (_loc8_ + 1 < _loc6_.length && _loc6_[_loc8_ + 1].weeklyXPos <= param1)
 					_loc8_++;
@@ -383,14 +383,14 @@ namespace com.google.finance.indicator
 			this.doCopyLastIndicatorPoint(param1, rest);
 		}
 
-		setIndicator(param1: string, param2: DataSeries) 
+		setIndicator(param1: string, dataSeries: DataSeries) 
 		{
 			this.indicatorName = param1;
 			if (this.dataSource.indicators[param1] === undefined)
 				this.dataSource.indicators[param1] = new Indicator();
 
 			this.indicator = this.dataSource.indicators[param1];
-			this.originalDataSeries = param2;
+			this.originalDataSeries = dataSeries;
 			this.setIndicatorInstanceArray(Const.INDICATOR_PARAMETERS[param1]);
 		}
 
@@ -558,7 +558,7 @@ namespace com.google.finance.indicator
 
 		clearHighlight() 
 		{
-			this.highlightCanvas.graphics.clear(true);
+			this.highlightCanvas.graphics.clear();
 		}
 
 		public setIndicatorInstanceArray(param1: any[])

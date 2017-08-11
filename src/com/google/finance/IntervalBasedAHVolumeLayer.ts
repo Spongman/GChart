@@ -37,7 +37,7 @@ namespace com.google.finance
 		{
 			this.graphics.clear();
 			let vp = this.viewPoint;
-			if (vp.getDetailLevelForTechnicalStyle() !== Const.INTRADAY)
+			if (vp.getDetailLevelForTechnicalStyle() !== Intervals.INTRADAY)
 				return;
 
 			const _loc2_ = this.getDataSeries().getPointsInIntervalArray(Const.INTRADAY_INTERVAL);

@@ -88,7 +88,7 @@ namespace com.google.finance
 
 		clearHighlight() 
 		{
-			this.highlightCanvas.graphics.clear(true);
+			this.highlightCanvas.graphics.clear();
 		}
 
 		isEnabled(): boolean
@@ -126,7 +126,7 @@ namespace com.google.finance
 					if (_loc8_ >= _loc18_.length)
 						_loc8_ = _loc18_.length - 1;
 
-					if (_loc5_ < Const.DAILY)
+					if (_loc5_ < Intervals.DAILY)
 					{
 						while (_loc7_ < _loc18_.length && (isNaN(_loc18_[_loc7_].relativeMinutes) || _loc11_ - _loc18_[_loc7_].relativeMinutes >= _loc19_))
 							_loc7_++;
@@ -147,7 +147,7 @@ namespace com.google.finance
 				}
 				_loc5_++;
 			}
-			while (_loc4_ && _loc5_ <= Const.WEEKLY && _loc7_ === 0);
+			while (_loc4_ && _loc5_ <= Intervals.WEEKLY && _loc7_ === 0);
 
 			if (isNaN(_loc9_) || isNaN(_loc10_))
 				return context;
@@ -191,7 +191,7 @@ namespace com.google.finance
 				if (Math.abs(_loc4_ - _loc3_[_loc5_].relativeMinutes) > Math.abs(_loc4_ - _loc3_[_loc5_ + 1].relativeMinutes))
 					_loc5_++;
 			}
-			if (this.viewPoint.getDetailLevelForTechnicalStyle() === Const.WEEKLY)
+			if (this.viewPoint.getDetailLevelForTechnicalStyle() === Intervals.WEEKLY)
 			{
 				while (_loc5_ + 1 < _loc3_.length && _loc3_[_loc5_ + 1].weeklyXPos <= param1)
 					_loc5_++;
@@ -219,7 +219,7 @@ namespace com.google.finance
 				param3[SpaceText.SETTER_STR].clearHighlight();
 
 			const gr = this.highlightCanvas.graphics;
-			gr.clear(true);
+			gr.clear();
 			let _loc9_ = this.getDataSeries() === this.dataSource.afterHoursData ? Number(Const.AH_DOT_COLOR) : Const.DOT_COLOR;
 			gr.lineStyle(5, _loc9_, 1);
 			gr.moveTo(_loc7_, _loc8_ - 0.2);

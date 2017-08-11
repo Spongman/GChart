@@ -8,8 +8,8 @@ namespace com.google.finance
 			const gr = this.graphics;
 			switch (param1)
 			{
-				case Const.DAILY:
-				case Const.WEEKLY:
+				case Intervals.DAILY:
+				case Intervals.WEEKLY:
 					if (isNaN(param7))
 					{
 						const _loc8_ = this.viewPoint.getXPos(param3[param5]);
@@ -22,9 +22,8 @@ namespace com.google.finance
 					else
 					{
 						while (param5 >= param4 && this.viewPoint.getXPos(param3[param5]) >= param6)
-						{
 							param5--;
-						}
+
 						if (param5 < param4)
 							return param6;
 
@@ -40,13 +39,12 @@ namespace com.google.finance
 						gr.lineTo(_loc8_, _loc9_);
 					}
 					return _loc8_;
-				case Const.INTRADAY:
-				case Const.FIVE_MINUTES:
-				case Const.HALF_HOUR:
+				case Intervals.INTRADAY:
+				case Intervals.FIVE_MINUTES:
+				case Intervals.HALF_HOUR:
 					while (param5 >= param4 && this.viewPoint.getXPos(param3[param5]) >= param6)
-					{
 						param5--;
-					}
+
 					if (param5 < param4)
 						return param6;
 
@@ -130,7 +128,7 @@ namespace com.google.finance
 					_loc4_ = Math.max(_loc2_.getRelativeMinuteIndex(vp.getFirstMinute(), _loc10_) - 1, 0);
 					const _loc5_ = Math.min(_loc2_.getRelativeMinuteIndex(vp.getLastMinute(), _loc10_) + 1, this.getLastRealPointIndex(_loc10_));
 					const _loc11_ = _loc10_[_loc10_.length - 1];
-					if (_loc8_ && _loc3_ >= Const.DAILY && _loc5_ === _loc10_.length - 1 && _loc11_.relativeMinutes < vp.getLastMinute())
+					if (_loc8_ && _loc3_ >= Intervals.DAILY && _loc5_ === _loc10_.length - 1 && _loc11_.relativeMinutes < vp.getLastMinute())
 					{
 						const _loc12_ = _loc2_.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
 						if (_loc12_ && _loc12_.length > 0)
@@ -161,7 +159,7 @@ namespace com.google.finance
 					_loc3_++;
 				}
 			}
-			while (_loc3_ <= Const.WEEKLY && _loc4_ === 0);
+			while (_loc3_ <= Intervals.WEEKLY && _loc4_ === 0);
 		}
 	}
 }

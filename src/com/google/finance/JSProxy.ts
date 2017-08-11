@@ -137,7 +137,7 @@ namespace com.google.finance
 
 			if (this.updateLastPriceInDataSeries(!!param1 ? _loc3_.afterHoursData : _loc3_.data, param2))
 			{
-				if (_loc4_.getDetailLevel() === Const.INTRADAY)
+				if (_loc4_.getDetailLevel() === Intervals.INTRADAY)
 					_loc4_.update(true);
 			}
 		}
@@ -266,17 +266,17 @@ namespace com.google.finance
 			flash.external.ExternalInterface.call("_sendAllDataToChart", encodeURIComponent(param1), "flash");
 		}
 
-		setLineStyle(param1: string) 
+		setLineStyle(lineStyle: string) 
 		{
 			if (this.mainManager.layersManager.getStyle() === LayersManager.SINGLE)
 			{
-				const _loc2_ = this.mainManager.displayManager;
-				const _loc3_ = _loc2_.getEnabledChartLayer();
-				const _loc4_ = param1 + "ChartLayer";
-				_loc2_.setEnabledChartLayer("");
-				_loc2_.mainController.toggleZoomIntervalButtons(_loc3_, _loc4_);
-				_loc2_.setEnabledChartLayer(_loc4_);
-				this.setJsCurrentViewParam("lineStyle", param1);
+				const displayManager = this.mainManager.displayManager;
+				const chartLayer = displayManager.getEnabledChartLayer();
+				const _loc4_ = lineStyle + "ChartLayer";
+				displayManager.setEnabledChartLayer("");
+				displayManager.mainController.toggleZoomIntervalButtons(chartLayer, _loc4_);
+				displayManager.setEnabledChartLayer(_loc4_);
+				this.setJsCurrentViewParam("lineStyle", lineStyle);
 			}
 		}
 
@@ -307,7 +307,7 @@ namespace com.google.finance
 			const _loc4_ = this.mainManager.displayManager;
 			com.google.finance.MainManager.paramsObj[param1] = param2;
 			if (param1 === "displayNewsPins")
-				Const.DISPLAY_NEWS_PINS = "true" === String(param2);
+				Const.DISPLAY_NEWS_PINS = "true" === param2;
 
 			if (param1 === "displayVolume")
 			{
@@ -343,7 +343,7 @@ namespace com.google.finance
 		{
 			param1 = Utils.adjustNasdToNasdaq(param1);
 			const _loc6_ = this.mainManager.dataManager;
-			const _loc7_ = EventFactory.getEvent(ChartEventTypes.GET_DATA, param1, ChartEventTypes.OPTIONAL);
+			const _loc7_ = EventFactory.getEvent(ChartEventTypes.GET_DATA, param1, ChartEventPriorities.OPTIONAL);
 			_loc6_.addData(_loc7_, decodeURIComponent(param3));
 			if (param5)
 				_loc6_.addData(_loc7_, decodeURIComponent(param5));
@@ -406,9 +406,9 @@ namespace com.google.finance
 			}
 		}
 
-		updateLastPriceInDataSeries(param1: DataSeries, param2: number): boolean
+		updateLastPriceInDataSeries(dataSeries: DataSeries, param2: number): boolean
 		{
-			const _loc3_ = param1.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
+			const _loc3_ = dataSeries.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
 			const _loc4_ = Utils.getLastRealPointIndex(_loc3_);
 			if (_loc4_ >= 0)
 			{

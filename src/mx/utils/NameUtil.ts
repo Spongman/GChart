@@ -20,12 +20,14 @@ namespace mx.utils
 						break;
 
 					let s = o.name;
+					/*	TODO
 					if (o instanceof mx.core.IRepeaterClient)	// TODO: instanceof interfaces
 					{
 						let indices = (<mx.core.IRepeaterClient><any>o).instanceIndices;
 						if (indices)
 							s = s + ("[" + indices.join("][") + "]");
 					}
+					*/
 					result = !result ? s : s + "." + result;
 					o = o.parent;
 				}

@@ -21,7 +21,7 @@ namespace com.google.finance
 			if (!param1)
 				return;
 			this.checkDataSourceExistance(param1.quote);
-			this.dataSources[param1.quote].markEvent(param1, ChartEventTypes.EXPECTED);
+			this.dataSources[param1.quote].markEvent(param1, ChartEventPriorities.EXPECTED);
 		}
 
 		syncDataSources(dataSource: DataSource, param2: DisplayManager) 
@@ -228,7 +228,7 @@ namespace com.google.finance
 
 		cloneDataUnitForTargetExchange(param1: DataUnit, param2: DataUnit, param3: number): DataUnit
 		{
-			const _loc4_ = new DataUnit(param2.close);
+			const _loc4_ = new DataUnit(param2.close, NaN, NaN, NaN);	// TODO
 			const _loc5_ = Date.UTC(param1.exchangeDateInUTC.fullYearUTC, param1.exchangeDateInUTC.monthUTC, param1.exchangeDateInUTC.dateUTC, param2.dayMinute / 60, param2.dayMinute % 60);
 			_loc4_.setExchangeDateInUTC(_loc5_, param2.timezoneOffset);
 			_loc4_.coveredDays = param1.coveredDays;

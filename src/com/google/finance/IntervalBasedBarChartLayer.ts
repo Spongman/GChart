@@ -36,7 +36,7 @@ namespace com.google.finance
 				{
 					if (!(isNaN(_loc3_[_loc8_].high) || isNaN(_loc3_[_loc8_].low) || isNaN(_loc3_[_loc8_].open)))
 					{
-						if (_loc6_ === Const.WEEKLY)
+						if (_loc6_ === Intervals.WEEKLY)
 							_loc7_ = this.getWeeklyBarXPos(_loc3_[_loc8_], _loc7_);
 
 						this.drawBarAtDataUnit(context, _loc3_, _loc8_);

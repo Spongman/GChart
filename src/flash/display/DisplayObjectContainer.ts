@@ -104,8 +104,8 @@ namespace flash.display
 			return this.getChildIndex(child) >= 0;
 		}
 
-		_width: number;
-		_height: number;
+		private _width: number;
+		private _height: number;
 
 		get width()
 		{

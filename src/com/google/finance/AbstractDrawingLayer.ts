@@ -9,14 +9,14 @@ namespace com.google.finance
 			return context;
 		}
 
-		protected getBarWidth(param1: number, param2: DataSeries): number
+		protected getBarWidth(param1: Intervals, dataSeries: DataSeries): number
 		{
 			let _loc3_ = 0;
 			let _loc4_ = 0;
-			if (param1 === Const.WEEKLY)
-				_loc3_ = param2.marketDayLength * 5;
-			else if (param1 === Const.DAILY)
-				_loc3_ = param2.marketDayLength;
+			if (param1 === Intervals.WEEKLY)
+				_loc3_ = dataSeries.marketDayLength * 5;
+			else if (param1 === Intervals.DAILY)
+				_loc3_ = dataSeries.marketDayLength;
 			else
 				_loc3_ = Const.getDetailLevelInterval(param1) / 60;
 

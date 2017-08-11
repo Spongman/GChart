@@ -14,6 +14,9 @@ namespace flash.display
 	export class Stage
 		extends DisplayObjectContainer
 	{
+		align: string;
+		scaleMode: string;
+
 		constructor(elt: HTMLElement)
 		{
 			super(elt);
@@ -25,30 +28,22 @@ namespace flash.display
 
 			window.addEventListener("resize", () =>
 			{
-				this.updateSize();
 				this.element.dispatchEvent(new Event("resize"));
 			});
-
-			this.updateSize();
 		}
 
-		private updateSize()
-		{
-			this._width = this.element.clientWidth;
-			this._height = this.element.clientHeight;
-		}
+		get width() { return this.stageWidth; }
+		get height() { return this.stageHeight; }
 
-		align: string;
 		get stageWidth(): number
 		{
-			return this._width; //this.element.clientWidth;
+			return this.element.clientWidth;
 		}
 
 		get stageHeight(): number
 		{
-			return this._height; //this.element.clientHeight;
+			return this.element.clientHeight;
 		}
-		scaleMode: string;
 
 		private _mouseX: number;
 		private _mouseY: number;
@@ -83,7 +78,7 @@ namespace flash.display
 				// Function.prototype doesn't have a prototype property
 				fNOP.prototype = this.prototype;
 			}
-			fBound.prototype = new fNOP();
+			fBound.prototype = new (<any>fNOP)();
 
 			return fBound;
 		}

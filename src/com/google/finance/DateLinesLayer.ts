@@ -21,11 +21,11 @@ namespace com.google.finance
 		static readonly DAY_START_TEXT_MAX_WIDTH = 65;
 
 		topMargin = 0;
-		tickPosition = Const.TOP;
+		tickPosition = TickPositions.TOP;
 
-		getDayPixel(param1: ViewPoint, param2: DataSeries, param3: number): number
+		getDayPixel(viewPoint: ViewPoint, dataSeries: DataSeries, param3: number): number
 		{
-			return (!!param1.getDisplayManager().isDifferentMarketSessionComparison() ? 1 : (param2.marketDayLength + param3)) * param1.minutePix;
+			return (!!viewPoint.getDisplayManager().isDifferentMarketSessionComparison() ? 1 : (dataSeries.marketDayLength + param3)) * viewPoint.minutePix;
 		}
 
 		private getHourTextFromUtcDate(param1: Date): string
@@ -80,7 +80,7 @@ namespace com.google.finance
 			const _loc5_ = _loc2_.getRelativeMinuteIndex(_loc3_.getLastMinute());
 			const _loc6_ = this.getDayPixel(_loc3_, _loc2_, 0);
 			const _loc7_ = !!Const.INDICATOR_ENABLED ? _loc3_.getDetailLevelForTechnicalStyle() : _loc3_.getDetailLevel();
-			if (!_loc3_.getDisplayManager().isDifferentMarketSessionComparison() && _loc6_ > Const.MIN_DAY_WIDTH_FOR_INTRADAY && _loc7_ <= Const.DAILY)
+			if (!_loc3_.getDisplayManager().isDifferentMarketSessionComparison() && _loc6_ > Const.MIN_DAY_WIDTH_FOR_INTRADAY && _loc7_ <= Intervals.DAILY)
 			{
 				const _loc8_ = this.getVisibleDaysArray(context);
 				this.drawDayStarts(_loc4_, this.textCanvas, _loc8_, _loc7_);
@@ -358,20 +358,20 @@ namespace com.google.finance
 			for (let _loc8_ = 0; _loc8_ < param3.length; _loc8_++)
 			{
 				const _loc9_ = this.viewPoint.getXPos(param3[_loc8_].dataUnit);
-				//AbstractLayer.drawVerticalLine(param1, _loc9_, Const.DAY_LINE_COLOR, Const.DAY_LINE_ALPHA, _loc5_, _loc6_, ViewPoint.TICK_SIZE_BIG, this.tickPosition, param4 !== Const.DAILY);
+				//AbstractLayer.drawVerticalLine(param1, _loc9_, Const.DAY_LINE_COLOR, Const.DAY_LINE_ALPHA, _loc5_, _loc6_, ViewPoint.TICK_SIZE_BIG, this.tickPosition, param4 !== Intervals.DAILY);
 				if (this.viewPoint.bottomTextHeight > 0)
 				{
 					const _loc10_ = this.viewPoint.getIntervalLength(param3[_loc8_].coveredMinutes);
 					const _loc11_ = this.getDayText(param3, _loc8_, _loc10_);
 					let _loc12_ = "center";
-					if (_loc10_ >= DateLinesLayer.DISPLAY_HOURS_MIN_DAY_WIDTH && param4 < Const.DAILY)
+					if (_loc10_ >= DateLinesLayer.DISPLAY_HOURS_MIN_DAY_WIDTH && param4 < Intervals.DAILY)
 					{
 						_loc12_ = "left";
 						this.drawHoursForDay(param1, param2, param3[_loc8_], _loc10_);
 					}
 					let _loc13_: number;
 					let _loc14_: number;
-					if (param4 < Const.DAILY)
+					if (param4 < Intervals.DAILY)
 					{
 						_loc13_ = _loc9_ - _loc10_ + ViewPoint.TEXT_HORIZONTAL_OFFSET;
 						_loc14_ = _loc10_ - ViewPoint.TEXT_HORIZONTAL_OFFSET;

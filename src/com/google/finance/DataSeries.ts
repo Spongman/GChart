@@ -559,13 +559,13 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		copyMarketTimesFrom(param1: DataSeries) 
+		copyMarketTimesFrom(dataSeries: DataSeries) 
 		{
-			this.dataSessions = param1.dataSessions;
+			this.dataSessions = dataSeries.dataSessions;
 			this.currentSessionIndex = 0;
-			this.marketOpenMinute = param1.marketOpenMinute;
-			this.marketCloseMinute = param1.marketCloseMinute;
-			this.marketDayLength = param1.marketDayLength;
+			this.marketOpenMinute = dataSeries.marketOpenMinute;
+			this.marketCloseMinute = dataSeries.marketCloseMinute;
+			this.marketDayLength = dataSeries.marketDayLength;
 		}
 	}
 }

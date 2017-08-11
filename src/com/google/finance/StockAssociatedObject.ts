@@ -25,13 +25,15 @@ namespace com.google.finance
 			if (_loc3_ > _loc4_)
 				return 1;
 
-			// TODO: PinPoint only?
-			if (param1.letter < param2.letter)
-				return -1;
+			if (param1 instanceof PinPoint && param2 instanceof PinPoint)
+			{
+				// TODO: PinPoint only?
+				if (param1.letter < param2.letter)
+					return -1;
 
-			if (param1.letter > param2.letter)
-				return 1;
-
+				if (param1.letter > param2.letter)
+					return 1;
+			}
 			return 0;
 		}
 

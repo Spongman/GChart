@@ -36,9 +36,8 @@ namespace com.google.finance
 		private resetCanvas() 
 		{
 			for (let _loc1_ = 0; _loc1_ < this.movies.length; _loc1_++)
-			{
 				this.removeChild(this.movies[_loc1_]);
-			}
+
 			this.movies.splice(0);
 		}
 
@@ -68,6 +67,7 @@ namespace com.google.finance
 				this.resetCanvas();
 				return;
 			}
+
 			const _loc6_ = this.getLastVisibleObject(_loc2_, _loc3_, context);
 			const _loc7_ = this.viewPoint.count / this.dataSource.data.marketDayLength;
 			context[this.renderObj] = [];
@@ -96,16 +96,15 @@ namespace com.google.finance
 						const _loc12_ = context[this.avoidObj][_loc8_];
 						if (_loc12_.x === _loc11_.x)
 						{
-							_loc12_.setOrientation(Const.SIDEWAYS + _loc10_.orientation);
-							_loc11_.setOrientation(Const.SIDEWAYS + _loc10_.orientation);
+							_loc12_.setOrientation(Orientations.SIDEWAYS + _loc10_.orientation);
+							_loc11_.setOrientation(Orientations.SIDEWAYS + _loc10_.orientation);
 						}
 					}
 				}
 			}
 			for (let _loc9_ = this.activeMovies; _loc9_ < this.movies.length; _loc9_++)
-			{
 				this.removeChild(this.movies[_loc9_]);
-			}
+
 			this.movies.splice(this.activeMovies);
 		}
 
@@ -121,12 +120,12 @@ namespace com.google.finance
 				if (_loc7_ > this.viewPoint.miny + 40)
 				{
 					_loc5_.y = _loc7_ - IndependentObjectsLayer.OBJECT_DISTANCE;
-					_loc5_.orientation = Const.DOWN;
+					_loc5_.orientation = Orientations.DOWN;
 				}
 				else
 				{
 					_loc5_.y = _loc7_ + IndependentObjectsLayer.OBJECT_DISTANCE;
-					_loc5_.orientation = Const.UP;
+					_loc5_.orientation = Orientations.UP;
 				}
 			}
 			else if (this.positioning === IndependentObjectsLayer.POSITION_BOTTOM)
@@ -137,7 +136,7 @@ namespace com.google.finance
 					_loc10_ = Number(_loc9_.bottomTextHeight);
 
 				_loc5_.y = this.viewPoint.maxy - _loc10_;
-				_loc5_.orientation = Const.DOWN;
+				_loc5_.orientation = Orientations.DOWN;
 			}
 			_loc5_.x = _loc6_;
 			return _loc5_;
@@ -152,7 +151,6 @@ namespace com.google.finance
 				const _loc7_ = notnull(_loc6_.refDataSeries).units[_loc6_.pos].relativeMinutes;
 				if (_loc7_ < _loc4_)
 					return _loc5_;
-
 			}
 			return -1;
 		}
@@ -192,10 +190,10 @@ namespace com.google.finance
 				switch (param1.originalObject._orientation)
 				{
 					case "down":
-						param2.orientation = Const.DOWN;
+						param2.orientation = Orientations.DOWN;
 						break;
 					case "up":
-						param2.orientation = Const.UP;
+						param2.orientation = Orientations.UP;
 				}
 			}
 			_loc3_.setOrientation(param2.orientation);

@@ -178,9 +178,7 @@ namespace com.google.finance
 				}
 				_loc13_.reverse();
 				for (let _loc14_ = 0; _loc14_ < _loc7_.length; _loc14_++)
-				{
 					this.renderFlagsGroup(context, param5, _loc9_[_loc14_], _loc10_[_loc14_], _loc7_[_loc14_], _loc8_[_loc14_], param2, IntervalBasedPinPointsLayer.FLAG_POLE_HEIGHT + IntervalBasedPinPointsLayer.FLAG_HEIGHT, _loc13_[_loc14_]);
-				}
 			}
 		}
 

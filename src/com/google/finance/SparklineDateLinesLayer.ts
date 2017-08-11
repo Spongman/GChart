@@ -8,7 +8,7 @@ namespace com.google.finance
 		private static readonly DATE_LINES_COLOR = 13426124;
 		private static readonly SHORT_YEAR_LINE_HEIGHT = 5;
 
-		tickPosition = Const.TOP;
+		tickPosition = TickPositions.TOP;
 		
 		private drawQuarterStarts(param1: flash.display.Sprite) 
 		{

@@ -15,9 +15,9 @@ namespace com.google.finance
 			if (!IntervalBasedChartManagerLayer.enabledChartLayerName)
 				IntervalBasedChartManagerLayer.enabledChartLayerName = Const.DEFAULT_CHART_STYLE_NAME;
 
-			for (let _loc3_ = 0; _loc3_ < Const.CHART_STYLE_NAMES.length; _loc3_++)
+			for (let index = 0; index < Const.CHART_STYLE_NAMES.length; index++)
 			{
-				const styleName = Const.CHART_STYLE_NAMES[_loc3_];
+				const styleName = Const.CHART_STYLE_NAMES[index];
 				const className = getDefinitionByName("com.google.finance." + styleName) as typeof IntervalBasedChartLayer;
 				const chartLayer = new className(viewPoint, dataSource);
 				chartLayer.name = styleName;
@@ -54,9 +54,9 @@ namespace com.google.finance
 				this.enabledChartLayer = null;
 				IntervalBasedChartManagerLayer.enabledChartLayerName = null;
 			}
-			for (let _loc2_ = 0; _loc2_ < this.chartLayers.length; _loc2_++)
+			for (let layerIndex = 0; layerIndex < this.chartLayers.length; layerIndex++)
 			{
-				const _loc3_ = this.chartLayers[_loc2_];
+				const _loc3_ = this.chartLayers[layerIndex];
 				if (_loc3_.getLayerName() === param1)
 				{
 					_loc3_.setEnabled(true);

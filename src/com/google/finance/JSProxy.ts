@@ -44,8 +44,8 @@ namespace com.google.finance
 
 		removeLayerFromStyle(param1: LayerInfo, param2: string) 
 		{
-			const _loc3_ = this.mainManager.layersManager;
-			_loc3_.removeLayerFromStyle(param1, param2);
+			const layersManager = this.mainManager.layersManager;
+			layersManager.removeLayerFromStyle(param1, param2);
 		}
 
 		initIndicators() 
@@ -118,27 +118,27 @@ namespace com.google.finance
 
 		importGVizData(param1: any, param2: string, param3: number) 
 		{
-			const _loc4_ = this.mainManager.layersManager.getFirstDataSource();
-			if (!_loc4_)
+			const firstDataSource = this.mainManager.layersManager.getFirstDataSource();
+			if (!firstDataSource)
 				return;
 
-			if (!_loc4_.indicators[param2])
-				_loc4_.indicators[param2] = new Indicator();
+			if (!firstDataSource.indicators[param2])
+				firstDataSource.indicators[param2] = new Indicator();
 
-			GVizFormatConverter.convertGVizData(param1, param3, _loc4_.data, _loc4_.indicators[param2]);
+			GVizFormatConverter.convertGVizData(param1, param3, firstDataSource.data, firstDataSource.indicators[param2]);
 		}
 
 		updateLastPrice(param1: boolean, param2: number) 
 		{
-			const _loc3_ = this.mainManager.layersManager.getFirstDataSource();
-			const _loc4_ = this.mainManager.displayManager;
-			if (!_loc3_)
+			const firstDataSource = this.mainManager.layersManager.getFirstDataSource();
+			const displayManager = this.mainManager.displayManager;
+			if (!firstDataSource)
 				return;
 
-			if (this.updateLastPriceInDataSeries(!!param1 ? _loc3_.afterHoursData : _loc3_.data, param2))
+			if (this.updateLastPriceInDataSeries(!!param1 ? firstDataSource.afterHoursData : firstDataSource.data, param2))
 			{
-				if (_loc4_.getDetailLevel() === Intervals.INTRADAY)
-					_loc4_.update(true);
+				if (displayManager.getDetailLevel() === Intervals.INTRADAY)
+					displayManager.update(true);
 			}
 		}
 
@@ -189,49 +189,49 @@ namespace com.google.finance
 
 		toggleIndicator(param1: string, param2: string) 
 		{
-			const _loc3_ = this.mainManager.layersManager;
-			const _loc4_ = this.mainManager.displayManager;
+			const layersManager = this.mainManager.layersManager;
+			const displayManager = this.mainManager.displayManager;
 			const _loc5_ = param2.split("*");
 			if (Const.DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1 || Const.VOLUME_DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1)
 			{
 				const _loc6_ = Const.DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1 ? Const.MAIN_VIEW_POINT_NAME : Const.BOTTOM_VIEW_POINT_NAME;
 				if (Boolean(_loc5_[0]))
 				{
-					_loc4_.enableIndicatorConfig(param1, true);
-					_loc4_.enableIndicatorLayer(param1, _loc6_, true);
-					_loc4_.setIndicatorInstanceArray(param1, this.getIndicatorInstanceArray(param1, _loc5_));
+					displayManager.enableIndicatorConfig(param1, true);
+					displayManager.enableIndicatorLayer(param1, _loc6_, true);
+					displayManager.setIndicatorInstanceArray(param1, this.getIndicatorInstanceArray(param1, _loc5_));
 				}
 				else
 				{
-					_loc4_.enableIndicatorConfig(param1, false);
-					_loc4_.enableIndicatorLayer(param1, _loc6_, false);
+					displayManager.enableIndicatorConfig(param1, false);
+					displayManager.enableIndicatorLayer(param1, _loc6_, false);
 				}
 			}
 			else if (Const.INDEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1)
 			{
 				if (Boolean(_loc5_[0]))
 				{
-					if (!_loc4_.isIndicatorConfigEnabled(param1))
+					if (!displayManager.isIndicatorConfigEnabled(param1))
 					{
 						this.mainManager.layersManager.chartHeightInStyle[LayersManager.SINGLE] = this.mainManager.layersManager.chartHeightInStyle[LayersManager.SINGLE] + Const.TECHNICAL_INDICATOR_HEIGHT;
-						_loc4_.enableIndicatorConfig(param1, true);
-						_loc3_.unhideViewPoint(param1, LayersManager.SINGLE);
-						_loc4_.setIndicatorInstanceArray(param1, this.getIndicatorInstanceArray(param1, _loc5_));
+						displayManager.enableIndicatorConfig(param1, true);
+						layersManager.unhideViewPoint(param1, LayersManager.SINGLE);
+						displayManager.setIndicatorInstanceArray(param1, this.getIndicatorInstanceArray(param1, _loc5_));
 						Const.MOVIE_HEIGHT = this.mainManager.stage.stageHeight;
 					}
 				}
-				else if (_loc4_.isIndicatorConfigEnabled(param1))
+				else if (displayManager.isIndicatorConfigEnabled(param1))
 				{
 					this.mainManager.layersManager.chartHeightInStyle[LayersManager.SINGLE] = this.mainManager.layersManager.chartHeightInStyle[LayersManager.SINGLE] - Const.TECHNICAL_INDICATOR_HEIGHT;
-					_loc4_.enableIndicatorConfig(param1, false);
-					_loc3_.hideViewPoint(param1, LayersManager.SINGLE);
+					displayManager.enableIndicatorConfig(param1, false);
+					layersManager.hideViewPoint(param1, LayersManager.SINGLE);
 					Const.MOVIE_HEIGHT = this.mainManager.stage.stageHeight;
 				}
-				const _loc7_ = _loc4_.getMainViewPoint();
-				if (_loc7_)
-					_loc7_.checkEvents();
+				const mainViewPoint = displayManager.getMainViewPoint();
+				if (mainViewPoint)
+					mainViewPoint.checkEvents();
 
-				_loc4_.update();
+				displayManager.update();
 			}
 		}
 
@@ -297,14 +297,14 @@ namespace com.google.finance
 
 		addLayerToStyle(param1: LayerInfo, param2: string) 
 		{
-			const _loc3_ = this.mainManager.layersManager;
-			_loc3_.addLayerToStyle(param1, param2);
+			const layersManager = this.mainManager.layersManager;
+			layersManager.addLayerToStyle(param1, param2);
 		}
 
 		setParameter(param1: string, param2: string) 
 		{
-			const _loc3_ = this.mainManager.layersManager;
-			const _loc4_ = this.mainManager.displayManager;
+			const layersManager = this.mainManager.layersManager;
+			const displayManager = this.mainManager.displayManager;
 			com.google.finance.MainManager.paramsObj[param1] = param2;
 			if (param1 === "displayNewsPins")
 				Const.DISPLAY_NEWS_PINS = "true" === param2;
@@ -312,41 +312,41 @@ namespace com.google.finance
 			if (param1 === "displayVolume")
 			{
 				if (!Boolean(param2))
-					_loc3_.hideViewPoint("BottomViewPoint", "single");
+					layersManager.hideViewPoint("BottomViewPoint", "single");
 				else
-					_loc3_.unhideViewPoint("BottomViewPoint", "single");
+					layersManager.unhideViewPoint("BottomViewPoint", "single");
 
-				_loc4_.windowResized(Const.MOVIE_WIDTH, Const.MOVIE_HEIGHT);
+				displayManager.windowResized(Const.MOVIE_WIDTH, Const.MOVIE_HEIGHT);
 			}
 			if (param1 === "displayExtendedHours" && com.google.finance.MainManager.paramsObj.hasExtendedHours !== "false")
 			{
 				if (Boolean(param2))
-					_loc4_.setAfterHoursDisplay(true);
+					displayManager.setAfterHoursDisplay(true);
 				else
-					_loc4_.setAfterHoursDisplay(false);
+					displayManager.setAfterHoursDisplay(false);
 
-				const _loc5_ = _loc4_.getMainViewPoint();
-				if (_loc5_)
-					this.setJsCurrentViewParam("defaultDisplayMinutes", _loc5_.count);
+				const mainViewPoint = displayManager.getMainViewPoint();
+				if (mainViewPoint)
+					this.setJsCurrentViewParam("defaultDisplayMinutes", mainViewPoint.count);
 
-				const _loc6_ = _loc3_.getFirstDataSource();
-				if (_loc6_)
-					this.setForceDisplayExtendedHours(_loc6_);
+				const firstDataSource = layersManager.getFirstDataSource();
+				if (firstDataSource)
+					this.setForceDisplayExtendedHours(firstDataSource);
 			}
 			if (param1 === "minZoomDays")
-				_loc4_.mainController.setMinDisplayDays(Number(param2));
+				displayManager.mainController.setMinDisplayDays(Number(param2));
 
-			_loc4_.update();
+			displayManager.update();
 		}
 
 		addData(param1: string, param2: string, param3: string, param4: string, param5: string) 
 		{
 			param1 = Utils.adjustNasdToNasdaq(param1);
-			const _loc6_ = this.mainManager.dataManager;
-			const _loc7_ = EventFactory.getEvent(ChartEventTypes.GET_DATA, param1, ChartEventPriorities.OPTIONAL);
-			_loc6_.addData(_loc7_, decodeURIComponent(param3));
+			const dataManager = this.mainManager.dataManager;
+			const event = EventFactory.getEvent(ChartEventTypes.GET_DATA, param1, ChartEventPriorities.OPTIONAL);
+			dataManager.addData(event, decodeURIComponent(param3));
 			if (param5)
-				_loc6_.addData(_loc7_, decodeURIComponent(param5));
+				dataManager.addData(event, decodeURIComponent(param5));
 		}
 
 		setJsChartType(param1: string) 
@@ -408,11 +408,11 @@ namespace com.google.finance
 
 		updateLastPriceInDataSeries(dataSeries: DataSeries, param2: number): boolean
 		{
-			const _loc3_ = dataSeries.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
-			const _loc4_ = Utils.getLastRealPointIndex(_loc3_);
-			if (_loc4_ >= 0)
+			const pointsInIntervalArray = dataSeries.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
+			const lastRealPointIndex = Utils.getLastRealPointIndex(pointsInIntervalArray);
+			if (lastRealPointIndex >= 0)
 			{
-				const _loc5_ = _loc3_[_loc4_];
+				const _loc5_ = pointsInIntervalArray[lastRealPointIndex];
 				_loc5_.close = param2;
 				_loc5_.low = Utils.extendedMin(_loc5_.low, param2);
 				_loc5_.high = Utils.extendedMax(_loc5_.high, param2);

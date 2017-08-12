@@ -56,17 +56,17 @@ namespace com.google.finance
 
 		getDateText(): string
 		{
-			const _loc1_ = this.associatedDividend.exchangeDateInUTC;
+			const exchangeDateInUTC = this.associatedDividend.exchangeDateInUTC;
 			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
-				return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.LONG_DATE_FORMAT, _loc1_, true);
+				return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.LONG_DATE_FORMAT, exchangeDateInUTC, true);
 
-			return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.MEDIUM_DATE_FORMAT, _loc1_, true);
+			return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.MEDIUM_DATE_FORMAT, exchangeDateInUTC, true);
 		}
 
 		getShortText(param1 = false): string
 		{
 			let _loc3_ = false;
-			const _loc2_ = this.associatedDividend.amount;
+			const amount = this.associatedDividend.amount;
 			if (!Boolean(Const.DISPLAY_DIVIDENDS_UNITS))
 			{
 				_loc3_ = !MainManager.paramsObj.companyCurrency || !this.associatedDividend.currency || MainManager.paramsObj.differentDividendCurrency;
@@ -75,18 +75,18 @@ namespace com.google.finance
 				{
 					for (let _loc5_ = 100; _loc5_ < 10000; _loc5_ = _loc5_ * 10)
 					{
-						const _loc6_ = Math.round(_loc2_ * _loc5_) / _loc5_;
+						const _loc6_ = Math.round(amount * _loc5_) / _loc5_;
 						if (_loc6_ !== 0)
 							return _loc4_ + _loc6_;
 
 					}
 					return _loc4_ + "0";
 				}
-				return _loc4_ + _loc2_.toString();
+				return _loc4_ + amount.toString();
 			}
-			if (_loc2_ < 1)
+			if (amount < 1)
 			{
-				let _loc7_ = _loc2_ * 100;
+				let _loc7_ = amount * 100;
 				if (!param1)
 				{
 					if (Math.round(_loc7_) === 0)
@@ -96,7 +96,7 @@ namespace com.google.finance
 				}
 				return _loc7_ + String.fromCharCode(162);
 			}
-			let _loc8_ = _loc2_;
+			let _loc8_ = amount;
 			if (!param1)
 				_loc8_ = Math.round(_loc8_ * 100) / 100;
 

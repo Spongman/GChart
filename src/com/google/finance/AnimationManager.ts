@@ -36,13 +36,13 @@ namespace com.google.finance
 			{
 				this.stepCount--;
 
-				for (let _loc1_ = 0; _loc1_ < lfunctions.length; _loc1_++)
-					lfunctions[_loc1_](lobjects[_loc1_], this.amount, opt_pinClicked);
+				for (let functionIndex = 0; functionIndex < lfunctions.length; functionIndex++)
+					lfunctions[functionIndex](lobjects[functionIndex], this.amount, opt_pinClicked);
 
 				if (this.stepCount <= 0)
 				{
-					for (let _loc1_ = 0; _loc1_ < lfunctions.length; _loc1_++)
-						lfunctions[_loc1_](lobjects[_loc1_], 0, opt_pinClicked);
+					for (let functionIndex = 0; functionIndex < lfunctions.length; functionIndex++)
+						lfunctions[functionIndex](lobjects[functionIndex], 0, opt_pinClicked);
 
 					this.stopAnimation();
 				}

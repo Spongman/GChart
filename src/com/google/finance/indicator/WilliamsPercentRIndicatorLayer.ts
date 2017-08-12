@@ -45,21 +45,21 @@ namespace com.google.finance.indicator
 			if (this.indicator.hasInterval(param1))
 				return;
 
-			const _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
-			if (!_loc2_)
+			const pointsInIntervalArray = this.originalDataSeries.getPointsInIntervalArray(param1);
+			if (!pointsInIntervalArray)
 				return;
 
-			const _loc9_ = new DataSeries();
+			const dataSeries = new DataSeries();
 			const _loc8_: DataUnit[] = [];
-			for (let _loc6_ = 0; _loc6_ < _loc2_.length; _loc6_++)
+			for (let pointIndex = 0; pointIndex < pointsInIntervalArray.length; pointIndex++)
 			{
-				const _loc10_ = _loc2_[_loc6_];
-				if (!this.shouldSkip(_loc10_, _loc9_))
+				const _loc10_ = pointsInIntervalArray[pointIndex];
+				if (!this.shouldSkip(_loc10_, dataSeries))
 				{
 					_loc8_.push(_loc10_);
 					if (_loc8_.length < this.period)
 					{
-						_loc9_.points.push(new IndicatorPoint(NaN, _loc10_));
+						dataSeries.points.push(new IndicatorPoint(NaN, _loc10_));
 					}
 					else
 					{
@@ -73,17 +73,17 @@ namespace com.google.finance.indicator
 						if (_loc3_ !== _loc4_)
 						{
 							const _loc5_ = (_loc3_ - _loc10_.close) / (_loc3_ - _loc4_) * 100;
-							_loc9_.points.push(new IndicatorPoint(_loc5_, _loc10_));
+							dataSeries.points.push(new IndicatorPoint(_loc5_, _loc10_));
 						}
 						else
 						{
-							this.copyLastIndicatorPoint(_loc10_, _loc9_);
+							this.copyLastIndicatorPoint(_loc10_, dataSeries);
 						}
 						_loc8_.shift();
 					}
 				}
 			}
-			this.indicator.setDataSeries(param1, _loc9_, 0);
+			this.indicator.setDataSeries(param1, dataSeries, 0);
 		}
 
 		isOhlcDataRequired(): boolean

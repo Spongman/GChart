@@ -43,21 +43,21 @@ namespace com.google.finance.indicator
 			if (this.indicator.hasInterval(param1))
 				return;
 
-			const _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
-			if (!_loc2_ || _loc2_.length === 0)
+			const points = this.originalDataSeries.getPointsInIntervalArray(param1);
+			if (!points || points.length === 0)
 				return;
 
-			const _loc3_ = new DataSeries();
+			const dataSeries = new DataSeries();
 			let _loc5_ = 0;
 			let _loc6_ = 0;
 			const _loc9_: number[] = [];
-			let _loc10_ = _loc2_[0].close;
-			const _loc8_ = new IndicatorPoint(NaN, _loc2_[0]);
-			_loc3_.points.push(_loc8_);
-			for (let _loc11_ = 1; _loc11_ < _loc2_.length; _loc11_++)
+			let _loc10_ = points[0].close;
+			const indicatorPoint = new IndicatorPoint(NaN, points[0]);
+			dataSeries.points.push(indicatorPoint);
+			for (let _loc11_ = 1; _loc11_ < points.length; _loc11_++)
 			{
-				const _loc12_ = _loc2_[_loc11_];
-				if (!this.shouldSkip(_loc12_, _loc3_))
+				const _loc12_ = points[_loc11_];
+				if (!this.shouldSkip(_loc12_, dataSeries))
 				{
 					let _loc7_ = _loc12_.close - _loc10_;
 					_loc10_ = _loc12_.close;
@@ -69,18 +69,18 @@ namespace com.google.finance.indicator
 
 					if (_loc9_.length < this.period)
 					{
-						_loc3_.points.push(new IndicatorPoint(NaN, _loc12_));
+						dataSeries.points.push(new IndicatorPoint(NaN, _loc12_));
 					}
 					else
 					{
 						if (_loc5_ + _loc6_ !== 0)
 						{
 							const _loc4_ = _loc5_ / (_loc5_ + _loc6_) * 100;
-							_loc3_.points.push(new IndicatorPoint(_loc4_, _loc12_));
+							dataSeries.points.push(new IndicatorPoint(_loc4_, _loc12_));
 						}
 						else
 						{
-							this.copyLastIndicatorPoint(_loc12_, _loc3_);
+							this.copyLastIndicatorPoint(_loc12_, dataSeries);
 						}
 						_loc7_ = Number(_loc9_.shift());
 						if (_loc7_ > 0)
@@ -90,7 +90,7 @@ namespace com.google.finance.indicator
 					}
 				}
 			}
-			this.indicator.setDataSeries(param1, _loc3_, 0);
+			this.indicator.setDataSeries(param1, dataSeries, 0);
 		}
 
 		setIndicatorInstanceArray(param1: any[]) 

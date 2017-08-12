@@ -42,8 +42,8 @@ namespace com.google.finance
 			if (dataSource.countEvents(ChartEventPriorities.REQUIRED) + dataSource.countEvents(ChartEventPriorities.EXPECTED) > 0)
 				return;
 
-			const _loc3_ = this.displayManager.getDetailLevel();
-			if (this.shouldToggleAfterHours(_loc3_))
+			const detailLevel = this.displayManager.getDetailLevel();
+			if (this.shouldToggleAfterHours(detailLevel))
 				this.displayManager.toggleAllAfterHoursSessions(true, dataSource);
 			else
 				this.displayManager.toggleAllAfterHoursSessions(false, dataSource);
@@ -54,8 +54,8 @@ namespace com.google.finance
 			if (!this.displayManager.isDifferentMarketSessionComparison())
 				this.displayManager.computeRelativeTimes(dataSource);
 
-			const _loc4_ = this.layersManager.getFirstDataSource();
-			if (_loc4_)
+			const firstDataSource = this.layersManager.getFirstDataSource();
+			if (firstDataSource)
 			{
 				this.dataManager.syncDataSources(dataSource, this.displayManager);
 				this.displayManager.mainController.syncZoomLevel();
@@ -114,8 +114,8 @@ namespace com.google.finance
 			this.startTime = MainManager.paramsObj.startTime || NaN;
 			this.endTime = MainManager.paramsObj.endTime || NaN;
 			this.weekdayBitmap = MainManager.paramsObj.weekdayBitmap || Const.DEFAULT_WEEKDAY_BITMAP;
-			const _loc1_ = window.loaderInfo.url;
-			const _loc2_ = _loc1_.substring(0, _loc1_.indexOf("/finance/"));
+			const url = window.loaderInfo.url;
+			const _loc2_ = url.substring(0, url.indexOf("/finance/"));
 			if (MainManager.paramsObj.u)
 			{
 				if (MainManager.paramsObj.u.indexOf("/finance/") === -1)
@@ -306,17 +306,17 @@ namespace com.google.finance
 		getQuote(param1: string, param2?: string, param3 = NaN, param4: boolean = false) 
 		{
 			let _loc5_: number;
-			const _loc6_ = notnull(this.displayManager.getMainViewPoint());
-			const _loc7_ = this.layersManager.getFirstDataSource();
+			const mainViewPoint = notnull(this.displayManager.getMainViewPoint());
+			const firstDataSource = this.layersManager.getFirstDataSource();
 			this.dataManager.checkDataSourceExistance(param1, param2);
 			if (!isNaN(param3))
 			{
 				_loc5_ = param3;
 			}
-			else if (!isNaN(_loc6_.count) && _loc7_)
+			else if (!isNaN(mainViewPoint.count) && firstDataSource)
 			{
-				const _loc8_ = !!this.displayManager.isDifferentMarketSessionComparison() ? 1 : _loc7_.data.marketDayLength;
-				_loc5_ = _loc6_.count / _loc8_;
+				const _loc8_ = !!this.displayManager.isDifferentMarketSessionComparison() ? 1 : firstDataSource.data.marketDayLength;
+				_loc5_ = mainViewPoint.count / _loc8_;
 			}
 			else
 			{
@@ -330,7 +330,7 @@ namespace com.google.finance
 
 		private getQuoteForBarChart(param1: string, param2: number, param3: boolean)
 		{
-			const _loc4_ = EventFactory.getEvent(ChartEventStyles.GET_5D_DATA, param1, ChartEventPriorities.REQUIRED);
+			const event = EventFactory.getEvent(ChartEventStyles.GET_5D_DATA, param1, ChartEventPriorities.REQUIRED);
 
 			let _loc7_: ChartEvent;
 			if (MainManager.paramsObj.sparklineType === Const.STATIC || param2 > Const.SCALE_INTERVALS[ScaleTypes.SCALE_1Y].days)
@@ -357,11 +357,11 @@ namespace com.google.finance
 					_loc6_ = EventFactory.getEvent(ChartEventStyles.GET_1Y_DATA, param1, ChartEventPriorities.REQUIRED);
 					break;
 			}
-			this.dataManager.expectEvent(_loc4_);
+			this.dataManager.expectEvent(event);
 			this.dataManager.expectEvent(_loc5_);
 			this.dataManager.expectEvent(_loc7_);
 			this.dataManager.expectEvent(_loc6_);
-			this.dataManager.eventHandler(_loc4_, !param3);
+			this.dataManager.eventHandler(event, !param3);
 			//this.dataManager.eventHandler(_loc8_, !param3);
 			this.dataManager.eventHandler(_loc5_, !param3);
 			this.dataManager.eventHandler(_loc7_, !param3);

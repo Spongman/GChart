@@ -26,11 +26,11 @@ namespace com.google.i18n.locale
 		private static activeLocale: string;
 		
 
-		static getStandardDateTimeFormatter(param1: DateTimeFormats, param2 = false): DateTimeFormat
+		static getStandardDateTimeFormatter(pattern: DateTimeFormats, isUtc = false): DateTimeFormat
 		{
-			const _loc3_ = new DateTimeFormat(param2);
-			_loc3_.applyStandardPattern(param1);
-			return _loc3_;
+			const format = new DateTimeFormat(isUtc);
+			format.applyStandardPattern(pattern);
+			return format;
 		}
 
 		static getResource(param1: string) 
@@ -39,18 +39,18 @@ namespace com.google.i18n.locale
 			return DateTimeLocale.constantsRepository[_loc2_];
 		}
 
-		static getDateTimeFormatter(param1: string, param2 = false): DateTimeFormat
+		static getDateTimeFormatter(param1: string, isUtc = false): DateTimeFormat
 		{
-			const _loc3_ = new DateTimeFormat(param2);
-			_loc3_.applyPattern(param1);
-			return _loc3_;
+			const format = new DateTimeFormat(isUtc);
+			format.applyPattern(param1);
+			return format;
 		}
 
-		static standardFormatDateTime(param1: number, param2: Date, param3 = false): string
+		static standardFormatDateTime(pattern: number, param2: Date, isUtc = false): string
 		{
-			const _loc4_ = new DateTimeFormat(param3);
-			_loc4_.applyStandardPattern(param1);
-			return _loc4_.format(param2);
+			const format = new DateTimeFormat(isUtc);
+			format.applyStandardPattern(pattern);
+			return format.format(param2);
 		}
 
 		static getLocale(): string
@@ -61,11 +61,11 @@ namespace com.google.i18n.locale
 			return DateTimeLocale.activeLocale;
 		}
 
-		static formatDateTime(param1: string, param2: Date, param3 = false): string
+		static formatDateTime(pattern: string, date: Date, isUtc = false): string
 		{
-			const _loc4_ = new DateTimeFormat(param3);
-			_loc4_.applyPattern(param1);
-			return _loc4_.format(param2);
+			const format = new DateTimeFormat(isUtc);
+			format.applyPattern(pattern);
+			return format.format(date);
 		}
 
 		static registerResource(param1: { [key: string]: any }, param2: string) 

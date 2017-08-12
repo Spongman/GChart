@@ -22,19 +22,19 @@ namespace com.google.finance.indicator
 		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
 			super(viewPoint, dataSource);
-			const _loc3_ = new flash.text.TextFormat("Verdana", 9);
-			_loc3_.align = "right";
+			const textFormat = new flash.text.TextFormat("Verdana", 9);
+			textFormat.align = "right";
 			for (let _loc4_= 0; _loc4_ < IndependentIndicatorLayer.LEVEL_CNT; _loc4_++)
 			{
-				const _loc5_ = new flash.text.TextField();
-				_loc5_.width = IndependentIndicatorLayer.LEVEL_TEXT_WIDTH;
-				_loc5_.defaultTextFormat = _loc3_;
-				_loc5_.text = "";
-				_loc5_.selectable = false;
-				_loc5_.x = viewPoint.maxx - IndependentIndicatorLayer.LEVEL_TEXT_WIDTH;
-				_loc5_.y = viewPoint.miny + (viewPoint.maxy - viewPoint.miny - 15) * (IndependentIndicatorLayer.LEVEL_CNT - 1 - _loc4_) / (IndependentIndicatorLayer.LEVEL_CNT - 1);
-				this.textOutCanvas.addChild(_loc5_);
-				this.levelTextArray.push(_loc5_);
+				const layerTextFormat = new flash.text.TextField();
+				layerTextFormat.width = IndependentIndicatorLayer.LEVEL_TEXT_WIDTH;
+				layerTextFormat.defaultTextFormat = textFormat;
+				layerTextFormat.text = "";
+				layerTextFormat.selectable = false;
+				layerTextFormat.x = viewPoint.maxx - IndependentIndicatorLayer.LEVEL_TEXT_WIDTH;
+				layerTextFormat.y = viewPoint.miny + (viewPoint.maxy - viewPoint.miny - 15) * (IndependentIndicatorLayer.LEVEL_CNT - 1 - _loc4_) / (IndependentIndicatorLayer.LEVEL_CNT - 1);
+				this.textOutCanvas.addChild(layerTextFormat);
+				this.levelTextArray.push(layerTextFormat);
 			}
 		}
 
@@ -55,44 +55,44 @@ namespace com.google.finance.indicator
 			if (!this._enabled)
 				return context;
 
-			const _loc3_ = this.viewPoint;
-			const _loc4_ = _loc3_.getDetailLevelForTechnicalStyle(context.lastMinute, context.count);
-			const _loc5_ = Const.getDetailLevelInterval(_loc4_);
-			const _loc6_ = this.originalDataSeries;
-			const _loc7_ = _loc6_.getPointsInIntervalArray(_loc5_);
-			if (!_loc7_)
+			const viewPoint = this.viewPoint;
+			const detailLevel = viewPoint.getDetailLevelForTechnicalStyle(context.lastMinute, context.count);
+			const detailLevelInterval = Const.getDetailLevelInterval(detailLevel);
+			const originalDataSeries = this.originalDataSeries;
+			const points = originalDataSeries.getPointsInIntervalArray(detailLevelInterval);
+			if (!points)
 				return context;
 
-			const _loc8_ = this.getDataSeriesArray(_loc4_, context);
-			if (!_loc8_)
+			const dataSeries = this.getDataSeriesArray(detailLevel, context);
+			if (!dataSeries)
 				return context;
 
 			let _loc9_ = Number.NEGATIVE_INFINITY;
 			let _loc10_ = Number.POSITIVE_INFINITY;
-			let _loc11_ = _loc6_.getRelativeMinuteIndex(context.lastMinute, _loc7_);
-			if (_loc11_ < _loc7_.length - 1)
+			let _loc11_ = originalDataSeries.getRelativeMinuteIndex(context.lastMinute, points);
+			if (_loc11_ < points.length - 1)
 				_loc11_ = _loc11_ + 1;
 
-			let _loc12_ = _loc6_.getRelativeMinuteIndex(context.lastMinute - context.count, _loc7_) - 1;
+			let _loc12_ = originalDataSeries.getRelativeMinuteIndex(context.lastMinute - context.count, points) - 1;
 			if (_loc12_ < 0)
 				_loc12_ = 0;
 			
-			for (let _loc13_= 0; _loc13_ < _loc8_.length; _loc13_++)
+			for (let _loc13_= 0; _loc13_ < dataSeries.length; _loc13_++)
 			{
 				if (this.getLineStyle(_loc13_) === IndicatorLineStyle.NONE)
 					continue;
 
 				for (let _loc14_ = _loc11_; _loc14_ >= _loc12_; _loc14_--)
 				{
-					let points = _loc8_[_loc13_].points[_loc14_];
+					let points = dataSeries[_loc13_].points[_loc14_];
 					if (!points)
 						continue;	// TODO: this shouldn't happen
 
-					const _loc15_ = points.getValue();
-					if (!isNaN(_loc15_))
+					const value = points.getValue();
+					if (!isNaN(value))
 					{
-						_loc9_ = Math.max(_loc9_, _loc15_);
-						_loc10_ = Math.min(_loc10_, _loc15_);
+						_loc9_ = Math.max(_loc9_, value);
+						_loc10_ = Math.min(_loc10_, value);
 					}
 				}
 			}
@@ -126,9 +126,9 @@ namespace com.google.finance.indicator
 
 		protected calculateLocalScaleMeters(context: Context) 
 		{
-			const _loc2_ = this.viewPoint;
-			this.localYOffset = _loc2_.miny + _loc2_.medPriceY + IndependentIndicatorLayer.NAME_TEXT_BLOCK_HEIGHT / 2;
-			this.localYScale = (_loc2_.maxy - _loc2_.miny - IndependentIndicatorLayer.NAME_TEXT_BLOCK_HEIGHT - IndependentIndicatorLayer.MARGIN_HEIGHT * 2) / (context.maxValue - context.minValue);
+			const viewPoint = this.viewPoint;
+			this.localYOffset = viewPoint.miny + viewPoint.medPriceY + IndependentIndicatorLayer.NAME_TEXT_BLOCK_HEIGHT / 2;
+			this.localYScale = (viewPoint.maxy - viewPoint.miny - IndependentIndicatorLayer.NAME_TEXT_BLOCK_HEIGHT - IndependentIndicatorLayer.MARGIN_HEIGHT * 2) / (context.maxValue - context.minValue);
 			this.localMedianValue = (context.maxValue + context.minValue) / 2;
 		}
 	}

@@ -18,9 +18,9 @@ namespace com.google.finance
 		{
 			const gr = this.graphics;
 			gr.lineStyle(0, Const.ZERO_PERCENT_LINE_COLOR, 1);
-			const _loc2_ = this.getYPos(0, param1);
-			gr.moveTo(this.viewPoint.minx + 1, _loc2_);
-			gr.lineTo(this.viewPoint.maxx - 1, _loc2_);
+			const yPos = this.getYPos(0, param1);
+			gr.moveTo(this.viewPoint.minx + 1, yPos);
+			gr.lineTo(this.viewPoint.maxx - 1, yPos);
 		}
 
 		protected getMinLineValue(param1: Context): number

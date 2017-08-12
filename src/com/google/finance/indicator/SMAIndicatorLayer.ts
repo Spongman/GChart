@@ -43,33 +43,33 @@ namespace com.google.finance.indicator
 			if (this.indicator.hasInterval(param1))
 				return;
 
-			const _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
-			for (let _loc4_ = 0; _loc4_ < this.periods.length; _loc4_++)
+			const pointsInIntervalArray = this.originalDataSeries.getPointsInIntervalArray(param1);
+			for (let pointIndex = 0; pointIndex < this.periods.length; pointIndex++)
 			{
-				const _loc9_ = new DataSeries();
+				const dataSeries = new DataSeries();
 				let _loc3_ = 0;
 				const _loc8_: number[] = [];
-				for (let _loc5_ = 0; _loc5_ < _loc2_.length; _loc5_++)
+				for (let pointIndex2 = 0; pointIndex2 < pointsInIntervalArray.length; pointIndex2++)
 				{
-					const _loc10_ = _loc2_[_loc5_];
-					if (!this.shouldSkip(_loc10_, _loc9_))
+					const _loc10_ = pointsInIntervalArray[pointIndex2];
+					if (!this.shouldSkip(_loc10_, dataSeries))
 					{
 						_loc3_ = Number(_loc3_ + _loc10_.close);
 						_loc8_.push(_loc10_.close);
 						let _loc7_: IndicatorPoint;
-						if (_loc8_.length < this.periods[_loc4_])
+						if (_loc8_.length < this.periods[pointIndex])
 						{
 							_loc7_ = new IndicatorPoint(NaN, _loc10_);
 						}
 						else
 						{
-							_loc7_ = new IndicatorPoint(_loc3_ / this.periods[_loc4_], _loc10_);
+							_loc7_ = new IndicatorPoint(_loc3_ / this.periods[pointIndex], _loc10_);
 							_loc3_ = Number(_loc3_ - _loc8_.shift()!);
 						}
-						_loc9_.points.push(_loc7_);
+						dataSeries.points.push(_loc7_);
 					}
 				}
-				this.indicator.setDataSeries(param1, _loc9_, _loc4_);
+				this.indicator.setDataSeries(param1, dataSeries, pointIndex);
 			}
 		}
 

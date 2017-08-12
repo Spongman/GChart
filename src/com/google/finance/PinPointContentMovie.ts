@@ -184,20 +184,20 @@ namespace com.google.finance
 		private getContentHtmlText(): string
 		{
 			let activePinPoint = notnull(this.activePinPoint);
-			const _loc1_ = activePinPoint.originalObject;
-			let _loc2_ = this.getLetterHtml(activePinPoint.letter);
+			const originalObject = activePinPoint.originalObject;
+			let letterHtml = this.getLetterHtml(activePinPoint.letter);
 			if (activePinPoint.exchangeDateInUTC)
-				_loc2_ = _loc2_ + (" " + this.getDateHtml(activePinPoint.exchangeDateInUTC));
+				letterHtml = letterHtml + (" " + this.getDateHtml(activePinPoint.exchangeDateInUTC));
 
-			if (_loc1_._title && _loc1_._title !== "")
-				_loc2_ = _loc2_ + ("\n" + this.getTitleHtml(activePinPoint.letter, _loc1_._title, _loc1_._url));
+			if (originalObject._title && originalObject._title !== "")
+				letterHtml = letterHtml + ("\n" + this.getTitleHtml(activePinPoint.letter, originalObject._title, originalObject._url));
 
-			if (_loc1_._author && _loc1_._author !== "")
-				_loc2_ = _loc2_ + ("\n" + this.getAuthorHtml(_loc1_._author));
-			else if (_loc1_._snippet && _loc1_._snippet !== "")
-				_loc2_ = _loc2_ + ("\n" + this.getAuthorHtml(_loc1_._snippet));
+			if (originalObject._author && originalObject._author !== "")
+				letterHtml = letterHtml + ("\n" + this.getAuthorHtml(originalObject._author));
+			else if (originalObject._snippet && originalObject._snippet !== "")
+				letterHtml = letterHtml + ("\n" + this.getAuthorHtml(originalObject._snippet));
 
-			return _loc2_;
+			return letterHtml;
 		}
 
 		protected getSnippetHtml(param1: string): string

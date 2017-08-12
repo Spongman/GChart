@@ -83,11 +83,11 @@ namespace com.google.finance
 
 		setReturnInfo(viewPoint: ViewPoint) 
 		{
-			const _loc2_ = viewPoint.getLastNotVisibleDataUnit();
-			const _loc3_ = viewPoint.getLastDataUnit();
-			const _loc4_ = viewPoint.getBaseDataSource();
+			const lastNotVisibleDataUnit = viewPoint.getLastNotVisibleDataUnit();
+			const lastDataUnit = viewPoint.getLastDataUnit();
+			const baseDataSource = viewPoint.getBaseDataSource();
 			this.clearComparisonInfo();
-			this.returnText = this.getReturnText(_loc2_, _loc3_, _loc4_);
+			this.returnText = this.getReturnText(lastNotVisibleDataUnit, lastDataUnit, baseDataSource);
 			this.updateInfoText();
 		}
 
@@ -150,23 +150,23 @@ namespace com.google.finance
 
 		private clearComparisonInfo() 
 		{
-			for (let _loc1_ = 0; _loc1_ < this.infoDots.length; _loc1_++)
+			for (let index = 0; index < this.infoDots.length; index++)
 			{
-				const _loc2_ = this.infoDots[_loc1_];
-				this.removeChild(_loc2_);
+				const infoDot = this.infoDots[index];
+				this.removeChild(infoDot);
 			}
 			this.infoDots.splice(0);
 		}
 
 		private newTextField(param1: number, param2: number): flash.text.TextField
 		{
-			const _loc3_ = new flash.text.TextField();
-			_loc3_.defaultTextFormat = this.blackText;
-			_loc3_.selectable = false;
-			_loc3_.autoSize = flash.text.TextFieldAutoSize.LEFT;
-			_loc3_.x = param1;
-			_loc3_.y = param2;
-			return _loc3_;
+			const textField = new flash.text.TextField();
+			textField.defaultTextFormat = this.blackText;
+			textField.selectable = false;
+			textField.autoSize = flash.text.TextFieldAutoSize.LEFT;
+			textField.x = param1;
+			textField.y = param2;
+			return textField;
 		}
 
 		private appendOhlcText(param1: string, param2: number, param3: number) 
@@ -205,7 +205,7 @@ namespace com.google.finance
 
 		private updateAlignAndPadding() 
 		{
-			const _loc1_ = this.displayManager.mainController.getButtonsWidth();
+			const buttonsWidth = this.displayManager.mainController.getButtonsWidth();
 			let _loc2_ = 0;
 			_loc2_ = Number(_loc2_ + (!!this.startDate.visible ? this.startDate.width + 3 : 0));
 			_loc2_ = Number(_loc2_ + (!!this.endDate.visible ? this.endDate.width + 3 : 0));
@@ -214,7 +214,7 @@ namespace com.google.finance
 			if (Const.INDICATOR_ENABLED)
 				_loc2_ = Number(_loc2_ + 160);
 
-			if (Const.EXPAND_BUTTON_ENABLED || Const.SHRINK_BUTTON_ENABLED || _loc2_ + _loc1_ > Const.MOVIE_WIDTH)
+			if (Const.EXPAND_BUTTON_ENABLED || Const.SHRINK_BUTTON_ENABLED || _loc2_ + buttonsWidth > Const.MOVIE_WIDTH)
 			{
 				Const.INFO_TEXT_ALIGN = "left";
 				Const.INFO_TEXT_TOP_PADDING = 17;
@@ -255,9 +255,9 @@ namespace com.google.finance
 					break;
 			}
 			this.datesTextFormats = [];
-			const _loc4_ = this.getSinglePointDateFormat(_loc2_);
-			const _loc5_ = _loc2_.exchangeDateInUTC;
-			this.datesText = this.datesText + com.google.i18n.locale.DateTimeLocale.formatDateTime(_loc4_, _loc5_, true);
+			const singlePointDateFormat = this.getSinglePointDateFormat(_loc2_);
+			const exchangeDateInUTC = _loc2_.exchangeDateInUTC;
+			this.datesText = this.datesText + com.google.i18n.locale.DateTimeLocale.formatDateTime(singlePointDateFormat, exchangeDateInUTC, true);
 			if (param1[SpaceText.OHLC_INFO_FLAG_STR])
 			{
 				this.appendOhlcText(SpaceText.OPEN_TEXT, _loc2_.open, param1[SpaceText.OHLC_BASE_PRICE_STR]);
@@ -450,10 +450,10 @@ namespace com.google.finance
 			this.clearComparisonInfo();
 			for (let _loc3_ = _loc2_.length - 1; _loc3_ >= 0; _loc3_--)
 			{
-				const _loc4_ = new InfoDot();
-				this.addChild(_loc4_);
-				_loc4_.setInfo(_loc2_[_loc3_]);
-				this.infoDots.push(_loc4_);
+				const infoDot = new InfoDot();
+				this.addChild(infoDot);
+				infoDot.setInfo(_loc2_[_loc3_]);
+				this.infoDots.push(infoDot);
 			}
 			this.positionComparisonInfoDots();
 		}
@@ -529,39 +529,39 @@ namespace com.google.finance
 
 		setTimePeriod(param1: IDataUnitContainer) 
 		{
-			let _loc2_ = param1.getFirstDataUnit();
-			let _loc3_ = param1.getLastDataUnit();
-			if (!_loc2_ || !_loc3_)
+			let firstDataUnit = param1.getFirstDataUnit();
+			let lastDataUnit = param1.getLastDataUnit();
+			if (!firstDataUnit || !lastDataUnit)
 				return;
 
-			if (_loc3_.time < _loc2_.time)
+			if (lastDataUnit.time < firstDataUnit.time)
 			{
-				const _loc4_ = _loc3_;
-				_loc3_ = _loc2_;
-				_loc2_ = _loc4_;
+				const _loc4_ = lastDataUnit;
+				lastDataUnit = firstDataUnit;
+				firstDataUnit = _loc4_;
 			}
 			this.datesText = "";
 			this.datesTextFormats = [];
-			this.startDate.date = _loc2_.exchangeDateInUTC;
-			this.endDate.date = _loc3_.exchangeDateInUTC;
+			this.startDate.date = firstDataUnit.exchangeDateInUTC;
+			this.endDate.date = lastDataUnit.exchangeDateInUTC;
 			this.updateInfoText();
 		}
 
 		private newDateTextField(param1: number, param2: number, param3: number): com.google.finance.DateTextField
 		{
-			const _loc4_ = new com.google.finance.DateTextField();
-			_loc4_.autoSize = flash.text.TextFieldAutoSize.LEFT;
-			_loc4_.backgroundColor = Const.DATE_HIGHLIGHTED_BACKGROUND_COLOR;
-			_loc4_.border = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
-			_loc4_.defaultTextFormat = this.blackText;
-			_loc4_.focusRect = _loc4_;
-			_loc4_.mouseEnabled = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
-			_loc4_.selectable = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
-			_loc4_.tabEnabled = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
-			_loc4_.tabIndex = param3;
-			_loc4_.x = param1;
-			_loc4_.y = param2;
-			return _loc4_;
+			const dateTextField = new com.google.finance.DateTextField();
+			dateTextField.autoSize = flash.text.TextFieldAutoSize.LEFT;
+			dateTextField.backgroundColor = Const.DATE_HIGHLIGHTED_BACKGROUND_COLOR;
+			dateTextField.border = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
+			dateTextField.defaultTextFormat = this.blackText;
+			dateTextField.focusRect = dateTextField;
+			dateTextField.mouseEnabled = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
+			dateTextField.selectable = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
+			dateTextField.tabEnabled = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
+			dateTextField.tabIndex = param3;
+			dateTextField.x = param1;
+			dateTextField.y = param2;
+			return dateTextField;
 		}
 	}
 }

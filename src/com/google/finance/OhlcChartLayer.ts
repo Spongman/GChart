@@ -9,15 +9,15 @@ namespace com.google.finance
 				return;
 
 			const _loc5_ = !isNaN(_loc4_.weeklyXPos) ? _loc4_.weeklyXPos : this.viewPoint.getXPos(_loc4_);
-			const _loc6_ = this.getOhlcYPos(param1, _loc4_);
-			const _loc7_ = this.getOhlcColor(_loc4_, param2[Math.max(param3 - 1, 0)]);
+			const ohlcYPos = this.getOhlcYPos(param1, _loc4_);
+			const ohlcColor = this.getOhlcColor(_loc4_, param2[Math.max(param3 - 1, 0)]);
 
 			let gr = this.graphics;
-			gr.lineStyle(1, _loc7_);
+			gr.lineStyle(1, ohlcColor);
 
-			if (Math.abs(_loc6_.highY - _loc6_.lowY) <= 1)
+			if (Math.abs(ohlcYPos.highY - ohlcYPos.lowY) <= 1)
 			{
-				const _loc8_ = (_loc6_.highY + _loc6_.lowY) / 2;
+				const _loc8_ = (ohlcYPos.highY + ohlcYPos.lowY) / 2;
 				if (this.barWidth === 0)
 				{
 					gr.moveTo(_loc5_, _loc8_ - 0.5);
@@ -31,12 +31,12 @@ namespace com.google.finance
 			}
 			else
 			{
-				gr.moveTo(_loc5_ - this.barWidth / 2, _loc6_.openY);
-				gr.lineTo(_loc5_, _loc6_.openY);
-				gr.moveTo(_loc5_, _loc6_.closeY);
-				gr.lineTo(_loc5_ + this.barWidth / 2, _loc6_.closeY);
-				gr.moveTo(_loc5_, _loc6_.highY);
-				gr.lineTo(_loc5_, _loc6_.lowY);
+				gr.moveTo(_loc5_ - this.barWidth / 2, ohlcYPos.openY);
+				gr.lineTo(_loc5_, ohlcYPos.openY);
+				gr.moveTo(_loc5_, ohlcYPos.closeY);
+				gr.lineTo(_loc5_ + this.barWidth / 2, ohlcYPos.closeY);
+				gr.moveTo(_loc5_, ohlcYPos.highY);
+				gr.lineTo(_loc5_, ohlcYPos.lowY);
 			}
 		}
 	}

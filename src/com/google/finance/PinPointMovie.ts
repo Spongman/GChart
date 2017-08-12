@@ -125,12 +125,12 @@ namespace com.google.finance
 		private initFlagComponents() 
 		{
 			this.pinButton = new flash.display.SimpleButton("pinButton");
-			const _loc1_ = new this.FlagImg();
-			const _loc2_ = new this.FlagOverImg();
-			this.pinButton.overState = _loc2_;
-			this.pinButton.downState = _loc2_;
-			this.pinButton.hitTestState = _loc1_;
-			this.pinButton.upState = _loc1_;
+			const flagImg = new this.FlagImg();
+			const flagOverImg = new this.FlagOverImg();
+			this.pinButton.overState = flagOverImg;
+			this.pinButton.downState = flagOverImg;
+			this.pinButton.hitTestState = flagImg;
+			this.pinButton.upState = flagImg;
 			this.pinButton.useHandCursor = true;
 			this.addChild(this.pinButton);
 			this.flagline = new this.FlagPoleImg();
@@ -161,8 +161,8 @@ namespace com.google.finance
 				this.pinButton.x = 1;
 				this.flagline.x = -2;
 				this.letter.x = -14;
-				for (let _loc2_ = 0; _loc2_ < this.borders.length; _loc2_++)
-					this.borders[_loc2_].scaleX = -1;
+				for (let borderIndex = 0; borderIndex < this.borders.length; borderIndex++)
+					this.borders[borderIndex].scaleX = -1;
 			}
 			else
 			{
@@ -172,8 +172,8 @@ namespace com.google.finance
 				this.pinButton.x = -1;
 				this.flagline.x = -1;
 				this.letter.x = 3;
-				for (let _loc2_ = 0; _loc2_ < this.borders.length; _loc2_++)
-					this.borders[_loc2_].scaleX = 1;
+				for (let borderIndex = 0; borderIndex < this.borders.length; borderIndex++)
+					this.borders[borderIndex].scaleX = 1;
 			}
 		}
 
@@ -184,10 +184,10 @@ namespace com.google.finance
 			this.letter.y = -param1;
 			this.pinButton.y = -param1;
 			this.activeOverlay.y = -param1;
-			for (let _loc2_ = 0; _loc2_ < this.borders.length; _loc2_++)
+			for (let borderIndex = 0; borderIndex < this.borders.length; borderIndex++)
 			{
-				this.borders[_loc2_].y = this.pinButton.y + this.pinButton.height - 4 + _loc2_ * 2;
-				this.borders[_loc2_].y = Math.min(-this.borders[_loc2_].height, this.borders[_loc2_].y);
+				this.borders[borderIndex].y = this.pinButton.y + this.pinButton.height - 4 + borderIndex * 2;
+				this.borders[borderIndex].y = Math.min(-this.borders[borderIndex].height, this.borders[borderIndex].y);
 			}
 		}
 

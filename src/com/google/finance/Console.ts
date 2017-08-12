@@ -40,11 +40,11 @@ namespace com.google.finance
 
 		positionLoadingMessage() 
 		{
-			const _loc1_ = this.mainManager.displayManager.getMainViewPoint();
-			if (_loc1_)
+			const mainViewPoint = this.mainManager.displayManager.getMainViewPoint();
+			if (mainViewPoint)
 			{
 				this.loading.x = this.stage.stageWidth - this.loading.width - Const.BORDER_WIDTH;
-				this.loading.y = _loc1_.miny + 1;
+				this.loading.y = mainViewPoint.miny + 1;
 			}
 		}
 

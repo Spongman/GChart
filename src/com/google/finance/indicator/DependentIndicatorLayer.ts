@@ -19,9 +19,9 @@ namespace com.google.finance.indicator
 
 		protected calculateLocalScaleMeters(context: Context) 
 		{
-			const _loc2_ = this.viewPoint;
-			this.localYOffset = _loc2_.miny + _loc2_.medPriceY + _loc2_.V_OFFSET;
-			this.localYScale = _loc2_.maxPriceRangeViewSize / context.maxPriceRange;
+			const viewPoint = this.viewPoint;
+			this.localYOffset = viewPoint.miny + viewPoint.medPriceY + viewPoint.V_OFFSET;
+			this.localYScale = viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
 			this.localMedianValue = context.medPrice;
 		}
 	}

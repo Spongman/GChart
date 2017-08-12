@@ -38,14 +38,14 @@ namespace com.google.finance
 			else
 				_loc3_ = vp.getDetailLevelForTechnicalStyle();
 
-			const _loc4_ = Const.getDetailLevelInterval(_loc3_);
-			return notnull(this.getDataSeries()).getPointsInIntervalArray(_loc4_);
+			const detailLevelInterval = Const.getDetailLevelInterval(_loc3_);
+			return notnull(this.getDataSeries()).getPointsInIntervalArray(detailLevelInterval);
 		}
 
 		shouldDisplayOhlcText(param1: DataUnit): boolean
 		{
-			const _loc2_ = this.viewPoint.getDisplayManager().getEnabledChartLayer();
-			if (_loc2_ !== Const.CANDLE_STICK && _loc2_ !== Const.OHLC_CHART)
+			const enabledChartLayer = this.viewPoint.getDisplayManager().getEnabledChartLayer();
+			if (enabledChartLayer !== Const.CANDLE_STICK && enabledChartLayer !== Const.OHLC_CHART)
 				return false;
 
 			if (isNaN(param1.open) || isNaN(param1.high) || isNaN(param1.low))
@@ -102,52 +102,52 @@ namespace com.google.finance
 				return context;
 
 			let vp = this.viewPoint;
-			const _loc3_ = vp.getDisplayManager().getEnabledChartLayer();
-			const _loc4_ = _loc3_ === Const.LINE_CHART;
-			let _loc5_ = vp.getDetailLevelForTechnicalStyle(context.lastMinute, context.count);
-			const _loc6_ = notnull(this.getDataSeries(context));
+			const displayManager = vp.getDisplayManager().getEnabledChartLayer();
+			const _loc4_ = displayManager === Const.LINE_CHART;
+			let detailLevel = vp.getDetailLevelForTechnicalStyle(context.lastMinute, context.count);
+			const dataSeries = notnull(this.getDataSeries(context));
 			let _loc9_ = NaN;
 			let _loc10_ = NaN;
 			const _loc11_ = context.lastMinute - context.count;
-			const _loc12_ = context.lastMinute;
+			const lastMinute = context.lastMinute;
 			let _loc7_ = 0;
 			do
 			{
-				const _loc17_ = Const.getDetailLevelInterval(_loc5_);
-				const _loc18_ = _loc6_.getPointsInIntervalArray(_loc17_);
-				const _loc19_ = Const.getDetailLevelInterval(_loc5_) / 60;
-				if (_loc18_ && _loc18_.length > 0 && _loc18_[0].relativeMinutes <= _loc12_)
+				const _loc17_ = Const.getDetailLevelInterval(detailLevel);
+				const points = dataSeries.getPointsInIntervalArray(_loc17_);
+				const _loc19_ = Const.getDetailLevelInterval(detailLevel) / 60;
+				if (points && points.length > 0 && points[0].relativeMinutes <= lastMinute)
 				{
-					_loc7_ = _loc6_.getRelativeMinuteIndex(_loc11_, _loc18_) - 1;
+					_loc7_ = dataSeries.getRelativeMinuteIndex(_loc11_, points) - 1;
 					if (_loc7_ < 0)
 						_loc7_ = 0;
 
-					let _loc8_ = _loc6_.getRelativeMinuteIndex(context.lastMinute, _loc18_) + 1;
-					if (_loc8_ >= _loc18_.length)
-						_loc8_ = _loc18_.length - 1;
+					let lastMinuteIndex = dataSeries.getRelativeMinuteIndex(context.lastMinute, points) + 1;
+					if (lastMinuteIndex >= points.length)
+						lastMinuteIndex = points.length - 1;
 
-					if (_loc5_ < Intervals.DAILY)
+					if (detailLevel < Intervals.DAILY)
 					{
-						while (_loc7_ < _loc18_.length && (isNaN(_loc18_[_loc7_].relativeMinutes) || _loc11_ - _loc18_[_loc7_].relativeMinutes >= _loc19_))
+						while (_loc7_ < points.length && (isNaN(points[_loc7_].relativeMinutes) || _loc11_ - points[_loc7_].relativeMinutes >= _loc19_))
 							_loc7_++;
 
-						while (_loc8_ >= 0 && (isNaN(_loc18_[_loc8_].relativeMinutes) || _loc18_[_loc8_].relativeMinutes - _loc12_ >= _loc19_))
-							_loc8_--;
+						while (lastMinuteIndex >= 0 && (isNaN(points[lastMinuteIndex].relativeMinutes) || points[lastMinuteIndex].relativeMinutes - lastMinute >= _loc19_))
+							lastMinuteIndex--;
 					}
-					for (let _loc23_ = _loc8_; _loc23_ >= _loc7_; _loc23_--)
+					for (let _loc23_ = lastMinuteIndex; _loc23_ >= _loc7_; _loc23_--)
 					{
-						const _loc20_ = _loc18_[_loc23_];
+						const _loc20_ = points[_loc23_];
 						const _loc21_ = !_loc4_ && _loc20_.low ? _loc20_.low : _loc20_.close;
 						_loc10_ = Utils.extendedMin(_loc10_, _loc21_);
 						const _loc22_ = !_loc4_ && _loc20_.high ? _loc20_.high : _loc20_.close;
 						_loc9_ = Utils.extendedMax(_loc9_, _loc22_);
 					}
-					if (_loc18_[0].relativeMinutes - 1 <= _loc11_)
+					if (points[0].relativeMinutes - 1 <= _loc11_)
 						break;
 				}
-				_loc5_++;
+				detailLevel++;
 			}
-			while (_loc4_ && _loc5_ <= Intervals.WEEKLY && _loc7_ === 0);
+			while (_loc4_ && detailLevel <= Intervals.WEEKLY && _loc7_ === 0);
 
 			if (isNaN(_loc9_) || isNaN(_loc10_))
 				return context;
@@ -179,27 +179,27 @@ namespace com.google.finance
 
 		protected findPointIndex(param1: number): number
 		{
-			const _loc2_ = notnull(this.getDataSeries());
-			const _loc3_ = this.getPointsForCurrentDetailLevel();
-			if (!_loc3_)
+			const dataSeries = notnull(this.getDataSeries());
+			const points = this.getPointsForCurrentDetailLevel();
+			if (!points)
 				return -1;
 
-			const _loc4_ = this.viewPoint.getMinuteOfX(param1);
-			let _loc5_ = _loc2_.getRelativeMinuteIndex(_loc4_, _loc3_);
-			if (_loc5_ === _loc3_.length - 2)
+			const minute = this.viewPoint.getMinuteOfX(param1);
+			let relativeMinuteIndex = dataSeries.getRelativeMinuteIndex(minute, points);
+			if (relativeMinuteIndex === points.length - 2)
 			{
-				if (Math.abs(_loc4_ - _loc3_[_loc5_].relativeMinutes) > Math.abs(_loc4_ - _loc3_[_loc5_ + 1].relativeMinutes))
-					_loc5_++;
+				if (Math.abs(minute - points[relativeMinuteIndex].relativeMinutes) > Math.abs(minute - points[relativeMinuteIndex + 1].relativeMinutes))
+					relativeMinuteIndex++;
 			}
 			if (this.viewPoint.getDetailLevelForTechnicalStyle() === Intervals.WEEKLY)
 			{
-				while (_loc5_ + 1 < _loc3_.length && _loc3_[_loc5_ + 1].weeklyXPos <= param1)
-					_loc5_++;
+				while (relativeMinuteIndex + 1 < points.length && points[relativeMinuteIndex + 1].weeklyXPos <= param1)
+					relativeMinuteIndex++;
 			}
-			while (_loc5_ > 0 && (_loc3_[_loc5_].fake || _loc3_[_loc5_].duplicate))
-				_loc5_--;
+			while (relativeMinuteIndex > 0 && (points[relativeMinuteIndex].fake || points[relativeMinuteIndex].duplicate))
+				relativeMinuteIndex--;
 
-			return _loc5_;
+			return relativeMinuteIndex;
 		}
 
 		highlightPoint(context: Context, param2: number, param3: { [key: string]: any }) 
@@ -207,28 +207,28 @@ namespace com.google.finance
 			if (!this.isEnabled())
 				return;
 
-			const _loc4_ = this.findPointIndex(param2);
-			const _loc5_ = this.getPointsForCurrentDetailLevel();
-			if (!_loc5_ || _loc4_ === -1)
+			const pointIndex = this.findPointIndex(param2);
+			const points = this.getPointsForCurrentDetailLevel();
+			if (!points || pointIndex === -1)
 				return;
 
-			const _loc6_ = _loc5_[_loc4_];
+			const _loc6_ = points[pointIndex];
 			const _loc7_ = !isNaN(_loc6_.weeklyXPos) ? Number(_loc6_.weeklyXPos) : this.viewPoint.getXPos(_loc6_);
-			const _loc8_ = this.getCloseYPos(context, _loc6_);
+			const closeYPos = this.getCloseYPos(context, _loc6_);
 			if (param3[SpaceText.SETTER_STR])
 				param3[SpaceText.SETTER_STR].clearHighlight();
 
 			const gr = this.highlightCanvas.graphics;
 			gr.clear();
-			let _loc9_ = this.getDataSeries() === this.dataSource.afterHoursData ? Number(Const.AH_DOT_COLOR) : Const.DOT_COLOR;
-			gr.lineStyle(5, _loc9_, 1);
-			gr.moveTo(_loc7_, _loc8_ - 0.2);
-			gr.lineTo(_loc7_, _loc8_ + 0.2);
+			let dataSeries = this.getDataSeries() === this.dataSource.afterHoursData ? Number(Const.AH_DOT_COLOR) : Const.DOT_COLOR;
+			gr.lineStyle(5, dataSeries, 1);
+			gr.moveTo(_loc7_, closeYPos - 0.2);
+			gr.lineTo(_loc7_, closeYPos + 0.2);
 			param3[SpaceText.POINT_STR] = _loc6_;
 			param3[SpaceText.EXTRA_TEXT_STR] = "";
 			param3[SpaceText.SETTER_STR] = this;
 			param3[SpaceText.OHLC_INFO_FLAG_STR] = this.shouldDisplayOhlcText(_loc6_);
-			param3[SpaceText.OHLC_BASE_PRICE_STR] = this.getOhlcBasePrice(_loc6_, _loc4_ === 0 ? null : _loc5_[_loc4_ - 1]);
+			param3[SpaceText.OHLC_BASE_PRICE_STR] = this.getOhlcBasePrice(_loc6_, pointIndex === 0 ? null : points[pointIndex - 1]);
 		}
 
 		getOhlcColor(param1: DataUnit, param2: DataUnit): number

@@ -34,8 +34,8 @@ namespace com.google.finance
 			if (!GVizFormatConverter.validateGVizData(param1))
 				return;
 
-			const _loc5_ = dataSeries.getPointsInIntervalArray(param2);
-			if (!_loc5_ || _loc5_.length === 0)
+			const points = dataSeries.getPointsInIntervalArray(param2);
+			if (!points || points.length === 0)
 				return;
 
 			const _loc6_ = param1[GVizFormatConverter.ROWS_PROPERTY_NAME];
@@ -47,8 +47,8 @@ namespace com.google.finance
 			{
 				const _loc9_ = _loc6_[_loc8_][GVizFormatConverter.COL_PROPERTY_NAME][0][GVizFormatConverter.VALUE_PROPERTY_NAME];
 				const _loc10_ = Date.parse(_loc9_.toString());
-				const _loc11_ = dataSeries.getTimestampIndex(_loc10_, _loc5_);
-				const _loc12_ = _loc5_[_loc11_];
+				const timestampIndex = dataSeries.getTimestampIndex(_loc10_, points);
+				const _loc12_ = points[timestampIndex];
 				for (let _loc13_ = 1; _loc13_ < _loc6_[_loc8_][GVizFormatConverter.COL_PROPERTY_NAME].length; _loc13_++)
 				{
 					const _loc14_ = _loc6_[_loc8_][GVizFormatConverter.COL_PROPERTY_NAME][_loc13_][GVizFormatConverter.VALUE_PROPERTY_NAME];
@@ -57,8 +57,8 @@ namespace com.google.finance
 			}
 
 			param4.clear(param2);
-			for (let _loc8_ = 0; _loc8_ < _loc7_.length; _loc8_++)
-				param4.setDataSeries(param2, _loc7_[_loc8_], _loc8_);
+			for (let dataSeriesIndex = 0; dataSeriesIndex < _loc7_.length; dataSeriesIndex++)
+				param4.setDataSeries(param2, _loc7_[dataSeriesIndex], dataSeriesIndex);
 		}
 	}
 }

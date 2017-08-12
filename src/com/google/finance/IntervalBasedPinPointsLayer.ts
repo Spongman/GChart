@@ -32,9 +32,9 @@ namespace com.google.finance
 		private getDataUnit(param1: StockAssociatedObject, param2: number): DataUnit
 		{
 			let posInInterval = notnull(param1.posInInterval);
-			const _loc3_ = posInInterval[param2].refDataSeries;
-			const _loc4_ = notnull(_loc3_).getPointsInIntervalArray(param2);
-			return _loc4_[posInInterval[param2].position];
+			const refDataSeries = posInInterval[param2].refDataSeries;
+			const points = notnull(refDataSeries).getPointsInIntervalArray(param2);
+			return points[posInInterval[param2].position];
 		}
 
 		private getLastVisibleFlagIndex(context: Context, param2: StockAssociatedObject[], param3: number): number
@@ -44,8 +44,8 @@ namespace com.google.finance
 				const _loc5_ = param2[_loc4_];
 				if (notnull(_loc5_.posInInterval)[param3])
 				{
-					const _loc6_ = this.getDataUnit(_loc5_, param3);
-					if (_loc6_.relativeMinutes <= context.lastMinute)
+					const dataUnit = this.getDataUnit(_loc5_, param3);
+					if (dataUnit.relativeMinutes <= context.lastMinute)
 						return _loc4_;
 				}
 			}
@@ -54,14 +54,14 @@ namespace com.google.finance
 
 		private getFirstVisibleFlagIndex(context: Context, param2: StockAssociatedObject[], param3: number): number
 		{
-			for (let _loc4_ = 0; _loc4_ < param2.length; _loc4_++)
+			for (let objectIndex = 0; objectIndex < param2.length; objectIndex++)
 			{
-				const _loc5_ = param2[_loc4_];
+				const _loc5_ = param2[objectIndex];
 				if (notnull(_loc5_.posInInterval)[param3])
 				{
-					const _loc6_ = this.getDataUnit(_loc5_, param3);
-					if (_loc6_.relativeMinutes > context.lastMinute - context.count)
-						return _loc4_;
+					const dataUnit = this.getDataUnit(_loc5_, param3);
+					if (dataUnit.relativeMinutes > context.lastMinute - context.count)
+						return objectIndex;
 				}
 			}
 			return param2.length - 1;
@@ -133,15 +133,15 @@ namespace com.google.finance
 			}
 			this.localYOffset = vp.miny + vp.medPriceY + vp.V_OFFSET;
 			this.localYScale = vp.maxPriceRangeViewSize / context.maxPriceRange;
-			const _loc4_ = vp.getLayer("BottomBarLayer") as BottomBarLayer;
-			this.pinPointYWhenContentDisplayed = vp.maxy - (!_loc4_ ? 0 : _loc4_.bottomTextHeight);
-			const _loc5_ = vp.getDetailLevelForTechnicalStyle();
-			const _loc6_ = Const.getDetailLevelInterval(_loc5_);
-			const _loc7_ = this.getFirstVisibleFlagIndex(context, _loc2_, _loc6_);
-			const _loc8_ = this.getLastVisibleFlagIndex(context, _loc2_, _loc6_);
+			const layer = vp.getLayer("BottomBarLayer") as BottomBarLayer;
+			this.pinPointYWhenContentDisplayed = vp.maxy - (!layer ? 0 : layer.bottomTextHeight);
+			const detailLevel = vp.getDetailLevelForTechnicalStyle();
+			const detailLevelInterval = Const.getDetailLevelInterval(detailLevel);
+			const firstVisibleFlagIndex = this.getFirstVisibleFlagIndex(context, _loc2_, detailLevelInterval);
+			const lastVisibleFlagIndex = this.getLastVisibleFlagIndex(context, _loc2_, detailLevelInterval);
 			this.lastAbsoluteHeightMin = 0;
 			this.lastAbsoluteHeightMax = 0;
-			this.renderFlagGroups(context, _loc2_, _loc7_, _loc8_, _loc6_);
+			this.renderFlagGroups(context, _loc2_, firstVisibleFlagIndex, lastVisibleFlagIndex, detailLevelInterval);
 			this.removePinMovies(this.activeMovies);
 			if (!_loc3_)
 				this.pinPointContentMovie.renderMovie();
@@ -159,9 +159,9 @@ namespace com.google.finance
 				_loc7_.push(_loc6_);
 				_loc11_ = this.getFlagGroupCount(context, param2, _loc6_, param5);
 				_loc8_.push(_loc11_);
-				const _loc12_ = this.getDataUnit(param2[_loc6_], param5);
-				_loc9_.push(Math.floor(!isNaN(_loc12_.weeklyXPos) ? Number(_loc12_.weeklyXPos) : this.viewPoint.getXPos(_loc12_)));
-				_loc10_.push(this.getYPos(context, _loc12_));
+				const dataUnit = this.getDataUnit(param2[_loc6_], param5);
+				_loc9_.push(Math.floor(!isNaN(dataUnit.weeklyXPos) ? Number(dataUnit.weeklyXPos) : this.viewPoint.getXPos(dataUnit)));
+				_loc10_.push(this.getYPos(context, dataUnit));
 			}
 			if (_loc7_.length > 0)
 			{
@@ -182,14 +182,14 @@ namespace com.google.finance
 
 		private renderFlag(param1: number, param2: PinOrientations, param3: number, param4: PinPoint, param5?: PinPoint, param6 = 1) 
 		{
-			const _loc7_ = this.getPinPointMovieClip(param4);
-			this.addChild(_loc7_);
-			_loc7_.x = param1;
-			_loc7_.y = this.pinPointYWhenContentDisplayed;
-			_loc7_.setCount(param6);
-			_loc7_.setObj(param4);
-			_loc7_.setOrientation(param2);
-			_loc7_.setHeight(param3);
+			const pinPointMovieClip = this.getPinPointMovieClip(param4);
+			this.addChild(pinPointMovieClip);
+			pinPointMovieClip.x = param1;
+			pinPointMovieClip.y = this.pinPointYWhenContentDisplayed;
+			pinPointMovieClip.setCount(param6);
+			pinPointMovieClip.setObj(param4);
+			pinPointMovieClip.setOrientation(param2);
+			pinPointMovieClip.setHeight(param3);
 		}
 
 		private getFlagGroupCount(param1: Context, param2: PinPoint[], param3: number, param4: number): number

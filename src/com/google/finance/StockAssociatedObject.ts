@@ -17,12 +17,12 @@ namespace com.google.finance
 
 		static compare(param1: StockAssociatedObject, param2: StockAssociatedObject): number
 		{
-			const _loc3_ = param1.time;
-			const _loc4_ = param2.time;
-			if (_loc3_ < _loc4_)
+			const time1 = param1.time;
+			const time2 = param2.time;
+			if (time1 < time2)
 				return -1;
 
-			if (_loc3_ > _loc4_)
+			if (time1 > time2)
 				return 1;
 
 			if (param1 instanceof PinPoint && param2 instanceof PinPoint)
@@ -50,9 +50,9 @@ namespace com.google.finance
 			if (!this.posInInterval[param1])
 				return NaN;
 
-			const _loc2_ = this.posInInterval[param1].refDataSeries;
-			const _loc3_ = this.posInInterval[param1].position;
-			return notnull(_loc2_).getPointsInIntervalArray(param1)[_loc3_].relativeMinutes;
+			const refDataSeries = this.posInInterval[param1].refDataSeries;
+			const position = this.posInInterval[param1].position;
+			return notnull(refDataSeries).getPointsInIntervalArray(param1)[position].relativeMinutes;
 		}
 	}
 }

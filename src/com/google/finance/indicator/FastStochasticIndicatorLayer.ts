@@ -24,26 +24,26 @@ namespace com.google.finance.indicator
 			if (this.indicator.hasInterval(param1))
 				return;
 
-			const _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
-			if (!_loc2_)
+			const points = this.originalDataSeries.getPointsInIntervalArray(param1);
+			if (!points)
 				return;
 
 			let _loc5_ = 0;
-			const _loc10_ = new DataSeries();
-			const _loc11_ = new DataSeries();
+			const dataSeries0 = new DataSeries();
+			const dataSeries1 = new DataSeries();
 			const _loc12_: DataUnit[] = [];
 			const _loc13_: number[] = [];
-			for (let _loc6_ = 0; _loc6_ < _loc2_.length; _loc6_++)
+			for (let pointIndex = 0; pointIndex < points.length; pointIndex++)
 			{
-				const _loc14_ = _loc2_[_loc6_];
-				if (!this.shouldSkip(_loc14_, _loc10_, _loc11_))
+				const _loc14_ = points[pointIndex];
+				if (!this.shouldSkip(_loc14_, dataSeries0, dataSeries1))
 				{
 					_loc12_.push(_loc14_);
 					if (_loc12_.length < this.kPeriod)
 					{
-						const _loc9_ = new IndicatorPoint(NaN, _loc14_);
-						_loc10_.points.push(_loc9_);
-						_loc11_.points.push(_loc9_);
+						const indicatorPoint = new IndicatorPoint(NaN, _loc14_);
+						dataSeries0.points.push(indicatorPoint);
+						dataSeries1.points.push(indicatorPoint);
 					}
 					else
 					{
@@ -56,21 +56,21 @@ namespace com.google.finance.indicator
 						}
 						if (_loc3_ === _loc4_)
 						{
-							this.copyLastIndicatorPoint(_loc14_, _loc10_, _loc11_);
+							this.copyLastIndicatorPoint(_loc14_, dataSeries0, dataSeries1);
 						}
 						else
 						{
 							const _loc8_ = (_loc14_.close - _loc4_) / (_loc3_ - _loc4_) * 100;
-							_loc10_.points.push(new IndicatorPoint(_loc8_, _loc14_));
+							dataSeries0.points.push(new IndicatorPoint(_loc8_, _loc14_));
 							_loc5_ = Number(_loc5_ + _loc8_);
 							_loc13_.push(_loc8_);
 							if (_loc13_.length < this.dPeriod)
 							{
-								this.copyLastIndicatorPoint(_loc14_, _loc11_);
+								this.copyLastIndicatorPoint(_loc14_, dataSeries1);
 							}
 							else
 							{
-								_loc11_.points.push(new IndicatorPoint(_loc5_ / this.dPeriod, _loc14_));
+								dataSeries1.points.push(new IndicatorPoint(_loc5_ / this.dPeriod, _loc14_));
 								_loc5_ = Number(_loc5_ - _loc13_.shift()!);
 							}
 						}
@@ -78,8 +78,8 @@ namespace com.google.finance.indicator
 					}
 				}
 			}
-			this.indicator.setDataSeries(param1, _loc10_, 0);
-			this.indicator.setDataSeries(param1, _loc11_, 1);
+			this.indicator.setDataSeries(param1, dataSeries0, 0);
+			this.indicator.setDataSeries(param1, dataSeries1, 1);
 		}
 	}
 }

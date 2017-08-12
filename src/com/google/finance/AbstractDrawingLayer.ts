@@ -11,23 +11,22 @@ namespace com.google.finance
 
 		protected getBarWidth(param1: Intervals, dataSeries: DataSeries): number
 		{
-			let _loc3_ = 0;
-			let _loc4_ = 0;
+			let numDays = 0;
 			if (param1 === Intervals.WEEKLY)
-				_loc3_ = dataSeries.marketDayLength * 5;
+				numDays = dataSeries.marketDayLength * 5;
 			else if (param1 === Intervals.DAILY)
-				_loc3_ = dataSeries.marketDayLength;
+				numDays = dataSeries.marketDayLength;
 			else
-				_loc3_ = Const.getDetailLevelInterval(param1) / 60;
+				numDays = Const.getDetailLevelInterval(param1) / 60;
 
 			if (this.viewPoint.count === 0)
 				return 0;
 
-			_loc4_ = Const.BAR_WIDTH_RATIO * _loc3_ * this.viewPoint.minutePix;
-			if (_loc4_ % 2 === 1)
-				_loc4_--;
+			let width = Const.BAR_WIDTH_RATIO * numDays * this.viewPoint.minutePix;
+			if (width % 2 === 1)
+				width--;
 
-			return _loc4_;
+			return width;
 		}
 
 		clearHighlight() 
@@ -36,21 +35,21 @@ namespace com.google.finance
 
 		protected getWeeklyBarXPos(param1: DataUnit, param2: number): number
 		{
-			let _loc3_ = (<ViewPoint><any>this.viewPoint).getXPos(param1);
-			const _loc4_ = this.dataSource.data.marketDayLength;
-			const _loc5_ = this.viewPoint.minutePix * _loc4_ * 4;
-			if (param2 < _loc3_ + _loc5_)
-				_loc3_ = param2 - _loc5_;
+			let xPos = (<ViewPoint><any>this.viewPoint).getXPos(param1);
+			const marketDayLength = this.dataSource.data.marketDayLength;
+			const _loc5_ = this.viewPoint.minutePix * marketDayLength * 4;
+			if (param2 < xPos + _loc5_)
+				xPos = param2 - _loc5_;
 
-			param1.weeklyXPos = _loc3_;
-			return _loc3_;
+			param1.weeklyXPos = xPos;
+			return xPos;
 		}
 
 		getOldestMinute(): number
 		{
-			const _loc1_ = this.getDataSeries();
-			if (_loc1_)
-				return _loc1_.getFirstRelativeMinute();
+			const dataSeries = this.getDataSeries();
+			if (dataSeries)
+				return dataSeries.getFirstRelativeMinute();
 			return 0;
 		}
 
@@ -68,9 +67,9 @@ namespace com.google.finance
 
 		getNewestMinute(): number
 		{
-			const _loc1_ = this.getDataSeries();
-			if (_loc1_)
-				return _loc1_.getLastRelativeMinute();
+			const dataSeries = this.getDataSeries();
+			if (dataSeries)
+				return dataSeries.getLastRelativeMinute();
 			return 0;
 		}
 	}

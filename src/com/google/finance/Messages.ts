@@ -109,9 +109,9 @@ namespace com.google.finance
 				return <string>Messages.MESSAGES[param1];
 
 			const _loc3_ = (<string[]>(Messages.MESSAGES[param1])).concat();
-			const _loc4_ = _loc3_.length;
+			const length = _loc3_.length;
 			
-			for (let _loc5_ = 1; _loc5_ < _loc4_; _loc5_ += 2)
+			for (let _loc5_ = 1; _loc5_ < length; _loc5_ += 2)
 				_loc3_[_loc5_] = rest[Number(_loc3_[_loc5_]) - 1];
 
 			return _loc3_.join("");

@@ -26,28 +26,28 @@ namespace com.google.finance.indicator
 			if (this.indicator.hasInterval(param1))
 				return;
 
-			const _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
-			if (!_loc2_)
+			const points = this.originalDataSeries.getPointsInIntervalArray(param1);
+			if (!points)
 				return;
 
 			let _loc5_ = 0;
 			let _loc6_ = 0;
-			const _loc12_ = new DataSeries();
-			const _loc13_ = new DataSeries();
+			const dataSeries0 = new DataSeries();
+			const dataSeries1 = new DataSeries();
 			const _loc14_: DataUnit[] = [];
 			const _loc15_: number[] = [];
 			const _loc16_: number[] = [];
-			for (let _loc7_ = 0; _loc7_ < _loc2_.length; _loc7_++)
+			for (let pointIndex = 0; pointIndex < points.length; pointIndex++)
 			{
-				const _loc17_ = _loc2_[_loc7_];
-				if (!this.shouldSkip(_loc17_, _loc12_, _loc13_))
+				const _loc17_ = points[pointIndex];
+				if (!this.shouldSkip(_loc17_, dataSeries0, dataSeries1))
 				{
 					_loc14_.push(_loc17_);
 					if (_loc14_.length < this.kPeriod)
 					{
-						const _loc11_ = new IndicatorPoint(NaN, _loc17_);
-						_loc12_.points.push(_loc11_);
-						_loc13_.points.push(_loc11_);
+						const indicatorPoint = new IndicatorPoint(NaN, _loc17_);
+						dataSeries0.points.push(indicatorPoint);
+						dataSeries1.points.push(indicatorPoint);
 					}
 					else
 					{
@@ -60,7 +60,7 @@ namespace com.google.finance.indicator
 						}
 						if (_loc3_ === _loc4_)
 						{
-							this.copyLastIndicatorPoint(_loc17_, _loc12_, _loc13_);
+							this.copyLastIndicatorPoint(_loc17_, dataSeries0, dataSeries1);
 						}
 						else
 						{
@@ -69,23 +69,23 @@ namespace com.google.finance.indicator
 							_loc15_.push(_loc9_);
 							if (_loc15_.length < SlowStochasticIndicatorLayer.FAST_SLOW_RATIO)
 							{
-								const _loc11_ = new IndicatorPoint(NaN, _loc17_);
-								_loc12_.points.push(_loc11_);
-								_loc13_.points.push(_loc11_);
+								const indicatorPoint = new IndicatorPoint(NaN, _loc17_);
+								dataSeries0.points.push(indicatorPoint);
+								dataSeries1.points.push(indicatorPoint);
 							}
 							else
 							{
 								const _loc10_ = _loc5_ / SlowStochasticIndicatorLayer.FAST_SLOW_RATIO;
-								_loc12_.points.push(new IndicatorPoint(_loc10_, _loc17_));
+								dataSeries0.points.push(new IndicatorPoint(_loc10_, _loc17_));
 								_loc6_ = Number(_loc6_ + _loc10_);
 								_loc16_.push(_loc10_);
 								if (_loc16_.length < this.dPeriod)
 								{
-									this.copyLastIndicatorPoint(_loc17_, _loc13_);
+									this.copyLastIndicatorPoint(_loc17_, dataSeries1);
 								}
 								else
 								{
-									_loc13_.points.push(new IndicatorPoint(_loc6_ / this.dPeriod, _loc17_));
+									dataSeries1.points.push(new IndicatorPoint(_loc6_ / this.dPeriod, _loc17_));
 									_loc6_ = Number(_loc6_ - _loc16_.shift()!);
 								}
 								_loc5_ = Number(_loc5_ - _loc15_.shift()!);
@@ -95,8 +95,8 @@ namespace com.google.finance.indicator
 					}
 				}
 			}
-			this.indicator.setDataSeries(param1, _loc12_, 0);
-			this.indicator.setDataSeries(param1, _loc13_, 1);
+			this.indicator.setDataSeries(param1, dataSeries0, 0);
+			this.indicator.setDataSeries(param1, dataSeries1, 1);
 		}
 	}
 }

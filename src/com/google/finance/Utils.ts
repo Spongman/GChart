@@ -22,8 +22,8 @@ namespace com.google.finance
 		{
 			if (isNaN(Utils.localTzOffset))
 			{
-				const _loc1_ = new Date();
-				Utils.localTzOffset = _loc1_.getTimezoneOffset();
+				const date = new Date();
+				Utils.localTzOffset = date.getTimezoneOffset();
 			}
 			return Utils.localTzOffset;
 		}
@@ -135,8 +135,8 @@ namespace com.google.finance
 
 		static newDateInTimezone(param1: Date, param2: number): Date
 		{
-			const _loc3_ = new Date(param1.getTime() + param2 * 60 * 1000);
-			return _loc3_;
+			const date = new Date(param1.getTime() + param2 * 60 * 1000);
+			return date;
 		}
 
 		static compareUtcDates(param1: Date, param2: Date): number
@@ -160,9 +160,9 @@ namespace com.google.finance
 
 		static getEndOfUTCDayTime(param1: Date): number
 		{
-			const _loc2_ = new Date(param1.getTime());
-			_loc2_.setUTCHours(23, 59, 0, 0);
-			return _loc2_.getTime();
+			const date = new Date(param1.getTime());
+			date.setUTCHours(23, 59, 0, 0);
+			return date.getTime();
 		}
 
 		static getSymbolFromTicker(param1: string): string
@@ -213,13 +213,13 @@ namespace com.google.finance
 
 		static createLabel(param1: flash.display.Sprite, param2: string, param3: flash.text.TextFormat): flash.text.TextField
 		{
-			const _loc4_ = new flash.text.TextField();
-			param1.addChild(_loc4_);
-			_loc4_.autoSize = flash.text.TextFieldAutoSize.LEFT;
-			_loc4_.defaultTextFormat = param3;
-			_loc4_.selectable = false;
-			_loc4_.text = param2;
-			return _loc4_;
+			const textField = new flash.text.TextField();
+			param1.addChild(textField);
+			textField.autoSize = flash.text.TextFieldAutoSize.LEFT;
+			textField.defaultTextFormat = param3;
+			textField.selectable = false;
+			textField.text = param2;
+			return textField;
 		}
 
 		static extendedMin(param1: number, param2: number): number
@@ -260,14 +260,14 @@ namespace com.google.finance
 				return _loc7_;
 
 			let _loc8_ = 0;
-			let _loc9_ = param1.getDay();
+			let day = param1.getDay();
 
-			for (let _loc10_ = 0; _loc10_ < Const.DAY_PER_WEEK && _loc9_ !== param2.getDay(); _loc10_++)
+			for (let _loc10_ = 0; _loc10_ < Const.DAY_PER_WEEK && day !== param2.getDay(); _loc10_++)
 			{
-				if (Utils.IsWeekday(_loc9_, param3))
+				if (Utils.IsWeekday(day, param3))
 					_loc8_++;
 
-				_loc9_ = (_loc9_ + 1) % Const.DAY_PER_WEEK;
+				day = (day + 1) % Const.DAY_PER_WEEK;
 			}
 			if (!Utils.IsWeekday(param1.getDay(), param3) && Utils.IsWeekday(param2.getDay(), param3))
 				_loc8_++;

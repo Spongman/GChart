@@ -11,27 +11,27 @@ namespace com.google.finance
 
 		private drawAfterHoursSession(param1: flash.display.Sprite, dataSeries: DataSeries, param3: number, param4: number, param5: Context, param6: number) 
 		{
-			const _loc7_ = DataSource.getTimeIndex(param4, dataSeries.units);
-			const _loc8_ = DataSource.getTimeIndex(param3, dataSeries.units);
-			const _loc9_ = this.viewPoint;
+			const timeIndex1 = DataSource.getTimeIndex(param4, dataSeries.units);
+			const timeIndex2 = DataSource.getTimeIndex(param3, dataSeries.units);
+			const viewPoint = this.viewPoint;
 			const _loc10_ = <indicator.VolumeIndicatorPoint[]>dataSeries.points;
-			let _loc11_ = _loc9_.getXPos(_loc10_[_loc7_].point);
-			const _loc12_ = _loc11_;
-			const _loc13_ = _loc9_.getIntervalLength(param6 / 60);
+			let xPos = viewPoint.getXPos(_loc10_[timeIndex1].point);
+			const _loc12_ = xPos;
+			const intervalLength = viewPoint.getIntervalLength(param6 / 60);
 			const gr = param1.graphics;
-			for (let _loc14_ = _loc7_; _loc14_ > _loc8_; _loc14_--)
+			for (let timeIndex = timeIndex1; timeIndex > timeIndex2; timeIndex--)
 			{
-				let _loc15_ = _loc9_.maxy - _loc10_[_loc14_].volume * this.verticalScale;
-				if (_loc9_.maxy - _loc15_ < 1 && _loc9_.maxy - _loc15_ > 0)
-					_loc15_ = _loc9_.maxy - 1;
-				else if (_loc15_ < _loc9_.miny)
-					_loc15_ = _loc9_.miny;
+				let _loc15_ = viewPoint.maxy - _loc10_[timeIndex].volume * this.verticalScale;
+				if (viewPoint.maxy - _loc15_ < 1 && viewPoint.maxy - _loc15_ > 0)
+					_loc15_ = viewPoint.maxy - 1;
+				else if (_loc15_ < viewPoint.miny)
+					_loc15_ = viewPoint.miny;
 
-				gr.moveTo(_loc11_, _loc15_);
-				gr.lineTo(_loc11_, _loc9_.maxy);
-				_loc11_ = _loc11_ - _loc13_;
+				gr.moveTo(xPos, _loc15_);
+				gr.lineTo(xPos, viewPoint.maxy);
+				xPos = xPos - intervalLength;
 			}
-			this.regionsXLimits.addInterval(_loc11_, _loc12_);
+			this.regionsXLimits.addInterval(xPos, _loc12_);
 		}
 
 		private getMaxVolumeHashKey(param1: number, param2: number): string
@@ -41,25 +41,25 @@ namespace com.google.finance
 
 		protected drawLines(param1: flash.display.Sprite, dataSeries: DataSeries, param3: number, param4: number, param5: IViewPoint, param6: Context) 
 		{
-			const _loc7_ = (<ViewPoint>param5).getSkipInterval();
+			const skipInterval = (<ViewPoint>param5).getSkipInterval();
 			//const _loc8_ = _loc7_.skip;
-			const _loc9_ = _loc7_.interval;
+			const skip = skipInterval.interval;
 			this.verticalScale = (param5.maxy - param5.miny - 6) / param6.maxVolume;
 			this.graphics.clear();
 			this.graphics.lineStyle(0, this.lineColor, 1);
-			const _loc10_ = this.dataSource.visibleExtendedHours;
+			const visibleExtendedHours = this.dataSource.visibleExtendedHours;
 			this.regionsXLimits = new com.google.finance.IntervalSet();
 			
-			for (let _loc11_ = 0; _loc11_ < _loc10_.length(); _loc11_++)
+			for (let intervalIndex = 0; intervalIndex < visibleExtendedHours.length(); intervalIndex++)
 			{
-				const _loc12_ = _loc10_.getIntervalAt(_loc11_);
-				const _loc13_ = this.dataSource.afterHoursData.units[_loc12_.start];
-				const _loc14_ = this.dataSource.afterHoursData.units[_loc12_.end];
-				if (ViewPoint.sessionVisible(_loc13_, _loc14_, param6))
+				const interval = visibleExtendedHours.getIntervalAt(intervalIndex);
+				const startUnit = this.dataSource.afterHoursData.units[interval.start];
+				const endUnit = this.dataSource.afterHoursData.units[interval.end];
+				if (ViewPoint.sessionVisible(startUnit, endUnit, param6))
 				{
-					const _loc15_ = _loc13_.time;
-					const _loc16_ = _loc14_.time;
-					this.drawAfterHoursSession(this, dataSeries, _loc15_, _loc16_, param6, _loc9_);
+					const startTime = startUnit.time;
+					const endTime = endUnit.time;
+					this.drawAfterHoursSession(this, dataSeries, startTime, endTime, param6, skip);
 				}
 			}
 		}
@@ -68,55 +68,55 @@ namespace com.google.finance
 		{
 			this.clearHighlight();
 			let vp = this.viewPoint;
-			const _loc4_ = vp.getSkipInterval(context.count, context.lastMinute);
-			const _loc5_ = this.indicator.getDataSeries(_loc4_.interval);
+			const skipInterval = vp.getSkipInterval(context.count, context.lastMinute);
+			const dataSeries = this.indicator.getDataSeries(skipInterval.interval);
 
-			if (!_loc5_ || !this.regionsXLimits || !this.regionsXLimits.containsValue(param2))
+			if (!dataSeries || !this.regionsXLimits || !this.regionsXLimits.containsValue(param2))
 				return;
 
 			if (param3["volumesetter"])
 				param3["volumesetter"].clearHighlight();
 
-			const _loc6_ = <indicator.VolumeIndicatorPoint>this.getPoint(_loc5_, param2);
-			const _loc7_ = vp.getXPos(_loc6_.point);
-			const _loc8_ = this.getYPos(this.viewPoint, _loc6_);
+			const indicatorPoint = <indicator.VolumeIndicatorPoint>this.getPoint(dataSeries, param2);
+			const xPos = vp.getXPos(indicatorPoint.point);
+			const yPos = this.getYPos(this.viewPoint, indicatorPoint);
 			this.highlightCanvas.graphics.lineStyle(2, Const.VOLUME_HIGHLIGHT_COLOR, 1);
-			this.drawOneLine(_loc7_, _loc8_, this.highlightCanvas, this.viewPoint);
-			param3["volume"] = _loc6_.volume;
+			this.drawOneLine(xPos, yPos, this.highlightCanvas, this.viewPoint);
+			param3["volume"] = indicatorPoint.volume;
 			param3["ahsetter"] = this;
 		}
 
 		protected getMaxVolume(param1: number, param2: number, param3: boolean): number
 		{
-			const _loc4_ = this.viewPoint.getSkipInterval(param2, param1).interval;
-			if (_loc4_ >= Intervals.DAILY)
+			const skipInterval = this.viewPoint.getSkipInterval(param2, param1).interval;
+			if (skipInterval >= Intervals.DAILY)
 				return 0;
 
-			const _loc5_ = this.dataSource.visibleExtendedHours;
-			let _loc6_ = 0;
-			const _loc7_ = notnull(this.indicator.getDataSeries(_loc4_));
+			const visibleExtendedHours = this.dataSource.visibleExtendedHours;
+			let maxVolume = 0;
+			const dataSeries = notnull(this.indicator.getDataSeries(skipInterval));
 			
-			for (let _loc8_ = 0; _loc8_ < _loc5_.length(); _loc8_++)
+			for (let intervalIndex = 0; intervalIndex < visibleExtendedHours.length(); intervalIndex++)
 			{
-				const _loc9_ = _loc5_.getIntervalAt(_loc8_);
-				const _loc10_ = this.dataSource.afterHoursData.units[_loc9_.start];
-				const _loc11_ = this.dataSource.afterHoursData.units[_loc9_.end];
-				const _loc12_ = this.getMaxVolumeHashKey(_loc10_.time, _loc4_);
-				if (this.maxVolumeCache[_loc12_] === undefined)
+				const interval = visibleExtendedHours.getIntervalAt(intervalIndex);
+				const _loc10_ = this.dataSource.afterHoursData.units[interval.start];
+				const _loc11_ = this.dataSource.afterHoursData.units[interval.end];
+				const maxVolumeHashKey = this.getMaxVolumeHashKey(_loc10_.time, skipInterval);
+				if (this.maxVolumeCache[maxVolumeHashKey] === undefined)
 				{
-					const _loc13_ = DataSource.getTimeIndex(_loc11_.time, _loc7_.units);
-					const _loc14_ = DataSource.getTimeIndex(_loc10_.time, _loc7_.units);
+					const timeIndex1 = DataSource.getTimeIndex(_loc11_.time, dataSeries.units);
+					const timeIndex2 = DataSource.getTimeIndex(_loc10_.time, dataSeries.units);
 					let _loc15_ = 0;
 					
-					for (let _loc16_ = _loc14_; _loc16_ < _loc13_; _loc16_++)
-						_loc15_ = Math.max((<indicator.VolumeIndicatorPoint>_loc7_.points[_loc16_]).volume, _loc15_);
+					for (let timeIndex = timeIndex2; timeIndex < timeIndex1; timeIndex++)
+						_loc15_ = Math.max((<indicator.VolumeIndicatorPoint>dataSeries.points[timeIndex]).volume, _loc15_);
 
-					if (_loc13_ > _loc14_)
-						this.maxVolumeCache[_loc12_] = _loc15_;
+					if (timeIndex1 > timeIndex2)
+						this.maxVolumeCache[maxVolumeHashKey] = _loc15_;
 				}
-				_loc6_ = Utils.extendedMax(_loc6_, this.maxVolumeCache[_loc12_]);
+				maxVolume = Utils.extendedMax(maxVolume, this.maxVolumeCache[maxVolumeHashKey]);
 			}
-			return _loc6_;
+			return maxVolume;
 		}
 	}
 }

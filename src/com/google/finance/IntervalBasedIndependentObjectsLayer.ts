@@ -27,8 +27,8 @@ namespace com.google.finance
 
 		private resetCanvas() 
 		{
-			for (let _loc1_ = 0; _loc1_ < this.movies.length; _loc1_++)
-				this.removeChild(this.movies[_loc1_]);
+			for (let movieIndex = 0; movieIndex < this.movies.length; movieIndex++)
+				this.removeChild(this.movies[movieIndex]);
 
 			this.movies.splice(0);
 		}
@@ -37,14 +37,14 @@ namespace com.google.finance
 		{
 			let posInInterval = notnull(param1.posInInterval);
 			const _loc3_ = notnull(posInInterval[param2].refDataSeries);
-			const _loc4_ = _loc3_.getPointsInIntervalArray(param2);
-			return _loc4_[posInInterval[param2].position];
+			const points = _loc3_.getPointsInIntervalArray(param2);
+			return points[posInInterval[param2].position];
 		}
 
 		getYPos(context: Context, param2: DataUnit): number
 		{
-			const _loc4_ = this.viewPoint;
-			return _loc4_.miny + _loc4_.V_OFFSET + _loc4_.medPriceY - (param2.close - context.medPrice) * _loc4_.maxPriceRangeViewSize / context.maxPriceRange;
+			const viewPoint = this.viewPoint;
+			return viewPoint.miny + viewPoint.V_OFFSET + viewPoint.medPriceY - (param2.close - context.medPrice) * viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
 		}
 
 		renderLayer(context: Context) 
@@ -58,26 +58,26 @@ namespace com.google.finance
 				this.resetCanvas();
 				return;
 			}
-			const _loc3_ = this.viewPoint.getDetailLevelForTechnicalStyle();
-			const _loc4_ = Const.getDetailLevelInterval(_loc3_);
+			const detailLevel = this.viewPoint.getDetailLevelForTechnicalStyle();
+			const detailLevelInterval = Const.getDetailLevelInterval(detailLevel);
 			this.activeMovies = 0;
-			const _loc5_ = this.getFirstVisibleObject(_loc2_, _loc4_, context);
-			if (_loc5_ === -1)
+			const firstVisibleObject = this.getFirstVisibleObject(_loc2_, detailLevelInterval, context);
+			if (firstVisibleObject === -1)
 			{
 				this.resetCanvas();
 				return;
 			}
-			const _loc6_ = this.getLastVisibleObject(_loc2_, _loc4_, context);
+			const lastVisibleObject = this.getLastVisibleObject(_loc2_, detailLevelInterval, context);
 			const _loc7_ = this.viewPoint.count / this.dataSource.data.marketDayLength;
 			context[this.renderObj] = [];
 			let _loc8_ = 0;
-			for (let _loc9_ = _loc5_; _loc9_ <= _loc6_; _loc9_++)
+			for (let _loc9_ = firstVisibleObject; _loc9_ <= lastVisibleObject; _loc9_++)
 			{
 				const _loc10_ = _loc2_[_loc9_];
-				if (notnull(_loc10_.posInInterval)[_loc4_])
+				if (notnull(_loc10_.posInInterval)[detailLevelInterval])
 				{
-					const _loc11_ = this.getPosition(_loc10_, _loc4_, context);
-					const _loc12_ = this.putObject(_loc10_, _loc11_);
+					const position = this.getPosition(_loc10_, detailLevelInterval, context);
+					const _loc12_ = this.putObject(_loc10_, position);
 					if (_loc7_ > IntervalBasedIndependentObjectsLayer.HIDE_TEXT_THRESHOLD)
 					{
 						_loc12_.hideText();
@@ -98,8 +98,8 @@ namespace com.google.finance
 							const _loc13_ = context[this.avoidObj][_loc8_];
 							if (_loc13_.x === _loc12_.x)
 							{
-								_loc13_.setOrientation(Orientations.SIDEWAYS + _loc11_.orientation);
-								_loc12_.setOrientation(Orientations.SIDEWAYS + _loc11_.orientation);
+								_loc13_.setOrientation(Orientations.SIDEWAYS + position.orientation);
+								_loc12_.setOrientation(Orientations.SIDEWAYS + position.orientation);
 							}
 						}
 					}
@@ -113,47 +113,47 @@ namespace com.google.finance
 
 		private getPosition(param1: StockAssociatedObject, param2: number, param3: Context): Position
 		{
-			const _loc4_ = new Position();
-			const _loc5_ = this.getDataUnit(param1, param2);
-			const _loc6_ = !isNaN(_loc5_.weeklyXPos) ? Number(_loc5_.weeklyXPos) : this.viewPoint.getXPos(_loc5_);
-			const _loc7_ = this.getYPos(param3, _loc5_);
+			const position = new Position();
+			const dataUnit = this.getDataUnit(param1, param2);
+			const _loc6_ = !isNaN(dataUnit.weeklyXPos) ? Number(dataUnit.weeklyXPos) : this.viewPoint.getXPos(dataUnit);
+			const yPos = this.getYPos(param3, dataUnit);
 			//const _loc8_ = (this.viewPoint.maxy + this.viewPoint.miny) / 2;
 			if (this.positioning === IntervalBasedIndependentObjectsLayer.POSITION_CHART)
 			{
-				if (_loc7_ > this.viewPoint.miny + 40)
+				if (yPos > this.viewPoint.miny + 40)
 				{
-					_loc4_.y = _loc7_ - IntervalBasedIndependentObjectsLayer.OBJECT_DISTANCE;
-					_loc4_.orientation = Orientations.DOWN;
+					position.y = yPos - IntervalBasedIndependentObjectsLayer.OBJECT_DISTANCE;
+					position.orientation = Orientations.DOWN;
 				}
 				else
 				{
-					_loc4_.y = _loc7_ + IntervalBasedIndependentObjectsLayer.OBJECT_DISTANCE;
-					_loc4_.orientation = Orientations.UP;
+					position.y = yPos + IntervalBasedIndependentObjectsLayer.OBJECT_DISTANCE;
+					position.orientation = Orientations.UP;
 				}
 			}
 			else if (this.positioning === IntervalBasedIndependentObjectsLayer.POSITION_BOTTOM)
 			{
-				const _loc9_ = this.viewPoint.getLayer("BottomBarLayer") as BottomBarLayer;
+				const bottomLayer = this.viewPoint.getLayer("BottomBarLayer") as BottomBarLayer;
 				let _loc10_ = 0;
-				if (_loc9_)
-					_loc10_ = Number(_loc9_.bottomTextHeight);
+				if (bottomLayer)
+					_loc10_ = Number(bottomLayer.bottomTextHeight);
 
-				_loc4_.y = this.viewPoint.maxy - _loc10_;
-				_loc4_.orientation = Orientations.DOWN;
+				position.y = this.viewPoint.maxy - _loc10_;
+				position.orientation = Orientations.DOWN;
 			}
-			_loc4_.x = _loc6_;
-			return _loc4_;
+			position.x = _loc6_;
+			return position;
 		}
 
 		private getLastVisibleObject(param1: StockAssociatedObject[], param2: number, param3: Context): number
 		{
-			const _loc4_ = param3.lastMinute;
+			const lastMinute = param3.lastMinute;
 			for (let _loc5_ = param1.length - 1; _loc5_ >= 0; _loc5_--)
 			{
 				if (notnull(param1[_loc5_].posInInterval)[param2])
 				{
-					const _loc6_ = this.getDataUnit(param1[_loc5_], param2);
-					if (_loc6_ && _loc6_.relativeMinutes < _loc4_)
+					const dataUnit = this.getDataUnit(param1[_loc5_], param2);
+					if (dataUnit && dataUnit.relativeMinutes < lastMinute)
 						return _loc5_;
 				}
 			}
@@ -219,8 +219,8 @@ namespace com.google.finance
 			{
 				if (notnull(param1[_loc5_].posInInterval)[param2])
 				{
-					const _loc6_ = this.getDataUnit(param1[_loc5_], param2);
-					if (_loc6_ && _loc6_.relativeMinutes > _loc4_)
+					const dataUnit = this.getDataUnit(param1[_loc5_], param2);
+					if (dataUnit && dataUnit.relativeMinutes > _loc4_)
 						return _loc5_;
 				}
 			}

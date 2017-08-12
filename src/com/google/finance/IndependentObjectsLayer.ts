@@ -35,16 +35,16 @@ namespace com.google.finance
 
 		private resetCanvas() 
 		{
-			for (let _loc1_ = 0; _loc1_ < this.movies.length; _loc1_++)
-				this.removeChild(this.movies[_loc1_]);
+			for (let movieIndex = 0; movieIndex < this.movies.length; movieIndex++)
+				this.removeChild(this.movies[movieIndex]);
 
 			this.movies.splice(0);
 		}
 
 		getYPos(context: Context, param2: DataUnit): number
 		{
-			const _loc4_ = this.viewPoint;
-			return _loc4_.miny + _loc4_.V_OFFSET + _loc4_.medPriceY - (param2.close - context.medPrice) * _loc4_.maxPriceRangeViewSize / context.maxPriceRange;
+			const viewPoint = this.viewPoint;
+			return viewPoint.miny + viewPoint.V_OFFSET + viewPoint.medPriceY - (param2.close - context.medPrice) * viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
 		}
 
 		renderLayer(context: Context) 
@@ -58,24 +58,24 @@ namespace com.google.finance
 				this.resetCanvas();
 				return;
 			}
-			const _loc3_ = this.dataSource.data.units;
-			const _loc4_ = this.viewPoint.getDetailLevel();
+			const units = this.dataSource.data.units;
+			const detailLevel = this.viewPoint.getDetailLevel();
 			this.activeMovies = 0;
-			const _loc5_ = this.getFirstVisibleObject(_loc2_, _loc3_, context);
-			if (_loc5_ === -1)
+			const firstVisibleObject = this.getFirstVisibleObject(_loc2_, units, context);
+			if (firstVisibleObject === -1)
 			{
 				this.resetCanvas();
 				return;
 			}
 
-			const _loc6_ = this.getLastVisibleObject(_loc2_, _loc3_, context);
+			const lastVisibleObject = this.getLastVisibleObject(_loc2_, units, context);
 			const _loc7_ = this.viewPoint.count / this.dataSource.data.marketDayLength;
 			context[this.renderObj] = [];
 			let _loc8_ = 0;
-			for (let _loc9_ = _loc5_; _loc9_ <= _loc6_; _loc9_++)
+			for (let _loc9_ = firstVisibleObject; _loc9_ <= lastVisibleObject; _loc9_++)
 			{
-				const _loc10_ = this.getPosition(_loc2_[_loc9_], _loc3_, _loc4_, context);
-				const _loc11_ = this.putObject(_loc2_[_loc9_], _loc10_);
+				const position = this.getPosition(_loc2_[_loc9_], units, detailLevel, context);
+				const _loc11_ = this.putObject(_loc2_[_loc9_], position);
 				if (_loc7_ > IndependentObjectsLayer.HIDE_TEXT_THRESHOLD)
 				{
 					_loc11_.hideText();
@@ -96,8 +96,8 @@ namespace com.google.finance
 						const _loc12_ = context[this.avoidObj][_loc8_];
 						if (_loc12_.x === _loc11_.x)
 						{
-							_loc12_.setOrientation(Orientations.SIDEWAYS + _loc10_.orientation);
-							_loc11_.setOrientation(Orientations.SIDEWAYS + _loc10_.orientation);
+							_loc12_.setOrientation(Orientations.SIDEWAYS + position.orientation);
+							_loc11_.setOrientation(Orientations.SIDEWAYS + position.orientation);
 						}
 					}
 				}
@@ -110,46 +110,46 @@ namespace com.google.finance
 
 		private getPosition(param1: SeriesPosition, param2: DataUnit[], param3: number, param4: Context): Position
 		{
-			const _loc5_ = new Position();
+			const position = new Position();
 			let dataSeries = notnull(param1.refDataSeries);
-			const _loc6_ = this.viewPoint.getXPos(dataSeries.units[param1.pos]);
-			const _loc7_ = this.getYPos(param4, dataSeries.units[param1.pos]);
+			const xPos = this.viewPoint.getXPos(dataSeries.units[param1.pos]);
+			const yPos = this.getYPos(param4, dataSeries.units[param1.pos]);
 			//const _loc8_ = (this.viewPoint.maxy + this.viewPoint.miny) / 2;
 			if (this.positioning === IndependentObjectsLayer.POSITION_CHART)
 			{
-				if (_loc7_ > this.viewPoint.miny + 40)
+				if (yPos > this.viewPoint.miny + 40)
 				{
-					_loc5_.y = _loc7_ - IndependentObjectsLayer.OBJECT_DISTANCE;
-					_loc5_.orientation = Orientations.DOWN;
+					position.y = yPos - IndependentObjectsLayer.OBJECT_DISTANCE;
+					position.orientation = Orientations.DOWN;
 				}
 				else
 				{
-					_loc5_.y = _loc7_ + IndependentObjectsLayer.OBJECT_DISTANCE;
-					_loc5_.orientation = Orientations.UP;
+					position.y = yPos + IndependentObjectsLayer.OBJECT_DISTANCE;
+					position.orientation = Orientations.UP;
 				}
 			}
 			else if (this.positioning === IndependentObjectsLayer.POSITION_BOTTOM)
 			{
-				const _loc9_ = this.viewPoint.getLayer("BottomBarLayer") as BottomBarLayer;
+				const layer = this.viewPoint.getLayer("BottomBarLayer") as BottomBarLayer;
 				let _loc10_ = 0;
-				if (_loc9_)
-					_loc10_ = Number(_loc9_.bottomTextHeight);
+				if (layer)
+					_loc10_ = Number(layer.bottomTextHeight);
 
-				_loc5_.y = this.viewPoint.maxy - _loc10_;
-				_loc5_.orientation = Orientations.DOWN;
+				position.y = this.viewPoint.maxy - _loc10_;
+				position.orientation = Orientations.DOWN;
 			}
-			_loc5_.x = _loc6_;
-			return _loc5_;
+			position.x = xPos;
+			return position;
 		}
 
 		private getLastVisibleObject(param1: SeriesPosition[], param2: DataUnit[], param3: Context): number
 		{
-			const _loc4_ = param3.lastMinute;
+			const lastMinute = param3.lastMinute;
 			for (let _loc5_ = param1.length - 1; _loc5_ >= 0; _loc5_--)
 			{
 				const _loc6_ = param1[_loc5_];
-				const _loc7_ = notnull(_loc6_.refDataSeries).units[_loc6_.pos].relativeMinutes;
-				if (_loc7_ < _loc4_)
+				const relativeMinutes = notnull(_loc6_.refDataSeries).units[_loc6_.pos].relativeMinutes;
+				if (relativeMinutes < lastMinute)
 					return _loc5_;
 			}
 			return -1;
@@ -209,12 +209,12 @@ namespace com.google.finance
 		private getFirstVisibleObject(param1: SeriesPosition[], param2: DataUnit[], param3: Context): number
 		{
 			const _loc4_ = param3.lastMinute - param3.count;
-			for (let _loc5_ = 0; _loc5_ < param1.length; _loc5_++)
+			for (let seriesPositionIndex = 0; seriesPositionIndex < param1.length; seriesPositionIndex++)
 			{
-				const _loc6_ = param1[_loc5_];
-				const _loc7_ = notnull(_loc6_.refDataSeries).units[_loc6_.pos].relativeMinutes;
-				if (_loc7_ > _loc4_ && _loc6_.pos > 0)
-					return _loc5_;
+				const _loc6_ = param1[seriesPositionIndex];
+				const relativeMinutes = notnull(_loc6_.refDataSeries).units[_loc6_.pos].relativeMinutes;
+				if (relativeMinutes > _loc4_ && _loc6_.pos > 0)
+					return seriesPositionIndex;
 			}
 			return -1;
 		}

@@ -19,7 +19,6 @@ namespace com.google.finance
 				if (_loc7_ < 0)
 					_loc7_ = 0;
 
-
 				const _loc9_ = new indicator.VolumeIndicatorPoint(
 					_loc8_,
 					(dataSeries1.units[dataSeries1.fridays[_loc6_]]).relativeMinutes,
@@ -47,7 +46,6 @@ namespace com.google.finance
 				}
 				if (_loc7_ < 0)
 					_loc7_ = 0;
-
 
 				const _loc9_ = new indicator.VolumeIndicatorPoint(
 					_loc8_,
@@ -93,14 +91,14 @@ namespace com.google.finance
 			const _loc5_ = param3 / Const.INTRADAY_INTERVAL;
 			for (let _loc6_ = dataSeries1.intradayRegions.length - 1; _loc6_ >= 0; _loc6_--)
 			{
-				const _loc7_ = dataSeries1.intradayRegions[_loc6_].end;
-				const _loc8_ = dataSeries1.intradayRegions[_loc6_].start;
+				const end = dataSeries1.intradayRegions[_loc6_].end;
+				const start = dataSeries1.intradayRegions[_loc6_].start;
 				dataSeries2.days.push(dataSeries2.points.length);
-				let _loc9_ = _loc7_;
-				while (_loc9_ >= _loc8_)
+				let _loc9_ = end;
+				while (_loc9_ >= start)
 				{
 					let _loc11_ = 0;
-					for (let _loc10_ = _loc9_; _loc10_ > _loc9_ - _loc5_ && _loc10_ >= _loc8_; _loc10_--)
+					for (let _loc10_ = _loc9_; _loc10_ > _loc9_ - _loc5_ && _loc10_ >= start; _loc10_--)
 					{
 						_loc11_ = Number(_loc11_ + dataSeries1.units[_loc10_].volumes[_loc4_]);
 					}

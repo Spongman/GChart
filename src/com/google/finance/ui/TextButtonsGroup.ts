@@ -19,9 +19,9 @@ namespace com.google.finance.ui
 
 		private selectButton(param1: string): number
 		{
-			const _loc2_ = this.getButtonIndex(param1);
-			this.selectButtonByIndex(_loc2_);
-			return _loc2_;
+			const buttonIndex = this.getButtonIndex(param1);
+			this.selectButtonByIndex(buttonIndex);
+			return buttonIndex;
 		}
 
 		selectButtonByIndex(param1: number) 

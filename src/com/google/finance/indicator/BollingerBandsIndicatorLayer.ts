@@ -53,50 +53,49 @@ namespace com.google.finance.indicator
 			if (this.indicator.hasInterval(param1))
 				return;
 
-			const _loc2_ = this.originalDataSeries.getPointsInIntervalArray(param1);
-			if (!_loc2_)
+			const points = this.originalDataSeries.getPointsInIntervalArray(param1);
+			if (!points)
 				return;
 
 			let _loc9_ = 0;
-			const _loc11_ = new DataSeries();
-			const _loc12_ = new DataSeries();
-			const _loc13_ = new DataSeries();
+			const dataSeries0 = new DataSeries();
+			const dataSeries1 = new DataSeries();
+			const dataSeries2 = new DataSeries();
 			const _loc14_: number[] = [];
-			for (let _loc3_ = 0; _loc3_ < _loc2_.length; _loc3_++)
+			for (let pointIndex = 0; pointIndex < points.length; pointIndex++)
 			{
-				const _loc15_ = _loc2_[_loc3_];
-				if (!this.shouldSkip(_loc15_, _loc11_, _loc12_, _loc13_))
+				const _loc15_ = points[pointIndex];
+				if (!this.shouldSkip(_loc15_, dataSeries0, dataSeries1, dataSeries2))
 				{
 					_loc9_ = Number(_loc9_ + _loc15_.close);
 					_loc14_.push(_loc15_.close);
 					if (_loc14_.length < this.period)
 					{
-						const _loc10_ = new IndicatorPoint(NaN, _loc15_);
-						_loc11_.points.push(_loc10_);
-						_loc12_.points.push(_loc10_);
-						_loc13_.points.push(_loc10_);
+						const indicatorPoint = new IndicatorPoint(NaN, _loc15_);
+						dataSeries0.points.push(indicatorPoint);
+						dataSeries1.points.push(indicatorPoint);
+						dataSeries2.points.push(indicatorPoint);
 					}
 					else
 					{
 						const _loc5_ = _loc9_ / this.period;
 						let _loc6_ = 0;
 						for (let _loc4_ = 0; _loc4_ < this.period; _loc4_++)
-						{
 							_loc6_ = Number(_loc6_ + (_loc14_[_loc4_] - _loc5_) * (_loc14_[_loc4_] - _loc5_));
-						}
+
 						_loc6_ = Number(Math.sqrt(_loc6_ / this.period));
 						const _loc7_ = _loc5_ + this.multiplier * _loc6_;
 						const _loc8_ = _loc5_ - this.multiplier * _loc6_;
-						_loc11_.points.push(new IndicatorPoint(_loc5_, _loc15_));
-						_loc12_.points.push(new IndicatorPoint(_loc7_, _loc15_));
-						_loc13_.points.push(new IndicatorPoint(_loc8_, _loc15_));
+						dataSeries0.points.push(new IndicatorPoint(_loc5_, _loc15_));
+						dataSeries1.points.push(new IndicatorPoint(_loc7_, _loc15_));
+						dataSeries2.points.push(new IndicatorPoint(_loc8_, _loc15_));
 						_loc9_ = Number(_loc9_ - _loc14_.shift()!);
 					}
 				}
 			}
-			this.indicator.setDataSeries(param1, _loc11_, 0);
-			this.indicator.setDataSeries(param1, _loc13_, 1);
-			this.indicator.setDataSeries(param1, _loc12_, 2);
+			this.indicator.setDataSeries(param1, dataSeries0, 0);
+			this.indicator.setDataSeries(param1, dataSeries2, 1);
+			this.indicator.setDataSeries(param1, dataSeries1, 2);
 		}
 
 		setIndicatorInstanceArray(param1: any[]) 

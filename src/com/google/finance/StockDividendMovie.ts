@@ -58,11 +58,11 @@ namespace com.google.finance
 
 		getDateText(): string
 		{
-			const _loc1_ = this.associatedStockDividend.exchangeDateInUTC;
+			const exchangeDateInUTC = this.associatedStockDividend.exchangeDateInUTC;
 			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
-				return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.LONG_DATE_FORMAT, _loc1_, true);
+				return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.LONG_DATE_FORMAT, exchangeDateInUTC, true);
 
-			return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.MEDIUM_DATE_FORMAT, _loc1_, true);
+			return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.MEDIUM_DATE_FORMAT, exchangeDateInUTC, true);
 		}
 
 		getShortText(param1 = false): string

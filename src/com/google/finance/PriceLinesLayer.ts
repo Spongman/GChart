@@ -16,12 +16,12 @@ namespace com.google.finance
 
 		private getLinePosAndLabelToFillGap(param1: number, param2: Context, param3: number): LabelPos
 		{
-			const _loc4_ = this.getValueForYPos(param1, param2);
-			const _loc5_ = this.getIncreaseInterval(_loc4_);
-			const _loc6_ = _loc5_ * Math.ceil(_loc4_ / _loc5_);
-			const _loc7_ = this.getYPos(_loc6_, param2);
+			const value = this.getValueForYPos(param1, param2);
+			const increaseInterval = this.getIncreaseInterval(value);
+			const _loc6_ = increaseInterval * Math.ceil(value / increaseInterval);
+			const yPos = this.getYPos(_loc6_, param2);
 			return {
-				"yPos": _loc7_,
+				"yPos": yPos,
 				"label": _loc6_
 			};
 		}
@@ -36,11 +36,11 @@ namespace com.google.finance
 		{
 			let _loc5_: number;
 			let _loc2_ = Const.YSCALE_INTERVALS.length - 1;
-			const _loc3_ = this.getMaxDisplayRange(param1);
+			const maxDisplayRange = this.getMaxDisplayRange(param1);
 			const _loc4_ = this.viewPoint.maxy - this.viewPoint.miny - ViewPoint.MIN_EDGE_DISTANCE - ViewPoint.MAX_EDGE_DISTANCE;
 			do
 			{
-				_loc5_ = Const.YSCALE_INTERVALS[_loc2_] * _loc4_ / _loc3_;
+				_loc5_ = Const.YSCALE_INTERVALS[_loc2_] * _loc4_ / maxDisplayRange;
 				_loc2_--;
 			}
 			while (_loc5_ > ViewPoint.MIN_DISTANCE_BETWEEN_H_LINES && _loc2_ >= 0);
@@ -55,10 +55,10 @@ namespace com.google.finance
 			{
 				let _loc6_: number;
 				let _loc7_ = 0;
-				const _loc8_ = this.getMaxY(param1, _loc3_);
+				const maxY = this.getMaxY(param1, _loc3_);
 				do
 				{
-					_loc6_ = Math.floor(_loc8_ / _loc3_);
+					_loc6_ = Math.floor(maxY / _loc3_);
 					if (_loc6_ > 2)
 					{
 						const _loc9_ = (_loc6_ - 1) * _loc3_;
@@ -110,9 +110,9 @@ namespace com.google.finance
 
 		private getInitialLinesList_(param1: Context)
 		{
-			const _loc2_ = this.viewPoint.getLayer("BottomBarLayer") as BottomBarLayer;
-			const _loc3_ = _loc2_.bottomTextHeight;
-			return [this.viewPoint.maxy - _loc3_ - 1];
+			const bottomLayer = this.viewPoint.getLayer("BottomBarLayer") as BottomBarLayer;
+			const bottomTextHeight = bottomLayer.bottomTextHeight;
+			return [this.viewPoint.maxy - bottomTextHeight - 1];
 		}
 
 		protected getMaxDisplayRange(param1: Context): number
@@ -157,13 +157,13 @@ namespace com.google.finance
 			this.graphics.lineStyle(0, Const.HORIZONTAL_GRID_COLOR, 1);
 			const _loc2_ = this.viewPoint.maxx - Const.BORDER_WIDTH;
 			let _loc3_ = this.getMinLineValue(param1);
-			const _loc4_ = this.viewPoint.getLayer("BottomBarLayer") as BottomBarLayer;
-			const _loc5_ = _loc4_.bottomTextHeight;
+			const bottomBarLayer = this.viewPoint.getLayer("BottomBarLayer") as BottomBarLayer;
+			const bottomTextHeight = bottomBarLayer.bottomTextHeight;
 			const _loc6_ = this.getInitialLinesList_(param1);
 			do
 			{
 				_loc7_ = this.getYPos(_loc3_, param1);
-				if (_loc7_ > this.viewPoint.miny && _loc7_ < this.viewPoint.maxy - _loc5_)
+				if (_loc7_ > this.viewPoint.miny && _loc7_ < this.viewPoint.maxy - bottomTextHeight)
 				{
 					this.drawSingleHorizontalLine({
 						"yPos": _loc7_,
@@ -210,10 +210,10 @@ namespace com.google.finance
 		{
 			this.graphics.moveTo(this.viewPoint.minx + 1, param1.yPos);
 			this.graphics.lineTo(this.viewPoint.maxx - 1, param1.yPos);
-			const _loc3_ = this.getTextForValue(param1.label) + this.valueSuffix;
+			const text = this.getTextForValue(param1.label) + this.valueSuffix;
 			const _loc4_ = param1.yPos - ViewPoint.TEXT_VERTICAL_OFFSET + ViewPoint.GRID_TEXT_VERTICAL_OFFSET - ViewPoint.TEXT_FIELD_HEIGHT;
 			const _loc6_ = ViewPoint.TEXT_FIELD_HEIGHT;
-			ViewPoint.addTextField(this.textCanvas, _loc3_, param2, _loc4_, 0, _loc6_, "right", this.viewPoint.priceTextFormat, flash.text.TextFieldAutoSize.RIGHT);
+			ViewPoint.addTextField(this.textCanvas, text, param2, _loc4_, 0, _loc6_, "right", this.viewPoint.priceTextFormat, flash.text.TextFieldAutoSize.RIGHT);
 		}
 
 		private getIncreaseInterval(param1: number): number

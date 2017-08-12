@@ -54,28 +54,28 @@ namespace com.google.finance
 		{
 			//const _loc2_ = this.event.target as flash.net.URLLoader;
 			clearInterval(this.intervalId);
-			const _loc3_ = this.dataManager.dataSources;
-			const _loc4_ = _loc3_[this.event.quote].addStream(decodeURIComponent(this.urlLoader.data), this.event);
-			switch (_loc4_)
+			const dataSources = this.dataManager.dataSources;
+			const result = dataSources[this.event.quote].addStream(decodeURIComponent(this.urlLoader.data), this.event);
+			switch (result)
 			{
 				case AddStreamResults.ERROR:
 					this.setUpDataReload();
 					break;
 				case AddStreamResults.NOTHING:
 					MainManager.console.dataLoaded();
-					_loc3_[this.event.quote].dataUnavailableOnServer = true;
+					dataSources[this.event.quote].dataUnavailableOnServer = true;
 					break;
 				case AddStreamResults.FIRST_DATA:
 				case AddStreamResults.ADDED_DATA:
 					MainManager.console.dataLoaded();
-					this.dataManager.mainManager.dataIsHere(_loc3_[this.event.quote], _loc4_);
+					this.dataManager.mainManager.dataIsHere(dataSources[this.event.quote], result);
 					if (this.event.callbacks)
 					{
-						for (let _loc5_ = 0; _loc5_ < this.event.callbacks.length; _loc5_++)
+						for (let callbackIndex = 0; callbackIndex < this.event.callbacks.length; callbackIndex++)
 						{
-							const _loc6_: { (p1: any): void } = this.event.callbacks[_loc5_].func;
-							const _loc7_ = this.event.callbacks[_loc5_].param;
-							_loc6_.apply(this, _loc7_);
+							const callbackFunc: { (p1: any): void } = this.event.callbacks[callbackIndex].func;
+							const param = this.event.callbacks[callbackIndex].param;
+							callbackFunc.apply(this, param);
 						}
 					}
 					flash.display.Graphics.cleanupPending()

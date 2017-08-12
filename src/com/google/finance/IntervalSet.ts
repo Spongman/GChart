@@ -27,9 +27,9 @@ namespace com.google.finance
 				return null;	// throw?
 
 			let _loc2_: StartEndPair | null = null;
-			for (let _loc3_ = 0; _loc3_ < this.intervals.length; _loc3_++)
+			for (let pairIndex = 0; pairIndex < this.intervals.length; pairIndex++)
 			{
-				const _loc4_ = this.intervals[_loc3_];
+				const _loc4_ = this.intervals[pairIndex];
 				if (_loc4_.start <= param1 && param1 <= _loc4_.end)
 					return _loc4_;
 
@@ -65,16 +65,16 @@ namespace com.google.finance
 
 		containsValue(param1: number): boolean
 		{
-			const _loc2_ = this.getIntervalForValue(param1);
-			return !!_loc2_;
+			const interval = this.getIntervalForValue(param1);
+			return !!interval;
 		}
 
 		allIntervalsLength(): number
 		{
 			let _loc1_ = 0;
-			for (let _loc2_ = 0; _loc2_ < this.intervals.length; _loc2_++)
+			for (let pairIndex = 0; pairIndex < this.intervals.length; pairIndex++)
 			{
-				const _loc3_ = this.intervals[_loc2_];
+				const _loc3_ = this.intervals[pairIndex];
 				_loc1_ = Number(_loc1_ + (_loc3_.end - _loc3_.start));
 			}
 			return _loc1_;
@@ -122,9 +122,9 @@ namespace com.google.finance
 			if (param1.intervals.length !== this.intervals.length)
 				return false;
 
-			for (let _loc2_ = 0; _loc2_ < this.intervals.length; _loc2_++)
+			for (let pairIndex = 0; pairIndex < this.intervals.length; pairIndex++)
 			{
-				if (!this.intervals[_loc2_].equals(param1.intervals[_loc2_]))
+				if (!this.intervals[pairIndex].equals(param1.intervals[pairIndex]))
 					return false;
 			}
 			return true;

@@ -84,16 +84,16 @@ namespace com.google.finance.indicator
 				this.textOutCanvas.addChild(this.indicatorNameText);
 			}
 			this.indicatorValueTextArray = [];
-			for (let _loc3_ = 0; _loc3_ < IndicatorLayer.COLORS.length; _loc3_++)
+			for (let colorIndex = 0; colorIndex < IndicatorLayer.COLORS.length; colorIndex++)
 			{
-				const _loc4_ = new flash.text.TextField();
-				_loc4_.selectable = false;
-				_loc4_.textColor = this.getColor(_loc3_);
-				_loc4_.defaultTextFormat = new flash.text.TextFormat(IndicatorLayer.INDICATOR_TEXT_FONT, IndicatorLayer.INDICATOR_TEXT_FONT_SIZE, _loc4_.textColor);
-				_loc4_.width = IndicatorLayer.INDICATOR_TEXT_WIDTH;
-				_loc4_.height = IndicatorLayer.INDICATOR_TEXT_HEIGHT;
-				this.textOutCanvas.addChild(_loc4_);
-				this.indicatorValueTextArray.push(_loc4_);
+				const layerTextFormat = new flash.text.TextField();
+				layerTextFormat.selectable = false;
+				layerTextFormat.textColor = this.getColor(colorIndex);
+				layerTextFormat.defaultTextFormat = new flash.text.TextFormat(IndicatorLayer.INDICATOR_TEXT_FONT, IndicatorLayer.INDICATOR_TEXT_FONT_SIZE, layerTextFormat.textColor);
+				layerTextFormat.width = IndicatorLayer.INDICATOR_TEXT_WIDTH;
+				layerTextFormat.height = IndicatorLayer.INDICATOR_TEXT_HEIGHT;
+				this.textOutCanvas.addChild(layerTextFormat);
+				this.indicatorValueTextArray.push(layerTextFormat);
 			}
 		}
 
@@ -126,21 +126,21 @@ namespace com.google.finance.indicator
 			let _loc13_ = 0;
 			let _loc14_ = 0;
 			let _loc9_ = Number.MAX_VALUE;
-			const _loc11_ = this.getYPos(param6, new IndicatorPoint(0, <DataUnit><any>null));	// TODO
+			const yPos = this.getYPos(param6, new IndicatorPoint(0, <DataUnit><any>null));	// TODO
 			let _loc12_ = param4;
 			const gr = this.graphics;
 			while (_loc12_ >= param3)
 			{
 				if (!isNaN(param1[param2].points[_loc12_].getValue()))
 				{
-					const _loc10_ = param1[param2].points[_loc12_].getPoint();
+					const point = param1[param2].points[_loc12_].getPoint();
 					if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
-						_loc9_ = this.getWeeklyBarXPos(_loc10_, _loc9_);
+						_loc9_ = this.getWeeklyBarXPos(point, _loc9_);
 
-					_loc13_ = !isNaN(_loc10_.weeklyXPos) ? _loc10_.weeklyXPos : viewPoint.getXPos(_loc10_);
+					_loc13_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
 					_loc14_ = this.getYPos(param6, param1[param2].points[_loc12_]);
 					gr.lineStyle(1, this.getColor(param2, param1[param2].points[_loc12_].getValue()));
-					gr.moveTo(_loc13_, _loc11_);
+					gr.moveTo(_loc13_, yPos);
 					gr.lineTo(_loc13_, _loc14_);
 				}
 				_loc12_--;
@@ -152,23 +152,23 @@ namespace com.google.finance.indicator
 			let _loc12_ = 0;
 			let _loc13_ = 0;
 			let _loc9_ = Number.MAX_VALUE;
-			let _loc10_ = param1[param2].points[param4].getPoint();
+			let point = param1[param2].points[param4].getPoint();
 			if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
-				_loc9_ = this.getWeeklyBarXPos(_loc10_, _loc9_);
+				_loc9_ = this.getWeeklyBarXPos(point, _loc9_);
 
 			const gr = this.graphics;
 			gr.lineStyle(1, this.indicatorValueTextArray[param2].textColor);
-			gr.moveTo(!isNaN(_loc10_.weeklyXPos) ? Number(_loc10_.weeklyXPos) : viewPoint.getXPos(_loc10_), this.getYPos(param6, param1[param2].points[param4]));
+			gr.moveTo(!isNaN(point.weeklyXPos) ? Number(point.weeklyXPos) : viewPoint.getXPos(point), this.getYPos(param6, param1[param2].points[param4]));
 			let _loc11_ = param4 - 1;
 			while (_loc11_ >= param3)
 			{
 				if (!isNaN(param1[param2].points[_loc11_].getValue()))
 				{
-					_loc10_ = param1[param2].points[_loc11_].getPoint();
+					point = param1[param2].points[_loc11_].getPoint();
 					if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
-						_loc9_ = this.getWeeklyBarXPos(_loc10_, _loc9_);
+						_loc9_ = this.getWeeklyBarXPos(point, _loc9_);
 
-					_loc12_ = !isNaN(_loc10_.weeklyXPos) ? _loc10_.weeklyXPos : viewPoint.getXPos(_loc10_);
+					_loc12_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
 					_loc13_ = this.getYPos(param6, param1[param2].points[_loc11_]);
 					if (_loc13_ < viewPoint.miny)
 						gr.moveTo(_loc12_, viewPoint.miny);
@@ -193,11 +193,11 @@ namespace com.google.finance.indicator
 			{
 				if (!isNaN(param1[param2].points[_loc11_].getValue()))
 				{
-					const _loc10_ = param1[param2].points[_loc11_].getPoint();
+					const point = param1[param2].points[_loc11_].getPoint();
 					if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
-						_loc9_ = this.getWeeklyBarXPos(_loc10_, _loc9_);
+						_loc9_ = this.getWeeklyBarXPos(point, _loc9_);
 
-					_loc12_ = !isNaN(_loc10_.weeklyXPos) ? _loc10_.weeklyXPos : viewPoint.getXPos(_loc10_);
+					_loc12_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
 					_loc13_ = this.getYPos(param6, param1[param2].points[_loc11_]);
 					gr.moveTo(_loc12_, this.viewPoint.maxy);
 					gr.lineTo(_loc12_, _loc13_);
@@ -219,19 +219,19 @@ namespace com.google.finance.indicator
 			if (!param2)
 				param2 = this.medianLineCanvas;
 
-			const _loc3_ = this.localYOffset;
-			const _loc4_ = this.viewPoint.minx;
-			const _loc5_ = this.viewPoint.maxx;
+			const localYOffset = this.localYOffset;
+			const minx = this.viewPoint.minx;
+			const maxx = this.viewPoint.maxx;
 			let _loc6_ = 0;
 			const gr = param2.graphics;
 			gr.lineStyle(1, param1);
 			do
 			{
-				gr.moveTo(_loc4_ + _loc6_ * this.dashSize, _loc3_);
-				gr.lineTo(_loc4_ + (_loc6_ + 1) * this.dashSize, _loc3_);
+				gr.moveTo(minx + _loc6_ * this.dashSize, localYOffset);
+				gr.lineTo(minx + (_loc6_ + 1) * this.dashSize, localYOffset);
 				_loc6_ = Number(_loc6_ + 2);
 			}
-			while (_loc4_ + _loc6_ * this.dashSize < _loc5_);
+			while (minx + _loc6_ * this.dashSize < maxx);
 		}
 
 		protected drawAHighlightDot(param1: number, param2: number, param3: number) 
@@ -268,106 +268,106 @@ namespace com.google.finance.indicator
 				return;
 
 			this.clearHighlight();
-			const _loc4_ = this.viewPoint;
-			const _loc5_ = _loc4_.getDetailLevelForTechnicalStyle();
-			const _loc6_ = this.getIntervalText(_loc5_);
-			const _loc7_ = this.getDataSeriesArray(_loc5_);
-			if (!_loc7_)
+			const viewPoint = this.viewPoint;
+			const detailLevel = viewPoint.getDetailLevelForTechnicalStyle();
+			const intervalText = this.getIntervalText(detailLevel);
+			const dataSeriesArray = this.getDataSeriesArray(detailLevel);
+			if (!dataSeriesArray)
 				return;
 
-			const _loc8_ = this.findPointIndex(param2);
-			if (_loc8_ === -1)
+			const dPointIndex = this.findPointIndex(param2);
+			if (dPointIndex === -1)
 				return;
 
-			for (let _loc11_ = 0; _loc11_ < _loc7_.length; _loc11_++)
+			for (let dataSeriesIndex = 0; dataSeriesIndex < dataSeriesArray.length; dataSeriesIndex++)
 			{
-				let point = _loc7_[_loc11_].points[_loc8_];
+				let point = dataSeriesArray[dataSeriesIndex].points[dPointIndex];
 				if (!point)
 					continue;	// TODO:
 				const _loc9_ = point.getPoint();
-				let _loc10_ = point.getValue();
-				if (!isNaN(_loc10_))
+				let value = point.getValue();
+				if (!isNaN(value))
 				{
-					_loc12_ = !isNaN(_loc9_.weeklyXPos) ? _loc9_.weeklyXPos : _loc4_.getXPos(_loc9_);
-					switch (this.getLineStyle(_loc11_))
+					_loc12_ = !isNaN(_loc9_.weeklyXPos) ? _loc9_.weeklyXPos : viewPoint.getXPos(_loc9_);
+					switch (this.getLineStyle(dataSeriesIndex))
 					{
 						case IndicatorLineStyle.SIMPLE_LINE:
 							_loc13_ = this.getYPos(context, point);
-							if (_loc13_ < _loc4_.maxy && _loc13_ > _loc4_.miny)
-								this.drawAHighlightDot(_loc12_, _loc13_, this.indicatorValueTextArray[_loc11_].textColor);
+							if (_loc13_ < viewPoint.maxy && _loc13_ > viewPoint.miny)
+								this.drawAHighlightDot(_loc12_, _loc13_, this.indicatorValueTextArray[dataSeriesIndex].textColor);
 
-							_loc10_ = Math.round(_loc10_ * 100) / 100;
-							this.indicatorValueTextArray[_loc11_].text = this.getIndicatorValueText(_loc11_, _loc10_, _loc6_, context);
+							value = Math.round(value * 100) / 100;
+							this.indicatorValueTextArray[dataSeriesIndex].text = this.getIndicatorValueText(dataSeriesIndex, value, intervalText, context);
 							break;
 						case IndicatorLineStyle.HISTOGRAM_LINE:
 							_loc14_ = this.getYPos(context, new IndicatorPoint(0, <DataUnit><any>null)); // TODO
 							_loc13_ = this.getYPos(context, point);
-							this.drawAHighlightLine(_loc12_, _loc14_, _loc12_, _loc13_, this.getColor(_loc11_, point.getValue()));
-							_loc10_ = Math.round(_loc10_ * 100) / 100;
-							this.indicatorValueTextArray[_loc11_].text = this.getIndicatorValueText(_loc11_, _loc10_, _loc6_, context);
+							this.drawAHighlightLine(_loc12_, _loc14_, _loc12_, _loc13_, this.getColor(dataSeriesIndex, point.getValue()));
+							value = Math.round(value * 100) / 100;
+							this.indicatorValueTextArray[dataSeriesIndex].text = this.getIndicatorValueText(dataSeriesIndex, value, intervalText, context);
 							break;
 						case IndicatorLineStyle.HISTOGRAM_LINE_FROM_BOTTOM:
 							_loc13_ = this.getYPos(context, point);
-							this.drawAHighlightLine(_loc12_, _loc4_.maxy, _loc12_, _loc13_, this.indicatorValueTextArray[_loc11_].textColor);
-							_loc10_ = Math.round(_loc10_ * 100) / 100;
-							this.indicatorValueTextArray[_loc11_].text = this.getIndicatorValueText(_loc11_, _loc10_, _loc6_, context);
+							this.drawAHighlightLine(_loc12_, viewPoint.maxy, _loc12_, _loc13_, this.indicatorValueTextArray[dataSeriesIndex].textColor);
+							value = Math.round(value * 100) / 100;
+							this.indicatorValueTextArray[dataSeriesIndex].text = this.getIndicatorValueText(dataSeriesIndex, value, intervalText, context);
 							break;
 						case IndicatorLineStyle.NONE:
 							break;
 					}
 				}
 			}
-			let _loc11_ = _loc7_.length;
-			while (_loc11_ < this.indicatorValueTextArray.length)
+			let length = dataSeriesArray.length;
+			while (length < this.indicatorValueTextArray.length)
 			{
-				this.indicatorValueTextArray[_loc11_].text = "";
-				_loc11_++;
+				this.indicatorValueTextArray[length].text = "";
+				length++;
 			}
 		}
 
 		private doCopyLastIndicatorPoint(param1: DataUnit, param2: DataSeries[])
 		{
 			let _loc5_ = 0;
-			const _loc3_ = new IndicatorPoint(NaN, param1);
-			for (let _loc4_ = 0; _loc4_ < param2.length; _loc4_++)
+			const indicatorPoint = new IndicatorPoint(NaN, param1);
+			for (let dataSeriesIndex = 0; dataSeriesIndex < param2.length; dataSeriesIndex++)
 			{
-				_loc5_ = param2[_loc4_].points.length;
+				_loc5_ = param2[dataSeriesIndex].points.length;
 				if (_loc5_ > 0)
-					param2[_loc4_].points.push(new IndicatorPoint(param2[_loc4_].points[_loc5_ - 1].getValue(), param1));
+					param2[dataSeriesIndex].points.push(new IndicatorPoint(param2[dataSeriesIndex].points[_loc5_ - 1].getValue(), param1));
 				else
-					param2[_loc4_].points.push(_loc3_);
+					param2[dataSeriesIndex].points.push(indicatorPoint);
 
-				_loc4_++;
+				dataSeriesIndex++;
 			}
 		}
 
 		protected findPointIndex(param1: number): number
 		{
-			const _loc2_ = this.viewPoint;
-			const _loc3_ = this.originalDataSeries;
-			const _loc4_ = _loc2_.getDetailLevelForTechnicalStyle();
-			const _loc5_ = Const.getDetailLevelInterval(_loc4_);
-			const _loc6_ = _loc3_.getPointsInIntervalArray(_loc5_);
-			if (!_loc6_)
+			const viewPoint = this.viewPoint;
+			const originalDataSeries = this.originalDataSeries;
+			const detailLevel = viewPoint.getDetailLevelForTechnicalStyle();
+			const detailLevelInterval = Const.getDetailLevelInterval(detailLevel);
+			const points = originalDataSeries.getPointsInIntervalArray(detailLevelInterval);
+			if (!points)
 				return -1;
 
-			const _loc7_ = _loc2_.getMinuteOfX(param1);
-			let _loc8_ = _loc3_.getRelativeMinuteIndex(_loc7_, _loc6_);
-			if (_loc8_ === _loc6_.length - 2)
+			const minuteOfX = viewPoint.getMinuteOfX(param1);
+			let relativeMinuteIndex = originalDataSeries.getRelativeMinuteIndex(minuteOfX, points);
+			if (relativeMinuteIndex === points.length - 2)
 			{
-				if (Math.abs(_loc7_ - _loc6_[_loc8_].relativeMinutes) > Math.abs(_loc7_ - _loc6_[_loc8_ + 1].relativeMinutes))
-					_loc8_++;
+				if (Math.abs(minuteOfX - points[relativeMinuteIndex].relativeMinutes) > Math.abs(minuteOfX - points[relativeMinuteIndex + 1].relativeMinutes))
+					relativeMinuteIndex++;
 			}
-			if (_loc4_ === Intervals.WEEKLY)
+			if (detailLevel === Intervals.WEEKLY)
 			{
-				while (_loc8_ + 1 < _loc6_.length && _loc6_[_loc8_ + 1].weeklyXPos <= param1)
-					_loc8_++;
+				while (relativeMinuteIndex + 1 < points.length && points[relativeMinuteIndex + 1].weeklyXPos <= param1)
+					relativeMinuteIndex++;
 			}
-			while (_loc8_ > 0 && (_loc6_[_loc8_].fake || _loc6_[_loc8_].duplicate))
+			while (relativeMinuteIndex > 0 && (points[relativeMinuteIndex].fake || points[relativeMinuteIndex].duplicate))
 			{
-				_loc8_--;
+				relativeMinuteIndex--;
 			}
-			return _loc8_;
+			return relativeMinuteIndex;
 		}
 
 		protected drawAHighlightLine(param1: number, param2: number, param3: number, param4: number, param5: number) 
@@ -403,10 +403,10 @@ namespace com.google.finance.indicator
 		{
 			if (param1.duplicate)
 			{
-				const _loc3_ = new IndicatorPoint(NaN, param1);
-				for (let _loc4_ = 0; _loc4_ < rest.length; _loc4_++)
+				const indicatorPoint = new IndicatorPoint(NaN, param1);
+				for (let dataSeriesIndex = 0; dataSeriesIndex < rest.length; dataSeriesIndex++)
 				{
-					rest[_loc4_].points.push(_loc3_);
+					rest[dataSeriesIndex].points.push(indicatorPoint);
 				}
 				return true;
 			}
@@ -429,12 +429,12 @@ namespace com.google.finance.indicator
 				return;
 
 			this.graphics.clear();
-			const _loc2_ = this.viewPoint;
-			const _loc3_ = _loc2_.getDetailLevelForTechnicalStyle();
-			const _loc4_ = Const.getDetailLevelInterval(_loc3_);
-			const _loc5_ = this.originalDataSeries;
-			const _loc6_ = _loc5_.getPointsInIntervalArray(_loc4_);
-			if (!_loc6_)
+			const viewPoint = this.viewPoint;
+			const detailLevel = viewPoint.getDetailLevelForTechnicalStyle();
+			const detailLevelInterval = Const.getDetailLevelInterval(detailLevel);
+			const originalDataSeries = this.originalDataSeries;
+			const points = originalDataSeries.getPointsInIntervalArray(detailLevelInterval);
+			if (!points)
 			{
 				if (this.indicatorNameText)
 					this.indicatorNameText.text = "";
@@ -447,39 +447,39 @@ namespace com.google.finance.indicator
 				}
 				return;
 			}
-			const _loc7_ = this.getDataSeriesArray(_loc3_);
-			if (!_loc7_)
+			const dataSeriesArray = this.getDataSeriesArray(detailLevel);
+			if (!dataSeriesArray)
 				return;
 
-			const _loc8_ = this.getIntervalText(_loc3_);
+			const intervalText = this.getIntervalText(detailLevel);
 			if (this.indicatorNameText)
-				this.indicatorNameText.text = this.getIndicatorNameText(_loc8_);
+				this.indicatorNameText.text = this.getIndicatorNameText(intervalText);
 
 			this.calculateLocalScaleMeters(param1);
-			let _loc9_ = _loc5_.getRelativeMinuteIndex(_loc2_.getLastMinute(), _loc6_);
-			if (_loc9_ < _loc6_.length - 1)
-				_loc9_ = _loc9_ + 1;
+			let lastMinuteIndex = originalDataSeries.getRelativeMinuteIndex(viewPoint.getLastMinute(), points);
+			if (lastMinuteIndex < points.length - 1)
+				lastMinuteIndex = lastMinuteIndex + 1;
 
-			const _loc10_ = this.getLastRealPointIndex(_loc6_);
-			if (_loc9_ > _loc10_)
-				_loc9_ = _loc10_;
+			const lastRealPointIndex = this.getLastRealPointIndex(points);
+			if (lastMinuteIndex > lastRealPointIndex)
+				lastMinuteIndex = lastRealPointIndex;
 
-			let _loc11_ = _loc5_.getRelativeMinuteIndex(_loc2_.getFirstMinute(), _loc6_) - 1;
-			if (_loc11_ < 0)
-				_loc11_ = 0;
+			let firstMinuteIndex = originalDataSeries.getRelativeMinuteIndex(viewPoint.getFirstMinute(), points) - 1;
+			if (firstMinuteIndex < 0)
+				firstMinuteIndex = 0;
 
-			const _loc12_ = this.viewPoint.getDisplayManager().getEnabledChartLayer();
-			for (let _loc13_ = 0; _loc13_ < _loc7_.length; _loc13_++)
+			const enabledChartLayer = this.viewPoint.getDisplayManager().getEnabledChartLayer();
+			for (let dataSeriesIndex = 0; dataSeriesIndex < dataSeriesArray.length; dataSeriesIndex++)
 			{
-				let points = _loc7_[_loc13_].points;
+				let points = dataSeriesArray[dataSeriesIndex].points;
 
-				let _loc15_ = _loc9_;
+				let _loc15_ = lastMinuteIndex;
 				if (_loc15_ > points.length - 1)
 					_loc15_ = points.length - 1;	// TODO: never
 
-				let _loc16_ = _loc11_;
-				const _loc17_ = points.length;
-				while (_loc16_ < _loc17_ && isNaN(points[_loc16_].getValue()))
+				let _loc16_ = firstMinuteIndex;
+				const numPoints = points.length;
+				while (_loc16_ < numPoints && isNaN(points[_loc16_].getValue()))
 					_loc16_++;
 
 				while (_loc15_ >= 0 && isNaN(points[_loc15_].getValue()))
@@ -487,20 +487,20 @@ namespace com.google.finance.indicator
 
 				if (_loc16_ > _loc15_)
 				{
-					this.indicatorValueTextArray[_loc13_].text = this.getIndicatorValueText(_loc13_, 0, _loc8_, param1);
+					this.indicatorValueTextArray[dataSeriesIndex].text = this.getIndicatorValueText(dataSeriesIndex, 0, intervalText, param1);
 				}
 				else
 				{
-					switch (this.getLineStyle(_loc13_))
+					switch (this.getLineStyle(dataSeriesIndex))
 					{
 						case IndicatorLineStyle.SIMPLE_LINE:
-							this.renderSingleLine(_loc7_, _loc13_, _loc16_, _loc15_, _loc2_, param1, _loc3_, _loc12_);
+							this.renderSingleLine(dataSeriesArray, dataSeriesIndex, _loc16_, _loc15_, viewPoint, param1, detailLevel, enabledChartLayer);
 							break;
 						case IndicatorLineStyle.HISTOGRAM_LINE:
-							this.renderHistogramLine(_loc7_, _loc13_, _loc16_, _loc15_, _loc2_, param1, _loc3_, _loc12_);
+							this.renderHistogramLine(dataSeriesArray, dataSeriesIndex, _loc16_, _loc15_, viewPoint, param1, detailLevel, enabledChartLayer);
 							break;
 						case IndicatorLineStyle.HISTOGRAM_LINE_FROM_BOTTOM:
-							this.renderHistogramLineFromBottom(_loc7_, _loc13_, _loc16_, _loc15_, _loc2_, param1, _loc3_, _loc12_);
+							this.renderHistogramLineFromBottom(dataSeriesArray, dataSeriesIndex, _loc16_, _loc15_, viewPoint, param1, detailLevel, enabledChartLayer);
 							break;
 						case IndicatorLineStyle.NONE:
 							break;
@@ -517,28 +517,28 @@ namespace com.google.finance.indicator
 		getDataSeriesArray(param1: number, param2?: Context): DataSeries[] | null
 		{
 			let _loc6_ = 0;
-			const _loc3_ = Const.getDetailLevelInterval(param1);
-			const _loc4_ = this.originalDataSeries;
-			const _loc5_ = _loc4_.getPointsInIntervalArray(_loc3_);
-			if (!_loc5_ || _loc5_.length === 0)
+			const detailLevelInterval = Const.getDetailLevelInterval(param1);
+			const originalDataSeries = this.originalDataSeries;
+			const points = originalDataSeries.getPointsInIntervalArray(detailLevelInterval);
+			if (!points || points.length === 0)
 				return null;
 
-			if (!this.indicator.hasInterval(_loc3_))
+			if (!this.indicator.hasInterval(detailLevelInterval))
 			{
 				if (this.isOhlcDataRequired())
 				{
 					_loc6_ = 0;
-					while (_loc6_ < _loc5_.length)
+					while (_loc6_ < points.length)
 					{
-						if (isNaN(_loc5_[_loc6_].high) || isNaN(_loc5_[_loc6_].low) || isNaN(_loc5_[_loc6_].open))
+						if (isNaN(points[_loc6_].high) || isNaN(points[_loc6_].low) || isNaN(points[_loc6_].open))
 							return null;
 
 						_loc6_++;
 					}
 				}
-				this.computeIntervalIndicator(_loc3_);
+				this.computeIntervalIndicator(detailLevelInterval);
 			}
-			return this.indicator.getDataSeriesArray(_loc3_);
+			return this.indicator.getDataSeriesArray(detailLevelInterval);
 		}
 
 		isOhlcDataRequired(): boolean
@@ -572,10 +572,10 @@ namespace com.google.finance.indicator
 				this.indicatorNameText.y = this.viewPoint.miny + IndicatorLayer.TEXT_TOP_MARGIN;
 				this.indicatorNameText.x = this.viewPoint.minx + IndicatorLayer.TEXT_LEFT_MARGIN;
 			}
-			for (let _loc1_ = 0; _loc1_ < this.indicatorValueTextArray.length; _loc1_++)
+			for (let textFieldIndex = 0; textFieldIndex < this.indicatorValueTextArray.length; textFieldIndex++)
 			{
-				this.indicatorValueTextArray[_loc1_].y = this.viewPoint.miny + IndicatorLayer.TEXT_TOP_MARGIN;
-				this.indicatorValueTextArray[_loc1_].x = this.viewPoint.minx + IndicatorLayer.TEXT_LEFT_MARGIN + (!!this.indicatorNameText ? _loc1_ + 1 : _loc1_) * IndicatorLayer.INDICATOR_TEXT_WIDTH;
+				this.indicatorValueTextArray[textFieldIndex].y = this.viewPoint.miny + IndicatorLayer.TEXT_TOP_MARGIN;
+				this.indicatorValueTextArray[textFieldIndex].x = this.viewPoint.minx + IndicatorLayer.TEXT_LEFT_MARGIN + (!!this.indicatorNameText ? textFieldIndex + 1 : textFieldIndex) * IndicatorLayer.INDICATOR_TEXT_WIDTH;
 			}
 		}
 

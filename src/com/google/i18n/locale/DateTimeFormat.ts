@@ -31,11 +31,11 @@ namespace com.google.i18n.locale
 		{
 			let _loc5_ = 0;
 			let _loc2_ = 0;
-			const _loc3_ = pattern.length;
+			const length = pattern.length;
 			while (_loc2_ < pattern.length)
 			{
 				_loc5_ = _loc2_;
-				while (_loc5_ < _loc3_ && !this.tokensHash[pattern.substr(_loc5_, 1)])
+				while (_loc5_ < length && !this.tokensHash[pattern.substr(_loc5_, 1)])
 					_loc5_++;
 
 				if (_loc5_ !== _loc2_)
@@ -44,7 +44,7 @@ namespace com.google.i18n.locale
 					this.patternParts.push(new PatternPart(_loc4_, PatternPartTypes.LITERAL));
 				}
 				_loc2_ = _loc5_;
-				while (_loc5_ < _loc3_ && this.tokensHash[pattern.substr(_loc5_, 1)] && pattern.charAt(_loc5_) === pattern.charAt(_loc2_))
+				while (_loc5_ < length && this.tokensHash[pattern.substr(_loc5_, 1)] && pattern.charAt(_loc5_) === pattern.charAt(_loc2_))
 					_loc5_++;
 
 				if (_loc5_ !== _loc2_)
@@ -178,20 +178,20 @@ namespace com.google.i18n.locale
 
 		private formatGMT(fieldLength: number, date: Date): string
 		{
-			let _loc3_ = date.getTimezoneOffset();
+			let timezoneOffset = date.getTimezoneOffset();
 			const _loc4_: string[] = [];
-			if (_loc3_ > 0)
+			if (timezoneOffset > 0)
 			{
 				_loc4_.push("GMT-");
 			}
 			else
 			{
-				_loc3_ = -_loc3_;
+				timezoneOffset = -timezoneOffset;
 				_loc4_.push("GMT+");
 			}
-			_loc4_.push(this.padNumber(_loc3_ / 60, 2));
+			_loc4_.push(this.padNumber(timezoneOffset / 60, 2));
 			_loc4_.push(":");
-			_loc4_.push(this.padNumber(_loc3_ % 60, 2));
+			_loc4_.push(this.padNumber(timezoneOffset % 60, 2));
 			return _loc4_.join("");
 		}
 
@@ -211,15 +211,15 @@ namespace com.google.i18n.locale
 		{
 			if (fieldLength < 4)
 			{
-				let _loc3_ = date.getTimezoneOffset();
+				let timezoneOffset = date.getTimezoneOffset();
 				let _loc4_ = "-";
-				if (_loc3_ < 0)
+				if (timezoneOffset < 0)
 				{
-					_loc3_ = -_loc3_;
+					timezoneOffset = -timezoneOffset;
 					_loc4_ = "+";
 				}
-				_loc3_ = _loc3_ / 3 * 5 + _loc3_ % 60;
-				return _loc4_ + this.padNumber(_loc3_, 4);
+				timezoneOffset = timezoneOffset / 3 * 5 + timezoneOffset % 60;
+				return _loc4_ + this.padNumber(timezoneOffset, 4);
 			}
 			return this.formatGMT(fieldLength, date);
 		}
@@ -282,11 +282,11 @@ namespace com.google.i18n.locale
 			const _loc2_: string[] = [];
 			for (let _loc3_ = 0; _loc3_ < this.patternParts.length; _loc3_++)
 			{
-				const _loc4_ = this.patternParts[_loc3_].text;
+				const text = this.patternParts[_loc3_].text;
 				if (PatternPartTypes.FIELD === this.patternParts[_loc3_].type)
-					_loc2_.push(this.formatField(_loc4_, date));
+					_loc2_.push(this.formatField(text, date));
 				else
-					_loc2_.push(_loc4_);
+					_loc2_.push(text);
 			}
 			return _loc2_.join("");
 		}

@@ -17,11 +17,11 @@ namespace com.google.finance
 
 		static newDateInUtc(param1: number, param2: number, param3: number): Date
 		{
-			const _loc4_ = new Date();
-			_loc4_.setUTCFullYear(param1);
-			_loc4_.setUTCMonth(param2 - 1, param3);
-			_loc4_.setUTCHours(0, 0, 0, 0);
-			return _loc4_;
+			const date = new Date();
+			date.setUTCFullYear(param1);
+			date.setUTCMonth(param2 - 1, param3);
+			date.setUTCHours(0, 0, 0, 0);
+			return date;
 		}
 
 		static stringToNumberOrOne(param1: string): number

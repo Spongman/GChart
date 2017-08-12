@@ -4,17 +4,17 @@ namespace com.google.finance
 	{
 		private static buildEvent(param1: number, param2: string, param3: string, param4: number, param5: string, param6: number = -1): ChartEvent
 		{
-			const _loc7_ = new ChartEvent(param1);
+			const chartEvent = new ChartEvent(param1);
 			if (param6 !== -1)
-				_loc7_.detailType = param6;
+				chartEvent.detailType = param6;
 			else
-				_loc7_.detailType = null;
+				chartEvent.detailType = null;
 
-			_loc7_.quote = param2;
-			_loc7_.period = param3;
-			_loc7_.interval = "" + param4;
-			_loc7_.columns = param5;
-			return _loc7_;
+			chartEvent.quote = param2;
+			chartEvent.period = param3;
+			chartEvent.interval = "" + param4;
+			chartEvent.columns = param5;
+			return chartEvent;
 		}
 
 		static getEvent(param1: number, param2: string, param3: ChartEventPriorities): ChartEvent

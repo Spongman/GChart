@@ -63,18 +63,18 @@ namespace com.google.finance
 			this.addChild(this.textCanvas);
 			this.dateTextFormat.bold = false;
 			this.priceTextFormat.align = "right";
-			const _loc3_ = new this.ScrollbarButtonLeft();
-			this.leftScrollButton.downState = _loc3_;
-			this.leftScrollButton.overState = _loc3_;
-			this.leftScrollButton.upState = _loc3_;
-			this.leftScrollButton.hitTestState = _loc3_;
+			const scrollbarButtonLeft = new this.ScrollbarButtonLeft();
+			this.leftScrollButton.downState = scrollbarButtonLeft;
+			this.leftScrollButton.overState = scrollbarButtonLeft;
+			this.leftScrollButton.upState = scrollbarButtonLeft;
+			this.leftScrollButton.hitTestState = scrollbarButtonLeft;
 			this.leftScrollButton.useHandCursor = true;
 			this.addChild(this.leftScrollButton);
-			const _loc4_ = new this.ScrollbarButtonRight();
-			this.rightScrollButton.downState = _loc4_;
-			this.rightScrollButton.overState = _loc4_;
-			this.rightScrollButton.upState = _loc4_;
-			this.rightScrollButton.hitTestState = _loc4_;
+			const scrollbarButtonRight = new this.ScrollbarButtonRight();
+			this.rightScrollButton.downState = scrollbarButtonRight;
+			this.rightScrollButton.overState = scrollbarButtonRight;
+			this.rightScrollButton.upState = scrollbarButtonRight;
+			this.rightScrollButton.hitTestState = scrollbarButtonRight;
 			this.rightScrollButton.useHandCursor = true;
 			this.addChild(this.rightScrollButton);
 			this.bg.addChild(this.scrollBg);
@@ -148,9 +148,9 @@ namespace com.google.finance
 
 		generateEvent(param1: number, param2: com.google.finance.DataSource) 
 		{
-			const _loc3_ = EventFactory.getEvent(param1, param2.quoteName, ChartEventPriorities.OPTIONAL);
-			this.dataManager.expectEvent(_loc3_);
-			this.dataManager.eventHandler(_loc3_);
+			const event = EventFactory.getEvent(param1, param2.quoteName, ChartEventPriorities.OPTIONAL);
+			this.dataManager.expectEvent(event);
+			this.dataManager.eventHandler(event);
 		}
 
 		addLayer(param1: string, param2: com.google.finance.DataSource, param3: string): AbstractLayer<IViewPoint> | null
@@ -189,18 +189,18 @@ namespace com.google.finance
 
 		private adjustWindowToSparkline() 
 		{
-			const _loc1_ = this.getLastMinute();
-			const _loc2_ = this.getFirstMinute();
-			const _loc3_ = this.getSparkLastMinute();
-			const _loc4_ = this.getSparkFirstMinute();
-			if (_loc1_ > _loc3_)
+			const lastMinute = this.getLastMinute();
+			const firstMinute = this.getFirstMinute();
+			const sparkLastMinute = this.getSparkLastMinute();
+			const sparkFirstMinute = this.getSparkFirstMinute();
+			if (lastMinute > sparkLastMinute)
 			{
-				this.myController.jumpTo(_loc3_, _loc1_ - _loc2_);
+				this.myController.jumpTo(sparkLastMinute, lastMinute - firstMinute);
 			}
-			else if (_loc2_ < _loc4_)
+			else if (firstMinute < sparkFirstMinute)
 			{
-				const _loc5_ = _loc1_ - _loc2_;
-				const _loc6_ = _loc4_ + _loc5_;
+				const _loc5_ = lastMinute - firstMinute;
+				const _loc6_ = sparkFirstMinute + _loc5_;
 				this.myController.jumpTo(_loc6_, _loc5_);
 			}
 		}
@@ -253,9 +253,9 @@ namespace com.google.finance
 
 		getXPos(param1: number, param2: number, param3: DataUnit): number
 		{
-			const _loc4_ = this.getSparkLastMinute();
-			const _loc5_ = param3.relativeMinutes;
-			const _loc6_ = param1 - (_loc4_ - _loc5_) * (param1 - param2) / this.sparkCount;
+			const sparkLastMinute = this.getSparkLastMinute();
+			const relativeMinutes = param3.relativeMinutes;
+			const _loc6_ = param1 - (sparkLastMinute - relativeMinutes) * (param1 - param2) / this.sparkCount;
 			return Math.round(_loc6_);
 		}
 
@@ -299,14 +299,14 @@ namespace com.google.finance
 			if (!this.windowMask)
 				return;
 
-			const _loc1_ = this.getMinuteXPos(this.getLastMinute());
-			let _loc2_ = this.getMinuteXPos(this.getFirstMinute());
-			if (_loc1_ - _loc2_ <= 4)
-				_loc2_ = _loc1_ - 4;
+			const lastMinuteXPos = this.getMinuteXPos(this.getLastMinute());
+			let firstMinuteXPos = this.getMinuteXPos(this.getFirstMinute());
+			if (lastMinuteXPos - firstMinuteXPos <= 4)
+				firstMinuteXPos = lastMinuteXPos - 4;
 
-			this.windowMask.x = _loc2_;
+			this.windowMask.x = firstMinuteXPos;
 			this.windowMask.y = this.my_miny - 1;
-			this.windowMask.width = _loc1_ - _loc2_;
+			this.windowMask.width = lastMinuteXPos - firstMinuteXPos;
 		}
 
 		private createSparklineMask(): flash.display.Sprite
@@ -360,15 +360,13 @@ namespace com.google.finance
 		renderLayers() 
 		{
 			for (let _loc1_ = 0; _loc1_ < this.layers.length; _loc1_++)
-			{
 				this.layers[_loc1_].renderLayer();
-			}
 		}
 
 		getLastDataUnit(): DataUnit
 		{
-			const _loc1_ = this.displayManager.getMainViewPoint();
-			return notnull(_loc1_.getLastDataUnit());
+			const mainViewPoint = this.displayManager.getMainViewPoint();
+			return notnull(mainViewPoint.getLastDataUnit());
 		}
 
 		getLeftX(): number
@@ -412,8 +410,8 @@ namespace com.google.finance
 
 		getFirstMinute(): number
 		{
-			const _loc1_ = <ViewPoint><any>this.displayManager.getMainViewPoint();
-			return _loc1_.getFirstMinute();
+			const mainViewPoint = this.displayManager.getMainViewPoint();
+			return mainViewPoint.getFirstMinute();
 		}
 
 		moveChartBy_Handler(param1: number) 
@@ -482,12 +480,12 @@ namespace com.google.finance
 			if (this.stage.stageWidth === 0 || !this.dataSource || !this.dataSource.data || this.dataSource.data.points.length === 0)
 				return;
 
-			const _loc1_ = this.dataSource.data.points;
-			const _loc2_ = this.dataSource.data.getFirstRelativeMinute();
-			if (this.dataSource && _loc1_.length !== 0)
+			const points = this.dataSource.data.points;
+			const firstRelativeMinute = this.dataSource.data.getFirstRelativeMinute();
+			if (this.dataSource && points.length !== 0)
 			{
-				if (this.sparkCount !== Math.abs(_loc2_) && this.sparklineType === Const.STATIC)
-					this.sparkCount = Math.abs(_loc2_);
+				if (this.sparkCount !== Math.abs(firstRelativeMinute) && this.sparklineType === Const.STATIC)
+					this.sparkCount = Math.abs(firstRelativeMinute);
 
 				this.checkResizeSparkline();
 
@@ -500,9 +498,9 @@ namespace com.google.finance
 
 		sparklinePagingPossible(param1: number): boolean
 		{
-			const _loc2_ = this.getSparkLastMinute() < 0;
-			const _loc3_ = this.getSparkFirstMinute() > this.getOldestMinute();
-			return param1 < 0 && _loc3_ || param1 > 0 && _loc2_;
+			const sparkLastMinute = this.getSparkLastMinute() < 0;
+			const sparkFirstMinute = this.getSparkFirstMinute() > this.getOldestMinute();
+			return param1 < 0 && sparkFirstMinute || param1 > 0 && sparkLastMinute;
 		}
 
 		private checkResizeSparkline(param1 = NaN) 
@@ -510,20 +508,20 @@ namespace com.google.finance
 			if (this.sparklineType === Const.STATIC)
 				return;
 
-			let _loc2_ = this.getLastMinute() - this.getFirstMinute();
+			let minutes = this.getLastMinute() - this.getFirstMinute();
 			if (!isNaN(param1))
-				_loc2_ = param1;
+				minutes = param1;
 
 			if (!this.dataSource || !this.dataSource.data)
 				return;
 
-			const _loc3_ = this.dataSource.data.marketDayLength;
+			const marketDayLength = this.dataSource.data.marketDayLength;
 			let _loc4_ = 0;
-			while (_loc4_ < this.displayThresholds.length - 1 && _loc2_ > this.displayThresholds[_loc4_].chartDays * _loc3_)
+			while (_loc4_ < this.displayThresholds.length - 1 && minutes > this.displayThresholds[_loc4_].chartDays * marketDayLength)
 			{
 				_loc4_++;
 			}
-			let _loc5_ = this.displayThresholds[_loc4_].sparkDays * _loc3_;
+			let _loc5_ = this.displayThresholds[_loc4_].sparkDays * marketDayLength;
 			const _loc6_ = Math.abs(this.dataSource.data.getFirstRelativeMinute());
 			_loc5_ = Math.min(_loc5_, _loc6_);
 			if (_loc5_ !== this.sparkCount && !isNaN(_loc5_))
@@ -634,10 +632,10 @@ namespace com.google.finance
 				this.passiveLayers.push(this.sparkline);
 				this.windowMask = this.createSparklineMask();
 				// TODO: this.sparkline.mask = this.windowMask;
-				const _loc2_ = new SparklineDateLinesLayer(this, param1);
-				_loc2_.textCanvas = this.textCanvas;
-				this.addChild(_loc2_);
-				this.passiveLayers.push(_loc2_);
+				const sparklineDateLinesLayer = new SparklineDateLinesLayer(this, param1);
+				sparklineDateLinesLayer.textCanvas = this.textCanvas;
+				this.addChild(sparklineDateLinesLayer);
+				this.passiveLayers.push(sparklineDateLinesLayer);
 			}
 			this.rightScrollButton.enabled = true;
 			this.leftScrollButton.enabled = true;
@@ -669,12 +667,12 @@ namespace com.google.finance
 				_loc2_ = this.getOldestMinute() + this.sparkCount - this.sparkLastMinute;
 				this.generateEvent(ChartEventStyles.GET_40Y_DATA, this.dataSource);
 			}
-			const _loc5_ = this.displayManager.layersManager.getFirstDataSource();
-			if (this.myController.currentIntervalLevel !== -1 && _loc5_)
+			const firstDataSource = this.displayManager.layersManager.getFirstDataSource();
+			if (this.myController.currentIntervalLevel !== -1 && firstDataSource)
 			{
 				_loc3_ = this.sparkLastMinute + _loc2_ - this.sparkCount;
-				if (_loc3_ > this.getOldestMinute() && _loc3_ < _loc5_.firstOpenRelativeMinutes)
-					_loc2_ = _loc5_.firstOpenRelativeMinutes + this.sparkCount - this.sparkLastMinute;
+				if (_loc3_ > this.getOldestMinute() && _loc3_ < firstDataSource.firstOpenRelativeMinutes)
+					_loc2_ = firstDataSource.firstOpenRelativeMinutes + this.sparkCount - this.sparkLastMinute;
 			}
 			if (_loc2_ !== this.sparkMinutesOffset)
 			{
@@ -689,14 +687,14 @@ namespace com.google.finance
 
 		private adjustSparklineToWindow() 
 		{
-			const _loc1_ = this.getLastMinute();
-			const _loc2_ = this.getFirstMinute();
-			const _loc3_ = this.getSparkLastMinute();
-			const _loc4_ = this.getSparkFirstMinute();
-			if (_loc1_ > _loc3_ && _loc1_ <= 0)
-				this.sparkLastMinute = this.sparkLastMinute + (_loc1_ - _loc3_);
-			else if (_loc2_ < _loc4_)
-				this.sparkLastMinute = this.sparkLastMinute + (_loc2_ - _loc4_);
+			const lastMinute = this.getLastMinute();
+			const firstMinute = this.getFirstMinute();
+			const sparkLastMinute = this.getSparkLastMinute();
+			const sparkFirstMinute = this.getSparkFirstMinute();
+			if (lastMinute > sparkLastMinute && lastMinute <= 0)
+				this.sparkLastMinute = this.sparkLastMinute + (lastMinute - sparkLastMinute);
+			else if (firstMinute < sparkFirstMinute)
+				this.sparkLastMinute = this.sparkLastMinute + (firstMinute - sparkFirstMinute);
 			else
 				return;
 
@@ -708,8 +706,7 @@ namespace com.google.finance
 
 		getMinuteOfX(param1: number): number
 		{
-			const _loc2_ = this.getSparkLastMinute() - (this.maxx - param1) * this.sparkCount / (this.maxx - this.minx);
-			return _loc2_;
+			return this.getSparkLastMinute() - (this.maxx - param1) * this.sparkCount / (this.maxx - this.minx);
 		}
 
 		zoomingAnimation_init(param1: Context) 

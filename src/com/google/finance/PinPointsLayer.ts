@@ -135,14 +135,14 @@ namespace com.google.finance
 			let vp = this.viewPoint;
 			this.localYOffset = vp.miny + vp.medPriceY + vp.V_OFFSET;
 			this.localYScale = vp.maxPriceRangeViewSize / param1.maxPriceRange;
-			const _loc4_ = vp.getLayer("BottomBarLayer") as BottomBarLayer;
-			this.pinPointYWhenContentDisplayed = vp.maxy - (!_loc4_ ? 0 : _loc4_.bottomTextHeight);
-			const _loc5_ = this.getFirstVisibleFlagIndex(param1, _loc2_);
-			const _loc6_ = this.getLastVisibleFlagIndex(param1, _loc2_);
+			const bottomBarLayer = vp.getLayer("BottomBarLayer") as BottomBarLayer;
+			this.pinPointYWhenContentDisplayed = vp.maxy - (!bottomBarLayer ? 0 : bottomBarLayer.bottomTextHeight);
+			const firstVisibleFlagIndex = this.getFirstVisibleFlagIndex(param1, _loc2_);
+			const lastVisibleFlagIndex = this.getLastVisibleFlagIndex(param1, _loc2_);
 			this.lastAbsoluteHeightMin = 0;
 			this.lastAbsoluteHeightMax = 0;
-			const _loc7_ = vp.getDetailLevel(param1.count, param1.lastMinute);
-			this.renderFlagGroups(param1, _loc2_, _loc5_, _loc6_, _loc7_);
+			const detailLevel = vp.getDetailLevel(param1.count, param1.lastMinute);
+			this.renderFlagGroups(param1, _loc2_, firstVisibleFlagIndex, lastVisibleFlagIndex, detailLevel);
 			this.removePinMovies(this.activeMovies);
 			if (!_loc3_)
 				this.pinPointContentMovie.renderMovie();
@@ -157,12 +157,12 @@ namespace com.google.finance
 			for (let _loc6_ = param3; _loc6_ <= param4; )
 			{
 				_loc7_.push(_loc6_);
-				const _loc11_ = this.getFlagGroupCount(param1, param2, _loc6_, param5);
-				_loc8_.push(_loc11_);
-				const _loc12_ = this.getVisibleDataUnit(param2[_loc6_]);
-				_loc9_.push(Math.floor(this.viewPoint.getXPos(_loc12_)));
-				_loc10_.push(this.getYPos(param1, _loc12_));
-				_loc6_ = _loc6_ + _loc11_;
+				const flagGroupCount = this.getFlagGroupCount(param1, param2, _loc6_, param5);
+				_loc8_.push(flagGroupCount);
+				const visibleDataUnit = this.getVisibleDataUnit(param2[_loc6_]);
+				_loc9_.push(Math.floor(this.viewPoint.getXPos(visibleDataUnit)));
+				_loc10_.push(this.getYPos(param1, visibleDataUnit));
+				_loc6_ = _loc6_ + flagGroupCount;
 			}
 
 			if (_loc7_.length > 0)
@@ -186,31 +186,31 @@ namespace com.google.finance
 
 		private renderFlag(param1: number, param2: PinOrientations, param3: number, param4: PinPoint, param5?: PinPoint, param6 = 1) 
 		{
-			const _loc7_ = this.getPinPointMovieClip(param4);
-			this.addChild(_loc7_);
-			_loc7_.x = param1;
-			_loc7_.y = this.pinPointYWhenContentDisplayed;
-			_loc7_.setCount(param6);
-			_loc7_.setObj(param4);
-			_loc7_.setOrientation(param2);
-			_loc7_.setHeight(param3);
+			const pinPointMovieClip = this.getPinPointMovieClip(param4);
+			this.addChild(pinPointMovieClip);
+			pinPointMovieClip.x = param1;
+			pinPointMovieClip.y = this.pinPointYWhenContentDisplayed;
+			pinPointMovieClip.setCount(param6);
+			pinPointMovieClip.setObj(param4);
+			pinPointMovieClip.setOrientation(param2);
+			pinPointMovieClip.setHeight(param3);
 		}
 
 		private getVisibleDataUnit(param1: PinPoint): DataUnit
 		{
 			const _loc5_ = notnull(param1.refDataSeries);
 			//const _loc2_ = _loc5_.units[param1.pos];
-			const _loc3_ = this.viewPoint.getSkipInterval();
+			const skipInterval = this.viewPoint.getSkipInterval();
 			let _loc4_ = 0;
-			if (_loc3_.interval >= Const.WEEKLY_INTERVAL)
+			if (skipInterval.interval >= Const.WEEKLY_INTERVAL)
 			{
-				const _loc6_ = _loc5_.getNextWeekEnd(param1.pos);
-				_loc4_ = Number(_loc5_.fridays[_loc6_]);
+				const nextWeekEnd = _loc5_.getNextWeekEnd(param1.pos);
+				_loc4_ = Number(_loc5_.fridays[nextWeekEnd]);
 			}
-			else if (_loc3_.interval >= Const.DAILY_INTERVAL)
+			else if (skipInterval.interval >= Const.DAILY_INTERVAL)
 				_loc4_ = Number(param1.dayPos);
 			else
-				_loc4_ = Number(param1.pos + (notnull(param1.dayPos) - param1.pos) % _loc3_.skip);
+				_loc4_ = Number(param1.pos + (notnull(param1.dayPos) - param1.pos) % skipInterval.skip);
 
 			return _loc5_.units[_loc4_];
 		}

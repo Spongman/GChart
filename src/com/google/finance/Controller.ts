@@ -123,9 +123,9 @@ namespace com.google.finance
 
 		private movePage(param1: number) 
 		{
-			const _loc2_ = this.displayManager.getMainViewPoint();
-			if (_loc2_)
-				this.notifyListenersToMove(param1 * (_loc2_.maxx - _loc2_.minx));
+			const mainViewPoint = this.displayManager.getMainViewPoint();
+			if (mainViewPoint)
+				this.notifyListenersToMove(param1 * (mainViewPoint.maxx - mainViewPoint.minx));
 		}
 
 		private getInitialZoomLevel(): number
@@ -134,10 +134,10 @@ namespace com.google.finance
 				return -1;
 
 
-			for (let _loc1_ = 0; _loc1_ < Const.SCALE_INTERVALS.length; _loc1_++)
+			for (let index = 0; index < Const.SCALE_INTERVALS.length; index++)
 			{
-				if (Const.SCALE_INTERVALS[_loc1_].days === Const.DEFAULT_DISPLAY_DAYS && _loc1_ >= ScaleTypes.SCALE_5D)
-					return _loc1_;
+				if (Const.SCALE_INTERVALS[index].days === Const.DEFAULT_DISPLAY_DAYS && index >= ScaleTypes.SCALE_5D)
+					return index;
 			}
 			return -1;
 		}
@@ -196,7 +196,6 @@ namespace com.google.finance
 
 		private applyLastOrDefaultInterval(dataSource: DataSource | null, viewPoint: ViewPoint) 
 		{
-			let _loc4_ = 0;
 			if (this.lastIntervalLevel >= 0 && this.lastIntervalLevel <= Intervals.WEEKLY)
 			{
 				this.enableIntervalButtons(this.lastIntervalLevel);
@@ -210,9 +209,8 @@ namespace com.google.finance
 				viewPoint.checkEvents();
 				if (dataSource)
 				{
-					const _loc3_ = Const.INTERVAL_PERIODS[Const.DEFAULT_D].days;
-					_loc4_ = dataSource.data.marketDayLength + 1;
-					this.animateTo(0, _loc3_ * _loc4_, 1);
+					const days = Const.INTERVAL_PERIODS[Const.DEFAULT_D].days;
+					this.animateTo(0, days * (dataSource.data.marketDayLength + 1), 1);
 				}
 			}
 		}
@@ -230,11 +228,11 @@ namespace com.google.finance
 
 		removeControlListener(param1: flash.display.Sprite) 
 		{
-			for (let _loc2_ = 0; _loc2_ < this.listeners.length; _loc2_++)
+			for (let listenerIndex = 0; listenerIndex < this.listeners.length; listenerIndex++)
 			{
-				if (this.listeners[_loc2_] === param1)
+				if (this.listeners[listenerIndex] === param1)
 				{
-					this.listeners.splice(_loc2_, 1);
+					this.listeners.splice(listenerIndex, 1);
 					return;
 				}
 			}
@@ -247,22 +245,22 @@ namespace com.google.finance
 
 		getCountForDays(dataSource: DataSource, param2: number, param3: number): number
 		{
-			const _loc4_ = dataSource.data.units;
-			const _loc5_ = dataSource.data.days;
-			const _loc6_ = dataSource.getEndOfDayDataUnitFor(param3);
-			let _loc7_ = DataSource.getMinuteMetaIndex(_loc6_.relativeMinutes, _loc5_, _loc4_);
-			_loc7_ = Math.min(_loc7_, _loc5_.length - 1);
+			const units = dataSource.data.units;
+			const days = dataSource.data.days;
+			const endOfDayDataUnit = dataSource.getEndOfDayDataUnitFor(param3);
+			let minuteMetaIndex = DataSource.getMinuteMetaIndex(endOfDayDataUnit.relativeMinutes, days, units);
+			minuteMetaIndex = Math.min(minuteMetaIndex, days.length - 1);
 			let _loc8_ = 0;
 			let _loc9_ = 0;
-			const _loc10_ = _loc4_[_loc5_[_loc7_]].relativeMinutes;
-			let _loc11_ = dataSource.getEndOfDayDataUnitFor(_loc10_);
-			if (Utils.compareUtcDates(_loc11_.exchangeDateInUTC, _loc6_.exchangeDateInUTC) !== 0)
+			const relativeMinutes = units[days[minuteMetaIndex]].relativeMinutes;
+			let _loc11_ = dataSource.getEndOfDayDataUnitFor(relativeMinutes);
+			if (Utils.compareUtcDates(_loc11_.exchangeDateInUTC, endOfDayDataUnit.exchangeDateInUTC) !== 0)
 				_loc8_ = _loc8_ + (dataSource.afterHoursData.getSessionLength(Const.PRE_MARKET_NAME) + 1);
 
-			while (_loc7_ >= 0 && _loc9_ < param2)
+			while (minuteMetaIndex >= 0 && _loc9_ < param2)
 			{
-				_loc7_--;
-				let _loc12_ = _loc4_[_loc5_[_loc7_]];
+				minuteMetaIndex--;
+				let _loc12_ = units[days[minuteMetaIndex]];
 				if (_loc11_.coveredDays > 0)
 				{
 					_loc8_ = _loc8_ + _loc11_.coveredDays * (dataSource.data.marketDayLength + 1);
@@ -287,16 +285,16 @@ namespace com.google.finance
 
 		moveListenersByOffsets() 
 		{
-			const _loc1_ = this.displayManager.getMainViewPoint();
-			if (!_loc1_)
+			const mainViewPoint = this.displayManager.getMainViewPoint();
+			if (!mainViewPoint)
 				return;
 
-			const _loc2_ = <SparklineViewPoint><any>this.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
+			const sparklineViewPoint = <SparklineViewPoint><any>this.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
 			//const _loc3_ = _loc2_.dataSource;
-			const _loc4_ = _loc2_.getWidth();
-			const _loc5_ = _loc2_.sparkCount * (_loc1_.maxx - _loc1_.minx) / _loc1_.count;
-			const _loc6_ = _loc2_.moveSparklineBy_Handler(this.cumulativeXOffset);
-			const _loc7_ = (this.baseXOffset - _loc6_) * _loc5_ / _loc4_;
+			const width = sparklineViewPoint.getWidth();
+			const _loc5_ = sparklineViewPoint.sparkCount * (mainViewPoint.maxx - mainViewPoint.minx) / mainViewPoint.count;
+			const _loc6_ = sparklineViewPoint.moveSparklineBy_Handler(this.cumulativeXOffset);
+			const _loc7_ = (this.baseXOffset - _loc6_) * _loc5_ / width;
 			this.changeListenersOffset(_loc7_);
 		}
 
@@ -317,9 +315,9 @@ namespace com.google.finance
 
 		private hitTestInsideBounds(param1: number, param2: number): boolean
 		{
-			for (let _loc3_ = 0; _loc3_ < this.controlledAreaBounds.length; _loc3_++)
+			for (let boundsIndex = 0; boundsIndex < this.controlledAreaBounds.length; boundsIndex++)
 			{
-				if (this.controlledAreaBounds[_loc3_].containsPoint(param1, param2))
+				if (this.controlledAreaBounds[boundsIndex].containsPoint(param1, param2))
 					return true;
 			}
 			return false;
@@ -327,36 +325,36 @@ namespace com.google.finance
 
 		checkSparklinePositioning() 
 		{
-			const _loc1_ = <SparklineViewPoint><any>this.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
-			const _loc2_ = this.displayManager.getMainViewPoint();
-			if (!_loc1_ || !_loc2_)
+			const sparklineViewPoint = <SparklineViewPoint><any>this.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
+			const mainViewPoint = this.displayManager.getMainViewPoint();
+			if (!sparklineViewPoint || !mainViewPoint)
 				return;
 
 			//const _loc3_ = _loc2_.minutesOffset;
-			if (!_loc1_.windowLayer)
+			if (!sparklineViewPoint.windowLayer)
 				return;
 
-			const _loc4_ = _loc1_.windowLayer.getLeftX();
-			const _loc5_ = _loc1_.windowLayer.getRightX();
-			const _loc6_ = this.displayManager.layersManager.getFirstDataSource();
-			const _loc7_ = _loc1_.getSparkLastMinute() < 0;
-			let _loc8_ = _loc1_.getSparkFirstMinute() > _loc1_.getOldestMinute();
-			if (this.currentIntervalLevel !== -1 && _loc6_)
+			const leftX = sparklineViewPoint.windowLayer.getLeftX();
+			const rightX = sparklineViewPoint.windowLayer.getRightX();
+			const firstDataSource = this.displayManager.layersManager.getFirstDataSource();
+			const sparkLastMinute = sparklineViewPoint.getSparkLastMinute() < 0;
+			let sparkFirstMinute = sparklineViewPoint.getSparkFirstMinute() > sparklineViewPoint.getOldestMinute();
+			if (this.currentIntervalLevel !== -1 && firstDataSource)
 			{
-				const _loc9_ = _loc6_.getFirstRelativeMinute(this.currentIntervalLevel);
-				_loc8_ = _loc1_.getSparkFirstMinute() > _loc9_;
+				const tFirstRelativeMinute = firstDataSource.getFirstRelativeMinute(this.currentIntervalLevel);
+				sparkFirstMinute = sparklineViewPoint.getSparkFirstMinute() > tFirstRelativeMinute;
 			}
-			if (_loc8_ && _loc4_ < _loc1_.minx + this.PAGING_AREA_WIDTH)
+			if (sparkFirstMinute && leftX < sparklineViewPoint.minx + this.PAGING_AREA_WIDTH)
 			{
-				const _loc10_ = _loc4_ - (_loc1_.minx + this.PAGING_AREA_WIDTH);
-				_loc1_.moveSparklineBy_Handler(_loc10_);
-				_loc1_.commitSparklineOffset_Handler();
+				const _loc10_ = leftX - (sparklineViewPoint.minx + this.PAGING_AREA_WIDTH);
+				sparklineViewPoint.moveSparklineBy_Handler(_loc10_);
+				sparklineViewPoint.commitSparklineOffset_Handler();
 			}
-			else if (_loc7_ && _loc5_ > _loc1_.maxx - this.PAGING_AREA_WIDTH)
+			else if (sparkLastMinute && rightX > sparklineViewPoint.maxx - this.PAGING_AREA_WIDTH)
 			{
-				const _loc10_ = _loc5_ - (_loc1_.maxx - this.PAGING_AREA_WIDTH);
-				_loc1_.moveSparklineBy_Handler(_loc10_);
-				_loc1_.commitSparklineOffset_Handler();
+				const _loc10_ = rightX - (sparklineViewPoint.maxx - this.PAGING_AREA_WIDTH);
+				sparklineViewPoint.moveSparklineBy_Handler(_loc10_);
+				sparklineViewPoint.commitSparklineOffset_Handler();
 			}
 		}
 
@@ -367,8 +365,8 @@ namespace com.google.finance
 
 			if (this.aniManager.isAnimating())
 			{
-				for (let _loc3_ = 0; _loc3_ < this.listeners.length; _loc3_++)
-					this.listeners[_loc3_].newFinalAnimationState(param1);
+				for (let listenerIndex = 0; listenerIndex < this.listeners.length; listenerIndex++)
+					this.listeners[listenerIndex].newFinalAnimationState(param1);
 			}
 			else
 			{
@@ -380,15 +378,15 @@ namespace com.google.finance
 		{
 			const _loc5_: { (param1: flash.display.DisplayObject, param2: number, param3: boolean): void }[] = [];
 			const _loc6_: flash.display.DisplayObject[] = [];
-			const _loc7_ = new Context();
-			_loc7_.lastMinute = param1;
-			_loc7_.count = param2;
-			for (let _loc8_ = 0; _loc8_ < this.listeners.length; _loc8_++)
+			const context = new Context();
+			context.lastMinute = param1;
+			context.count = param2;
+			for (let listenerIndex = 0; listenerIndex < this.listeners.length; listenerIndex++)
 			{
-				this.listeners[_loc8_].zoomingAnimation_init(_loc7_);
-				let listener = this.listeners[_loc8_];
-				_loc5_[_loc8_] = listener.zoomingAnimation_ticker.bind(listener);
-				_loc6_[_loc8_] = listener;
+				this.listeners[listenerIndex].zoomingAnimation_init(context);
+				let listener = this.listeners[listenerIndex];
+				_loc5_[listenerIndex] = listener.zoomingAnimation_ticker.bind(listener);
+				_loc6_[listenerIndex] = listener;
 			}
 			let topBorderLayer = this.displayManager.topBorderLayer;
 			_loc5_[this.listeners.length] = topBorderLayer.update.bind(topBorderLayer);
@@ -414,9 +412,9 @@ namespace com.google.finance
 			if (this.displayManager.isDifferentMarketSessionComparison())
 				return;
 
-			const _loc2_ = this.getZoomLevelFinalState(this.currentZoomLevel);
-			if (_loc2_)
-				this.setNewFinalState(_loc2_, param1);
+			const zoomLevelFinalState = this.getZoomLevelFinalState(this.currentZoomLevel);
+			if (zoomLevelFinalState)
+				this.setNewFinalState(zoomLevelFinalState, param1);
 		}
 
 		private createChartTypeButtons() 
@@ -449,7 +447,7 @@ namespace com.google.finance
 			let _loc10_ = false;
 			let _loc11_ = false;
 			const _loc2_ = <ViewPoint>this.displayManager.getMainViewPoint();
-			const _loc3_ = <SparklineViewPoint>this.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
+			const sparklineViewPoint = <SparklineViewPoint>this.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
 			//const _loc4_ = this.displayManager.getViewPoint("BottomViewPoint");
 			//const _loc5_ = this.mainManager.layersManager;
 			switch (this.state)
@@ -470,49 +468,49 @@ namespace com.google.finance
 						com.google.finance.MainManager.mouseCursor.setCursor(MouseCursors.OPENED_HAND);
 						break;
 					}
-					if (_loc3_.windowLayer && param1.target !== _loc3_.windowLayer.leftHandle.button.element && param1.target !== _loc3_.windowLayer.rightHandle.button.element)
+					if (sparklineViewPoint.windowLayer && param1.target !== sparklineViewPoint.windowLayer.leftHandle.button.element && param1.target !== sparklineViewPoint.windowLayer.rightHandle.button.element)
 						com.google.finance.MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 
 					this.clearAllHighlights();
 					this.displayManager.showContextualStaticInfo();
-					if (_loc3_.bg.hitTestPoint(this.mouseX, this.mouseY, false))
+					if (sparklineViewPoint.bg.hitTestPoint(this.mouseX, this.mouseY, false))
 					{
-						_loc3_.toggleHandles(true);
+						sparklineViewPoint.toggleHandles(true);
 						break;
 					}
-					_loc3_.toggleHandles(false);
+					sparklineViewPoint.toggleHandles(false);
 					break;
 				case ControllerStates.DRAGGING_SPARKLINE:
 					this.mouseCursor.setCursor(MouseCursors.CLOSED_HAND);
-					_loc3_.moveSparklineBy_Handler(this.initialXMouse - this.mouseX);
+					sparklineViewPoint.moveSparklineBy_Handler(this.initialXMouse - this.mouseX);
 					break;
 				case ControllerStates.SCROLLING:
 					this.displayManager.showContextualStaticInfo();
 					//const _loc6_ = _loc3_.windowLayer.getLeftX();
 					//const _loc7_ = _loc3_.windowLayer.getRightX();
-					let _loc8_ = this.mouseX;
-					_loc8_ = Math.max(_loc8_, this.scrollMouseMinX);
-					_loc8_ = Math.min(_loc8_, this.scrollMouseMaxX);
-					this.baseXOffset = this.initialXMouse - _loc8_;
+					let mouseX = this.mouseX;
+					mouseX = Math.max(mouseX, this.scrollMouseMinX);
+					mouseX = Math.min(mouseX, this.scrollMouseMaxX);
+					this.baseXOffset = this.initialXMouse - mouseX;
 					const _loc9_ = this.displayManager.layersManager.getFirstDataSource();
-					_loc10_ = _loc3_.getSparkLastMinute() < 0;
-					_loc11_ = _loc3_.getSparkFirstMinute() > _loc3_.getOldestMinute();
+					_loc10_ = sparklineViewPoint.getSparkLastMinute() < 0;
+					_loc11_ = sparklineViewPoint.getSparkFirstMinute() > sparklineViewPoint.getOldestMinute();
 					if (this.currentIntervalLevel !== -1 && _loc9_)
 					{
-						const _loc13_ = _loc9_.getFirstRelativeMinute(this.currentIntervalLevel);
-						_loc11_ = _loc3_.getSparkFirstMinute() > _loc13_;
+						const firstRelativeMinute = _loc9_.getFirstRelativeMinute(this.currentIntervalLevel);
+						_loc11_ = sparklineViewPoint.getSparkFirstMinute() > firstRelativeMinute;
 					}
-					if (_loc8_ < this.scrollMouseMinX + this.PAGING_AREA_WIDTH && _loc11_)
+					if (mouseX < this.scrollMouseMinX + this.PAGING_AREA_WIDTH && _loc11_)
 					{
-						this.pagingAmount = _loc8_ - (this.scrollMouseMinX + this.PAGING_AREA_WIDTH);
+						this.pagingAmount = mouseX - (this.scrollMouseMinX + this.PAGING_AREA_WIDTH);
 						this.addXOffset(this, this.pagingAmount);
 						clearInterval(this.intId);
 						this.intId = setInterval(() => { this.addXOffset(this, this.pagingAmount); }, 20);
 						break;
 					}
-					if (_loc8_ >= this.scrollMouseMaxX - this.PAGING_AREA_WIDTH && _loc10_)
+					if (mouseX >= this.scrollMouseMaxX - this.PAGING_AREA_WIDTH && _loc10_)
 					{
-						this.pagingAmount = _loc8_ - (this.scrollMouseMaxX - this.PAGING_AREA_WIDTH);
+						this.pagingAmount = mouseX - (this.scrollMouseMaxX - this.PAGING_AREA_WIDTH);
 						this.addXOffset(this, this.pagingAmount);
 						clearInterval(this.intId);
 						this.intId = setInterval(() => { this.addXOffset(this, this.pagingAmount); }, 20);
@@ -523,17 +521,17 @@ namespace com.google.finance
 					break;
 				case ControllerStates.DRAGGING_LEFT_HANDLE:
 					this.mouseCursor.setCursor(MouseCursors.H_ARROWS);
-					_loc3_.windowLayer.initialX = this.initialXMouse;
-					_loc3_.windowLayer.leftHandleXOffset = this.initialXMouse - this.mouseX;
-					_loc3_.windowLayer.renderLayer();
-					this.displayManager.spaceText.setTimePeriod(_loc3_.windowLayer);
+					sparklineViewPoint.windowLayer.initialX = this.initialXMouse;
+					sparklineViewPoint.windowLayer.leftHandleXOffset = this.initialXMouse - this.mouseX;
+					sparklineViewPoint.windowLayer.renderLayer();
+					this.displayManager.spaceText.setTimePeriod(sparklineViewPoint.windowLayer);
 					break;
 				case ControllerStates.DRAGGING_RIGHT_HANDLE:
 					this.mouseCursor.setCursor(MouseCursors.H_ARROWS);
-					_loc3_.windowLayer.initialX = this.initialXMouse;
-					_loc3_.windowLayer.rightHandleXOffset = this.initialXMouse - this.mouseX;
-					_loc3_.windowLayer.renderLayer();
-					this.displayManager.spaceText.setTimePeriod(_loc3_.windowLayer);
+					sparklineViewPoint.windowLayer.initialX = this.initialXMouse;
+					sparklineViewPoint.windowLayer.rightHandleXOffset = this.initialXMouse - this.mouseX;
+					sparklineViewPoint.windowLayer.renderLayer();
+					this.displayManager.spaceText.setTimePeriod(sparklineViewPoint.windowLayer);
 					break;
 			}
 			if (this.displayManager.topBorderLayer)
@@ -558,8 +556,8 @@ namespace com.google.finance
 
 		listenersNotifyHtml() 
 		{
-			for (let _loc1_ = 0; _loc1_ < this.listeners.length; _loc1_++)
-				this.listeners[_loc1_].HTMLnotify();
+			for (let listenerIndex = 0; listenerIndex < this.listeners.length; listenerIndex++)
+				this.listeners[listenerIndex].HTMLnotify();
 
 			clearInterval(this.notifyHtmlIntervalId);
 		}
@@ -595,23 +593,23 @@ namespace com.google.finance
 			this.intervalButtons.x = this.intervalText.x + this.intervalText.width + this.intervalButtons.spacing;
 			this.intervalButtons.y = this.intervalText.y;
 			const _loc1_ = Const.INTERVAL_PERIODS;
-			for (let _loc2_ = 0; _loc2_ < _loc1_.length; _loc2_++)
+			for (let index = 0; index < _loc1_.length; index++)
 			{
-				if (_loc1_[_loc2_].days >= Const.MIN_DISPLAY_DAYS)
-					this.intervalButtons.addButton(Messages.getMsg(_loc1_[_loc2_].text));
+				if (_loc1_[index].days >= Const.MIN_DISPLAY_DAYS)
+					this.intervalButtons.addButton(Messages.getMsg(_loc1_[index].text));
 			}
 			this.intervalButtons.addListener(this.intervalButtonClicked, this);
 		}
 
 		jumpTo(param1: number, param2: number, param3: boolean = false)
 		{
-			let _loc4_ = new Context();
-			_loc4_.lastMinute = param1;
-			_loc4_.count = param2;
-			for (let _loc5_ = 0; _loc5_ < this.listeners.length; _loc5_++)
+			let context = new Context();
+			context.lastMinute = param1;
+			context.count = param2;
+			for (let listenerIndex = 0; listenerIndex < this.listeners.length; listenerIndex++)
 			{
-				_loc4_ = this.listeners[_loc5_].getNewContext(param1, param2);
-				this.listeners[_loc5_].zoomInMinutes_Handler(_loc4_, param3);
+				context = this.listeners[listenerIndex].getNewContext(param1, param2);
+				this.listeners[listenerIndex].zoomInMinutes_Handler(context, param3);
 			}
 		}
 
@@ -619,21 +617,21 @@ namespace com.google.finance
 		{
 			if (param3 === Intervals.INTRADAY && param4 > Intervals.INTRADAY)
 			{
-				for (let _loc5_ = 0; _loc5_ < param2.visibleExtendedHours.length(); _loc5_++)
+				for (let intervalIndex = 0; intervalIndex < param2.visibleExtendedHours.length(); intervalIndex++)
 				{
-					const _loc6_ = param2.visibleExtendedHours.getIntervalAt(_loc5_);
-					const _loc7_ = param2.afterHoursData.units[_loc6_.start];
-					const _loc8_ = param2.afterHoursData.units[_loc6_.end];
+					const interval = param2.visibleExtendedHours.getIntervalAt(intervalIndex);
+					const _loc7_ = param2.afterHoursData.units[interval.start];
+					const _loc8_ = param2.afterHoursData.units[interval.end];
 					param1 = param1 - (_loc8_.dayMinute - _loc7_.dayMinute);
 				}
 			}
 			else if (param3 > Intervals.INTRADAY && param4 === Intervals.INTRADAY)
 			{
-				for (let _loc5_ = 0; _loc5_ < param2.hiddenExtendedHours.length(); _loc5_++)				
+				for (let intervalIndex = 0; intervalIndex < param2.hiddenExtendedHours.length(); intervalIndex++)				
 				{
-					const _loc6_ = param2.hiddenExtendedHours.getIntervalAt(_loc5_);
-					const _loc7_ = param2.afterHoursData.units[_loc6_.start];
-					const _loc8_ = param2.afterHoursData.units[_loc6_.end];
+					const interval = param2.hiddenExtendedHours.getIntervalAt(intervalIndex);
+					const _loc7_ = param2.afterHoursData.units[interval.start];
+					const _loc8_ = param2.afterHoursData.units[interval.end];
 					param1 = param1 + (_loc8_.dayMinute - _loc7_.dayMinute);
 				}
 			}
@@ -648,12 +646,12 @@ namespace com.google.finance
 			this.zoomButtons.clearSelection();
 			this.zoomButtons.resetButtonsGroup();
 			const _loc2_ = Const.SCALE_INTERVALS;
-			for (let _loc3_ = _loc2_.length - 1; _loc3_ >= 0; _loc3_--)
+			for (let index = _loc2_.length - 1; index >= 0; index--)
 			{
-				if (_loc2_[_loc3_].days >= param1)
+				if (_loc2_[index].days >= param1)
 				{
-					if (_loc2_[_loc3_].text !== Const.NO_BUTTON_TEXT)
-						this.zoomButtons.addButton(Messages.getMsg(_loc2_[_loc3_].text));
+					if (_loc2_[index].text !== Const.NO_BUTTON_TEXT)
+						this.zoomButtons.addButton(Messages.getMsg(_loc2_[index].text));
 				}
 			}
 			this.zoomButtons.addListener(this.zoomButtonClicked, this);
@@ -662,10 +660,8 @@ namespace com.google.finance
 		private computeHolderBounds() 
 		{
 			this.holderBounds = new com.google.finance.Bounds(Number.MAX_VALUE, Number.MAX_VALUE, 0, 0);
-			for (let _loc1_ = 0; _loc1_ < this.controlledAreaBounds.length; _loc1_++)
-			{
-				this.holderBounds.append(this.controlledAreaBounds[_loc1_]);
-			}
+			for (let boundsIndex = 0; boundsIndex < this.controlledAreaBounds.length; boundsIndex++)
+				this.holderBounds.append(this.controlledAreaBounds[boundsIndex]);
 		}
 
 		clearCurrentInterval() 
@@ -704,16 +700,15 @@ namespace com.google.finance
 		mouseUpAction() 
 		{
 			//const _loc1_ = this.displayManager.getMainViewPoint();
-			const _loc2_ = <SparklineViewPoint><any>this.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
+			const sparklineViewPoint = <SparklineViewPoint><any>this.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
 			switch (this.state)
 			{
 				case ControllerStates.SELECTING:
 					const _loc5_ = Math.min(this.initialXMouse, this.mouseX);
 					const _loc6_ = Math.max(this.initialXMouse, this.mouseX);
-					for (let _loc4_ = 0; _loc4_ < this.listeners.length; _loc4_++)
-					{
-						this.listeners[_loc4_].zoomIn_Handler(_loc5_, _loc6_);
-					}
+					for (let listenerIndex = 0; listenerIndex < this.listeners.length; listenerIndex++)
+						this.listeners[listenerIndex].zoomIn_Handler(_loc5_, _loc6_);
+
 					this.listenersNotifyHtml();
 					this.graphics.clear();
 					break;
@@ -727,34 +722,32 @@ namespace com.google.finance
 				case ControllerStates.DRAGGING:
 				case ControllerStates.SCROLLING:
 					clearInterval(this.intId);
-					_loc2_.moveSparklineBy_Handler(this.cumulativeXOffset + this.pagingAmount);
-					_loc2_.commitSparklineOffset_Handler();
+					sparklineViewPoint.moveSparklineBy_Handler(this.cumulativeXOffset + this.pagingAmount);
+					sparklineViewPoint.commitSparklineOffset_Handler();
 					this.cumulativeXOffset = 0;
 					this.pagingAmount = 0;
 					this.commitListenersOffset();
 					if (Math.abs(this.initialXMouse - this.mouseX) >= this.MIN_PIXELS)
 					{
-						for (let _loc4_ = 0; _loc4_ < this.listeners.length; _loc4_++)							
-						{
-							this.listeners[_loc4_].HTMLnotify();
-						}
+						for (let listenerIndex = 0; listenerIndex < this.listeners.length; listenerIndex++)							
+							this.listeners[listenerIndex].HTMLnotify();
 						break;
 					}
 					break;
 				case ControllerStates.DRAGGING_LEFT_HANDLE:
-					_loc2_.windowLayer.handleReleased(_loc2_.windowLayer.leftHandle);
+					sparklineViewPoint.windowLayer.handleReleased(sparklineViewPoint.windowLayer.leftHandle);
 					break;
 				case ControllerStates.DRAGGING_RIGHT_HANDLE:
-					_loc2_.windowLayer.handleReleased(_loc2_.windowLayer.rightHandle);
+					sparklineViewPoint.windowLayer.handleReleased(sparklineViewPoint.windowLayer.rightHandle);
 					break;
 				case ControllerStates.WINDOW:
 					return;
 			}
 			this.mouseCursor.setCursor(MouseCursors.CLASSIC);
-			const _loc3_ = this.displayManager.getViewPoints();
-			for (let _loc4_ = 0; _loc4_ < _loc3_.length; _loc4_++)
+			const viewPoints = this.displayManager.getViewPoints();
+			for (let viewPointIndex = 0; viewPointIndex < viewPoints.length; viewPointIndex++)
 			{
-				const _loc7_ = _loc3_[_loc4_];
+				const _loc7_ = viewPoints[viewPointIndex];
 				if (_loc7_.bg.hitTestPoint(this.mouseX, this.mouseY, false) && !_loc7_.isAnimating())
 					com.google.finance.MainManager.mouseCursor.setCursor(MouseCursor.DRAGGABLE_CURSOR);
 			}
@@ -765,25 +758,25 @@ namespace com.google.finance
 
 		private clearAllHighlights() 
 		{
-			const _loc1_ = this.displayManager.getViewPoints();
-			for (let _loc2_ = 0; _loc2_ < _loc1_.length; _loc2_++)
+			const viewPoints = this.displayManager.getViewPoints();
+			for (let viewPointIndex = 0; viewPointIndex < viewPoints.length; viewPointIndex++)
 			{
-				_loc1_[_loc2_].clearPointInformation();
+				viewPoints[viewPointIndex].clearPointInformation();
 			}
 		}
 
 		moveSparkline(param1: number) 
 		{
-			const _loc2_ = <SparklineViewPoint><any>this.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
-			_loc2_.moveSparklineBy_Handler(param1 * 10);
-			_loc2_.commitSparklineOffset_Handler();
+			const sparklineViewPoint = <SparklineViewPoint><any>this.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
+			sparklineViewPoint.moveSparklineBy_Handler(param1 * 10);
+			sparklineViewPoint.commitSparklineOffset_Handler();
 			this.displayManager.topBorderLayer.update();
 		}
 
 		zoomButtonClicked(param1: string) 
 		{
-			const _loc2_ = this.displayManager.layersManager.getFirstDataSource();
-			if (!_loc2_ || _loc2_.isEmpty())
+			const firstDataSource = this.displayManager.layersManager.getFirstDataSource();
+			if (!firstDataSource || firstDataSource.isEmpty())
 				return;
 
 			const _loc3_ = Const.SCALE_INTERVALS;
@@ -801,8 +794,8 @@ namespace com.google.finance
 
 		private addXOffset(param1: Controller, param2: number) 
 		{
-			const _loc3_ = <SparklineViewPoint><any>param1.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
-			if (_loc3_.sparklinePagingPossible(param2))
+			const sparklineViewPoint = <SparklineViewPoint><any>param1.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
+			if (sparklineViewPoint.sparklinePagingPossible(param2))
 			{
 				param1.cumulativeXOffset = param1.cumulativeXOffset + param2;
 				param1.moveListenersByOffsets();
@@ -818,15 +811,15 @@ namespace com.google.finance
 			if (!viewPoint || !param2)
 				return -1;
 
-			const _loc3_ = viewPoint.getFirstMinute();
-			const _loc4_ = viewPoint.count;
-			if (this.isFitDetailLevel(this.lastIntervalLevel, param2, _loc3_, _loc4_))
+			const firstMinute = viewPoint.getFirstMinute();
+			const count = viewPoint.count;
+			if (this.isFitDetailLevel(this.lastIntervalLevel, param2, firstMinute, count))
 				return this.lastIntervalLevel;
 
-			for (let _loc5_ = Intervals.INTRADAY; _loc5_ <= Intervals.WEEKLY; _loc5_++)				
+			for (let intervalIndex = Intervals.INTRADAY; intervalIndex <= Intervals.WEEKLY; intervalIndex++)				
 			{
-				if (this.isFitDetailLevel(_loc5_, param2, _loc3_, _loc4_))
-					return _loc5_;
+				if (this.isFitDetailLevel(intervalIndex, param2, firstMinute, count))
+					return intervalIndex;
 			}
 			return -1;
 		}
@@ -851,9 +844,9 @@ namespace com.google.finance
 
 		replaceBounds(param1: com.google.finance.Bounds, param2: com.google.finance.Bounds) 
 		{
-			const _loc3_ = this.getBoundsIndex(param1);
-			if (_loc3_ !== -1)
-				this.controlledAreaBounds.splice(_loc3_, 1);
+			const boundsIndex = this.getBoundsIndex(param1);
+			if (boundsIndex !== -1)
+				this.controlledAreaBounds.splice(boundsIndex, 1);
 
 			this.controlledAreaBounds.push(param2);
 			this.computeHolderBounds();
@@ -861,44 +854,42 @@ namespace com.google.finance
 
 		private commitListenersOffset() 
 		{
-			for (let _loc1_ = 0; _loc1_ < this.listeners.length; _loc1_++)
-			{
-				this.listeners[_loc1_].commitOffset_Handler();
-			}
+			for (let listenerIndex = 0; listenerIndex < this.listeners.length; listenerIndex++)
+				this.listeners[listenerIndex].commitOffset_Handler();
 		}
 
-		getCustomScaleZoomLevel(dataSource: DataSource, param2: Date, param3: Date) 
+		getCustomScaleZoomLevel(dataSource: DataSource, startDate: Date, endDate: Date) 
 		{
-			if (!param2 || !param3 || param2 >= param3)
+			if (!startDate || !endDate || startDate >= endDate)
 				return null;
 
-			const _loc4_ = dataSource.data.units;
-			const _loc5_ = DataSource.getTimeIndex(param2.getTime(), _loc4_);
-			const _loc6_ = DataSource.getTimeIndex(param3.getTime(), _loc4_);
-			const _loc7_ = _loc4_[_loc6_].relativeMinutes;
-			const _loc8_ = _loc4_[_loc5_].relativeMinutes;
+			const units = dataSource.data.units;
+			const firstTimeIndex = DataSource.getTimeIndex(startDate.getTime(), units);
+			const lastTimeIndex = DataSource.getTimeIndex(endDate.getTime(), units);
+			const lastRelativeMinute = units[lastTimeIndex].relativeMinutes;
+			const firstRelativeMinute = units[firstTimeIndex].relativeMinutes;
 			return {
-				"lastMinute": _loc7_,
-				"count": _loc7_ - _loc8_
+				"lastMinute": lastRelativeMinute,
+				"count": lastRelativeMinute - firstRelativeMinute
 			};
 		}
 
 		setMinDisplayDays(param1: number) 
 		{
-			const _loc2_ = this.displayManager.getMainViewPoint();
-			if (!_loc2_)
+			const mainViewPoint = this.displayManager.getMainViewPoint();
+			if (!mainViewPoint)
 				return;
-			const _loc3_ = _loc2_.getFirstMinute();
-			const _loc4_ = _loc2_.getLastMinute();
-			const _loc5_ = this.mainManager.layersManager.getFirstDataSource();
-			if (!_loc5_)
+			const firstMinute = mainViewPoint.getFirstMinute();
+			const lastMinute = mainViewPoint.getLastMinute();
+			const firstDataSource = this.mainManager.layersManager.getFirstDataSource();
+			if (!firstDataSource)
 				return;
-			const _loc6_ = _loc5_.getEndOfDayDataUnitFor(_loc4_);
-			const _loc7_ = _loc6_.relativeMinutes;
-			const _loc8_ = this.getCountForDays(_loc5_, param1, _loc7_);
+			const endOfDayDataUnit = firstDataSource.getEndOfDayDataUnitFor(lastMinute);
+			const endOfDayMinute = endOfDayDataUnit.relativeMinutes;
+			const countForDays = this.getCountForDays(firstDataSource, param1, endOfDayMinute);
 			Const.MIN_DISPLAY_DAYS = param1;
-			if (_loc8_ > _loc4_ - _loc3_)
-				this.animateTo(_loc7_, _loc8_);
+			if (countForDays > lastMinute - firstMinute)
+				this.animateTo(endOfDayMinute, countForDays);
 		}
 
 		private notifyListenersToMove(param1: number) 
@@ -935,25 +926,25 @@ namespace com.google.finance
 
 		private pollingTimerHandler(param1: flash.utils.TimerEvent) 
 		{
-			const _loc2_ = this.displayManager.layersManager.getFirstDataSource();
-			if (!_loc2_ || _loc2_.isEmpty())
+			const firstDataSource = this.displayManager.layersManager.getFirstDataSource();
+			if (!firstDataSource || firstDataSource.isEmpty())
 			{
 				this.pollingTimer.stop();
 				return;
 			}
-			const _loc3_ = _loc2_.data.marketCloseMinute - _loc2_.data.marketOpenMinute;
-			const _loc4_ = this.getNewMarketState(this.isMarketOpen, this.stateRemainingMinutes, _loc3_);
-			this.isMarketOpen = _loc4_.isMarketOpen;
-			this.stateRemainingMinutes = _loc4_.stateRemainingMinutes;
-			if (_loc2_.data.hasPointsInIntervalArray(Const.INTRADAY_INTERVAL) && this.shouldRequestRegularMarketData(this.isMarketOpen, this.stateRemainingMinutes, this.delayedMinutes, _loc3_))
+			const _loc3_ = firstDataSource.data.marketCloseMinute - firstDataSource.data.marketOpenMinute;
+			const newMarketState = this.getNewMarketState(this.isMarketOpen, this.stateRemainingMinutes, _loc3_);
+			this.isMarketOpen = newMarketState.isMarketOpen;
+			this.stateRemainingMinutes = newMarketState.stateRemainingMinutes;
+			if (firstDataSource.data.hasPointsInIntervalArray(Const.INTRADAY_INTERVAL) && this.shouldRequestRegularMarketData(this.isMarketOpen, this.stateRemainingMinutes, this.delayedMinutes, _loc3_))
 			{
-				const _loc5_ = EventFactory.getEvent(ChartEventStyles.GET_RT_DATA, _loc2_.quoteName, ChartEventPriorities.POLLING);
-				this.mainManager.dataManager.eventHandler(_loc5_);
+				const event = EventFactory.getEvent(ChartEventStyles.GET_RT_DATA, firstDataSource.quoteName, ChartEventPriorities.POLLING);
+				this.mainManager.dataManager.eventHandler(event);
 			}
-			if (Boolean(com.google.finance.MainManager.paramsObj.hasExtendedHours) && _loc2_.afterHoursData.hasPointsInIntervalArray(Const.INTRADAY_INTERVAL) && this.shouldRequestAfterHoursData(this.isMarketOpen, this.stateRemainingMinutes, this.delayedMinutes, _loc3_))
+			if (Boolean(com.google.finance.MainManager.paramsObj.hasExtendedHours) && firstDataSource.afterHoursData.hasPointsInIntervalArray(Const.INTRADAY_INTERVAL) && this.shouldRequestAfterHoursData(this.isMarketOpen, this.stateRemainingMinutes, this.delayedMinutes, _loc3_))
 			{
-				const _loc6_ = EventFactory.getEvent(ChartEventStyles.GET_RT_AH_DATA, _loc2_.quoteName, ChartEventPriorities.POLLING);
-				this.mainManager.dataManager.eventHandler(_loc6_);
+				const event = EventFactory.getEvent(ChartEventStyles.GET_RT_AH_DATA, firstDataSource.quoteName, ChartEventPriorities.POLLING);
+				this.mainManager.dataManager.eventHandler(event);
 			}
 		}
 
@@ -974,26 +965,26 @@ namespace com.google.finance
 			const _loc3_ = <ViewPoint>this.displayManager.getMainViewPoint();
 			if (param1 === Const.LINE_CHART)
 			{
-				const _loc4_ = this.displayManager.layersManager.getFirstDataSource();
-				if (_loc4_ && _loc3_.getFirstMinute() < _loc4_.firstOpenRelativeMinutes)
+				const firstDataSource = this.displayManager.layersManager.getFirstDataSource();
+				if (firstDataSource && _loc3_.getFirstMinute() < firstDataSource.firstOpenRelativeMinutes)
 				{
-					this.applyLastOrDefaultInterval(_loc4_, _loc3_);
+					this.applyLastOrDefaultInterval(firstDataSource, _loc3_);
 					return;
 				}
 				if (this.displayManager.getDetailLevel() < Intervals.DAILY && Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
 				{
-					this.applyLastOrDefaultInterval(_loc4_, _loc3_);
+					this.applyLastOrDefaultInterval(firstDataSource, _loc3_);
 					return;
 				}
-				const _loc5_ = this.findBestFitDetailLevel(_loc3_, _loc4_);
-				if (_loc5_ === -1)
+				const dBestFitDetailLevel = this.findBestFitDetailLevel(_loc3_, firstDataSource);
+				if (dBestFitDetailLevel === -1)
 				{
-					this.applyLastOrDefaultInterval(_loc4_, _loc3_);
+					this.applyLastOrDefaultInterval(firstDataSource, _loc3_);
 				}
 				else
 				{
-					this.enableIntervalButtons(_loc5_);
-					this.currentIntervalLevel = _loc5_;
+					this.enableIntervalButtons(dBestFitDetailLevel);
+					this.currentIntervalLevel = dBestFitDetailLevel;
 					_loc3_.checkEvents();
 				}
 			}
@@ -1014,11 +1005,11 @@ namespace com.google.finance
 
 		animateToLevel(param1: number) 
 		{
-			const _loc2_ = this.getZoomLevelFinalState(param1);
-			if (_loc2_)
+			const zoomLevelFinalState = this.getZoomLevelFinalState(param1);
+			if (zoomLevelFinalState)
 			{
 				this.currentZoomLevel = param1;
-				this.animateTo(_loc2_.lastMinute, _loc2_.count);
+				this.animateTo(zoomLevelFinalState.lastMinute, zoomLevelFinalState.count);
 			}
 		}
 
@@ -1066,10 +1057,10 @@ namespace com.google.finance
 			if (!(param1 >= Intervals.INTRADAY && param1 <= Intervals.WEEKLY))
 				return false;
 
-			const _loc5_ = Const.getDetailLevelInterval(param1);
-			const _loc6_ = param2.data.getPointsInIntervalArray(_loc5_);
+			const detailLevelInterval = Const.getDetailLevelInterval(param1);
+			const pointsInIntervalArray = param2.data.getPointsInIntervalArray(detailLevelInterval);
 			const _loc7_ = param2.data.marketDayLength + 1;
-			return _loc6_ && _loc6_.length > 0 && _loc6_[0].relativeMinutes <= param3 && param4 <= Const.INTERVAL_PERIODS[param1].maxdays * _loc7_ && param4 >= Const.INTERVAL_PERIODS[param1].mindays * _loc7_;
+			return pointsInIntervalArray && pointsInIntervalArray.length > 0 && pointsInIntervalArray[0].relativeMinutes <= param3 && param4 <= Const.INTERVAL_PERIODS[param1].maxdays * _loc7_ && param4 >= Const.INTERVAL_PERIODS[param1].mindays * _loc7_;
 		}
 
 		onMouseDown(param1: MouseEvent) 
@@ -1116,8 +1107,8 @@ namespace com.google.finance
 
 		intervalButtonClicked(param1: string) 
 		{
-			const _loc2_ = this.displayManager.layersManager.getFirstDataSource();
-			if (!_loc2_ || _loc2_.isEmpty())
+			const firstDataSource = this.displayManager.layersManager.getFirstDataSource();
+			if (!firstDataSource || firstDataSource.isEmpty())
 				return;
 
 			const _loc3_ = Const.INTERVAL_PERIODS;
@@ -1137,18 +1128,18 @@ namespace com.google.finance
 				else
 					this.displayManager.toggleAllAfterHoursSessions(false);
 			}
-			this.animateTo(0, _loc3_[_loc4_].days * (_loc2_.data.marketDayLength + 1), 1);
+			this.animateTo(0, _loc3_[_loc4_].days * (firstDataSource.data.marketDayLength + 1), 1);
 			com.google.finance.MainManager.jsProxy.setJsCurrentViewParam("defaultDisplayInterval", Const.getDetailLevelInterval(_loc4_));
 		}
 
 		private highlightPoints() 
 		{
 			const _loc1_ = {};
-			const _loc2_ = this.displayManager.getViewPoints();
+			const viewPoints = this.displayManager.getViewPoints();
 
-			for (let _loc3_ = 0; _loc3_ < _loc2_.length; _loc3_++)
+			for (let viewPointIndex = 0; viewPointIndex < viewPoints.length; viewPointIndex++)
 			{
-				const _loc4_ = _loc2_[_loc3_];
+				const _loc4_ = viewPoints[viewPointIndex];
 				_loc4_.highlightPoint(this.mouseX, _loc1_);
 			}
 			return _loc1_;
@@ -1162,85 +1153,85 @@ namespace com.google.finance
 		private getZoomLevelFinalState(param1: number): ViewPointState | null
 		{
 			let _loc8_ = NaN;
-			const _loc2_ = <SparklineViewPoint><any>this.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
+			const sparklineViewPoint = <SparklineViewPoint><any>this.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
 			const _loc3_ = <ViewPoint>this.displayManager.getMainViewPoint();
-			const _loc4_ = this.mainManager.layersManager;
-			const _loc5_ = _loc4_.getFirstDataSource();
-			if (!_loc5_)
+			const layersManager = this.mainManager.layersManager;
+			const firstDataSource = layersManager.getFirstDataSource();
+			if (!firstDataSource)
 				return null;
 
 			const _loc6_ = Const.SCALE_INTERVALS;
-			let _loc7_ = _loc2_.getLastMinute();
+			let lastMinute = sparklineViewPoint.getLastMinute();
 			if (param1 === Const.SCALE_CUSTOM)
 			{
-				const _loc10_ = this.getCustomScaleZoomLevel(_loc5_, this.customZoomStartDate, this.customZoomEndDate);
-				if (!_loc10_)
+				const customScaleZoomLevel = this.getCustomScaleZoomLevel(firstDataSource, this.customZoomStartDate, this.customZoomEndDate);
+				if (!customScaleZoomLevel)
 					return null;
 
-				_loc7_ = _loc10_.lastMinute;
-				_loc8_ = _loc10_.count;
+				lastMinute = customScaleZoomLevel.lastMinute;
+				_loc8_ = customScaleZoomLevel.count;
 			}
 			else if (param1 === ScaleTypes.SCALE_YTD)
 			{
-				const _loc11_ = _loc5_.data.units.length;
-				const _loc12_ = _loc5_.data.units[_loc11_ - 1];
+				const numUnits = firstDataSource.data.units.length;
+				const _loc12_ = firstDataSource.data.units[numUnits - 1];
 				const _loc13_ = new Date(_loc12_.time);
 				_loc13_.setMonth(0);
 				_loc13_.setDate(1);
-				const _loc14_ = _loc5_.data.units;
-				const _loc15_ = DataSource.getTimeIndex(_loc13_.getTime(), _loc14_);
-				_loc7_ = 0;
-				_loc8_ = _loc7_ - _loc14_[_loc15_].relativeMinutes;
+				const units = firstDataSource.data.units;
+				const timeIndex = DataSource.getTimeIndex(_loc13_.getTime(), units);
+				lastMinute = 0;
+				_loc8_ = lastMinute - units[timeIndex].relativeMinutes;
 			}
 			else if (param1 === ScaleTypes.SCALE_MAX)
 			{
-				_loc7_ = _loc3_.getNewestMinute();
+				lastMinute = _loc3_.getNewestMinute();
 				_loc8_ = Math.abs(_loc3_.getOldestBaseMinute());
 			}
 			else if (param1 >= 0 && param1 <= ScaleTypes.SCALE_1M)
 			{
-				const _loc12_ = _loc2_.getLastDataUnit();
-				const _loc13_ = new Date(_loc12_.time);
-				_loc13_.setMonth(_loc13_.getMonth() - _loc6_[param1].months);
-				const _loc14_ = _loc5_.data.units;
-				const _loc15_ = DataSource.getTimeIndex(_loc13_.getTime(), _loc14_);
-				_loc8_ = _loc2_.getLastMinute() - _loc14_[_loc15_].relativeMinutes;
+				const lastDataUnit = sparklineViewPoint.getLastDataUnit();
+				const date = new Date(lastDataUnit.time);
+				date.setMonth(date.getMonth() - _loc6_[param1].months);
+				const units = firstDataSource.data.units;
+				const timeIndex = DataSource.getTimeIndex(date.getTime(), units);
+				_loc8_ = sparklineViewPoint.getLastMinute() - units[timeIndex].relativeMinutes;
 			}
 			else if (param1 >= 0 && param1 < _loc6_.length)
 			{
 				const _loc16_ = _loc3_.getLastMinute();
-				const _loc17_ = _loc5_.getEndOfDayDataUnitFor(_loc16_);
-				_loc7_ = _loc17_.relativeMinutes;
-				_loc8_ = this.getCountForDays(_loc5_, _loc6_[param1].days, _loc7_);
+				const _loc17_ = firstDataSource.getEndOfDayDataUnitFor(_loc16_);
+				lastMinute = _loc17_.relativeMinutes;
+				_loc8_ = this.getCountForDays(firstDataSource, _loc6_[param1].days, lastMinute);
 			}
 			else
 			{
 				return null;
 			}
 
-			const _loc9_ = this.displayManager.layersManager.getStyle();
-			if (_loc9_ === LayersManager.SINGLE && Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
+			const style = this.displayManager.layersManager.getStyle();
+			if (style === LayersManager.SINGLE && Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
 			{
-				let _loc18_: number;
-				let _loc19_: number;
+				let _loc18_: Intervals;
+				let _loc19_: Intervals;
 
 				if (Const.INDICATOR_ENABLED)
 				{
 					_loc18_ = _loc3_.getDetailLevelForTechnicalStyle();
-					_loc19_ = _loc3_.getDetailLevelForTechnicalStyle(_loc8_, _loc7_);
+					_loc19_ = _loc3_.getDetailLevelForTechnicalStyle(_loc8_, lastMinute);
 				}
 				else
 				{
 					_loc18_ = _loc3_.getDetailLevel();
-					_loc19_ = _loc3_.getDetailLevel(_loc8_, _loc7_);
+					_loc19_ = _loc3_.getDetailLevel(_loc8_, lastMinute);
 				}
-				_loc8_ = this.adjustCountForAfterHours(_loc8_, _loc5_, _loc18_, _loc19_);
+				_loc8_ = this.adjustCountForAfterHours(_loc8_, firstDataSource, _loc18_, _loc19_);
 			}
-			if (isNaN(_loc8_) || isNaN(_loc7_))
+			if (isNaN(_loc8_) || isNaN(lastMinute))
 				return null;
 
 			return {
-				"lastMinute": _loc7_,
+				"lastMinute": lastMinute,
 				"count": _loc8_
 			};
 		}
@@ -1249,8 +1240,8 @@ namespace com.google.finance
 		{
 			this.clearCurrentZoom();
 
-			for (let _loc4_ = 0; _loc4_ < this.listeners.length; _loc4_++)
-				this.listeners[_loc4_].zoomChart_Handler(param1, param3);
+			for (let listenerIndex = 0; listenerIndex < this.listeners.length; listenerIndex++)
+				this.listeners[listenerIndex].zoomChart_Handler(param1, param3);
 
 			this.displayManager.topBorderLayer.update();
 			this.displayManager.showContextualStaticInfo();
@@ -1258,18 +1249,18 @@ namespace com.google.finance
 
 		private getBoundsIndex(param1: com.google.finance.Bounds): number
 		{
-			for (let _loc2_ = 0; _loc2_ < this.controlledAreaBounds.length; _loc2_++)
+			for (let boundsIndex = 0; boundsIndex < this.controlledAreaBounds.length; boundsIndex++)
 			{
-				if (param1.equals(this.controlledAreaBounds[_loc2_]))
-					return _loc2_;
+				if (param1.equals(this.controlledAreaBounds[boundsIndex]))
+					return boundsIndex;
 			}
 			return -1;
 		}
 
 		private changeListenersOffset(param1: number) 
 		{
-			for (let _loc2_ = 0; _loc2_ < this.listeners.length; _loc2_++)
-				this.listeners[_loc2_].moveChartBy_Handler(param1);
+			for (let listenerIndex = 0; listenerIndex < this.listeners.length; listenerIndex++)
+				this.listeners[listenerIndex].moveChartBy_Handler(param1);
 		}
 
 		getNewMarketState(param1: boolean, param2: number, param3: number) 
@@ -1321,7 +1312,7 @@ namespace com.google.finance
 
 		mouseDownAction(param1: ControllerComponents = NaN) 
 		{
-			const _loc2_ = <SparklineViewPoint>this.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
+			const sparklineViewPoint = <SparklineViewPoint>this.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
 			this.initialXMouse = this.stage.mouseX;
 			this.initialYMouse = this.stage.mouseY;
 			switch (param1)
@@ -1330,19 +1321,19 @@ namespace com.google.finance
 					this.state = ControllerStates.SCROLLING;
 					this.cumulativeXOffset = 0;
 					this.pagingAmount = 0;
-					const _loc3_ = _loc2_.windowLayer.getLeftX();
-					const _loc4_ = _loc2_.windowLayer.getRightX();
-					this.scrollMouseMinX = _loc2_.minx + this.initialXMouse - _loc3_;
-					this.scrollMouseMaxX = _loc2_.maxx - (_loc4_ - this.initialXMouse);
+					const leftX = sparklineViewPoint.windowLayer.getLeftX();
+					const rightX = sparklineViewPoint.windowLayer.getRightX();
+					this.scrollMouseMinX = sparklineViewPoint.minx + this.initialXMouse - leftX;
+					this.scrollMouseMaxX = sparklineViewPoint.maxx - (rightX - this.initialXMouse);
 					break;
 				case ControllerComponents.SCROLL_BG:
-					const _loc5_ = _loc2_.windowLayer.scrollSlider;
-					if (this.mouseX < _loc5_.x)
+					const scrollSlider = sparklineViewPoint.windowLayer.scrollSlider;
+					if (this.mouseX < scrollSlider.x)
 					{
 						this.movePage(Directions.BACKWARD);
 						break;
 					}
-					if (this.mouseX > _loc5_.x + _loc5_.width)
+					if (this.mouseX > scrollSlider.x + scrollSlider.width)
 					{
 						this.movePage(Directions.FORWARD);
 						break;

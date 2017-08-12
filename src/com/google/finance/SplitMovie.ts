@@ -84,18 +84,18 @@ namespace com.google.finance
 			const _loc4_ = this.detailsTextField.x + this.detailsTextField.width + 2;
 			const _loc5_ = this.detailsTextField.y + this.detailsTextField.height + 2;
 			let _loc6_ = -2;
-			const _loc7_ = this.supportingLayer.viewPoint.minx;
-			const _loc8_ = this.supportingLayer.viewPoint.maxx;
-			if (_loc2_ < _loc7_)
-				_loc6_ = Number(_loc7_ - _loc2_ - 2);
-			else if (_loc4_ > _loc8_)
-				_loc6_ = Number(_loc8_ - _loc4_ - 2);
+			const minx = this.supportingLayer.viewPoint.minx;
+			const maxx = this.supportingLayer.viewPoint.maxx;
+			if (_loc2_ < minx)
+				_loc6_ = Number(minx - _loc2_ - 2);
+			else if (_loc4_ > maxx)
+				_loc6_ = Number(maxx - _loc4_ - 2);
 
 			this.detailsTextField.x = this.detailsTextField.x + _loc6_;
-			const _loc9_ = this.highlightCanvas.graphics;
-			_loc9_.lineStyle(0, this.textColor, 1);
-			_loc9_.beginFill(0xffffff, 1);
-			_loc9_.drawRect(
+			const graphics = this.highlightCanvas.graphics;
+			graphics.lineStyle(0, this.textColor, 1);
+			graphics.beginFill(0xffffff, 1);
+			graphics.drawRect(
 				_loc2_ + _loc6_, _loc3_,
 				_loc4_ - _loc2_, _loc5_ - _loc3_
 			);
@@ -106,7 +106,7 @@ namespace com.google.finance
 			_loc9_.lineTo(_loc2_ + _loc6_, _loc5_);
 			_loc9_.lineTo(_loc2_ + _loc6_, _loc3_);
 			*/
-			_loc9_.endFill();
+			graphics.endFill();
 		}
 
 		getShortText(param1 = false): string
@@ -139,11 +139,11 @@ namespace com.google.finance
 
 		getDateText(): string
 		{
-			const _loc1_ = this.associatedSplit.exchangeDateInUTC;
+			const exchangeDateInUTC = this.associatedSplit.exchangeDateInUTC;
 			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
-				return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.LONG_DATE_FORMAT, _loc1_, true);
+				return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.LONG_DATE_FORMAT, exchangeDateInUTC, true);
 
-			return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.MEDIUM_DATE_FORMAT, _loc1_, true);
+			return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.MEDIUM_DATE_FORMAT, exchangeDateInUTC, true);
 		}
 
 		hideDetails() 
@@ -166,13 +166,13 @@ namespace com.google.finance
 
 		private initTextField(): flash.text.TextField
 		{
-			const _loc1_ = new flash.text.TextField();
-			_loc1_.autoSize = flash.text.TextFieldAutoSize.CENTER;
-			_loc1_.x = 0;
-			_loc1_.selectable = false;
-			_loc1_.cacheAsBitmap = false;
-			_loc1_.defaultTextFormat = this.textFormat;
-			return _loc1_;
+			const textField = new flash.text.TextField();
+			textField.autoSize = flash.text.TextFieldAutoSize.CENTER;
+			textField.x = 0;
+			textField.selectable = false;
+			textField.cacheAsBitmap = false;
+			textField.defaultTextFormat = this.textFormat;
+			return textField;
 		}
 
 		private positionRegularArrow() 

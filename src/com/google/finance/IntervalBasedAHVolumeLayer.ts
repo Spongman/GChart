@@ -15,21 +15,21 @@ namespace com.google.finance
 			if (param3["volumesetter"])
 				param3["volumesetter"].clearHighlight();
 
-			const _loc4_ = this.getDataSeries();
-			const _loc5_ = this.viewPoint;
-			const _loc6_ = this.findPointIndex(param2);
-			const _loc7_ = _loc5_.getDetailLevelForTechnicalStyle();
-			const _loc8_ = Const.getDetailLevelInterval(_loc7_);
-			const _loc9_ = _loc4_.getPointsInIntervalArray(_loc8_);
-			if (!_loc9_ || _loc6_ === -1)
+			const dataSeries = this.getDataSeries();
+			const viewPoint = this.viewPoint;
+			const pointIndex = this.findPointIndex(param2);
+			const detailLevel = viewPoint.getDetailLevelForTechnicalStyle();
+			const detailLevelInterval = Const.getDetailLevelInterval(detailLevel);
+			const points = dataSeries.getPointsInIntervalArray(detailLevelInterval);
+			if (!points || pointIndex === -1)
 				return;
 
-			const _loc10_ = _loc9_[_loc6_];
-			const _loc11_ = _loc5_.getXPos(_loc10_);
-			const _loc12_ = this.getYPos(_loc10_.volumes[_loc8_], _loc5_);
+			const _loc10_ = points[pointIndex];
+			const xPos = viewPoint.getXPos(_loc10_);
+			const yPos = this.getYPos(_loc10_.volumes[detailLevelInterval], viewPoint);
 			this.highlightCanvas.graphics.lineStyle(2, Const.VOLUME_HIGHLIGHT_COLOR, 1);
-			this.drawOneLine(_loc11_, _loc12_, _loc5_, this.highlightCanvas);
-			param3[SpaceText.VOLUME_STR] = _loc10_.volumes[_loc8_];
+			this.drawOneLine(xPos, yPos, viewPoint, this.highlightCanvas);
+			param3[SpaceText.VOLUME_STR] = _loc10_.volumes[detailLevelInterval];
 			param3["ahsetter"] = this;
 		}
 
@@ -40,26 +40,26 @@ namespace com.google.finance
 			if (vp.getDetailLevelForTechnicalStyle() !== Intervals.INTRADAY)
 				return;
 
-			const _loc2_ = this.getDataSeries().getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
-			if (!_loc2_)
+			const points = this.getDataSeries().getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
+			if (!points)
 				return;
 
-			const _loc3_ = this.dataSource.visibleExtendedHours;
-			if (_loc3_.length() === 0)
+			const visibleExtendedHours = this.dataSource.visibleExtendedHours;
+			if (visibleExtendedHours.length() === 0)
 				return;
 
 			this.regionsXLimits = new com.google.finance.IntervalSet();
 			
-			for (let _loc4_ = 0; _loc4_ < _loc3_.length(); _loc4_++)
+			for (let intervalIndex = 0; intervalIndex < visibleExtendedHours.length(); intervalIndex++)
 			{
-				const _loc5_ = _loc3_.getIntervalAt(_loc4_);
-				const _loc6_ = _loc2_[_loc5_.start];
-				const _loc7_ = _loc2_[_loc5_.end];
+				const interval = visibleExtendedHours.getIntervalAt(intervalIndex);
+				const _loc6_ = points[interval.start];
+				const _loc7_ = points[interval.end];
 				if (ViewPoint.sessionVisible(_loc6_, _loc7_, context))
 				{
-					const _loc8_ = vp.getXPos(_loc6_);
-					const _loc9_ = vp.getXPos(_loc7_);
-					this.regionsXLimits.addInterval(_loc8_, _loc9_);
+					const xPos1 = vp.getXPos(_loc6_);
+					const xPos2 = vp.getXPos(_loc7_);
+					this.regionsXLimits.addInterval(xPos1, xPos2);
 				}
 			}
 			super.renderLayer(context);

@@ -28,22 +28,22 @@ namespace com.google.finance
 
 		getAllDataSeriesArray()
 		{
-			const _loc1_: DataSeries[] = [];
-			for (let _loc2_ = 0; _loc2_ < this.intervals.length; _loc2_++)
+			const dataSeriesArray: DataSeries[] = [];
+			for (let intervalIndex = 0; intervalIndex < this.intervals.length; intervalIndex++)
 			{
-				let ds = this.getDataSeries(this.intervals[_loc2_]);
+				let ds = this.getDataSeries(this.intervals[intervalIndex]);
 				if (ds)
-					_loc1_.push(ds);
+					dataSeriesArray.push(ds);
 			}
-			return _loc1_;
+			return dataSeriesArray;
 		}
 
 		clear(param1:number = 0) 
 		{
 			if (param1 === 0)
 			{
-				for (let _loc2_ = 0; _loc2_ < this.intervals.length; _loc2_++)
-					delete this.hash["series" + this.intervals[_loc2_]];
+				for (let intervalIndex = 0; intervalIndex < this.intervals.length; intervalIndex++)
+					delete this.hash["series" + this.intervals[intervalIndex]];
 
 				this.intervals = [];
 			}
@@ -66,11 +66,11 @@ namespace com.google.finance
 
 		hasInterval(param1: number): boolean
 		{
-			let _loc2_ = this.intervals.length;
-			while (_loc2_ >= 0 && this.intervals[_loc2_] !== param1)
-				_loc2_--;
+			let index = this.intervals.length;
+			while (index >= 0 && this.intervals[index] !== param1)
+				index--;
 
-			return _loc2_ !== -1;
+			return index !== -1;
 		}
 	}
 }

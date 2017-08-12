@@ -73,38 +73,38 @@ namespace com.google.finance.ui
 
 		private putSeparator(param1: number, param2: number, param3: string): flash.text.TextField
 		{
-			const _loc4_ = new flash.text.TextField();
-			_loc4_.x = param1 - this.spacing / 2;
-			_loc4_.y = param2;
-			_loc4_.defaultTextFormat = this.separatorTextFormat;
-			_loc4_.autoSize = flash.text.TextFieldAutoSize.LEFT;
-			_loc4_.selectable = false;
-			_loc4_.text = param3;
-			this.addChild(_loc4_);
-			return _loc4_;
+			const textField = new flash.text.TextField();
+			textField.x = param1 - this.spacing / 2;
+			textField.y = param2;
+			textField.defaultTextFormat = this.separatorTextFormat;
+			textField.autoSize = flash.text.TextFieldAutoSize.LEFT;
+			textField.selectable = false;
+			textField.text = param3;
+			this.addChild(textField);
+			return textField;
 		}
 
 		protected attachButton(param1: string, param2?: flash.text.TextFormat, param3 = NaN, param4 = NaN): flash.display.SimpleButton
 		{
-			const _loc5_ = new flash.display.SimpleButton();
-			const _loc6_ = this.getNextButtonPosition();
-			_loc5_.x = _loc6_.x;
-			_loc5_.y = _loc6_.y;
-			_loc5_.useHandCursor = true;
-			const _loc8_ = new flash.text.TextField();
-			const _loc7_ = new flash.display.Sprite();
-			_loc7_.addChild(_loc8_);
+			const simpleButton = new flash.display.SimpleButton();
+			const nextButtonPosition = this.getNextButtonPosition();
+			simpleButton.x = nextButtonPosition.x;
+			simpleButton.y = nextButtonPosition.y;
+			simpleButton.useHandCursor = true;
+			const textField = new flash.text.TextField();
+			const sprite = new flash.display.Sprite();
+			sprite.addChild(textField);
 			//const _loc7_ = _loc8_;
-			_loc8_.defaultTextFormat = !!param2 ? param2 : this.buttonTextFormat;
-			_loc8_.text = param1;
-			_loc8_.autoSize = flash.text.TextFieldAutoSize.LEFT;
-			_loc5_.upState = _loc7_;
-			_loc5_.downState = _loc7_;
-			_loc5_.overState = _loc7_;
-			_loc5_.hitTestState = _loc7_;
-			_loc5_.name = param1;
-			this.addChild(_loc5_);
-			return _loc5_;
+			textField.defaultTextFormat = !!param2 ? param2 : this.buttonTextFormat;
+			textField.text = param1;
+			textField.autoSize = flash.text.TextFieldAutoSize.LEFT;
+			simpleButton.upState = sprite;
+			simpleButton.downState = sprite;
+			simpleButton.overState = sprite;
+			simpleButton.hitTestState = sprite;
+			simpleButton.name = param1;
+			this.addChild(simpleButton);
+			return simpleButton;
 		}
 
 		setLeftPadding(param1: number) 
@@ -132,8 +132,8 @@ namespace com.google.finance.ui
 		{
 			let button = (<any>param1.currentTarget).displayObject as flash.display.SimpleButton;
 			const _loc2_ = (<flash.display.DisplayObjectContainer>button.upState).getChildAt(0) as flash.text.TextField;
-			const _loc3_ = this.getButtonIndex(_loc2_.text);
-			if (_loc3_ !== -1)
+			const buttonIndex = this.getButtonIndex(_loc2_.text);
+			if (buttonIndex !== -1)
 			{
 				for (let _loc4_ = 0; _loc4_ < this.listenerFunctions.length; _loc4_++)
 				{
@@ -158,8 +158,8 @@ namespace com.google.finance.ui
 
 		addPlainText(param1: string, param2 = NaN) 
 		{
-			const _loc3_ = this.getNextButtonPosition();
-			const _loc4_ = this.putSeparator(_loc3_.x, _loc3_.y, param1);
+			const nextButtonPosition = this.getNextButtonPosition();
+			const _loc4_ = this.putSeparator(nextButtonPosition.x, nextButtonPosition.y, param1);
 			if (!isNaN(param2))
 				this.currentX = this.currentX + param2;
 			else

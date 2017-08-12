@@ -25,8 +25,8 @@ namespace com.google.finance
 
 		toString(): string
 		{
-			const _loc1_ = this.exchangeDateInUTC;
-			let _loc2_ = Utils.utcDateToString(_loc1_);
+			const exchangeDateInUTC = this.exchangeDateInUTC;
+			let _loc2_ = Utils.utcDateToString(exchangeDateInUTC);
 			if (!isNaN(this.relativeMinutes))
 				_loc2_ = _loc2_ + ("[relMin:" + this.relativeMinutes + "]");
 
@@ -61,9 +61,9 @@ namespace com.google.finance
 		addVolumeInfo(param1: DataUnit) 
 		{
 			let _loc3_ = 0;
-			for (let _loc2_ = 0; _loc2_ < param1.intervals.length; _loc2_++)
+			for (let intervalIndex = 0; intervalIndex < param1.intervals.length; intervalIndex++)
 			{
-				_loc3_ = param1.intervals[_loc2_];
+				_loc3_ = param1.intervals[intervalIndex];
 				if (this.volumes[_loc3_] === undefined)
 				{
 					this.volumes[_loc3_] = param1.volumes[_loc3_];

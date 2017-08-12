@@ -55,7 +55,7 @@ gulp.task('javascript', function () {
 /*
 Web server to test app
 */
-gulp.task('webserver', function () {
+gulp.task('webserver', ['default'], function () {
 	connect.server({
 		livereload: true,
 		root: 'dist/',
@@ -132,4 +132,4 @@ gulp.task('default',
 	['styles', 'typescript', 'javascript', 'html', 'assets']);
 
 gulp.task('serve',
-	['default', 'webserver', 'livereload', 'watch']);
+	['webserver', 'livereload', 'watch']);

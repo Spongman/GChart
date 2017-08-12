@@ -18,6 +18,7 @@ var connectProxy = require('gulp-api-proxy');
 
 const config = {
 	production: !!util.env.production,
+	port: util.env.port,
 };
 
 var tsProject = ts.createProject(
@@ -59,6 +60,7 @@ gulp.task('webserver', ['default'], function () {
 	connect.server({
 		livereload: true,
 		root: 'dist/',
+		port: config.port || 8080,
 		middleware: function (connect, opt) {
 			opt.route = '/finance';
 			opt.context = "finance.google.com/finance";

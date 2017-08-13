@@ -339,8 +339,8 @@ namespace com.google.finance
 					return;
 
 				coveredMinutes = coveredMinutes - minutesSkip;
-				const intervalLength = this.viewPoint.getIntervalLength(coveredMinutes);
-				if (intervalLength < DateLinesLayer.DAY_START_TEXT_MAX_WIDTH)
+				const intervalLength2 = this.viewPoint.getIntervalLength(coveredMinutes);
+				if (intervalLength2 < DateLinesLayer.DAY_START_TEXT_MAX_WIDTH)
 					return;
 
 				AbstractLayer.drawVerticalLine(param1, xPos, Const.HOUR_LINE_COLOR, Const.HOUR_LINE_ALPHA, _loc11_, _loc12_, ViewPoint.TICK_SIZE_SMALL, this.tickPosition);

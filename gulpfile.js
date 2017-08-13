@@ -29,6 +29,10 @@ var tsProject = ts.createProject(
 	}
 );
 
+var uglifyOptions = {
+	keep_fnames: true
+};
+
 /*
 compile typescript
 use ES5 and commonJS module
@@ -40,7 +44,7 @@ gulp.task('typescript', function () {
 		.pipe(tsProject()).js
 		//.pipe(gulp.dest("dist/js"))
 		//.pipe(buffer())
-		.pipe(config.production ? uglify() : util.noop())
+		.pipe(config.production ? uglify(uglifyOptions) : util.noop())
 		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest("dist"));
 });
@@ -49,7 +53,7 @@ gulp.task('javascript', function () {
 
 	gulp.src('src/**/*.js')
 		.pipe(sourcemaps.init())
-		.pipe(config.production ? uglify() : util.noop())
+		.pipe(config.production ? uglify(uglifyOptions) : util.noop())
 		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest('dist'));
 });

@@ -15,23 +15,23 @@ namespace com.google.finance
 			super(null, pos, dayPos);
 		}
 
-		static compare(param1: StockAssociatedObject, param2: StockAssociatedObject): number
+		static compare(obj1: StockAssociatedObject, obj2: StockAssociatedObject): number
 		{
-			const time1 = param1.time;
-			const time2 = param2.time;
+			const time1 = obj1.time;
+			const time2 = obj2.time;
 			if (time1 < time2)
 				return -1;
 
 			if (time1 > time2)
 				return 1;
 
-			if (param1 instanceof PinPoint && param2 instanceof PinPoint)
+			if (obj1 instanceof PinPoint && obj2 instanceof PinPoint)
 			{
 				// TODO: PinPoint only?
-				if (param1.letter < param2.letter)
+				if (obj1.letter < obj2.letter)
 					return -1;
 
-				if (param1.letter > param2.letter)
+				if (obj1.letter > obj2.letter)
 					return 1;
 			}
 			return 0;

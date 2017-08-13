@@ -13,7 +13,7 @@ namespace com.google.finance
 			this.setEnabled(true);
 		}
 
-		private drawOhlcBars(param1: DataUnit[], param2: number, param3: number, param4: Context)
+		private drawOhlcBars(param1: DataUnit[], param2: number, param3: number, context: Context)
 		{
 			const afterHoursBarWidth = this.getAfterHoursBarWidth();
 			const gr = this.graphics;
@@ -23,7 +23,7 @@ namespace com.google.finance
 				{
 					const _loc7_ = param1[_loc6_];
 					const xPos = this.viewPoint.getXPos(_loc7_);
-					const ohlcYPos = this.getOhlcYPos(param4, _loc7_);
+					const ohlcYPos = this.getOhlcYPos(context, _loc7_);
 					const ohlcColor = this.getOhlcColor(_loc7_, param1[Math.max(_loc6_ - 1, 0)]);
 					gr.lineStyle(1, ohlcColor);
 					if (!_loc7_.fake)
@@ -106,7 +106,7 @@ namespace com.google.finance
 			return intervalSet;
 		}
 
-		private drawCandleSticks(param1: DataUnit[], param2: number, param3: number, param4: Context) 
+		private drawCandleSticks(param1: DataUnit[], param2: number, param3: number, context: Context) 
 		{
 			const afterHoursBarWidth = this.getAfterHoursBarWidth();
 			const gr = this.graphics;
@@ -116,7 +116,7 @@ namespace com.google.finance
 				{
 					const _loc7_ = param1[_loc6_];
 					const xPos = this.viewPoint.getXPos(_loc7_);
-					const ohlcYPos = this.getOhlcYPos(param4, _loc7_);
+					const ohlcYPos = this.getOhlcYPos(context, _loc7_);
 					//const _loc10_ = Math.abs(_loc9_.closeY - _loc9_.openY);
 					const _loc11_ = _loc7_.close >= _loc7_.open;
 					const candleStickColor = this.getCandleStickColor(_loc7_);
@@ -167,10 +167,10 @@ namespace com.google.finance
 			return context;
 		}
 
-		private drawLines(param1: DataUnit[], param2: number, param3: number, param4: Context) 
+		private drawLines(param1: DataUnit[], param2: number, param3: number, context: Context) 
 		{
 			let xPos = this.viewPoint.getXPos(param1[param3]);
-			let closeYPos = this.getCloseYPos(param4, param1[param3]);
+			let closeYPos = this.getCloseYPos(context, param1[param3]);
 			const gr = this.graphics;
 			gr.lineStyle(0, 0, 0);
 			gr.beginFill(Const.ECN_LINE_CHART_FILL_COLOR, Const.ECN_LINE_CHART_FILL_VISIBILITY);
@@ -180,7 +180,7 @@ namespace com.google.finance
 			for (let _loc7_ = param3; _loc7_ > param2; _loc7_--)
 			{
 				xPos = this.viewPoint.getXPos(param1[_loc7_]);
-				closeYPos = this.getCloseYPos(param4, param1[_loc7_]);
+				closeYPos = this.getCloseYPos(context, param1[_loc7_]);
 				gr.lineTo(xPos, closeYPos);
 			}
 			gr.lineStyle(0, 0, 0);
@@ -199,7 +199,7 @@ namespace com.google.finance
 			return this.dataSource.afterHoursData;
 		}
 
-		private drawAfterHoursSession(param1: number, param2: number, param3: Context, param4: DataUnit[]) 
+		private drawAfterHoursSession(param1: number, param2: number, context: Context, param4: DataUnit[]) 
 		{
 			const timeIndex1 = DataSource.getTimeIndex(param2, param4);
 			const timeIndex2 = DataSource.getTimeIndex(param1, param4);
@@ -207,13 +207,13 @@ namespace com.google.finance
 			switch (this.viewPoint.getDisplayManager().getEnabledChartLayer())
 			{
 				case Const.CANDLE_STICK:
-					this.drawCandleSticks(param4, timeIndex2, _loc7_, param3);
+					this.drawCandleSticks(param4, timeIndex2, _loc7_, context);
 					break;
 				case Const.OHLC_CHART:
-					this.drawOhlcBars(param4, timeIndex2, _loc7_, param3);
+					this.drawOhlcBars(param4, timeIndex2, _loc7_, context);
 					break;
 				default:
-					this.drawLines(param4, timeIndex2, _loc7_, param3);
+					this.drawLines(param4, timeIndex2, _loc7_, context);
 					break;
 			}
 			this.regionsXLimits.addInterval(this.viewPoint.getXPos(param4[timeIndex2]), this.viewPoint.getXPos(param4[timeIndex1]));

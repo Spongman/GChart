@@ -13,9 +13,9 @@ namespace com.google.finance
 			return units[param1].close;
 		}
 
-		protected getYPos(param1: Context, param2: DataUnit): number
+		protected getYPos(context: Context, param2: DataUnit): number
 		{
-			return this.localYOffset + param1.plusSize - (Utils.getLogScaledValue(param2.close / this.localStartPrice, param1.verticalScaling) - Utils.getLogScaledValue(1, param1.verticalScaling)) * this.localYScale;
+			return this.localYOffset + context.plusSize - (Utils.getLogScaledValue(param2.close / this.localStartPrice, context.verticalScaling) - Utils.getLogScaledValue(1, context.verticalScaling)) * this.localYScale;
 		}
 
 		private getQuoteText(param1: string): string
@@ -67,24 +67,24 @@ namespace com.google.finance
 			};
 		}
 
-		getContext(param1: Context, param2 = false) 
+		getContext(context: Context, param2 = false) 
 		{
 			const viewPoint = this.viewPoint;
-			const range = this.getRange(param1.lastMinute, param1.count);
+			const range = this.getRange(context.lastMinute, context.count);
 			if (!range)
-				return param1;
+				return context;
 
-			const _loc5_ = Utils.getLogScaledValue(range.maxPrice / range.startPrice, param1.verticalScaling);
-			param1.plusVariation = Utils.extendedMax(_loc5_, param1.plusVariation);
-			const _loc6_ = Utils.getLogScaledValue(range.minPrice / range.startPrice, param1.verticalScaling);
-			param1.minusVariation = Utils.extendedMin(_loc6_, param1.minusVariation);
-			param1.scaleVariation = param1.plusVariation - param1.minusVariation;
-			param1.localYAdjustment = param1.plusVariation - Utils.getLogScaledValue(1, param1.verticalScaling);
-			param1.plusSize = param1.localYAdjustment * (viewPoint.maxPriceRangeViewSize - 20) / param1.scaleVariation;
-			return param1;
+			const _loc5_ = Utils.getLogScaledValue(range.maxPrice / range.startPrice, context.verticalScaling);
+			context.plusVariation = Utils.extendedMax(_loc5_, context.plusVariation);
+			const _loc6_ = Utils.getLogScaledValue(range.minPrice / range.startPrice, context.verticalScaling);
+			context.minusVariation = Utils.extendedMin(_loc6_, context.minusVariation);
+			context.scaleVariation = context.plusVariation - context.minusVariation;
+			context.localYAdjustment = context.plusVariation - Utils.getLogScaledValue(1, context.verticalScaling);
+			context.plusSize = context.localYAdjustment * (viewPoint.maxPriceRangeViewSize - 20) / context.scaleVariation;
+			return context;
 		}
 
-		renderLayer(param1: Context) 
+		renderLayer(context: Context) 
 		{
 			const viewPoint = this.viewPoint;
 			const dataSeries = this.getDataSeries();
@@ -98,16 +98,16 @@ namespace com.google.finance
 			//const _loc7_ = new flash.display.Point(_loc2_.maxx, _loc2_.maxy + 1);
 			//this.globalToLocal(_loc7_);
 			this.localYOffset = viewPoint.miny + ViewPoint.MIN_EDGE_DISTANCE / 2;
-			this.localYScale = (viewPoint.maxPriceRangeViewSize - 20) / param1.scaleVariation;
+			this.localYScale = (viewPoint.maxPriceRangeViewSize - 20) / context.scaleVariation;
 			this.localStartPrice = this.calculatePercentChangeBase(_loc6_);
-			const _loc8_ = this.drawLine(this, _loc6_, lastRelativeMinuteIndex, viewPoint, param1);
+			const _loc8_ = this.drawLine(this, _loc6_, lastRelativeMinuteIndex, viewPoint, context);
 			const point = new flash.display.Point(_loc8_, viewPoint.maxy);
 			gr.lineStyle(0, 0, 0);
 			//this.globalToLocal(_loc9_);	// TODO:?
 			gr.lineTo(point.x, point.y);
 		}
 
-		highlightPoint(param1: Context, param2: number, param3: { [key: string]: any }) 
+		highlightPoint(context: Context, param2: number, param3: { [key: string]: any }) 
 		{
 			this.clearHighlight();
 			const dataSeries = this.getDataSeries();
@@ -124,7 +124,7 @@ namespace com.google.finance
 				_loc5_ = notnull(this.getPoint(dataSeries, param2));
 
 			const _loc8_ = this.viewPoint.getMinuteXPos(_loc5_.relativeMinutes);
-			const _loc9_ = this.getYPos(param1, _loc5_);
+			const _loc9_ = this.getYPos(context, _loc5_);
 			const gr = this.highlightCanvas.graphics;
 			gr.lineStyle(5, this.lineColor, 1);
 			gr.moveTo(_loc8_, _loc9_ - 0.2);

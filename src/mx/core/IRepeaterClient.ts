@@ -8,7 +8,7 @@ namespace mx.core
 
 		isDocument: boolean;
 
-		initializeRepeaterArrays(param1: IRepeaterClient): void;
+		initializeRepeaterArrays(client: IRepeaterClient): void;
 
 		//repeaters: Array;
 

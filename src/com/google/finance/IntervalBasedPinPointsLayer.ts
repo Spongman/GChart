@@ -192,7 +192,7 @@ namespace com.google.finance
 			pinPointMovieClip.setHeight(param3);
 		}
 
-		private getFlagGroupCount(param1: Context, param2: PinPoint[], param3: number, param4: number): number
+		private getFlagGroupCount(context: Context, param2: PinPoint[], param3: number, param4: number): number
 		{
 			let _loc5_ = 1;
 			const _loc6_ = param2[param3];
@@ -211,7 +211,7 @@ namespace com.google.finance
 			return _loc5_;
 		}
 
-		private renderFlagsGroup(param1: Context, param2: number, param3: number, param4: number, param5: number, param6: number, param7: PinPoint[], param8: number, param9: PinOrientations)
+		private renderFlagsGroup(context: Context, param2: number, param3: number, param4: number, param5: number, param6: number, param7: PinPoint[], param8: number, param9: PinOrientations)
 		{
 			this.lastAbsoluteHeightMin = param4 - param8 + IntervalBasedPinPointsLayer.FLAG_HEIGHT;
 			let _loc10_ = false;

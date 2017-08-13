@@ -259,9 +259,9 @@ namespace com.google.finance
 			return Math.round(_loc6_);
 		}
 
-		zoomInMinutes_Handler(param1: Context, param2 = false) 
+		zoomInMinutes_Handler(context: Context, param2 = false) 
 		{
-			this.checkResizeSparkline(param1.count);
+			this.checkResizeSparkline(context.count);
 		}
 
 		renderPassiveLayers() 
@@ -709,7 +709,7 @@ namespace com.google.finance
 			return this.getSparkLastMinute() - (this.maxx - param1) * this.sparkCount / (this.maxx - this.minx);
 		}
 
-		zoomingAnimation_init(param1: Context) 
+		zoomingAnimation_init(context: Context) 
 		{
 		}
 

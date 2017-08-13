@@ -11,12 +11,12 @@ namespace com.google.finance
 			return "[" + this.start + ", " + this.end + "]";
 		}
 
-		equals(param1: StartEndPair): boolean
+		equals(pair: StartEndPair): boolean
 		{
-			if (!(param1 instanceof StartEndPair))
+			if (!(pair instanceof StartEndPair))
 				return false;
 
-			return this.start === param1.start && this.end === param1.end;
+			return this.start === pair.start && this.end === pair.end;
 		}
 	}
 }

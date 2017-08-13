@@ -7,26 +7,26 @@ namespace com.google.finance
 		private localYOffset: number;
 		private localYScale: number;
 
-		private computeLocalVars(param1: Context) 
+		private computeLocalVars(context: Context) 
 		{
 			this.localYOffset = this.viewPoint.miny + ViewPoint.MIN_EDGE_DISTANCE / 2;
-			this.localYScale = (this.viewPoint.maxPriceRangeViewSize - 20) / param1.scaleVariation;
-			this.distanceBetweenLines = this.getDistanceBetweenLines(param1);
+			this.localYScale = (this.viewPoint.maxPriceRangeViewSize - 20) / context.scaleVariation;
+			this.distanceBetweenLines = this.getDistanceBetweenLines(context);
 		}
 
-		protected drawZeroLine(param1: Context) 
+		protected drawZeroLine(context: Context) 
 		{
 			const gr = this.graphics;
 			gr.lineStyle(0, Const.ZERO_PERCENT_LINE_COLOR, 1);
-			const yPos = this.getYPos(0, param1);
+			const yPos = this.getYPos(0, context);
 			gr.moveTo(this.viewPoint.minx + 1, yPos);
 			gr.lineTo(this.viewPoint.maxx - 1, yPos);
 		}
 
-		protected getMinLineValue(param1: Context): number
+		protected getMinLineValue(context: Context): number
 		{
 			let _loc2_ = 0;
-			const _loc3_ = (this.inverseLogTransform(param1.minusVariation, param1.verticalScaling) - 1) * 100;
+			const _loc3_ = (this.inverseLogTransform(context.minusVariation, context.verticalScaling) - 1) * 100;
 			while (_loc2_ > _loc3_)
 				_loc2_ = Number(_loc2_ - this.distanceBetweenLines);
 
@@ -34,18 +34,18 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		protected getMaxDisplayRange(param1: Context): number
+		protected getMaxDisplayRange(context: Context): number
 		{
-			return (this.inverseLogTransform(param1.plusVariation, param1.verticalScaling) - this.inverseLogTransform(param1.minusVariation, param1.verticalScaling)) * 100;
+			return (this.inverseLogTransform(context.plusVariation, context.verticalScaling) - this.inverseLogTransform(context.minusVariation, context.verticalScaling)) * 100;
 		}
 
-		protected getMaxY(param1: Context, param2: number): number
+		protected getMaxY(context: Context, param2: number): number
 		{
-			let _loc3_ = (this.inverseLogTransform(param1.plusVariation, param1.verticalScaling) - 1) * 100;
+			let _loc3_ = (this.inverseLogTransform(context.plusVariation, context.verticalScaling) - 1) * 100;
 			let _loc4_ = 0;
 			do
 			{
-				_loc4_ = Number(this.getYPos(_loc3_, param1));
+				_loc4_ = Number(this.getYPos(_loc3_, context));
 				_loc3_ = _loc3_ + param2;
 			}
 			while (_loc4_ > this.viewPoint.miny);
@@ -53,25 +53,25 @@ namespace com.google.finance
 			return _loc3_;
 		}
 
-		protected getInitialLinesList(param1: Context)
+		protected getInitialLinesList(context: Context)
 		{
-			return [this.getYPos(0, param1)];
+			return [this.getYPos(0, context)];
 		}
 
-		protected getValueForYPos(param1: number, param2: Context): number
+		protected getValueForYPos(param1: number, context: Context): number
 		{
-			if (param2.verticalScaling === Const.LOG_VSCALE || param2.verticalScaling === Const.NEW_LOG_VSCALE)
+			if (context.verticalScaling === Const.LOG_VSCALE || context.verticalScaling === Const.NEW_LOG_VSCALE)
 			{
-				const _loc3_ = param2.localYAdjustment - (param1 - this.localYOffset) / this.localYScale + Utils.logTransform(1);
-				return (this.inverseLogTransform(_loc3_, param2.verticalScaling) - 1) * 100;
+				const _loc3_ = context.localYAdjustment - (param1 - this.localYOffset) / this.localYScale + Utils.logTransform(1);
+				return (this.inverseLogTransform(_loc3_, context.verticalScaling) - 1) * 100;
 			}
-			return (param2.localYAdjustment - (param1 - this.localYOffset) / this.localYScale) * 100;
+			return (context.localYAdjustment - (param1 - this.localYOffset) / this.localYScale) * 100;
 		}
 
-		protected getYPos(param1: number, param2: Context): number
+		protected getYPos(param1: number, context: Context): number
 		{
 			let _loc3_ = 0;
-			if (param2.verticalScaling === Const.LOG_VSCALE || param2.verticalScaling === Const.NEW_LOG_VSCALE)
+			if (context.verticalScaling === Const.LOG_VSCALE || context.verticalScaling === Const.NEW_LOG_VSCALE)
 			{
 				if (1 + param1 / 100 < 0)
 					return 2 * this.viewPoint.maxy;
@@ -82,16 +82,16 @@ namespace com.google.finance
 			{
 				_loc3_ = Number(param1 / 100);
 			}
-			return this.localYOffset + (param2.localYAdjustment - _loc3_) * this.localYScale;
+			return this.localYOffset + (context.localYAdjustment - _loc3_) * this.localYScale;
 		}
 
-		renderLayer(param1: Context) 
+		renderLayer(context: Context) 
 		{
 			this.valueSuffix = "%";
 			this.graphics.clear();
-			this.computeLocalVars(param1);
-			this.drawHorizontalLines(param1);
-			this.drawZeroLine(param1);
+			this.computeLocalVars(context);
+			this.drawHorizontalLines(context);
+			this.drawZeroLine(context);
 		}
 	}
 }

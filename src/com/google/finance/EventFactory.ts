@@ -17,7 +17,7 @@ namespace com.google.finance
 			return chartEvent;
 		}
 
-		static getEvent(param1: number, param2: string, param3: ChartEventPriorities): ChartEvent
+		static getEvent(param1: number, param2: string, priorities: ChartEventPriorities): ChartEvent
 		{
 			let _loc4_: ChartEvent;
 			if (Const.INDICATOR_ENABLED)
@@ -89,7 +89,7 @@ namespace com.google.finance
 						break;
 				}
 			}
-			_loc4_.priority = param3;
+			_loc4_.priority = priorities;
 			return _loc4_;
 		}
 	}

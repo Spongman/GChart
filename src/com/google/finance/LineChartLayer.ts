@@ -24,7 +24,7 @@ namespace com.google.finance
 			this.addChild(this.highlightCanvas);
 		}
 
-		protected drawWeeklyLine(param1: flash.display.Sprite, param2: number, param3: number, viewPoint: ViewPoint, param5: Context): number
+		protected drawWeeklyLine(param1: flash.display.Sprite, param2: number, param3: number, viewPoint: ViewPoint, context: Context): number
 		{
 			const skipInterval = viewPoint.getSkipInterval();
 			const dataSeries = this.getDataSeries();
@@ -39,7 +39,7 @@ namespace com.google.finance
 			while (_loc9_ >= 0 && dataSeries.fridays[_loc9_] >= param2)
 			{
 				_loc10_ = dataSeries.units[dataSeries.fridays[_loc9_]];
-				this.drawLineToDataUnit(viewPoint, param1, param5, _loc10_);
+				this.drawLineToDataUnit(viewPoint, param1, context, _loc10_);
 				_loc9_ = _loc9_ - skipInterval.skip;
 			}
 			return _loc10_ ? Number(viewPoint.getXPos(_loc10_)) : -1;
@@ -199,7 +199,7 @@ namespace com.google.finance
 			return param2[param3];
 		}
 
-		protected drawDayLine(param1: flash.display.Sprite, param2: number, viewPoint: ViewPoint, param4: number, param5: number, param6: Context): number
+		protected drawDayLine(param1: flash.display.Sprite, param2: number, viewPoint: ViewPoint, param4: number, param5: number, context: Context): number
 		{
 			const dataSeries = this.getDataSeries();
 			const units = dataSeries.units;
@@ -215,7 +215,7 @@ namespace com.google.finance
 			if (units[param2 - 1].dayMinute === dataSeries.marketCloseMinute)
 			{
 				const xPos = viewPoint.getXPos(units[param2 - 1]);
-				const yPos = this.getYPos(param6, units[param2 - 1]);
+				const yPos = this.getYPos(context, units[param2 - 1]);
 				gr.lineTo(xPos, yPos);
 				return xPos;
 			}
@@ -237,7 +237,7 @@ namespace com.google.finance
 				//this.globalToLocal(_loc23_);	// TODO: ?
 				gr.lineStyle(0, 0, 0);
 				gr.moveTo(point.x, point.y);
-				gr.lineTo(point.x, this.getYPos(param6, units[param2]));
+				gr.lineTo(point.x, this.getYPos(context, units[param2]));
 				gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
 			}
 			while (param2 > _loc17_)
@@ -253,7 +253,7 @@ namespace com.google.finance
 			let _loc22_ = units[param2].relativeMinutes;
 			while (param2 >= _loc16_ && param2 >= param4)
 			{
-				const yPos = this.getYPos(param6, units[param2]);
+				const yPos = this.getYPos(context, units[param2]);
 				gr.lineTo(xPos, yPos);
 				param2 = param2 - _loc13_;
 				if (param2 > _loc16_ && param2 > param4 && _loc22_ - units[param2 - 1].relativeMinutes === _loc21_)
@@ -265,12 +265,12 @@ namespace com.google.finance
 				xPos = xPos - _loc20_;
 			}
 			const xPos2 = viewPoint.getXPos(units[_loc16_]);
-			const yPos2 = this.getYPos(param6, units[_loc16_]);
+			const yPos2 = this.getYPos(context, units[_loc16_]);
 			gr.lineTo(xPos2, yPos2);
 			return xPos2;
 		}
 
-		highlightPoint(param1: Context, param2: number, param3: { [key: string]: any }) 
+		highlightPoint(context: Context, param2: number, param3: { [key: string]: any }) 
 		{
 			if (param3[SpaceText.SETTER_STR])
 				param3[SpaceText.SETTER_STR].clearHighlight();
@@ -278,7 +278,7 @@ namespace com.google.finance
 			const dataSeries = this.getDataSeries();
 			const point = this.getPoint(dataSeries, param2);
 			const minuteXPos = this.viewPoint.getMinuteXPos(point.relativeMinutes);
-			const yPos = this.getYPos(param1, point);
+			const yPos = this.getYPos(context, point);
 			if (this.lastHighlightX !== minuteXPos || this.lastHighlightY !== yPos)
 			{
 				this.clearHighlight();
@@ -309,7 +309,7 @@ namespace com.google.finance
 			};
 		}
 
-		protected drawLine(param1: flash.display.Sprite, param2: number, param3: number, viewPoint: ViewPoint, param5: Context): number
+		protected drawLine(param1: flash.display.Sprite, param2: number, param3: number, viewPoint: ViewPoint, context: Context): number
 		{
 			const dataSeries = this.getDataSeries();
 			const units = dataSeries.units;
@@ -323,7 +323,7 @@ namespace com.google.finance
 
 			let _loc11_ = units[dataSeries.days[nextDayStart]];
 			let _loc12_ = viewPoint.getXPos(_loc11_) + 1;
-			const _loc13_ = this.getYPos(param5, _loc11_);
+			const _loc13_ = this.getYPos(context, _loc11_);
 			gr.moveTo(_loc12_, this.viewPoint.maxy);
 			gr.lineStyle(0, 0, 0);
 			gr.lineTo(_loc12_, _loc13_);
@@ -337,9 +337,9 @@ namespace com.google.finance
 						_loc11_ = units[dataSeries.days[nextDayStart]];
 						gr.lineTo(_loc12_, viewPoint.maxy);
 						gr.lineTo(viewPoint.getXPos(_loc11_), viewPoint.maxy);
-						this.drawLineToDataUnit(viewPoint, param1, param5, _loc11_);
+						this.drawLineToDataUnit(viewPoint, param1, context, _loc11_);
 						gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
-						_loc12_ = this.drawDayLine(param1, dataSeries.days[nextDayStart], viewPoint, param2, param3, param5);
+						_loc12_ = this.drawDayLine(param1, dataSeries.days[nextDayStart], viewPoint, param2, param3, context);
 						nextDayStart--;
 					}
 					_loc11_ = units[param2];
@@ -348,20 +348,20 @@ namespace com.google.finance
 					while (nextDayStart >= 0 && dataSeries.days[nextDayStart] >= param2)
 					{
 						_loc11_ = units[dataSeries.days[nextDayStart]];
-						this.drawLineToDataUnit(viewPoint, param1, param5, _loc11_);
+						this.drawLineToDataUnit(viewPoint, param1, context, _loc11_);
 						nextDayStart--;
 					}
 					return viewPoint.getXPos(_loc11_);
 				case Intervals.WEEKLY:
-					return this.drawWeeklyLine(param1, param2, param3, viewPoint, param5);
+					return this.drawWeeklyLine(param1, param2, param3, viewPoint, context);
 				default:
 					return -1;
 			}
 		}
 
-		protected getYPos(param1: Context, param2: DataUnit): number
+		protected getYPos(context: Context, param2: DataUnit): number
 		{
-			return this.localYOffset - (param2.getCloseLogValue(param1.verticalScaling) - param1.medPrice) * this.localYScale;
+			return this.localYOffset - (param2.getCloseLogValue(context.verticalScaling) - context.medPrice) * this.localYScale;
 		}
 
 		private checkMinMax(param1: number) 
@@ -372,7 +372,7 @@ namespace com.google.finance
 				this.maxPrice = param1;
 		}
 
-		renderLayer(param1: Context) 
+		renderLayer(context: Context) 
 		{
 			const viewPoint = this.viewPoint;
 			const _loc3_ = this.getDataSeries();
@@ -394,8 +394,8 @@ namespace com.google.finance
 			this.lineVisibility = Const.LINE_CHART_LINE_VISIBILITY;
 			gr.beginFill(Const.LINE_CHART_FILL_COLOR, Const.LINE_CHART_FILL_VISIBILITY);
 			this.localYOffset = viewPoint.miny + viewPoint.medPriceY + viewPoint.V_OFFSET;
-			this.localYScale = viewPoint.maxPriceRangeViewSize / param1.maxPriceRange;
-			const _loc6_ = this.drawLine(this, _loc5_, _loc4_, viewPoint, param1);
+			this.localYScale = viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
+			const _loc6_ = this.drawLine(this, _loc5_, _loc4_, viewPoint, context);
 			gr.lineStyle(0, 0, 0);
 			const point = new flash.display.Point(_loc6_, viewPoint.maxy);
 			//this.globalToLocal(_loc7_);	// TODO: ?
@@ -429,10 +429,10 @@ namespace com.google.finance
 			return this.getPrevOrNextClosestToX(dataSeries.units, dataSeries.fridays, _loc9_, param2, skip);
 		}
 
-		protected drawLineToDataUnit(viewPoint: ViewPoint, param2: flash.display.Sprite, param3: Context, param4: DataUnit) 
+		protected drawLineToDataUnit(viewPoint: ViewPoint, param2: flash.display.Sprite, context: Context, param4: DataUnit) 
 		{
 			const xPos = viewPoint.getXPos(param4);
-			const yPos = this.getYPos(param3, param4);
+			const yPos = this.getYPos(context, param4);
 			param2.graphics.lineTo(xPos, yPos);
 		}
 
@@ -446,32 +446,32 @@ namespace com.google.finance
 			return this.dataSource.data;
 		}
 
-		getContext(param1: Context, param2 = false) 
+		getContext(context: Context, param2 = false) 
 		{
 			//const _loc3_ = this.viewPoint;
 			const data = this.dataSource.data;
 			if (data.units.length === 0)
-				return param1;
+				return context;
 
-			const _loc5_ = this.computeMaxRange2(param1.lastMinute, param1.count, param1.verticalScaling, param2);
+			const _loc5_ = this.computeMaxRange2(context.lastMinute, context.count, context.verticalScaling, param2);
 			if (!_loc5_)
-				return param1;
+				return context;
 
-			const _loc6_ = Utils.getLogScaledValue(_loc5_.lowerBound, param1.verticalScaling);
-			param1.maxRangeLowerBound = Utils.extendedMin(_loc6_, param1.maxRangeLowerBound);
-			const _loc7_ = Utils.getLogScaledValue(_loc5_.upperBound, param1.verticalScaling);
-			param1.maxRangeUpperBound = Utils.extendedMax(_loc7_, param1.maxRangeUpperBound);
-			const _loc8_ = param1.verticalScaling !== Const.LOG_VSCALE && param1.verticalScaling !== Const.NEW_LOG_VSCALE ? Number(_loc5_.range) : _loc7_ - _loc6_;
-			param1.maxPriceRange = Utils.extendedMax(_loc8_, param1.maxPriceRange);
-			const _loc9_ = this.getMediumPrice(param1.lastMinute, param1.count, data, param1.verticalScaling);
-			const _loc10_ = this.normalizeMedPrice(_loc9_, param1.maxPriceRange);
-			param1.medPrice = (Utils.extendedMax(_loc10_, param1.medPrice) + Utils.extendedMin(_loc10_, param1.medPrice)) / 2;
-			param1.minPrice = Utils.extendedMin(this.minPrice, param1.minPrice);
-			param1.maxPrice = Utils.extendedMax(this.maxPrice, param1.maxPrice);
-			const _loc11_ = param1.maxPrice - param1.minPrice;
-			param1.maxPriceRange = Utils.extendedMax(_loc11_, param1.maxPriceRange);
-			param1.medPrice = this.normalizeMedPrice(param1, param1.maxPriceRange);
-			return param1;
+			const _loc6_ = Utils.getLogScaledValue(_loc5_.lowerBound, context.verticalScaling);
+			context.maxRangeLowerBound = Utils.extendedMin(_loc6_, context.maxRangeLowerBound);
+			const _loc7_ = Utils.getLogScaledValue(_loc5_.upperBound, context.verticalScaling);
+			context.maxRangeUpperBound = Utils.extendedMax(_loc7_, context.maxRangeUpperBound);
+			const _loc8_ = context.verticalScaling !== Const.LOG_VSCALE && context.verticalScaling !== Const.NEW_LOG_VSCALE ? Number(_loc5_.range) : _loc7_ - _loc6_;
+			context.maxPriceRange = Utils.extendedMax(_loc8_, context.maxPriceRange);
+			const _loc9_ = this.getMediumPrice(context.lastMinute, context.count, data, context.verticalScaling);
+			const _loc10_ = this.normalizeMedPrice(_loc9_, context.maxPriceRange);
+			context.medPrice = (Utils.extendedMax(_loc10_, context.medPrice) + Utils.extendedMin(_loc10_, context.medPrice)) / 2;
+			context.minPrice = Utils.extendedMin(this.minPrice, context.minPrice);
+			context.maxPrice = Utils.extendedMax(this.maxPrice, context.maxPrice);
+			const _loc11_ = context.maxPrice - context.minPrice;
+			context.maxPriceRange = Utils.extendedMax(_loc11_, context.maxPriceRange);
+			context.medPrice = this.normalizeMedPrice(context, context.maxPriceRange);
+			return context;
 		}
 
 		private computeMaximizedMaxRange(param1: number, param2: number) 

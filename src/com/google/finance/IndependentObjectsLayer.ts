@@ -41,10 +41,10 @@ namespace com.google.finance
 			this.movies.splice(0);
 		}
 
-		getYPos(context: Context, param2: DataUnit): number
+		getYPos(context: Context, dataUnit: DataUnit): number
 		{
 			const viewPoint = this.viewPoint;
-			return viewPoint.miny + viewPoint.V_OFFSET + viewPoint.medPriceY - (param2.close - context.medPrice) * viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
+			return viewPoint.miny + viewPoint.V_OFFSET + viewPoint.medPriceY - (dataUnit.close - context.medPrice) * viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
 		}
 
 		renderLayer(context: Context) 
@@ -108,12 +108,12 @@ namespace com.google.finance
 			this.movies.splice(this.activeMovies);
 		}
 
-		private getPosition(param1: SeriesPosition, param2: DataUnit[], param3: number, param4: Context): Position
+		private getPosition(param1: SeriesPosition, param2: DataUnit[], param3: number, context: Context): Position
 		{
 			const position = new Position();
 			let dataSeries = notnull(param1.refDataSeries);
 			const xPos = this.viewPoint.getXPos(dataSeries.units[param1.pos]);
-			const yPos = this.getYPos(param4, dataSeries.units[param1.pos]);
+			const yPos = this.getYPos(context, dataSeries.units[param1.pos]);
 			//const _loc8_ = (this.viewPoint.maxy + this.viewPoint.miny) / 2;
 			if (this.positioning === IndependentObjectsLayer.POSITION_CHART)
 			{
@@ -142,9 +142,9 @@ namespace com.google.finance
 			return position;
 		}
 
-		private getLastVisibleObject(param1: SeriesPosition[], param2: DataUnit[], param3: Context): number
+		private getLastVisibleObject(param1: SeriesPosition[], param2: DataUnit[], context: Context): number
 		{
-			const lastMinute = param3.lastMinute;
+			const lastMinute = context.lastMinute;
 			for (let _loc5_ = param1.length - 1; _loc5_ >= 0; _loc5_--)
 			{
 				const _loc6_ = param1[_loc5_];
@@ -206,9 +206,9 @@ namespace com.google.finance
 			return _loc3_;
 		}
 
-		private getFirstVisibleObject(param1: SeriesPosition[], param2: DataUnit[], param3: Context): number
+		private getFirstVisibleObject(param1: SeriesPosition[], param2: DataUnit[], context: Context): number
 		{
-			const _loc4_ = param3.lastMinute - param3.count;
+			const _loc4_ = context.lastMinute - context.count;
 			for (let seriesPositionIndex = 0; seriesPositionIndex < param1.length; seriesPositionIndex++)
 			{
 				const _loc6_ = param1[seriesPositionIndex];

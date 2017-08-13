@@ -28,9 +28,9 @@ namespace com.google.finance
 			return Utils.localTzOffset;
 		}
 
-		static getDateInTimezone(param1: Date, param2: number): number
+		static getDateInTimezone(date: Date, param2: number): number
 		{
-			const _loc3_ = Utils.newDateInTimezone(param1, param2);
+			const _loc3_ = Utils.newDateInTimezone(date, param2);
 			return _loc3_.getUTCDate();
 		}
 
@@ -127,28 +127,25 @@ namespace com.google.finance
 		{
 			let _loc2_ = 0;
 			for (let _loc3_ in param1)
-			{
 				_loc2_++;
-			}
 			return _loc2_;
 		}
 
-		static newDateInTimezone(param1: Date, param2: number): Date
+		static newDateInTimezone(date: Date, param2: number): Date
 		{
-			const date = new Date(param1.getTime() + param2 * 60 * 1000);
-			return date;
+			return new Date(date.getTime() + param2 * 60 * 1000);
 		}
 
-		static compareUtcDates(param1: Date, param2: Date): number
+		static compareUtcDates(date1: Date, date2: Date): number
 		{
-			if (param1.getUTCFullYear() !== param2.getUTCFullYear())
-				return param1.getUTCFullYear() - param2.getUTCFullYear();
+			if (date1.getUTCFullYear() !== date2.getUTCFullYear())
+				return date1.getUTCFullYear() - date2.getUTCFullYear();
 
-			if (param1.getUTCMonth() !== param2.getUTCMonth())
-				return param1.getUTCMonth() - param2.getUTCMonth();
+			if (date1.getUTCMonth() !== date2.getUTCMonth())
+				return date1.getUTCMonth() - date2.getUTCMonth();
 
-			if (param1.getUTCDate() !== param2.getUTCDate())
-				return param1.getUTCDate() - param2.getUTCDate();
+			if (date1.getUTCDate() !== date2.getUTCDate())
+				return date1.getUTCDate() - date2.getUTCDate();
 
 			return 0;
 		}
@@ -158,9 +155,9 @@ namespace com.google.finance
 			return Math.log(param1 < Const.LOG_SCALE ? Number((Const.LOG_SCALE - 1) / Const.LOG_SCALE * param1 + 1) : param1) / Const.LOG_SCALE_LOG;
 		}
 
-		static getEndOfUTCDayTime(param1: Date): number
+		static getEndOfUTCDayTime(date: Date): number
 		{
-			const date = new Date(param1.getTime());
+			date = new Date(date.getTime());
 			date.setUTCHours(23, 59, 0, 0);
 			return date.getTime();
 		}
@@ -206,9 +203,9 @@ namespace com.google.finance
 			return _loc6_;
 		}
 
-		static utcDateToString(param1: Date): string
+		static utcDateToString(date: Date): string
 		{
-			return param1.getUTCFullYear() + "." + (param1.getUTCMonth() + 1) + "." + param1.getUTCDate() + "/" + param1.getUTCHours() + ":" + param1.getUTCMinutes();
+			return date.getUTCFullYear() + "." + (date.getUTCMonth() + 1) + "." + date.getUTCDate() + "/" + date.getUTCHours() + ":" + date.getUTCMinutes();
 		}
 
 		static createLabel(param1: flash.display.Sprite, param2: string, param3: flash.text.TextFormat): flash.text.TextField
@@ -246,7 +243,7 @@ namespace com.google.finance
 			return -1;
 		}
 
-		static getWeekdaysDifference(param1: Date, param2: Date, param3: number): number
+		static getWeekdaysDifference(date1: Date, date2: Date, param3: number): number
 		{
 			let _loc4_ = 0;
 			for (let _loc5_ = 0; _loc5_ < Const.DAY_PER_WEEK; _loc5_++)
@@ -254,22 +251,22 @@ namespace com.google.finance
 				if (Utils.IsWeekday(_loc5_, param3))
 					_loc4_++;
 			}
-			const _loc6_ = (param2.getTime() - param1.getTime()) / Const.MS_PER_DAY;
+			const _loc6_ = (date2.getTime() - date1.getTime()) / Const.MS_PER_DAY;
 			const _loc7_ = Math.floor(_loc6_ / Const.DAY_PER_WEEK) * _loc4_;
 			if (_loc6_ % Const.DAY_PER_WEEK === 0)
 				return _loc7_;
 
 			let _loc8_ = 0;
-			let day = param1.getDay();
+			let day = date1.getDay();
 
-			for (let _loc10_ = 0; _loc10_ < Const.DAY_PER_WEEK && day !== param2.getDay(); _loc10_++)
+			for (let _loc10_ = 0; _loc10_ < Const.DAY_PER_WEEK && day !== date2.getDay(); _loc10_++)
 			{
 				if (Utils.IsWeekday(day, param3))
 					_loc8_++;
 
 				day = (day + 1) % Const.DAY_PER_WEEK;
 			}
-			if (!Utils.IsWeekday(param1.getDay(), param3) && Utils.IsWeekday(param2.getDay(), param3))
+			if (!Utils.IsWeekday(date1.getDay(), param3) && Utils.IsWeekday(date2.getDay(), param3))
 				_loc8_++;
 
 			return _loc7_ + _loc8_;

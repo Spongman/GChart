@@ -57,7 +57,7 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		protected getIndicatorValueText(param1: number, param2: number, param3: string, param4: Context): string
+		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string
 		{
 			if (param1 >= 0 && param1 < this.periods.length)
 				return Messages.getMsg(Messages.EMA_INTERVAL, this.periods[param1], param3, param2);

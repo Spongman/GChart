@@ -38,9 +38,9 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		protected getYPos(context: Context, param2: IndicatorPoint): number
+		protected getYPos(context: Context, point: IndicatorPoint): number
 		{
-			return this.localYOffset - (param2.getValue() - this.localMedianValue) * this.localYScale;
+			return this.localYOffset - (point.getValue() - this.localMedianValue) * this.localYScale;
 		}
 
 		renderLayer(context: Context) 

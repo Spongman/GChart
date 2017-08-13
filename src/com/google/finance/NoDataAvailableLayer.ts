@@ -8,7 +8,7 @@ namespace com.google.finance
 	{
 		private text: flash.text.TextField;
 
-		renderLayer(param1: Context) 
+		renderLayer(context: Context) 
 		{
 			if (!this.text)
 			{

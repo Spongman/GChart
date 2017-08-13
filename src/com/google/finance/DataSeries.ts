@@ -26,12 +26,12 @@ namespace com.google.finance
 			this.units = <any>this.points;
 		}
 
-		static compareUnitAndRelativeMinute(param1: DataUnit, param2: number): number
+		static compareUnitAndRelativeMinute(dataUnit: DataUnit, param2: number): number
 		{
-			if (param1.relativeMinutes < param2)
+			if (dataUnit.relativeMinutes < param2)
 				return -1;
 
-			if (param1.relativeMinutes > param2)
+			if (dataUnit.relativeMinutes > param2)
 				return 1;
 
 			return 0;
@@ -180,12 +180,12 @@ namespace com.google.finance
 			return null;
 		}
 
-		compareUnitAndTimestamp(param1: DataUnit, param2: number): number
+		compareUnitAndTimestamp(dataUnit: DataUnit, param2: number): number
 		{
-			if (param1.time < param2)
+			if (dataUnit.time < param2)
 				return -1;
 
-			if (param1.time > param2)
+			if (dataUnit.time > param2)
 				return 1;
 
 			return 0;
@@ -391,9 +391,9 @@ namespace com.google.finance
 			return this.noPointsInIntervals[param1];
 		}
 
-		getTimestampIndex(param1: number, param2: DataUnit[]): number
+		getTimestampIndex(param1: number, dataUnits: DataUnit[]): number
 		{
-			const _loc3_ = !param2 ? this.units : param2;
+			const _loc3_ = !dataUnits ? this.units : dataUnits;
 			const _loc4_ = Utils.binarySearch(_loc3_, param1, this.compareUnitAndTimestamp, this);
 			return _loc4_ === -1 ? 0 : _loc4_;
 		}
@@ -437,9 +437,9 @@ namespace com.google.finance
 			return "";
 		}
 
-		setPointsInIntervalArray(param1: number, param2: DataUnit[]) 
+		setPointsInIntervalArray(param1: number, dataUnits: DataUnit[]) 
 		{
-			this.pointsInIntervals[param1] = param2;
+			this.pointsInIntervals[param1] = dataUnits;
 		}
 
 		allSessionsLength(): number

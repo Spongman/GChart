@@ -14,29 +14,29 @@ namespace com.google.finance
 
 		private additionalDistanceBetweenLines: number;
 
-		private getLinePosAndLabelToFillGap(param1: number, param2: Context, param3: number): LabelPos
+		private getLinePosAndLabelToFillGap(param1: number, context: Context, param3: number): LabelPos
 		{
-			const value = this.getValueForYPos(param1, param2);
+			const value = this.getValueForYPos(param1, context);
 			const increaseInterval = this.getIncreaseInterval(value);
 			const _loc6_ = increaseInterval * Math.ceil(value / increaseInterval);
-			const yPos = this.getYPos(_loc6_, param2);
+			const yPos = this.getYPos(_loc6_, context);
 			return {
 				"yPos": yPos,
 				"label": _loc6_
 			};
 		}
 
-		protected getMinLineValue(param1: Context): number
+		protected getMinLineValue(context: Context): number
 		{
-			const _loc2_ = this.inverseLogTransform(param1.medPrice - param1.maxPriceRange / 2, param1.verticalScaling);
+			const _loc2_ = this.inverseLogTransform(context.medPrice - context.maxPriceRange / 2, context.verticalScaling);
 			return Math.floor(_loc2_ / this.distanceBetweenLines) * this.distanceBetweenLines;
 		}
 
-		protected getDistanceBetweenLines(param1: Context): number
+		protected getDistanceBetweenLines(context: Context): number
 		{
 			let _loc5_: number;
 			let _loc2_ = Const.YSCALE_INTERVALS.length - 1;
-			const maxDisplayRange = this.getMaxDisplayRange(param1);
+			const maxDisplayRange = this.getMaxDisplayRange(context);
 			const _loc4_ = this.viewPoint.maxy - this.viewPoint.miny - ViewPoint.MIN_EDGE_DISTANCE - ViewPoint.MAX_EDGE_DISTANCE;
 			do
 			{
@@ -45,17 +45,17 @@ namespace com.google.finance
 			}
 			while (_loc5_ > ViewPoint.MIN_DISTANCE_BETWEEN_H_LINES && _loc2_ >= 0);
 
-			return this.adjustDistanceBetweenLines(param1, _loc2_);
+			return this.adjustDistanceBetweenLines(context, _loc2_);
 		}
 
-		private adjustDistanceBetweenLines(param1: Context, param2: number): number
+		private adjustDistanceBetweenLines(context: Context, param2: number): number
 		{
 			let _loc3_ = Const.YSCALE_INTERVALS[param2 + 1];
-			if (param1.verticalScaling === Const.LOG_VSCALE || param1.verticalScaling === Const.NEW_LOG_VSCALE)
+			if (context.verticalScaling === Const.LOG_VSCALE || context.verticalScaling === Const.NEW_LOG_VSCALE)
 			{
 				let _loc6_: number;
 				let _loc7_ = 0;
-				const maxY = this.getMaxY(param1, _loc3_);
+				const maxY = this.getMaxY(context, _loc3_);
 				do
 				{
 					_loc6_ = Math.floor(maxY / _loc3_);
@@ -63,8 +63,8 @@ namespace com.google.finance
 					{
 						const _loc9_ = (_loc6_ - 1) * _loc3_;
 						const _loc10_ = (_loc6_ - 2) * _loc3_;
-						const _loc4_ = Number(this.getYPos(_loc9_, param1));
-						const _loc5_ = Number(this.getYPos(_loc10_, param1));
+						const _loc4_ = Number(this.getYPos(_loc9_, context));
+						const _loc5_ = Number(this.getYPos(_loc10_, context));
 						_loc7_ = Number(Math.abs(_loc4_ - _loc5_));
 						if (_loc7_ < ViewPoint.MIN_DISTANCE_BETWEEN_LOG_H_LINES)
 						{
@@ -108,61 +108,61 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		private getInitialLinesList_(param1: Context)
+		private getInitialLinesList_(context: Context)
 		{
 			const bottomLayer = this.viewPoint.getLayer("BottomBarLayer") as BottomBarLayer;
 			const bottomTextHeight = bottomLayer.bottomTextHeight;
 			return [this.viewPoint.maxy - bottomTextHeight - 1];
 		}
 
-		protected getMaxDisplayRange(param1: Context): number
+		protected getMaxDisplayRange(context: Context): number
 		{
-			if (param1.verticalScaling === Const.LOG_VSCALE || param1.verticalScaling === Const.NEW_LOG_VSCALE)
-				return this.inverseLogTransform(param1.maxRangeUpperBound, param1.verticalScaling) - this.inverseLogTransform(param1.maxRangeLowerBound, param1.verticalScaling);
+			if (context.verticalScaling === Const.LOG_VSCALE || context.verticalScaling === Const.NEW_LOG_VSCALE)
+				return this.inverseLogTransform(context.maxRangeUpperBound, context.verticalScaling) - this.inverseLogTransform(context.maxRangeLowerBound, context.verticalScaling);
 
-			return param1.maxPriceRange;
+			return context.maxPriceRange;
 		}
 
-		protected getYPos(param1: number, param2: Context): number
+		protected getYPos(param1: number, context: Context): number
 		{
-			return this.viewPoint.miny + this.viewPoint.V_OFFSET + this.viewPoint.medPriceY - (Utils.getLogScaledValue(param1, param2.verticalScaling) - param2.medPrice) * this.viewPoint.maxPriceRangeViewSize / param2.maxPriceRange;
+			return this.viewPoint.miny + this.viewPoint.V_OFFSET + this.viewPoint.medPriceY - (Utils.getLogScaledValue(param1, context.verticalScaling) - context.medPrice) * this.viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
 		}
 
-		protected getMaxY(param1: Context, param2: number): number
+		protected getMaxY(context: Context, param2: number): number
 		{
-			const _loc3_ = (this.viewPoint.V_OFFSET + this.viewPoint.medPriceY) * param1.maxPriceRange / this.viewPoint.maxPriceRangeViewSize + param1.medPrice;
-			return this.inverseLogTransform(_loc3_, param1.verticalScaling);
+			const _loc3_ = (this.viewPoint.V_OFFSET + this.viewPoint.medPriceY) * context.maxPriceRange / this.viewPoint.maxPriceRangeViewSize + context.medPrice;
+			return this.inverseLogTransform(_loc3_, context.verticalScaling);
 		}
 
-		private drawHorizontalMidLine(param1: number, param2: number, param3: number, param4: number, param5: Context)
+		private drawHorizontalMidLine(param1: number, param2: number, param3: number, param4: number, context: Context)
 		{
 			const _loc6_ = Math.floor(param1 / param2);
 			let _loc7_ = Math.ceil(_loc6_ / 2);
 			_loc7_ = _loc7_ === _loc6_ / 2 ? Number(_loc7_ * 1.2) : _loc7_;
-			const _loc8_ = this.getLinePosAndLabelToFillGap(param3 - _loc7_ * param2, param5, param4);
+			const _loc8_ = this.getLinePosAndLabelToFillGap(param3 - _loc7_ * param2, context, param4);
 			const _loc9_ = param3 - _loc8_.yPos;
 			const _loc10_ = param1 - _loc9_;
 			if (param2 < 0.95 * _loc10_ && _loc10_ < 0.95 * _loc9_)
 				this.drawSingleHorizontalLine(_loc8_, param4);
 		}
 
-		protected getValueForYPos(param1: number, param2: Context): number
+		protected getValueForYPos(param1: number, context: Context): number
 		{
-			return this.inverseLogTransform(param2.medPrice - (param1 - this.viewPoint.miny - this.viewPoint.V_OFFSET - this.viewPoint.medPriceY) * param2.maxPriceRange / this.viewPoint.maxPriceRangeViewSize, param2.verticalScaling);
+			return this.inverseLogTransform(context.medPrice - (param1 - this.viewPoint.miny - this.viewPoint.V_OFFSET - this.viewPoint.medPriceY) * context.maxPriceRange / this.viewPoint.maxPriceRangeViewSize, context.verticalScaling);
 		}
 
-		protected drawHorizontalLines(param1: Context)
+		protected drawHorizontalLines(context: Context)
 		{
 			let _loc7_: number;
 			this.graphics.lineStyle(0, Const.HORIZONTAL_GRID_COLOR, 1);
 			const _loc2_ = this.viewPoint.maxx - Const.BORDER_WIDTH;
-			let _loc3_ = this.getMinLineValue(param1);
+			let _loc3_ = this.getMinLineValue(context);
 			const bottomBarLayer = this.viewPoint.getLayer("BottomBarLayer") as BottomBarLayer;
 			const bottomTextHeight = bottomBarLayer.bottomTextHeight;
-			const _loc6_ = this.getInitialLinesList_(param1);
+			const _loc6_ = this.getInitialLinesList_(context);
 			do
 			{
-				_loc7_ = this.getYPos(_loc3_, param1);
+				_loc7_ = this.getYPos(_loc3_, context);
 				if (_loc7_ > this.viewPoint.miny && _loc7_ < this.viewPoint.maxy - bottomTextHeight)
 				{
 					this.drawSingleHorizontalLine({
@@ -177,7 +177,7 @@ namespace com.google.finance
 			while (_loc7_ > this.viewPoint.miny);
 
 			_loc6_[_loc6_.length] = this.viewPoint.miny;
-			if ((param1.verticalScaling === Const.LOG_VSCALE || param1.verticalScaling === Const.NEW_LOG_VSCALE) && _loc6_.length > 4)
+			if ((context.verticalScaling === Const.LOG_VSCALE || context.verticalScaling === Const.NEW_LOG_VSCALE) && _loc6_.length > 4)
 			{
 				const _loc8_ = _loc6_[0] - _loc6_[_loc6_.length - 1];
 				let _loc9_ = _loc6_[0] - _loc6_[1];
@@ -185,25 +185,25 @@ namespace com.google.finance
 				const _loc11_ = _loc6_[2] - _loc6_[3];
 				if (_loc9_ / _loc8_ > 0.4)
 				{
-					const _loc12_ = this.getLinePosAndLabelToFillGap(_loc6_[0], param1, _loc2_);
+					const _loc12_ = this.getLinePosAndLabelToFillGap(_loc6_[0], context, _loc2_);
 					this.drawSingleHorizontalLine(_loc12_, _loc2_);
 					_loc9_ = _loc12_.yPos - _loc6_[1];
-					this.drawHorizontalMidLine(_loc9_, _loc10_, _loc12_.yPos, _loc2_, param1);
+					this.drawHorizontalMidLine(_loc9_, _loc10_, _loc12_.yPos, _loc2_, context);
 				}
 				else if (_loc10_ / _loc8_ > 0.4)
 				{
-					this.drawHorizontalMidLine(_loc10_, _loc11_, _loc6_[1], _loc2_, param1);
+					this.drawHorizontalMidLine(_loc10_, _loc11_, _loc6_[1], _loc2_, context);
 				}
 			}
 		}
 
-		renderLayer(param1: Context)
+		renderLayer(context: Context)
 		{
 			this.valueSuffix = "";
 			this.additionalDistanceBetweenLines = 0;
 			this.graphics.clear();
-			this.distanceBetweenLines = this.getDistanceBetweenLines(param1);
-			this.drawHorizontalLines(param1);
+			this.distanceBetweenLines = this.getDistanceBetweenLines(context);
+			this.drawHorizontalLines(context);
 		}
 
 		private drawSingleHorizontalLine(param1: LabelPos, param2: number)

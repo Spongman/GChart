@@ -28,15 +28,15 @@ namespace com.google.finance
 			return (!!viewPoint.getDisplayManager().isDifferentMarketSessionComparison() ? 1 : (dataSeries.marketDayLength + param3)) * viewPoint.minutePix;
 		}
 
-		private getHourTextFromUtcDate(param1: Date): string
+		private getHourTextFromUtcDate(date: Date): string
 		{
 			//const _loc2_ = param1.getUTCHours();
-			const minutes = param1.getUTCMinutes();
+			const minutes = date.getUTCMinutes();
 			let pattern = "HH:mm";
 			if (minutes === 0 && !Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
 				pattern = "h a";
 
-			return com.google.i18n.locale.DateTimeLocale.formatDateTime(pattern, param1, true).toLowerCase();
+			return com.google.i18n.locale.DateTimeLocale.formatDateTime(pattern, date, true).toLowerCase();
 		}
 
 		private adjustVisibleDaysWithAfterHours(param1: DayVisibility[]) 

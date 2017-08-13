@@ -19,7 +19,7 @@ namespace com.google.finance
 			this.addChild(this.highlightCanvas);
 		}
 
-		private drawDayLine(param1: flash.display.Sprite, param2: number, viewPoint: ViewPoint, param4: com.google.finance.DataSeries, param5: number, param6: number, param7: number, param8: number, param9: Context): number
+		private drawDayLine(param1: flash.display.Sprite, param2: number, viewPoint: ViewPoint, param4: com.google.finance.DataSeries, param5: number, param6: number, param7: number, param8: number, context: Context): number
 		{
 			const points = param4.points;
 			const days = param4.days;
@@ -84,9 +84,9 @@ namespace com.google.finance
 			return param1.points[pointIndex];
 		}
 
-		renderLayer(param1: Context) 
+		renderLayer(context: Context) 
 		{
-			const skipInterval = this.viewPoint.getSkipInterval(param1.count, param1.lastMinute);
+			const skipInterval = this.viewPoint.getSkipInterval(context.count, context.lastMinute);
 			const dataSeries = this.indicator.getDataSeries(skipInterval.interval);
 			if (!dataSeries || dataSeries.points.length === 0)
 				return;
@@ -98,7 +98,7 @@ namespace com.google.finance
 			if (firstReferencePointIndex < 0)
 				firstReferencePointIndex = 0;
 
-			this.drawLines(this, dataSeries, firstReferencePointIndex, lastReferencePointIndex, this.viewPoint, param1);
+			this.drawLines(this, dataSeries, firstReferencePointIndex, lastReferencePointIndex, this.viewPoint, context);
 		}
 
 		protected drawOneLine(param1: number, param2: number, param3: flash.display.Sprite, param4: IViewPoint) 
@@ -142,7 +142,7 @@ namespace com.google.finance
 			return originalDataSeries.getFirstRelativeMinute();
 		}
 
-		protected drawLines(param1: flash.display.Sprite, param2: com.google.finance.DataSeries, param3: number, param4: number, viewPoint: ViewPoint, param6: Context) 
+		protected drawLines(param1: flash.display.Sprite, param2: com.google.finance.DataSeries, param3: number, param4: number, viewPoint: ViewPoint, context: Context) 
 		{
 			const _loc7_ = <indicator.VolumeIndicatorPoint[]>param2.points;
 			//const _loc8_ = param2.days;
@@ -151,7 +151,7 @@ namespace com.google.finance
 			const skipInterval = viewPoint.getSkipInterval();
 			//const _loc12_ = _loc11_.skip;
 			const interval = skipInterval.interval;
-			this.verticalScale = (viewPoint.maxy - viewPoint.miny - 6) / param6.maxVolume;
+			this.verticalScale = (viewPoint.maxy - viewPoint.miny - 6) / context.maxVolume;
 			const gr = param1.graphics;
 			gr.clear();
 			gr.lineStyle(0, this.lineColor, 1);
@@ -160,7 +160,7 @@ namespace com.google.finance
 				case Intervals.INTRADAY:
 					while (param2.days[nextDayStart] > param3 && nextDayStart >= 0)
 					{
-						this.drawDayLine(param1, nextDayStart, viewPoint, param2, detailLevel, interval, param3, param4, param6);
+						this.drawDayLine(param1, nextDayStart, viewPoint, param2, detailLevel, interval, param3, param4, context);
 						nextDayStart--;
 					}
 					break;
@@ -232,36 +232,36 @@ namespace com.google.finance
 			return this.maxVolume[_loc10_];
 		}
 
-		getDataSeries(param1: Context): com.google.finance.DataSeries
+		getDataSeries(context: Context): com.google.finance.DataSeries
 		{
 			let vp = this.viewPoint;
-			if (!param1)
-				param1 = vp.layersContext;
+			if (!context)
+				context = vp.layersContext;
 
-			const skipInterval = vp.getSkipInterval(param1.count, param1.lastMinute);
+			const skipInterval = vp.getSkipInterval(context.count, context.lastMinute);
 			this.computer(skipInterval.interval, indicator, this.originalDataSeries);
 			return notnull(this.indicator.getDataSeries(skipInterval.interval));
 		}
 
-		getContext(param1: Context, param2 = false) 
+		getContext(context: Context, param2 = false) 
 		{
-			const dataSeries = this.getDataSeries(param1);
+			const dataSeries = this.getDataSeries(context);
 			if (dataSeries.points.length === 0)
 			{
-				if (param1.maxVolume === undefined)
-					param1.maxVolume = 0;
+				if (context.maxVolume === undefined)
+					context.maxVolume = 0;
 
-				return param1;
+				return context;
 			}
-			const maxVolume = this.getMaxVolume(param1.lastMinute, param1.count, param2);
-			param1.maxVolume = Utils.extendedMax(param1.maxVolume, maxVolume);
-			return param1;
+			const maxVolume = this.getMaxVolume(context.lastMinute, context.count, param2);
+			context.maxVolume = Utils.extendedMax(context.maxVolume, maxVolume);
+			return context;
 		}
 
-		highlightPoint(param1: Context, param2: number, param3: { [key: string]: any }) 
+		highlightPoint(context: Context, param2: number, param3: { [key: string]: any }) 
 		{
 			this.clearHighlight();
-			const skipInterval = this.viewPoint.getSkipInterval(param1.count, param1.lastMinute);
+			const skipInterval = this.viewPoint.getSkipInterval(context.count, context.lastMinute);
 			const dataSeries = this.indicator.getDataSeries(skipInterval.interval);
 			if (!dataSeries)
 				return;

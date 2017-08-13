@@ -25,7 +25,7 @@ namespace com.google.finance.indicator
 			return Messages.getMsg(Messages.BOLL_INTERVAL, this.period, param1);
 		}
 
-		protected getIndicatorValueText(param1: number, param2: number, param3: string, param4: Context): string
+		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string
 		{
 			switch (param1)
 			{

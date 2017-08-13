@@ -9,14 +9,14 @@ namespace com.google.finance
 		protected regionsXLimits: com.google.finance.IntervalSet;
 		protected readonly maxVolumeCache: { [key: string]: number } = {};
 
-		private drawAfterHoursSession(param1: flash.display.Sprite, dataSeries: DataSeries, param3: number, param4: number, param5: Context, param6: number) 
+		private drawAfterHoursSession(param1: flash.display.Sprite, dataSeries: DataSeries, param3: number, param4: number, context: Context, param6: number) 
 		{
 			const timeIndex1 = DataSource.getTimeIndex(param4, dataSeries.units);
 			const timeIndex2 = DataSource.getTimeIndex(param3, dataSeries.units);
 			const viewPoint = this.viewPoint;
 			const _loc10_ = <indicator.VolumeIndicatorPoint[]>dataSeries.points;
-			let xPos = viewPoint.getXPos(_loc10_[timeIndex1].point);
-			const _loc12_ = xPos;
+			let left = viewPoint.getXPos(_loc10_[timeIndex1].point);
+			const right = left;
 			const intervalLength = viewPoint.getIntervalLength(param6 / 60);
 			const gr = param1.graphics;
 			for (let timeIndex = timeIndex1; timeIndex > timeIndex2; timeIndex--)
@@ -27,11 +27,11 @@ namespace com.google.finance
 				else if (_loc15_ < viewPoint.miny)
 					_loc15_ = viewPoint.miny;
 
-				gr.moveTo(xPos, _loc15_);
-				gr.lineTo(xPos, viewPoint.maxy);
-				xPos = xPos - intervalLength;
+				gr.moveTo(left, _loc15_);
+				gr.lineTo(left, viewPoint.maxy);
+				left = left - intervalLength;
 			}
-			this.regionsXLimits.addInterval(xPos, _loc12_);
+			this.regionsXLimits.addInterval(left, right);
 		}
 
 		private getMaxVolumeHashKey(param1: number, param2: number): string
@@ -39,12 +39,12 @@ namespace com.google.finance
 			return param1 + "-" + param2;
 		}
 
-		protected drawLines(param1: flash.display.Sprite, dataSeries: DataSeries, param3: number, param4: number, param5: IViewPoint, param6: Context) 
+		protected drawLines(param1: flash.display.Sprite, dataSeries: DataSeries, param3: number, param4: number, param5: IViewPoint, context: Context) 
 		{
 			const skipInterval = (<ViewPoint>param5).getSkipInterval();
 			//const _loc8_ = _loc7_.skip;
 			const skip = skipInterval.interval;
-			this.verticalScale = (param5.maxy - param5.miny - 6) / param6.maxVolume;
+			this.verticalScale = (param5.maxy - param5.miny - 6) / context.maxVolume;
 			this.graphics.clear();
 			this.graphics.lineStyle(0, this.lineColor, 1);
 			const visibleExtendedHours = this.dataSource.visibleExtendedHours;
@@ -55,11 +55,11 @@ namespace com.google.finance
 				const interval = visibleExtendedHours.getIntervalAt(intervalIndex);
 				const startUnit = this.dataSource.afterHoursData.units[interval.start];
 				const endUnit = this.dataSource.afterHoursData.units[interval.end];
-				if (ViewPoint.sessionVisible(startUnit, endUnit, param6))
+				if (ViewPoint.sessionVisible(startUnit, endUnit, context))
 				{
 					const startTime = startUnit.time;
 					const endTime = endUnit.time;
-					this.drawAfterHoursSession(this, dataSeries, startTime, endTime, param6, skip);
+					this.drawAfterHoursSession(this, dataSeries, startTime, endTime, context, skip);
 				}
 			}
 		}

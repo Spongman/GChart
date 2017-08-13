@@ -19,7 +19,7 @@ namespace com.google.finance.indicator
 			return KDJIndicatorLayer.PARAMETER_NAMES;
 		}
 
-		protected getIndicatorValueText(param1: number, param2: number, param3: string, param4: Context): string
+		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string
 		{
 			switch (param1)
 			{

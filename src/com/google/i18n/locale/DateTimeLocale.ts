@@ -33,24 +33,23 @@ namespace com.google.i18n.locale
 			return format;
 		}
 
-		static getResource(param1: string) 
+		static getResource(locale: string) 
 		{
-			const _loc2_ = !!param1 ? param1 : DateTimeLocale.getLocale();
-			return DateTimeLocale.constantsRepository[_loc2_];
+			return DateTimeLocale.constantsRepository[locale || DateTimeLocale.getLocale()];
 		}
 
-		static getDateTimeFormatter(param1: string, isUtc = false): DateTimeFormat
+		static getDateTimeFormatter(pattern: string, isUtc = false): DateTimeFormat
 		{
 			const format = new DateTimeFormat(isUtc);
-			format.applyPattern(param1);
+			format.applyPattern(pattern);
 			return format;
 		}
 
-		static standardFormatDateTime(pattern: number, param2: Date, isUtc = false): string
+		static standardFormatDateTime(pattern: number, date: Date, isUtc = false): string
 		{
 			const format = new DateTimeFormat(isUtc);
 			format.applyStandardPattern(pattern);
-			return format.format(param2);
+			return format.format(date);
 		}
 
 		static getLocale(): string

@@ -33,15 +33,15 @@ namespace com.google.finance
 		{
 		}
 
-		protected getWeeklyBarXPos(param1: DataUnit, param2: number): number
+		protected getWeeklyBarXPos(dataUnit: DataUnit, param2: number): number
 		{
-			let xPos = (<ViewPoint><any>this.viewPoint).getXPos(param1);
+			let xPos = (<ViewPoint><any>this.viewPoint).getXPos(dataUnit);
 			const marketDayLength = this.dataSource.data.marketDayLength;
 			const _loc5_ = this.viewPoint.minutePix * marketDayLength * 4;
 			if (param2 < xPos + _loc5_)
 				xPos = param2 - _loc5_;
 
-			param1.weeklyXPos = xPos;
+			dataUnit.weeklyXPos = xPos;
 			return xPos;
 		}
 
@@ -53,12 +53,12 @@ namespace com.google.finance
 			return 0;
 		}
 
-		protected getLastRealPointIndex(param1: DataUnit[]): number
+		protected getLastRealPointIndex(dataUnits: DataUnit[]): number
 		{
-			if (Boolean(MainManager.paramsObj.hasExtendedHours) && param1[param1.length - 1].relativeMinutes !== 0)
-				return param1.length - 1;
+			if (Boolean(MainManager.paramsObj.hasExtendedHours) && dataUnits[dataUnits.length - 1].relativeMinutes !== 0)
+				return dataUnits.length - 1;
 
-			return Utils.getLastRealPointIndex(param1);
+			return Utils.getLastRealPointIndex(dataUnits);
 		}
 
 		highlightPoint(context: Context, param2: number, param3: { [key: string]: any })

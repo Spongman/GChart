@@ -4,10 +4,10 @@ namespace com.google.finance
 {
 	export class CandleStickChartLayer extends IntervalBasedBarChartLayer
 	{
-		protected drawBarAtDataUnit(context: Context, param2: DataUnit[], param3: number) 
+		protected drawBarAtDataUnit(context: Context, dataUnits: DataUnit[], param3: number) 
 		{
 			let _loc9_ = false;
-			const _loc4_ = param2[param3];
+			const _loc4_ = dataUnits[param3];
 			const _loc5_ = !isNaN(_loc4_.weeklyXPos) ? _loc4_.weeklyXPos : this.viewPoint.getXPos(_loc4_);
 			const ohlcYPos = this.getOhlcYPos(context, _loc4_);
 			//const _loc7_ = Math.abs(_loc6_.closeY - _loc6_.openY);

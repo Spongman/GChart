@@ -27,10 +27,10 @@ namespace com.google.finance.indicator
 			return true;
 		}
 
-		protected getIndicatorValueText(param1: number, param2: number, param3: string, param4: Context): string
+		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string
 		{
 			let _loc5_ = 1000;
-			if (param4 && param4.maxVolume / 1000000 > 0.5)
+			if (context && context.maxVolume / 1000000 > 0.5)
 				_loc5_ = 1000000;
 
 			if (param1 >= 0 && param1 < this.periods.length)

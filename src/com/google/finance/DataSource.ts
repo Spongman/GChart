@@ -80,24 +80,24 @@ namespace com.google.finance
 			}
 		}
 
-		private static unitsInDifferentDays(param1: DataUnit, param2: DataUnit | null): boolean
+		private static unitsInDifferentDays(dataUnit1: DataUnit, dataUnit2: DataUnit | null): boolean
 		{
-			if (!param2 || !param1)
+			if (!dataUnit2 || !dataUnit1)
 				return true;
 
-			if (param1.exchangeDateInUTC.getUTCDay() !== param2.exchangeDateInUTC.getUTCDay())
+			if (dataUnit1.exchangeDateInUTC.getUTCDay() !== dataUnit2.exchangeDateInUTC.getUTCDay())
 				return true;
 
-			if (Math.abs(param1.time - param2.time) > Const.MS_PER_DAY)
+			if (Math.abs(dataUnit1.time - dataUnit2.time) > Const.MS_PER_DAY)
 				return true;
 
 			return false;
 		}
 
-		static getMinuteMetaIndex(param1: number, param2: number[], param3: DataUnit[]): number
+		static getMinuteMetaIndex(param1: number, param2: number[], dataUnits: DataUnit[]): number
 		{
 			let _loc6_ = 0;
-			if (isNaN(param1) || !param3 || param3.length === 0 || param2.length === 0)
+			if (isNaN(param1) || !dataUnits || dataUnits.length === 0 || param2.length === 0)
 				return -1;
 
 			let _loc4_ = 0;
@@ -105,19 +105,19 @@ namespace com.google.finance
 			while (true)
 			{
 				_loc6_ = Math.round((_loc4_ + _loc5_) / 2);
-				if (_loc6_ === 0 && param3[param2[0]].relativeMinutes > param1)
+				if (_loc6_ === 0 && dataUnits[param2[0]].relativeMinutes > param1)
 					break;
 
-				if (_loc6_ === param2.length - 1 && param3[param2[_loc6_]].relativeMinutes < param1)
+				if (_loc6_ === param2.length - 1 && dataUnits[param2[_loc6_]].relativeMinutes < param1)
 					return param2.length - 1;
 
-				if (param3[param2[_loc6_]].relativeMinutes === param1)
+				if (dataUnits[param2[_loc6_]].relativeMinutes === param1)
 					return _loc6_;
 
 				if (_loc4_ >= _loc5_ - 1)
 					return _loc4_;
 
-				if (param3[param2[_loc6_]].relativeMinutes < param1)
+				if (dataUnits[param2[_loc6_]].relativeMinutes < param1)
 					_loc4_ = _loc6_;
 				else
 					_loc5_ = _loc6_;
@@ -125,30 +125,30 @@ namespace com.google.finance
 			return 0;
 		}
 
-		static getTimeIndex(param1: number, param2: DataUnit[]): number
+		static getTimeIndex(param1: number, dataUnits: DataUnit[]): number
 		{
 			let _loc5_ = 0;
-			if (isNaN(param1) || !param2 || param2.length === 0)
+			if (isNaN(param1) || !dataUnits || dataUnits.length === 0)
 				return -1;
 
 			let _loc3_ = 0;
-			let _loc4_ = param2.length - 1;
+			let _loc4_ = dataUnits.length - 1;
 			while (true)
 			{
 				_loc5_ = Math.round((_loc3_ + _loc4_) / 2);
-				if (_loc5_ === 0 && param2[0].time > param1)
+				if (_loc5_ === 0 && dataUnits[0].time > param1)
 					break;
 
-				if (_loc5_ === param2.length - 1 && param2[_loc5_].time < param1)
-					return param2.length - 1;
+				if (_loc5_ === dataUnits.length - 1 && dataUnits[_loc5_].time < param1)
+					return dataUnits.length - 1;
 
-				if (param2[_loc5_].time === param1)
+				if (dataUnits[_loc5_].time === param1)
 					return _loc5_;
 
 				if (_loc3_ >= _loc4_ - 1)
 					return _loc3_;
 
-				if (param2[_loc5_].time < param1)
+				if (dataUnits[_loc5_].time < param1)
 					_loc3_ = _loc5_;
 				else
 					_loc4_ = _loc5_;
@@ -512,7 +512,7 @@ namespace com.google.finance
 			this.objects[param1].sort(StockAssociatedObject.compare);
 		}
 
-		private addFakeDataUnitsForSessions(param1: DataUnit[], param2: DataUnit, param3: com.google.finance.DataSeries, param4: number, param5: number, param6: number) 
+		private addFakeDataUnitsForSessions(dataUnits: DataUnit[], dataUnit: DataUnit, param3: com.google.finance.DataSeries, param4: number, param5: number, param6: number) 
 		{
 			let _loc9_ = 0;
 			let _loc10_ = 0;
@@ -526,13 +526,13 @@ namespace com.google.finance
 				switch (param6)
 				{
 					case Directions.BACKWARD:
-						_loc10_ = interval.end - param2.dayMinute + this.baseMinutesInterval;
+						_loc10_ = interval.end - dataUnit.dayMinute + this.baseMinutesInterval;
 						break;
 					case Directions.FORWARD:
-						_loc10_ = interval.start - param2.dayMinute - this.baseMinutesInterval;
+						_loc10_ = interval.start - dataUnit.dayMinute - this.baseMinutesInterval;
 						break;
 				}
-				this.addFakeDataUnits(param1, param2, param3, _loc9_, param6, _loc10_);
+				this.addFakeDataUnits(dataUnits, dataUnit, param3, _loc9_, param6, _loc10_);
 			}
 		}
 
@@ -556,76 +556,76 @@ namespace com.google.finance
 			return false;
 		}
 
-		private regularSanityCheck(param1: DataUnit[], param2: DataUnit, param3: StartEndPair|null, param4: StartEndPair, param5: number, param6: com.google.finance.DataSeries) 
+		private regularSanityCheck(dataUnits: DataUnit[], dataUnit: DataUnit, param3: StartEndPair|null, param4: StartEndPair, param5: number, param6: com.google.finance.DataSeries) 
 		{
 			let _loc7_ = 0;
 			if (this.baseInterval < Const.DAILY_INTERVAL)
 			{
 				const sessionIndex = param6.getSessionIndex(param4.start);
 				const _loc9_ = !param3 ? -1 : param6.getSessionIndex(param3.start);
-				if (param2.dayMinute === param4.start)
+				if (dataUnit.dayMinute === param4.start)
 				{
 					if (param3 && param5 !== param3.end)
 					{
 						_loc7_ = Math.floor((param3.end - param5) / this.baseMinutesInterval);
-						this.addFakeDataUnits(param1, param1[param1.length - 1], param6, _loc7_, Directions.FORWARD);
+						this.addFakeDataUnits(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc7_, Directions.FORWARD);
 					}
 					if (!param3)
 					{
-						this.addFakeDataUnitsForSessions(param1, param2, param6, 0, sessionIndex, Directions.BACKWARD);
+						this.addFakeDataUnitsForSessions(dataUnits, dataUnit, param6, 0, sessionIndex, Directions.BACKWARD);
 					}
-					else if (!DataSource.unitsInDifferentDays(param1[param1.length - 1], param2))
+					else if (!DataSource.unitsInDifferentDays(dataUnits[dataUnits.length - 1], dataUnit))
 					{
-						this.addFakeDataUnitsForSessions(param1, param1[param1.length - 1], param6, _loc9_ + 1, sessionIndex, Directions.FORWARD);
+						this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc9_ + 1, sessionIndex, Directions.FORWARD);
 					}
 					else
 					{
-						this.addFakeDataUnitsForSessions(param1, param1[param1.length - 1], param6, _loc9_ + 1, param6.dataSessions.length(), Directions.FORWARD);
-						this.addFakeDataUnitsForSessions(param1, param2, param6, 0, sessionIndex, Directions.BACKWARD);
+						this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc9_ + 1, param6.dataSessions.length(), Directions.FORWARD);
+						this.addFakeDataUnitsForSessions(dataUnits, dataUnit, param6, 0, sessionIndex, Directions.BACKWARD);
 					}
 				}
-				else if (param1.length === 0 || param2.time - param1[param1.length - 1].time !== this.baseMinutesInterval * Const.MS_PER_MINUTE)
+				else if (dataUnits.length === 0 || dataUnit.time - dataUnits[dataUnits.length - 1].time !== this.baseMinutesInterval * Const.MS_PER_MINUTE)
 				{
-					if (param1.length === 0)
+					if (dataUnits.length === 0)
 					{
-						this.addFakeDataUnitsForSessions(param1, param2, param6, 0, sessionIndex, Directions.BACKWARD);
-						if (param6 === this.data || param2.dayMinute !== param4.end)
+						this.addFakeDataUnitsForSessions(dataUnits, dataUnit, param6, 0, sessionIndex, Directions.BACKWARD);
+						if (param6 === this.data || dataUnit.dayMinute !== param4.end)
 						{
-							_loc7_ = Math.floor((param2.dayMinute - param4.start) / this.baseMinutesInterval);
-							this.addFakeDataUnits(param1, param2, param6, _loc7_, Directions.BACKWARD);
+							_loc7_ = Math.floor((dataUnit.dayMinute - param4.start) / this.baseMinutesInterval);
+							this.addFakeDataUnits(dataUnits, dataUnit, param6, _loc7_, Directions.BACKWARD);
 						}
 					}
-					else if (param2.time - param1[param1.length - 1].time <= (param2.dayMinute - param4.start) * Const.MS_PER_MINUTE)
+					else if (dataUnit.time - dataUnits[dataUnits.length - 1].time <= (dataUnit.dayMinute - param4.start) * Const.MS_PER_MINUTE)
 					{
-						_loc7_ = Math.floor((param2.dayMinute - param5) / this.baseMinutesInterval) - 1;
-						this.addFakeDataUnits(param1, param1[param1.length - 1], param6, _loc7_, Directions.FORWARD);
+						_loc7_ = Math.floor((dataUnit.dayMinute - param5) / this.baseMinutesInterval) - 1;
+						this.addFakeDataUnits(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc7_, Directions.FORWARD);
 					}
 					else
 					{
 						_loc7_ = Math.floor((notnull(param3).end - param5) / this.baseMinutesInterval);
-						this.addFakeDataUnits(param1, param1[param1.length - 1], param6, _loc7_, Directions.FORWARD);
-						if (!DataSource.unitsInDifferentDays(param1[param1.length - 1], param2) && param6 === this.data)
+						this.addFakeDataUnits(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc7_, Directions.FORWARD);
+						if (!DataSource.unitsInDifferentDays(dataUnits[dataUnits.length - 1], dataUnit) && param6 === this.data)
 						{
-							this.addFakeDataUnitsForSessions(param1, param1[param1.length - 1], param6, _loc9_ + 1, sessionIndex, Directions.FORWARD);
-							_loc7_ = Math.floor((param2.dayMinute - param4.start) / this.baseMinutesInterval);
-							const _loc10_ = param4.start - param1[param1.length - 1].dayMinute - this.baseMinutesInterval;
-							this.addFakeDataUnits(param1, param1[param1.length - 1], param6, _loc7_, Directions.FORWARD, _loc10_);
+							this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc9_ + 1, sessionIndex, Directions.FORWARD);
+							_loc7_ = Math.floor((dataUnit.dayMinute - param4.start) / this.baseMinutesInterval);
+							const _loc10_ = param4.start - dataUnits[dataUnits.length - 1].dayMinute - this.baseMinutesInterval;
+							this.addFakeDataUnits(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc7_, Directions.FORWARD, _loc10_);
 						}
 						else
 						{
-							this.addFakeDataUnitsForSessions(param1, param1[param1.length - 1], param6, _loc9_ + 1, param6.dataSessions.length(), Directions.FORWARD);
-							this.addFakeDataUnitsForSessions(param1, param2, param6, 0, sessionIndex, Directions.BACKWARD);
-							_loc7_ = Math.floor((param2.dayMinute - param4.start) / this.baseMinutesInterval);
-							this.addFakeDataUnits(param1, param2, param6, _loc7_, Directions.BACKWARD);
+							this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc9_ + 1, param6.dataSessions.length(), Directions.FORWARD);
+							this.addFakeDataUnitsForSessions(dataUnits, dataUnit, param6, 0, sessionIndex, Directions.BACKWARD);
+							_loc7_ = Math.floor((dataUnit.dayMinute - param4.start) / this.baseMinutesInterval);
+							this.addFakeDataUnits(dataUnits, dataUnit, param6, _loc7_, Directions.BACKWARD);
 						}
 					}
 				}
 			}
-			else if ((this.baseInterval === Const.DAILY_INTERVAL || this.baseInterval === Const.WEEKLY_INTERVAL) && param2.dayMinute !== param6.marketCloseMinute)
+			else if ((this.baseInterval === Const.DAILY_INTERVAL || this.baseInterval === Const.WEEKLY_INTERVAL) && dataUnit.dayMinute !== param6.marketCloseMinute)
 			{
-				let _loc11_ = (param6.marketCloseMinute - param2.dayMinute) * Const.MS_PER_MINUTE;
-				_loc11_ = _loc11_ - param2.exchangeDateInUTC.getUTCSeconds() * 1000;
-				param2.setDate(param2.time + _loc11_, param2.timezoneOffset);
+				let _loc11_ = (param6.marketCloseMinute - dataUnit.dayMinute) * Const.MS_PER_MINUTE;
+				_loc11_ = _loc11_ - dataUnit.exchangeDateInUTC.getUTCSeconds() * 1000;
+				dataUnit.setDate(dataUnit.time + _loc11_, dataUnit.timezoneOffset);
 			}
 		}
 
@@ -741,25 +741,25 @@ namespace com.google.finance
 				param1.intradayRegions.push(new StartEndPair(_loc3_, param1.points.length - 1));
 		}
 
-		private addStreamForPointsInIntervals(param1: number, param2: DataUnit[]) 
+		private addStreamForPointsInIntervals(param1: number, dataUnits: DataUnit[]) 
 		{
-			this.data.setPointsInIntervalArray(param1, param2);
+			this.data.setPointsInIntervalArray(param1, dataUnits);
 		}
 
-		private makeDataUnitEndOfDay(param1: DataUnit, param2: DataUnit[], param3: StartEndPair, param4: com.google.finance.DataSeries) 
+		private makeDataUnitEndOfDay(dataUnit: DataUnit, dataUnits: DataUnit[], param3: StartEndPair, param4: com.google.finance.DataSeries) 
 		{
 			let _loc8_ = 0;
 			const _loc5_ = param3.end - param3.start;
-			const _loc6_ = param1.dayMinute - param3.end;
+			const _loc6_ = dataUnit.dayMinute - param3.end;
 			let _loc7_ = -_loc6_ * 60 * 1000;
-			_loc7_ = _loc7_ - param1.exchangeDateInUTC.getUTCSeconds() * 1000;
-			param1.setDate(param1.time + _loc7_, param1.timezoneOffset);
+			_loc7_ = _loc7_ - dataUnit.exchangeDateInUTC.getUTCSeconds() * 1000;
+			dataUnit.setDate(dataUnit.time + _loc7_, dataUnit.timezoneOffset);
 			if (this.baseInterval < Const.DAILY_INTERVAL)
 			{
 				_loc8_ = _loc5_ / this.baseMinutesInterval;
-				this.addFakeDataUnits(param2, param1, param4, _loc8_, Directions.BACKWARD);
+				this.addFakeDataUnits(dataUnits, dataUnit, param4, _loc8_, Directions.BACKWARD);
 			}
-			param2.push(param1);
+			dataUnits.push(dataUnit);
 		}
 
 		/*
@@ -919,50 +919,50 @@ namespace com.google.finance
 			return !!this.events[param1];
 		}
 
-		mergePoints(param1: DataUnit[], param2: DataUnit[], param3: boolean, param4: number): DataUnit[]
+		mergePoints(dataUnits1: DataUnit[], dataUnits2: DataUnit[], param3: boolean, param4: number): DataUnit[]
 		{
 			let _loc8_: DataUnit;
 			const _loc5_: DataUnit[] = [];
 			let _loc6_ = 0;
 			let _loc7_ = 0;
-			while (_loc6_ < param1.length || _loc7_ < param2.length)
+			while (_loc6_ < dataUnits1.length || _loc7_ < dataUnits2.length)
 			{
-				if (_loc6_ === param1.length)
+				if (_loc6_ === dataUnits1.length)
 				{
-					while (_loc7_ < param2.length)
+					while (_loc7_ < dataUnits2.length)
 					{
-						_loc5_.push(param2[_loc7_]);
+						_loc5_.push(dataUnits2[_loc7_]);
 						_loc7_++;
 					}
 				}
-				else if (_loc7_ === param2.length)
+				else if (_loc7_ === dataUnits2.length)
 				{
-					while (_loc6_ < param1.length)
+					while (_loc6_ < dataUnits1.length)
 					{
-						_loc5_.push(param1[_loc6_]);
+						_loc5_.push(dataUnits1[_loc6_]);
 						_loc6_++;
 					}
 				}
-				else if (param1[_loc6_].time < param2[_loc7_].time)
+				else if (dataUnits1[_loc6_].time < dataUnits2[_loc7_].time)
 				{
-					_loc5_.push(param1[_loc6_++]);
+					_loc5_.push(dataUnits1[_loc6_++]);
 				}
-				else if (param1[_loc6_].time === param2[_loc7_].time)
+				else if (dataUnits1[_loc6_].time === dataUnits2[_loc7_].time)
 				{
-					if (param3 && param1[_loc6_].fake || param2[_loc7_].realtime && param4 <= _loc6_ || param2[_loc7_].coveredDays < param1[_loc6_].coveredDays)
-						_loc8_ = param2[_loc7_];
+					if (param3 && dataUnits1[_loc6_].fake || dataUnits2[_loc7_].realtime && param4 <= _loc6_ || dataUnits2[_loc7_].coveredDays < dataUnits1[_loc6_].coveredDays)
+						_loc8_ = dataUnits2[_loc7_];
 					else
-						_loc8_ = param1[_loc6_];
+						_loc8_ = dataUnits1[_loc6_];
 
 					_loc5_.push(_loc8_);
-					_loc8_.addVolumeInfo(param1[_loc6_]);
-					_loc8_.addVolumeInfo(param2[_loc7_]);
+					_loc8_.addVolumeInfo(dataUnits1[_loc6_]);
+					_loc8_.addVolumeInfo(dataUnits2[_loc7_]);
 					_loc6_++;
 					_loc7_++;
 				}
 				else
 				{
-					_loc5_.push(param2[_loc7_++]);
+					_loc5_.push(dataUnits2[_loc7_++]);
 				}
 			}
 			return _loc5_;
@@ -1097,9 +1097,9 @@ namespace com.google.finance
 			this.events[param1] = ChartEventPriorities.DONE;
 		}
 
-		private addAHStreamForPointsInIntervals(param1: DataUnit[]) 
+		private addAHStreamForPointsInIntervals(dataUnits: DataUnit[]) 
 		{
-			this.afterHoursData.setPointsInIntervalArray(Const.INTRADAY_INTERVAL, param1);
+			this.afterHoursData.setPointsInIntervalArray(Const.INTRADAY_INTERVAL, dataUnits);
 		}
 
 		dayIndexHasVisibleExtendedHours(param1: number): boolean
@@ -1367,30 +1367,30 @@ namespace com.google.finance
 			return -1;
 		}
 
-		private addFakeDataUnits(param1: DataUnit[], param2: DataUnit, param3: com.google.finance.DataSeries, param4: number, param5: number, param6 = 0) 
+		private addFakeDataUnits(dataUnits: DataUnit[], dataUnit: DataUnit, param3: com.google.finance.DataSeries, param4: number, param5: number, param6 = 0) 
 		{
 			if (param4 === 0)
 				return;
 
 			for (let _loc8_ = param4; _loc8_ > 0; _loc8_--)
 			{
-				const dataUnit = new DataUnit(param2.close, param2.high, param2.low, param2.open);
-				dataUnit.volumes[this.baseInterval] = 0;
-				dataUnit.intervals[0] = this.baseInterval;
+				const fakeDataUnit = new DataUnit(dataUnit.close, dataUnit.high, dataUnit.low, dataUnit.open);
+				fakeDataUnit.volumes[this.baseInterval] = 0;
+				fakeDataUnit.intervals[0] = this.baseInterval;
 				let _loc9_ = param6 * Const.MS_PER_MINUTE;
 				switch (param5)
 				{
 					case Directions.BACKWARD:
-						_loc9_ = _loc9_ + (param2.time - _loc8_ * this.baseInterval * 1000);
+						_loc9_ = _loc9_ + (dataUnit.time - _loc8_ * this.baseInterval * 1000);
 						break;
 					case Directions.FORWARD:
-						_loc9_ = _loc9_ + (param2.time + (param4 - _loc8_ + 1) * this.baseInterval * 1000);
+						_loc9_ = _loc9_ + (dataUnit.time + (param4 - _loc8_ + 1) * this.baseInterval * 1000);
 						break;
 				}
-				dataUnit.setDate(_loc9_, param2.timezoneOffset);
-				dataUnit.fake = true;
-				dataUnit.duplicate = param3.minuteIsStartOfDataSession(dataUnit.dayMinute);
-				param1.push(dataUnit);
+				fakeDataUnit.setDate(_loc9_, dataUnit.timezoneOffset);
+				fakeDataUnit.fake = true;
+				fakeDataUnit.duplicate = param3.minuteIsStartOfDataSession(fakeDataUnit.dayMinute);
+				dataUnits.push(fakeDataUnit);
 			}
 		}
 
@@ -1434,55 +1434,55 @@ namespace com.google.finance
 				this.objects[param1].splice(objPos, 1);
 		}
 
-		private addAfterHoursUnitToLastMinute(param1: DataUnit, param2: DataUnit[], param3: StartEndPair | undefined, param4: com.google.finance.DataSeries) 
+		private addAfterHoursUnitToLastMinute(dataUnit: DataUnit, dataUnits: DataUnit[], param3: StartEndPair | undefined, param4: com.google.finance.DataSeries) 
 		{
 			let _loc5_ = 0;
 			if (!param3)
 				return;
 
 			const sessionIndex = param4.getSessionIndex(param3.start);
-			if (param2.length === 0)
+			if (dataUnits.length === 0)
 			{
-				this.addFakeDataUnitsForSessions(param2, param1, param4, 0, sessionIndex, Directions.BACKWARD);
-				this.makeDataUnitEndOfDay(param1, param2, param3, param4);
+				this.addFakeDataUnitsForSessions(dataUnits, dataUnit, param4, 0, sessionIndex, Directions.BACKWARD);
+				this.makeDataUnitEndOfDay(dataUnit, dataUnits, param3, param4);
 				return;
 			}
-			let _loc7_ = param2[param2.length - 1];
+			let _loc7_ = dataUnits[dataUnits.length - 1];
 			const _loc8_ = notnull(param4.getSessionForMinute(_loc7_.dayMinute));
 			const _loc9_ = param4.getSessionIndex(_loc7_.dayMinute);
 			if (_loc7_ && _loc7_.dayMinute < _loc8_.end)
 			{
 				_loc5_ = (_loc8_.end - _loc7_.dayMinute) / this.baseMinutesInterval;
-				this.addFakeDataUnits(param2, _loc7_, param4, _loc5_, Directions.FORWARD);
-				_loc7_ = param2[param2.length - 1];
+				this.addFakeDataUnits(dataUnits, _loc7_, param4, _loc5_, Directions.FORWARD);
+				_loc7_ = dataUnits[dataUnits.length - 1];
 			}
-			const _loc10_ = (param1.time - _loc7_.time) / Const.MS_PER_MINUTE;
+			const _loc10_ = (dataUnit.time - _loc7_.time) / Const.MS_PER_MINUTE;
 			const _loc11_ = param3.end - param3.start;
-			const _loc12_ = param1.dayMinute - param3.end;
+			const _loc12_ = dataUnit.dayMinute - param3.end;
 			if (_loc10_ > _loc12_ + _loc11_)
 			{
-				if (!DataSource.unitsInDifferentDays(_loc7_, param1))
+				if (!DataSource.unitsInDifferentDays(_loc7_, dataUnit))
 				{
-					this.addFakeDataUnitsForSessions(param2, param2[param2.length - 1], param4, _loc9_ + 1, sessionIndex, Directions.FORWARD);
+					this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], param4, _loc9_ + 1, sessionIndex, Directions.FORWARD);
 				}
 				else
 				{
-					this.addFakeDataUnitsForSessions(param2, param2[param2.length - 1], param4, _loc9_ + 1, param4.dataSessions.length(), Directions.FORWARD);
-					this.addFakeDataUnitsForSessions(param2, param1, param4, 0, sessionIndex, Directions.BACKWARD);
+					this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], param4, _loc9_ + 1, param4.dataSessions.length(), Directions.FORWARD);
+					this.addFakeDataUnitsForSessions(dataUnits, dataUnit, param4, 0, sessionIndex, Directions.BACKWARD);
 				}
-				this.makeDataUnitEndOfDay(param1, param2, param3, param4);
+				this.makeDataUnitEndOfDay(dataUnit, dataUnits, param3, param4);
 			}
 			else
 			{
-				_loc7_.close = param1.close;
+				_loc7_.close = dataUnit.close;
 				if (!isNaN(_loc7_.high) && _loc7_.high < _loc7_.close)
 					_loc7_.high = _loc7_.close;
 
 				if (!isNaN(_loc7_.low) && _loc7_.low > _loc7_.close)
 					_loc7_.low = _loc7_.close;
 
-				const _loc13_ = param1.intervals[0];
-				_loc7_.volumes[_loc13_] = _loc7_.volumes[_loc13_] + param1.volumes[_loc13_];
+				const _loc13_ = dataUnit.intervals[0];
+				_loc7_.volumes[_loc13_] = _loc7_.volumes[_loc13_] + dataUnit.volumes[_loc13_];
 			}
 		}
 

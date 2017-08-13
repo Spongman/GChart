@@ -58,9 +58,9 @@ namespace com.google.finance
 			}
 		}
 
-		static computeInterval(param1: number, param2: Indicator, dataSeries: DataSeries) 
+		static computeInterval(param1: number, indicator: Indicator, dataSeries: DataSeries) 
 		{
-			if (param2.hasInterval(param1))
+			if (indicator.hasInterval(param1))
 				return;
 
 			const _loc4_ = new DataSeries();
@@ -82,7 +82,7 @@ namespace com.google.finance
 				_loc4_.days[_loc5_] = _loc4_.points.length - 1 - _loc4_.days[_loc5_];
 				_loc4_.fridays[_loc5_] = _loc4_.points.length - 1 - _loc4_.fridays[_loc5_];
 			}
-			param2.setDataSeries(param1, _loc4_);
+			indicator.setDataSeries(param1, _loc4_);
 		}
 
 		private static computeIntraday(dataSeries1: DataSeries, dataSeries2: DataSeries, param3: number) 

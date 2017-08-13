@@ -170,7 +170,7 @@ namespace com.google.finance
 			};
 		}
 
-		private drawAfterHoursSession(param1: flash.display.Sprite, param2: number, param3: number, param4: Context) 
+		private drawAfterHoursSession(param1: flash.display.Sprite, param2: number, param3: number, context: Context) 
 		{
 			const _loc5_ = Const.INTRADAY_INTERVAL / 60;
 			const units = this.dataSource.afterHoursData.units;
@@ -190,7 +190,7 @@ namespace com.google.finance
 			}
 			_loc11_ = _loc11_ + (timeIndex1 - _loc11_) % _loc10_;
 			let _loc12_ = vp.getXPos(units[_loc11_]);
-			let _loc13_ = this.getYPos(param4, units[_loc11_]);
+			let _loc13_ = this.getYPos(context, units[_loc11_]);
 			const gr = param1.graphics;
 			gr.lineStyle(0, 0, 0);
 			gr.beginFill(Const.ECN_LINE_CHART_FILL_COLOR, Const.ECN_LINE_CHART_FILL_VISIBILITY);
@@ -200,7 +200,7 @@ namespace com.google.finance
 			const _loc14_ = _loc10_ * (this.viewPoint.minutePix * _loc5_);
 			for (let timeIndex = _loc11_; timeIndex > timeIndex2; timeIndex = timeIndex - _loc10_)
 			{
-				_loc13_ = this.getYPos(param4, units[timeIndex]);
+				_loc13_ = this.getYPos(context, units[timeIndex]);
 				gr.lineTo(_loc12_, _loc13_);
 				_loc12_ = _loc12_ - _loc14_;
 			}

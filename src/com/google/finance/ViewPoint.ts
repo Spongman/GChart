@@ -175,10 +175,10 @@ namespace com.google.finance
 			this.lastMinute = 0;
 		}
 
-		static sessionVisible(param1: DataUnit, param2: DataUnit, param3: Context): boolean
+		static sessionVisible(param1: DataUnit, param2: DataUnit, context: Context): boolean
 		{
-			const lastMinute = param3.lastMinute;
-			const _loc5_ = param3.lastMinute - param3.count;
+			const lastMinute = context.lastMinute;
+			const _loc5_ = context.lastMinute - context.count;
 			if (param1 && param1.relativeMinutes >= _loc5_ && param1.relativeMinutes <= lastMinute)
 				return true;
 
@@ -212,10 +212,10 @@ namespace com.google.finance
 			Utils.removeAllChildren(this.textCanvas);
 		}
 
-		adjustBarChartContext(param1: Context, param2: number)
+		adjustBarChartContext(context: Context, param2: number)
 		{
-			let _loc3_ = param1.count;
-			let _loc4_ = param1.lastMinute;
+			let _loc3_ = context.count;
+			let _loc4_ = context.lastMinute;
 			let _loc5_ = (this.getMarketDayLength() + 1) * Const.INTERVAL_PERIODS[param2].maxdays;
 			const _loc6_ = (this.getMarketDayLength() + 1) * Const.INTERVAL_PERIODS[param2].mindays;
 			if (_loc3_ > _loc5_)
@@ -242,10 +242,10 @@ namespace com.google.finance
 					}
 				}
 			}
-			if (_loc3_ !== param1.count)
+			if (_loc3_ !== context.count)
 				return this.getNewContext(_loc4_, _loc3_);
 
-			return param1;
+			return context;
 		}
 
 		private trySnapping()
@@ -588,21 +588,21 @@ namespace com.google.finance
 			return !!this.zoomingFinalState;
 		}
 
-		zoomInMinutes_Handler(param1: Context, param2 = false)
+		zoomInMinutes_Handler(context: Context, param2 = false)
 		{
-			let context: Context | null;
+			let newContext: Context | null;
 			if (Const.INDICATOR_ENABLED && this.myController && this.myController.currentIntervalLevel >= 0)
-				context = this.adjustBarChartContext(param1, this.myController.currentIntervalLevel);
+				newContext = this.adjustBarChartContext(context, this.myController.currentIntervalLevel);
 			else
-				context = this.adjustLineChartContext(param1);
+				newContext = this.adjustLineChartContext(context);
 
-			if (!context)
-				return;
-
-			this.setNewCount(Math.floor(context.count), param2);
-			this.lastMinute = context.lastMinute;
-			this.update(context);
-			this.checkEvents();
+			if (newContext)
+			{
+				this.setNewCount(Math.floor(newContext.count), param2);
+				this.lastMinute = newContext.lastMinute;
+				this.update(newContext);
+				this.checkEvents();
+			}
 		}
 
 		private generateEventForAllSources(param1: number, param2 = 2, param3?: EventCallback[])
@@ -662,13 +662,10 @@ namespace com.google.finance
 		renderLayers()
 		{
 			for (let _loc1_ = 0; _loc1_ < this.drawingLayers.length; _loc1_++)
-			{
 				this.drawingLayers[_loc1_].renderLayer(this.layersContext);
-			}
+
 			for (let _loc1_ = 0; _loc1_ < this.descriptiveLayers.length; _loc1_++)
-			{
 				this.descriptiveLayers[_loc1_].renderLayer(this.layersContext);
-			}
 		}
 
 		getLastDataUnit(param1?: DataSeries): DataUnit | null
@@ -1095,10 +1092,10 @@ namespace com.google.finance
 			}
 		}
 
-		newFinalAnimationState(param1: Context)
+		newFinalAnimationState(context: Context)
 		{
-			const _loc2_ = Math.max(param1.count, this.getMinDisplayMinutes(this.getBaseDataSource()));
-			this.zoomingFinalState = this.getNewContext(param1.lastMinute, _loc2_);
+			const _loc2_ = Math.max(context.count, this.getMinDisplayMinutes(this.getBaseDataSource()));
+			this.zoomingFinalState = this.getNewContext(context.lastMinute, _loc2_);
 		}
 
 		private checkAfterHoursVisibilityWhenChartMoved(param1: number)

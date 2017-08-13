@@ -29,7 +29,7 @@ namespace com.google.finance
 			return true;
 		}
 
-		static convertGVizData(param1:any, param2: number, dataSeries: DataSeries, param4: Indicator) 
+		static convertGVizData(param1:any, param2: number, dataSeries: DataSeries, indicator: Indicator) 
 		{
 			if (!GVizFormatConverter.validateGVizData(param1))
 				return;
@@ -56,9 +56,9 @@ namespace com.google.finance
 				}
 			}
 
-			param4.clear(param2);
+			indicator.clear(param2);
 			for (let dataSeriesIndex = 0; dataSeriesIndex < _loc7_.length; dataSeriesIndex++)
-				param4.setDataSeries(param2, _loc7_[dataSeriesIndex], dataSeriesIndex);
+				indicator.setDataSeries(param2, _loc7_[dataSeriesIndex], dataSeriesIndex);
 		}
 	}
 }

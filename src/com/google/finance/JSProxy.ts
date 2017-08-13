@@ -29,17 +29,17 @@ namespace com.google.finance
 			//return Capabilities.playerType !== "StandAlone" && Capabilities.playerType !== "External";
 		}
 
-		addObject(param1: string, param2: string, param3: Date, param4: string, param5: number) 
+		addObject(qname: string, type: string, date: Date, letter: string, id: number) 
 		{
-			param1 = Utils.adjustNasdToNasdaq(param1);
-			const _loc6_ = {
-				"_qname": param1,
-				"_type": param2,
-				"_date": param3,
-				"_id": param5,
-				"_letter": param4
+			qname = Utils.adjustNasdToNasdaq(qname);
+			const obj = {
+				"_qname": qname,
+				"_type": type,
+				"_date": date,
+				"_id": id,
+				"_letter": letter
 			};
-			this.mainManager.addObject(_loc6_);
+			this.mainManager.addObject(obj);
 		}
 
 		removeLayerFromStyle(param1: LayerInfo, param2: string) 
@@ -467,12 +467,12 @@ namespace com.google.finance
 			return !JSProxy.isPlayingInBrowser() || !flash.external.ExternalInterface.available || com.google.finance.MainManager.paramsObj["disableExternalInterface"];
 		}
 
-		HTMLnotify(param1: Date, param2: Date, param3: number, param4: number, param5 = false) 
+		HTMLnotify(startDate: Date, endDate: Date, param3: number, param4: number, param5 = false) 
 		{
 			if (this.shouldSkipExternalInterfaceCall())
 				return;
 
-			flash.external.ExternalInterface.call("_visibleChartRangeChanged", param1, param2, param3, param4, param5);
+			flash.external.ExternalInterface.call("_visibleChartRangeChanged", startDate, endDate, param3, param4, param5);
 		}
 
 		htmlClicked(param1: string, param2: number) 

@@ -26,11 +26,11 @@ namespace com.google.finance
 		toString(): string
 		{
 			const exchangeDateInUTC = this.exchangeDateInUTC;
-			let _loc2_ = Utils.utcDateToString(exchangeDateInUTC);
+			let dateString = Utils.utcDateToString(exchangeDateInUTC);
 			if (!isNaN(this.relativeMinutes))
-				_loc2_ = _loc2_ + ("[relMin:" + this.relativeMinutes + "]");
+				dateString = dateString + ("[relMin:" + this.relativeMinutes + "]");
 
-			return this.time + " " + this.dayMinute + " " + _loc2_ + " " + close;
+			return this.time + " " + this.dayMinute + " " + dateString + " " + close;
 		}
 
 		getHighLogValue(param1: string): number
@@ -58,15 +58,15 @@ namespace com.google.finance
 			assert(!isNaN(this.dayMinute));
 		}
 
-		addVolumeInfo(param1: DataUnit) 
+		addVolumeInfo(dataUnit: DataUnit) 
 		{
 			let _loc3_ = 0;
-			for (let intervalIndex = 0; intervalIndex < param1.intervals.length; intervalIndex++)
+			for (let intervalIndex = 0; intervalIndex < dataUnit.intervals.length; intervalIndex++)
 			{
-				_loc3_ = param1.intervals[intervalIndex];
+				_loc3_ = dataUnit.intervals[intervalIndex];
 				if (this.volumes[_loc3_] === undefined)
 				{
-					this.volumes[_loc3_] = param1.volumes[_loc3_];
+					this.volumes[_loc3_] = dataUnit.volumes[_loc3_];
 					this.intervals.push(_loc3_);
 				}
 			}

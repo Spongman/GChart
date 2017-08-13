@@ -476,9 +476,9 @@ namespace com.google.finance
 			Const.DETAIL_LEVEL_INFO[Intervals.WEEKLY] = Const.WEEKLY_INTERVAL;
 		})();
 
-		static getDetailLevelInterval(param1: Intervals): number
+		static getDetailLevelInterval(interval: Intervals): number
 		{
-			return Const.DETAIL_LEVEL_INFO[param1];
+			return Const.DETAIL_LEVEL_INFO[interval];
 		}
 
 		static getIntervalDetailLevel(param1: number): number

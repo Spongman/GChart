@@ -154,10 +154,10 @@ namespace com.google.finance
 			//TODO: return XML(new XMLNode(XMLNodeType.TEXT_NODE, param1)).toXMLString();
 		}
 
-		protected getDateHtml(param1: Date): string
+		protected getDateHtml(date: Date): string
 		{
 			const _loc2_ = !!Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()) ? "yyyy-MM-dd HH:mm" : "MMM dd, yyyy h:mma";
-			return "<font color=\'#0B6CDE\'>" + com.google.i18n.locale.DateTimeLocale.formatDateTime(_loc2_, param1, true) + "</font>";
+			return "<font color=\'#0B6CDE\'>" + com.google.i18n.locale.DateTimeLocale.formatDateTime(_loc2_, date, true) + "</font>";
 		}
 
 		renderMovie() 

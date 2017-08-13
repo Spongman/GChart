@@ -14,12 +14,12 @@ namespace com.google.finance
 			return param1 > this.minx && param1 < this.maxx && param2 > this.miny && param2 < this.maxy;
 		}
 
-		append(param1: Bounds) 
+		append(bounds: Bounds) 
 		{
-			this.minx = Math.min(this.minx, param1.minx);
-			this.miny = Math.min(this.miny, param1.miny);
-			this.maxx = Math.max(this.maxx, param1.maxx);
-			this.maxy = Math.max(this.maxy, param1.maxy);
+			this.minx = Math.min(this.minx, bounds.minx);
+			this.miny = Math.min(this.miny, bounds.miny);
+			this.maxx = Math.max(this.maxx, bounds.maxx);
+			this.maxy = Math.max(this.maxy, bounds.maxy);
 		}
 
 		equals(param1: any): boolean

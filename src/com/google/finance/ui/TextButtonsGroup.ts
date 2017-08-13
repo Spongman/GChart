@@ -9,10 +9,10 @@ namespace com.google.finance.ui
 	{
 		private currentButton: number = -1;
 
-		buttonPress(param1: Event) 
+		buttonPress(event: Event) 
 		{
-			super.buttonPress(param1);
-			let button = (<any>param1.currentTarget).displayObject as flash.display.SimpleButton;
+			super.buttonPress(event);
+			let button = (<any>event.currentTarget).displayObject as flash.display.SimpleButton;
 			const _loc2_ = (<flash.display.DisplayObjectContainer>button.upState).getChildAt(0) as flash.text.TextField;
 			this.selectButton(_loc2_.text);
 		}

@@ -56,57 +56,57 @@ namespace com.google.i18n.locale
 			}
 		}
 
-		private formatField(field: string, param2: Date): string
+		private formatField(field: string, date: Date): string
 		{
 			const fieldLength = field.length;
 			switch (field.charAt(0))
 			{
 				case "G":
-					return this.formatEra(fieldLength, param2);
+					return this.formatEra(fieldLength, date);
 				case "y":
-					return this.formatYear(fieldLength, param2);
+					return this.formatYear(fieldLength, date);
 				case "M":
-					return this.formatMonth(fieldLength, param2);
+					return this.formatMonth(fieldLength, date);
 				case "k":
-					return this.format24Hours(fieldLength, param2);
+					return this.format24Hours(fieldLength, date);
 				case "S":
-					return this.formatFractionalSeconds(fieldLength, param2);
+					return this.formatFractionalSeconds(fieldLength, date);
 				case "E":
-					return this.formatDayOfWeek(fieldLength, param2);
+					return this.formatDayOfWeek(fieldLength, date);
 				case "a":
-					return this.formatAmPm(fieldLength, param2);
+					return this.formatAmPm(fieldLength, date);
 				case "h":
-					return this.format1To12Hours(fieldLength, param2);
+					return this.format1To12Hours(fieldLength, date);
 				case "K":
-					return this.format0To11Hours(fieldLength, param2);
+					return this.format0To11Hours(fieldLength, date);
 				case "H":
-					return this.format0To23Hours(fieldLength, param2);
+					return this.format0To23Hours(fieldLength, date);
 				case "c":
-					return this.formatStandaloneDay(fieldLength, param2);
+					return this.formatStandaloneDay(fieldLength, date);
 				case "L":
-					return this.formatStandaloneMonth(fieldLength, param2);
+					return this.formatStandaloneMonth(fieldLength, date);
 				case "Q":
-					return this.formatQuarter(fieldLength, param2);
+					return this.formatQuarter(fieldLength, date);
 				case "d":
-					return this.formatDate(fieldLength, param2);
+					return this.formatDate(fieldLength, date);
 				case "m":
-					return this.formatMinutes(fieldLength, param2);
+					return this.formatMinutes(fieldLength, date);
 				case "s":
-					return this.formatSeconds(fieldLength, param2);
+					return this.formatSeconds(fieldLength, date);
 				case "v":
-					return this.formatGMT(fieldLength, param2);
+					return this.formatGMT(fieldLength, date);
 				case "z":
-					return this.formatGMT(fieldLength, param2);
+					return this.formatGMT(fieldLength, date);
 				case "Z":
-					return this.formatTimeZoneRFC(fieldLength, param2);
+					return this.formatTimeZoneRFC(fieldLength, date);
 				default:
 					return "";
 			}
 		}
 
-		private formatStandaloneMonth(fieldLength: number, param2: Date): string
+		private formatStandaloneMonth(fieldLength: number, date: Date): string
 		{
-			const month = this.isUtc ? param2.getUTCMonth() : param2.getMonth();
+			const month = this.isUtc ? date.getUTCMonth() : date.getMonth();
 			switch (fieldLength)
 			{
 				case 5:
@@ -137,9 +137,9 @@ namespace com.google.i18n.locale
 			this.applyPattern(_loc2_);
 		}
 
-		private formatMonth(fieldLength: number, param2: Date): string
+		private formatMonth(fieldLength: number, date: Date): string
 		{
-			const month = this.isUtc ? param2.getUTCMonth() : param2.getMonth();
+			const month = this.isUtc ? date.getUTCMonth() : date.getMonth();
 			switch (fieldLength)
 			{
 				case 5:

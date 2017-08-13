@@ -121,12 +121,12 @@ namespace com.google.finance.indicator
 			return this.indicatorName;
 		}
 
-		private renderHistogramLine(param1: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, param6: Context, param7: number, param8: string) 
+		private renderHistogramLine(param1: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, param7: number, param8: string) 
 		{
 			let _loc13_ = 0;
 			let _loc14_ = 0;
 			let _loc9_ = Number.MAX_VALUE;
-			const yPos = this.getYPos(param6, new IndicatorPoint(0, <DataUnit><any>null));	// TODO
+			const yPos = this.getYPos(context, new IndicatorPoint(0, <DataUnit><any>null));	// TODO
 			let _loc12_ = param4;
 			const gr = this.graphics;
 			while (_loc12_ >= param3)
@@ -138,7 +138,7 @@ namespace com.google.finance.indicator
 						_loc9_ = this.getWeeklyBarXPos(point, _loc9_);
 
 					_loc13_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
-					_loc14_ = this.getYPos(param6, param1[param2].points[_loc12_]);
+					_loc14_ = this.getYPos(context, param1[param2].points[_loc12_]);
 					gr.lineStyle(1, this.getColor(param2, param1[param2].points[_loc12_].getValue()));
 					gr.moveTo(_loc13_, yPos);
 					gr.lineTo(_loc13_, _loc14_);
@@ -147,7 +147,7 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		private renderSingleLine(param1: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, param6: Context, param7: number, param8: string) 
+		private renderSingleLine(param1: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, param7: number, param8: string) 
 		{
 			let _loc12_ = 0;
 			let _loc13_ = 0;
@@ -158,7 +158,7 @@ namespace com.google.finance.indicator
 
 			const gr = this.graphics;
 			gr.lineStyle(1, this.indicatorValueTextArray[param2].textColor);
-			gr.moveTo(!isNaN(point.weeklyXPos) ? Number(point.weeklyXPos) : viewPoint.getXPos(point), this.getYPos(param6, param1[param2].points[param4]));
+			gr.moveTo(!isNaN(point.weeklyXPos) ? Number(point.weeklyXPos) : viewPoint.getXPos(point), this.getYPos(context, param1[param2].points[param4]));
 			let _loc11_ = param4 - 1;
 			while (_loc11_ >= param3)
 			{
@@ -169,7 +169,7 @@ namespace com.google.finance.indicator
 						_loc9_ = this.getWeeklyBarXPos(point, _loc9_);
 
 					_loc12_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
-					_loc13_ = this.getYPos(param6, param1[param2].points[_loc11_]);
+					_loc13_ = this.getYPos(context, param1[param2].points[_loc11_]);
 					if (_loc13_ < viewPoint.miny)
 						gr.moveTo(_loc12_, viewPoint.miny);
 					else if (_loc13_ > viewPoint.maxy)
@@ -181,7 +181,7 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		private renderHistogramLineFromBottom(param1: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, param6: Context, param7: number, param8: string) 
+		private renderHistogramLineFromBottom(param1: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, param7: number, param8: string) 
 		{
 			let _loc12_ = 0;
 			let _loc13_ = 0;
@@ -198,7 +198,7 @@ namespace com.google.finance.indicator
 						_loc9_ = this.getWeeklyBarXPos(point, _loc9_);
 
 					_loc12_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
-					_loc13_ = this.getYPos(param6, param1[param2].points[_loc11_]);
+					_loc13_ = this.getYPos(context, param1[param2].points[_loc11_]);
 					gr.moveTo(_loc12_, this.viewPoint.maxy);
 					gr.lineTo(_loc12_, _loc13_);
 				}
@@ -422,7 +422,7 @@ namespace com.google.finance.indicator
 		{
 		}
 
-		renderLayer(param1: Context) 
+		renderLayer(context: Context) 
 		{
 			this.placeIndicatorNameAndValueTexts();
 			if (!this._enabled)
@@ -455,7 +455,7 @@ namespace com.google.finance.indicator
 			if (this.indicatorNameText)
 				this.indicatorNameText.text = this.getIndicatorNameText(intervalText);
 
-			this.calculateLocalScaleMeters(param1);
+			this.calculateLocalScaleMeters(context);
 			let lastMinuteIndex = originalDataSeries.getRelativeMinuteIndex(viewPoint.getLastMinute(), points);
 			if (lastMinuteIndex < points.length - 1)
 				lastMinuteIndex = lastMinuteIndex + 1;
@@ -487,20 +487,20 @@ namespace com.google.finance.indicator
 
 				if (_loc16_ > _loc15_)
 				{
-					this.indicatorValueTextArray[dataSeriesIndex].text = this.getIndicatorValueText(dataSeriesIndex, 0, intervalText, param1);
+					this.indicatorValueTextArray[dataSeriesIndex].text = this.getIndicatorValueText(dataSeriesIndex, 0, intervalText, context);
 				}
 				else
 				{
 					switch (this.getLineStyle(dataSeriesIndex))
 					{
 						case IndicatorLineStyle.SIMPLE_LINE:
-							this.renderSingleLine(dataSeriesArray, dataSeriesIndex, _loc16_, _loc15_, viewPoint, param1, detailLevel, enabledChartLayer);
+							this.renderSingleLine(dataSeriesArray, dataSeriesIndex, _loc16_, _loc15_, viewPoint, context, detailLevel, enabledChartLayer);
 							break;
 						case IndicatorLineStyle.HISTOGRAM_LINE:
-							this.renderHistogramLine(dataSeriesArray, dataSeriesIndex, _loc16_, _loc15_, viewPoint, param1, detailLevel, enabledChartLayer);
+							this.renderHistogramLine(dataSeriesArray, dataSeriesIndex, _loc16_, _loc15_, viewPoint, context, detailLevel, enabledChartLayer);
 							break;
 						case IndicatorLineStyle.HISTOGRAM_LINE_FROM_BOTTOM:
-							this.renderHistogramLineFromBottom(dataSeriesArray, dataSeriesIndex, _loc16_, _loc15_, viewPoint, param1, detailLevel, enabledChartLayer);
+							this.renderHistogramLineFromBottom(dataSeriesArray, dataSeriesIndex, _loc16_, _loc15_, viewPoint, context, detailLevel, enabledChartLayer);
 							break;
 						case IndicatorLineStyle.NONE:
 							break;
@@ -546,7 +546,7 @@ namespace com.google.finance.indicator
 			return false;
 		}
 
-		protected getIndicatorValueText(param1: number, param2: number, param3: string, param4: Context): string
+		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string
 		{
 			return "";
 		}

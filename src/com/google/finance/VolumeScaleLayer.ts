@@ -25,11 +25,11 @@ namespace com.google.finance
 			this.initTextFields(viewPoint);
 		}
 
-		private drawVolumeLines(param1: Context) 
+		private drawVolumeLines(context: Context) 
 		{
 			let _loc2_ = 1000;
 			const viewPoint = this.viewPoint;
-			if (param1 && param1.maxVolume / 1000000 > 0.5)
+			if (context && context.maxVolume / 1000000 > 0.5)
 			{
 				this.volumeLabel.text = Messages.getMsg(Messages.VOLUME_LONG) + " (" + Messages.getMsg(Messages.MILLION_SHORT) + " / ";
 				_loc2_ = 1000000;
@@ -61,7 +61,7 @@ namespace com.google.finance
 			}
 			const gr = this.graphics;
 			gr.clear();
-			if (!param1.maxVolume)
+			if (!context.maxVolume)
 			{
 				this.topScaleTextField.text = "";
 				this.midScaleTextField.text = "";
@@ -85,8 +85,8 @@ namespace com.google.finance
 			this.topScaleTextField.y = _loc6_ + ViewPoint.TEXT_VERTICAL_OFFSET - 4;
 			this.midScaleTextField.x = viewPoint.maxx - ViewPoint.TEXT_FIELD_WIDTH - 4;
 			this.midScaleTextField.y = (_loc6_ + viewPoint.maxy) / 2 - ViewPoint.TEXT_FIELD_HEIGHT / 2 - 1;
-			this.topScaleTextField.text = String(Math.floor(param1.maxVolume) / _loc2_);
-			this.midScaleTextField.text = String(Math.floor(param1.maxVolume / 2) / _loc2_);
+			this.topScaleTextField.text = String(Math.floor(context.maxVolume) / _loc2_);
+			this.midScaleTextField.text = String(Math.floor(context.maxVolume / 2) / _loc2_);
 		}
 
 		private positionVolumeLabel() 
@@ -95,9 +95,9 @@ namespace com.google.finance
 			this.volumeLabel.y = this.viewPoint.miny + VolumeScaleLayer.LABEL_PADDING;
 		}
 
-		renderLayer(param1: Context) 
+		renderLayer(context: Context) 
 		{
-			this.drawVolumeLines(param1);
+			this.drawVolumeLines(context);
 			this.positionVolumeLabel();
 		}
 

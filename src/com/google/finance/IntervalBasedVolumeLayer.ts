@@ -85,21 +85,21 @@ namespace com.google.finance
 			gr.lineTo(param1, param3.maxy);
 		}
 
-		getContext(param1: Context, param2 = false) 
+		getContext(context: Context, param2 = false) 
 		{
-			const dataSeries = notnull(this.getDataSeries(param1));
-			const detailLevel = this.viewPoint.getDetailLevelForTechnicalStyle(param1.lastMinute, param1.count);
+			const dataSeries = notnull(this.getDataSeries(context));
+			const detailLevel = this.viewPoint.getDetailLevelForTechnicalStyle(context.lastMinute, context.count);
 			const detailLevelInterval = Const.getDetailLevelInterval(detailLevel);
 			const points = dataSeries.getPointsInIntervalArray(detailLevelInterval);
 			if (!points)
-				return param1;
+				return context;
 
-			const _loc7_ = param1.lastMinute - param1.count;
+			const _loc7_ = context.lastMinute - context.count;
 			let _loc8_ = dataSeries.getRelativeMinuteIndex(_loc7_, points) - 1;
 			if (_loc8_ < 0)
 				_loc8_ = 0;
 
-			let _loc9_ = dataSeries.getRelativeMinuteIndex(param1.lastMinute, points) + 1;
+			let _loc9_ = dataSeries.getRelativeMinuteIndex(context.lastMinute, points) + 1;
 			if (_loc9_ >= points.length)
 				_loc9_ = points.length - 1;
 
@@ -116,11 +116,11 @@ namespace com.google.finance
 					break;
 			}
 			const _loc13_ = (Math.floor(_loc10_ / _loc12_) + 1) * _loc12_;
-			param1.maxVolume = Utils.extendedMax(param1.maxVolume, _loc13_);
-			return param1;
+			context.maxVolume = Utils.extendedMax(context.maxVolume, _loc13_);
+			return context;
 		}
 
-		renderLayer(param1: Context) 
+		renderLayer(context: Context) 
 		{
 			const dataSeries = notnull(this.getDataSeries());
 			const viewPoint = this.viewPoint;
@@ -132,10 +132,10 @@ namespace com.google.finance
 			if (!points || points.length === 0)
 				return;
 
-			if (param1.maxVolume === undefined)
+			if (context.maxVolume === undefined)
 				return;
 
-			this.localYScale = (viewPoint.maxy - viewPoint.miny - Const.BOTTOM_VIEWPOINT_HEADER_HEIGHT) / param1.maxVolume;
+			this.localYScale = (viewPoint.maxy - viewPoint.miny - Const.BOTTOM_VIEWPOINT_HEADER_HEIGHT) / context.maxVolume;
 			const _loc7_ = Math.max(dataSeries.getRelativeMinuteIndex(viewPoint.getFirstMinute(), points) - 1, 0);
 			const _loc8_ = Math.min(dataSeries.getRelativeMinuteIndex(viewPoint.getLastMinute(), points) + 1, this.getLastRealPointIndex(points));
 			const displayManager = viewPoint.getDisplayManager().getEnabledChartLayer();
@@ -197,7 +197,7 @@ namespace com.google.finance
 			this.drawHorizontalLine(viewPoint.miny + Const.BOTTOM_VIEWPOINT_HEADER_HEIGHT);
 		}
 
-		highlightPoint(param1: Context, param2: number, param3: { [key: string]: any }) 
+		highlightPoint(context: Context, param2: number, param3: { [key: string]: any }) 
 		{
 			if (param3["ahsetter"])
 				return;

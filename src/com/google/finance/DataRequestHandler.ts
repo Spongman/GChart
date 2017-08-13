@@ -24,10 +24,10 @@ namespace com.google.finance
 			}
 		}
 
-		private ioErrorHandler(param1: Event) 
+		private ioErrorHandler(event: Event) 
 		{
 			this.setUpDataReload();
-			console.log("ioErrorHandler: " + param1);
+			console.log("ioErrorHandler: " + event);
 		}
 
 		private securityErrorHandler(param1: Event) 

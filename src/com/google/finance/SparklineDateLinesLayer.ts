@@ -134,7 +134,7 @@ namespace com.google.finance
 			return 250 * data.marketDayLength;
 		}
 
-		renderLayer(param1: Context) 
+		renderLayer(context: Context) 
 		{
 			this.drawVerticalLines();
 		}

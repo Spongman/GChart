@@ -14,15 +14,15 @@ namespace com.google.finance
 			return "[" + this.start + ", " + this.end + ", " + this.name + "]";
 		}
 
-		equals(param1: StartEndPair): boolean
+		equals(pair: StartEndPair): boolean
 		{
-			if (!(param1 instanceof MarketSessionPair))
+			if (!(pair instanceof MarketSessionPair))
 				return false;
 
-			if (this.name !== param1.name)
+			if (this.name !== pair.name)
 				return false;
 
-			return super.equals(param1);
+			return super.equals(pair);
 		}
 	}
 }

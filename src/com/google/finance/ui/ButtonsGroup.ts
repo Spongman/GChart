@@ -128,9 +128,9 @@ namespace com.google.finance.ui
 			this.currentY = 0;
 		}
 
-		buttonPress(param1: Event) 
+		buttonPress(event: Event) 
 		{
-			let button = (<any>param1.currentTarget).displayObject as flash.display.SimpleButton;
+			let button = (<any>event.currentTarget).displayObject as flash.display.SimpleButton;
 			const _loc2_ = (<flash.display.DisplayObjectContainer>button.upState).getChildAt(0) as flash.text.TextField;
 			const buttonIndex = this.getButtonIndex(_loc2_.text);
 			if (buttonIndex !== -1)

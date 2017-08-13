@@ -111,12 +111,12 @@ namespace com.google.finance
 			this.movies.splice(this.activeMovies);
 		}
 
-		private getPosition(param1: StockAssociatedObject, param2: number, param3: Context): Position
+		private getPosition(param1: StockAssociatedObject, param2: number, context: Context): Position
 		{
 			const position = new Position();
 			const dataUnit = this.getDataUnit(param1, param2);
 			const _loc6_ = !isNaN(dataUnit.weeklyXPos) ? Number(dataUnit.weeklyXPos) : this.viewPoint.getXPos(dataUnit);
-			const yPos = this.getYPos(param3, dataUnit);
+			const yPos = this.getYPos(context, dataUnit);
 			//const _loc8_ = (this.viewPoint.maxy + this.viewPoint.miny) / 2;
 			if (this.positioning === IntervalBasedIndependentObjectsLayer.POSITION_CHART)
 			{
@@ -145,9 +145,9 @@ namespace com.google.finance
 			return position;
 		}
 
-		private getLastVisibleObject(param1: StockAssociatedObject[], param2: number, param3: Context): number
+		private getLastVisibleObject(param1: StockAssociatedObject[], param2: number, context: Context): number
 		{
-			const lastMinute = param3.lastMinute;
+			const lastMinute = context.lastMinute;
 			for (let _loc5_ = param1.length - 1; _loc5_ >= 0; _loc5_--)
 			{
 				if (notnull(param1[_loc5_].posInInterval)[param2])
@@ -212,9 +212,9 @@ namespace com.google.finance
 			return _loc3_;
 		}
 
-		private getFirstVisibleObject(param1: StockAssociatedObject[], param2: number, param3: Context): number
+		private getFirstVisibleObject(param1: StockAssociatedObject[], param2: number, context: Context): number
 		{
-			const _loc4_ = param3.lastMinute - param3.count;
+			const _loc4_ = context.lastMinute - context.count;
 			for (let _loc5_ = 0; _loc5_ < param1.length; _loc5_++)
 			{
 				if (notnull(param1[_loc5_].posInInterval)[param2])

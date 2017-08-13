@@ -1098,10 +1098,10 @@ namespace com.google.finance
 			return false;
 		}
 
-		animateToCustomLevel(param1: Date, param2: Date) 
+		animateToCustomLevel(startDate: Date, endDate: Date) 
 		{
-			this.customZoomStartDate = param1;
-			this.customZoomEndDate = param2;
+			this.customZoomStartDate = startDate;
+			this.customZoomEndDate = endDate;
 			this.animateToLevel(Const.SCALE_CUSTOM);
 		}
 

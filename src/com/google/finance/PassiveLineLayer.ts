@@ -18,7 +18,7 @@ namespace com.google.finance
 			this.lineColor = Const.LINE_CHART_LINE_COLOR;
 		}
 
-		highlightPoint(param1: Context, param2: number, param3: { [key: string]: any }) 
+		highlightPoint(context: Context, param2: number, param3: { [key: string]: any }) 
 		{
 			this.clearHighlight();
 			const originalDataSeries = this.originalDataSeries;
@@ -72,7 +72,7 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		private drawLine_(param1: flash.display.Sprite, param2: number, param3: number, viewPoint: ViewPoint, param5: Context, param6: com.google.finance.DataSeries) 
+		private drawLine_(param1: flash.display.Sprite, param2: number, param3: number, viewPoint: ViewPoint, context: Context, param6: com.google.finance.DataSeries) 
 		{
 			const units = param6.units;
 			const days = param6.days;
@@ -84,7 +84,7 @@ namespace com.google.finance
 				_loc10_--;
 
 			let xPos = viewPoint.getXPos(units[_loc10_]) + 1;
-			let yPos = this.getYPos(param5, units[days[nextDayStart]]);
+			let yPos = this.getYPos(context, units[days[nextDayStart]]);
 			gr.moveTo(xPos, this.viewPoint.maxy);
 			gr.lineStyle(0, 0, 0);
 			gr.lineTo(xPos, yPos);
@@ -95,7 +95,7 @@ namespace com.google.finance
 				case Intervals.INTRADAY:
 					while (days[nextDayStart] > 0 && days[nextDayStart] >= param2 && days[nextDayStart] !== days[nextDayStart - 1] + 1)
 					{
-						this.drawDayLine_(param1, nextDayStart, viewPoint, param2, param3, param5, param6);
+						this.drawDayLine_(param1, nextDayStart, viewPoint, param2, param3, context, param6);
 						nextDayStart--;
 					}
 					break;
@@ -105,7 +105,7 @@ namespace com.google.finance
 					const _loc14_ = viewPoint.minutePix * (this.dataSource.data.marketDayLength + 2);
 					while (_loc13_ >= param2 && _loc13_ > 0)
 					{
-						yPos = this.getYPos(param5, units[_loc13_]);
+						yPos = this.getYPos(context, units[_loc13_]);
 						gr.lineTo(xPos, yPos);
 						_loc13_--;
 						xPos = xPos - _loc14_;
@@ -123,7 +123,7 @@ namespace com.google.finance
 					{
 						const _loc17_ = param6.units[param6.fridays[_loc16_]];
 						xPos = vp.getXPos(_loc17_);
-						yPos = this.getYPos(param5, _loc17_);
+						yPos = this.getYPos(context, _loc17_);
 						gr.lineTo(xPos, yPos);
 						_loc16_ = _loc16_ - skipInterval.skip;
 					}
@@ -136,7 +136,7 @@ namespace com.google.finance
 			return param1.units[this.getPointIndex(param1, param2)];
 		}
 
-		private drawDayLine_(param1: flash.display.Sprite, param2: number, viewPoint: ViewPoint, param4: number, param5: number, param6: Context, param7: com.google.finance.DataSeries) 
+		private drawDayLine_(param1: flash.display.Sprite, param2: number, viewPoint: ViewPoint, param4: number, param5: number, context: Context, param7: com.google.finance.DataSeries) 
 		{
 			let _loc17_ = 0;
 			const units = param7.units;
@@ -157,18 +157,18 @@ namespace com.google.finance
 				_loc12_--;
 
 			let xPos = viewPoint.getXPos(units[_loc12_]);
-			const skipInterval = viewPoint.getSkipInterval(param6.count, param6.lastMinute);
+			const skipInterval = viewPoint.getSkipInterval(context.count, context.lastMinute);
 			const intervalLength = viewPoint.getIntervalLength(skipInterval.interval / 60);
 			const gr = param1.graphics;
 			while (_loc12_ >= _loc17_ && _loc12_ >= param4)
 			{
-				const _loc11_ = this.localYOffset - (param7.points[_loc12_].value - param6.medPrice) * this.localYScale;
+				const _loc11_ = this.localYOffset - (param7.points[_loc12_].value - context.medPrice) * this.localYScale;
 				gr.lineTo(xPos, _loc11_);
 				_loc12_--;
 				xPos = xPos - intervalLength;
 			}
 			const xPos2 = viewPoint.getXPos(units[_loc17_]);
-			const yPos2 = this.getYPos(param6, units[_loc17_]);
+			const yPos2 = this.getYPos(context, units[_loc17_]);
 			gr.lineTo(xPos2, yPos2);
 		}
 
@@ -190,17 +190,17 @@ namespace com.google.finance
 			this.originalDataSeries = param3;
 		}
 
-		getYPos(param1: Context, param2: DataUnit): number
+		getYPos(context: Context, param2: DataUnit): number
 		{
-			return this.localYOffset - (param2.getCloseLogValue(param1.verticalScaling) - param1.medPrice) * this.localYScale;
+			return this.localYOffset - (param2.getCloseLogValue(context.verticalScaling) - context.medPrice) * this.localYScale;
 		}
 
-		getDataSeries(param1: Context): com.google.finance.DataSeries | null
+		getDataSeries(context: Context): com.google.finance.DataSeries | null
 		{
-			if (!param1)
+			if (!context)
 				return null;
 
-			const skipInterval = this.viewPoint.getSkipInterval(param1.count, param1.lastMinute);
+			const skipInterval = this.viewPoint.getSkipInterval(context.count, context.lastMinute);
 			if (!this.computer)
 				return null;
 
@@ -208,10 +208,10 @@ namespace com.google.finance
 			return this.indicator.getDataSeries(skipInterval.interval);
 		}
 
-		renderLayer(param1: Context) 
+		renderLayer(context: Context) 
 		{
 			const viewPoint = this.viewPoint;
-			const dataSeries = this.getDataSeries(param1);
+			const dataSeries = this.getDataSeries(context);
 			if (!dataSeries || dataSeries.points.length === 0)
 				return;
 
@@ -225,8 +225,8 @@ namespace com.google.finance
 				firstMinuteIndex = 0;
 
 			this.localYOffset = viewPoint.miny + viewPoint.medPriceY + viewPoint.V_OFFSET;
-			this.localYScale = viewPoint.maxPriceRangeViewSize / param1.maxPriceRange;
-			this.drawLine_(this, firstMinuteIndex, lastMinuteIndex, viewPoint, param1, dataSeries);
+			this.localYScale = viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
+			this.drawLine_(this, firstMinuteIndex, lastMinuteIndex, viewPoint, context, dataSeries);
 		}
 
 		private getPointIndex(param1: com.google.finance.DataSeries, param2: number): number

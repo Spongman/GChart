@@ -4,7 +4,7 @@ namespace com.google.finance
 	{
 		private dashSize = 7;
 
-		private drawLine(param1: Context) 
+		private drawLine(context: Context) 
 		{
 			//const _loc2_ = this.dataSource.data;
 			const gr = this.graphics;
@@ -16,8 +16,8 @@ namespace com.google.finance
 			const _loc6_ = units[units.length - 1];
 			if (Const.INDICATOR_ENABLED)
 			{
-				const closeLogValue = _loc5_.getCloseLogValue(param1.verticalScaling);
-				if (closeLogValue > param1.maxPrice || closeLogValue < param1.minPrice)
+				const closeLogValue = _loc5_.getCloseLogValue(context.verticalScaling);
+				if (closeLogValue > context.maxPrice || closeLogValue < context.minPrice)
 					return;
 			}
 			let vp = this.viewPoint;
@@ -26,7 +26,7 @@ namespace com.google.finance
 			const detailLevel = vp.getDetailLevel();
 			if (xPos1 < this.viewPoint.maxx && detailLevel === Intervals.INTRADAY)
 			{
-				const yPos = this.getYPos(_loc5_, param1);
+				const yPos = this.getYPos(_loc5_, context);
 				let _loc12_ = 0;
 				do
 				{
@@ -38,14 +38,14 @@ namespace com.google.finance
 			}
 		}
 
-		protected getYPos(param1: DataUnit, param2: Context): number
+		protected getYPos(param1: DataUnit, context: Context): number
 		{
-			return this.viewPoint.miny + this.viewPoint.V_OFFSET + this.viewPoint.medPriceY - (param1.getCloseLogValue(param2.verticalScaling) - param2.medPrice) * this.viewPoint.maxPriceRangeViewSize / param2.maxPriceRange;
+			return this.viewPoint.miny + this.viewPoint.V_OFFSET + this.viewPoint.medPriceY - (param1.getCloseLogValue(context.verticalScaling) - context.medPrice) * this.viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
 		}
 
-		renderLayer(param1: Context) 
+		renderLayer(context: Context) 
 		{
-			this.drawLine(param1);
+			this.drawLine(context);
 		}
 	}
 }

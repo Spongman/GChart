@@ -2,7 +2,7 @@ namespace com.google.finance
 {
 	export class IntervalBasedLineChartLayer extends IntervalBasedChartLayer
 	{
-		private drawLine(param1: number, param2: Context, param3: DataUnit[], param4: number, param5: number, param6: number, param7: number): number
+		private drawLine(param1: number, context: Context, param3: DataUnit[], param4: number, param5: number, param6: number, param7: number): number
 		{
 			let _loc8_ = NaN;
 			const gr = this.graphics;
@@ -13,7 +13,7 @@ namespace com.google.finance
 					if (isNaN(param7))
 					{
 						const _loc8_ = this.viewPoint.getXPos(param3[param5]);
-						const closeYPos = this.getCloseYPos(param2, param3[param5]);
+						const closeYPos = this.getCloseYPos(context, param3[param5]);
 						param5--;
 						gr.moveTo(_loc8_, this.viewPoint.maxy);
 						gr.lineStyle(0, 0, 0);
@@ -35,7 +35,7 @@ namespace com.google.finance
 					for (let _loc13_ = param5; _loc13_ >= param4; _loc13_--)
 					{
 						_loc8_ = this.viewPoint.getXPos(param3[_loc13_]);
-						const closeYPos = this.getCloseYPos(param2, param3[_loc13_]);
+						const closeYPos = this.getCloseYPos(context, param3[_loc13_]);
 						gr.lineTo(_loc8_, closeYPos);
 					}
 					return _loc8_;
@@ -57,7 +57,7 @@ namespace com.google.finance
 					{
 						gr.lineStyle(0, 0, 0);
 						_loc8_ = this.viewPoint.getXPos(param3[_loc10_]);
-						const closeYPos = this.getCloseYPos(param2, param3[_loc10_]);
+						const closeYPos = this.getCloseYPos(context, param3[_loc10_]);
 						gr.lineTo(_loc8_, this.viewPoint.maxy);
 						gr.lineTo(_loc8_, closeYPos);
 						const _loc14_ = notnull(this.getDataSeries());
@@ -66,7 +66,7 @@ namespace com.google.finance
 						{
 							_loc10_--;
 							_loc8_ = this.viewPoint.getXPos(param3[_loc10_]);
-							const closeYPos = this.getCloseYPos(param2, param3[_loc10_]);
+							const closeYPos = this.getCloseYPos(context, param3[_loc10_]);
 							gr.lineTo(_loc8_, closeYPos);
 						}
 						gr.lineStyle(0, 0, 0);
@@ -78,7 +78,7 @@ namespace com.google.finance
 							const _loc16_ = param3[_loc10_ + 1].relativeMinutes;
 							if (_loc16_ > _loc15_ + marketDayLength)
 							{
-								const closeYPos = this.getCloseYPos(param2, param3[_loc10_]);
+								const closeYPos = this.getCloseYPos(context, param3[_loc10_]);
 								_loc8_ = this.viewPoint.getMinuteXPos(_loc16_ - 1);
 								gr.lineTo(_loc8_, this.viewPoint.maxy);
 								gr.lineTo(_loc8_, closeYPos);

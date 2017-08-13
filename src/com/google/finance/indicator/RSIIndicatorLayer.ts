@@ -17,7 +17,7 @@ namespace com.google.finance.indicator
 			return RSIIndicatorLayer.PARAMETER_NAMES;
 		}
 
-		protected getIndicatorValueText(param1: number, param2: number, param3: string, param4: Context): string
+		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string
 		{
 			if (param1 === 0)
 				return Messages.getMsg(Messages.RSI_RSI, param2);

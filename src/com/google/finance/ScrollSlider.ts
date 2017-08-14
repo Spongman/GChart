@@ -23,22 +23,8 @@ namespace com.google.finance
 			this.addChild(this.middle);
 		}
 
-
-		private _width:number;
-		
 		setWidth(width: number) 
 		{
-			if (width === this._width)
-				return;
-			this._width = width;
-
-		/*
-		setWidth(width: number) 
-		{
-			if (width === this.width)
-				return;
-			this.width = width;
-		*/
 			if (width < ScrollSlider.MIN_WIDTH)
 				width = ScrollSlider.MIN_WIDTH;
 

@@ -10,23 +10,25 @@ body {
 }
 
 #stage {
-	position: relative;
 	overflow: hidden;
 
-	position: absolute;
 	top: 45px;
 	left: 0px;
 	bottom: 0px;
 	right: 0px;
 }
 
+#stage,
 #stage canvas,
 #stage div,
 #stage img,
 #stage span {
 	position: absolute;
-	pointer-events: none;
 	display: inline-block;
+}
+
+#stage * {
+	pointer-events: none;
 }
 
 div[name='SimpleButton'] div,
@@ -48,7 +50,7 @@ span {
 }
 
 #stage, .mouseEnabled, .mouseEnabled * {
-	pointer-events: auto;
+	pointer-events: auto !important;
 
 	-webkit-user-select: none;
 	-khtml-user-select: none;
@@ -63,11 +65,11 @@ span {
 	user-drag: none;
 }
 
-
 .handCursor {
 	cursor: pointer;
 	pointer-events: auto !important;
 }
+
 
 .handCursor:hover {
 }

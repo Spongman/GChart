@@ -458,7 +458,7 @@ namespace com.google.finance.indicator
 			this.calculateLocalScaleMeters(context);
 			let lastMinuteIndex = originalDataSeries.getRelativeMinuteIndex(viewPoint.getLastMinute(), points);
 			if (lastMinuteIndex < points.length - 1)
-				lastMinuteIndex = lastMinuteIndex + 1;
+				lastMinuteIndex++;
 
 			const lastRealPointIndex = this.getLastRealPointIndex(points);
 			if (lastMinuteIndex > lastRealPointIndex)

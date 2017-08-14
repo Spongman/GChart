@@ -219,7 +219,7 @@ namespace com.google.finance
 			_loc7_ = _loc7_ + ("&f=" + param3.columns + "&df=cpct");
 			_loc7_ = _loc7_ + "&auto=1";
 			_loc7_ = _loc7_ + ("&ts=" + new Date().getTime());
-			_loc7_ = _loc7_ + param2;
+			_loc7_ += param2;
 			return _loc7_;
 		}
 

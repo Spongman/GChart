@@ -9,17 +9,17 @@ namespace com.google.finance
 		protected regionsXLimits: com.google.finance.IntervalSet;
 		protected readonly maxVolumeCache: { [key: string]: number } = {};
 
-		private drawAfterHoursSession(param1: flash.display.Sprite, dataSeries: DataSeries, param3: number, param4: number, context: Context, param6: number) 
+		private drawAfterHoursSession(layer: AHVolumeLayer, dataSeries: DataSeries, startTime: number, endTime: number, context: Context, param6: number) 
 		{
-			const timeIndex1 = DataSource.getTimeIndex(param4, dataSeries.units);
-			const timeIndex2 = DataSource.getTimeIndex(param3, dataSeries.units);
+			const timeIndex2 = DataSource.getTimeIndex(endTime, dataSeries.units);
+			const timeIndex1 = DataSource.getTimeIndex(startTime, dataSeries.units);
 			const viewPoint = this.viewPoint;
 			const _loc10_ = <indicator.VolumeIndicatorPoint[]>dataSeries.points;
-			let left = viewPoint.getXPos(_loc10_[timeIndex1].point);
-			const right = left;
+			const right = viewPoint.getXPos(_loc10_[timeIndex2].point);
+			let left = right;
 			const intervalLength = viewPoint.getIntervalLength(param6 / 60);
-			const gr = param1.graphics;
-			for (let timeIndex = timeIndex1; timeIndex > timeIndex2; timeIndex--)
+			const gr = layer.graphics;
+			for (let timeIndex = timeIndex2; timeIndex > timeIndex1; timeIndex--)
 			{
 				let _loc15_ = viewPoint.maxy - _loc10_[timeIndex].volume * this.verticalScale;
 				if (viewPoint.maxy - _loc15_ < 1 && viewPoint.maxy - _loc15_ > 0)
@@ -29,7 +29,7 @@ namespace com.google.finance
 
 				gr.moveTo(left, _loc15_);
 				gr.lineTo(left, viewPoint.maxy);
-				left = left - intervalLength;
+				left -= intervalLength;
 			}
 			this.regionsXLimits.addInterval(left, right);
 		}

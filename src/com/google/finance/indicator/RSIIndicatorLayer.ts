@@ -84,9 +84,9 @@ namespace com.google.finance.indicator
 						}
 						_loc7_ = Number(_loc9_.shift());
 						if (_loc7_ > 0)
-							_loc5_ = _loc5_ - _loc7_;
+							_loc5_ -= _loc7_;
 						else
-							_loc6_ = _loc6_ + _loc7_;
+							_loc6_ += _loc7_;
 					}
 				}
 			}

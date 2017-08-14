@@ -21,10 +21,7 @@ namespace com.google.finance
 		static getLocalTimezoneOffset(): number
 		{
 			if (isNaN(Utils.localTzOffset))
-			{
-				const date = new Date();
-				Utils.localTzOffset = date.getTimezoneOffset();
-			}
+				Utils.localTzOffset = new Date().getTimezoneOffset();
 			return Utils.localTzOffset;
 		}
 
@@ -38,13 +35,10 @@ namespace com.google.finance
 		{
 			for (let _loc3_ = 0; _loc3_ < param1.length; _loc3_++)
 			{
-				if (param1[_loc3_])
+				if (param1[_loc3_] && param1[_loc3_][param2])
 				{
-					if (param1[_loc3_][param2])
-					{
-						if (param1[_loc3_][param2].indexOf("NASD:") === 0)
-							param1[_loc3_][param2] = Utils.adjustNasdToNasdaq(param1[_loc3_][param2]);
-					}
+					if (param1[_loc3_][param2].indexOf("NASD:") === 0)
+						param1[_loc3_][param2] = Utils.adjustNasdToNasdaq(param1[_loc3_][param2]);
 				}
 			}
 		}
@@ -192,8 +186,8 @@ namespace com.google.finance
 			let _loc6_ = Math.floor(param1 / _loc4_) + ".";
 			while (_loc4_ > 1)
 			{
-				_loc4_ = _loc4_ / 10;
-				_loc6_ = _loc6_ + Math.floor(_loc5_ / _loc4_);
+				_loc4_ /= 10;
+				_loc6_ += Math.floor(_loc5_ / _loc4_);
 				_loc5_ = _loc5_ % _loc4_;
 			}
 			for (let _loc7_ = 0; _loc7_ < param3 - _loc6_.length; _loc7_++)
@@ -358,7 +352,7 @@ namespace com.google.finance
 			{
 				if (param1 > 12)
 				{
-					param1 = param1 - 12;
+					param1 -= 12;
 					_loc3_ = param1 + " pm";
 				}
 				else if (param1 === 12)
@@ -389,9 +383,7 @@ namespace com.google.finance
 		{
 			let _loc3_ = param1 + ":";
 			for (let _loc4_ in param2)
-			{
-				_loc3_ = _loc3_ + ("  obj." + _loc4_ + "=" + param2[_loc4_]);
-			}
+				_loc3_ += "  obj." + _loc4_ + "=" + param2[_loc4_];
 			return _loc3_;
 		}
 
@@ -414,23 +406,20 @@ namespace com.google.finance
 
 		static getLastDayOfWeek(param1: number): number
 		{
-			for (let _loc2_ = Const.DAY_PER_WEEK - 1; _loc2_ >= 0; _loc2_--)
+			for (let day = Const.DAY_PER_WEEK - 1; day >= 0; day--)
 			{
-				if (Utils.IsWeekday(_loc2_, param1))
-					return _loc2_;
-
+				if (Utils.IsWeekday(day, param1))
+					return day;
 			}
 			return Const.DEFAULT_LAST_MARKET_WEEKDAY;
 		}
 
-		static cloneObject<T>(param1: T): T
+		static cloneObject<T>(obj: T): T
 		{
-			const _loc2_ = <T>{};
-			for (let _loc3_ in param1)
-			{
-				(<any>_loc2_)[_loc3_] = (<any>param1)[_loc3_]; // TODO
-			}
-			return _loc2_;
+			const clone = <T>{};
+			for (let key in obj)
+				(<any>clone)[key] = (<any>obj)[key]; // TODO
+			return clone;
 		}
 
 		static IsWeekday(param1: number, param2: number): boolean

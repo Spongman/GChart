@@ -797,7 +797,7 @@ namespace com.google.finance
 			const sparklineViewPoint = <SparklineViewPoint><any>param1.displayManager.getViewPoint(Const.SPARKLINE_VIEW_POINT_NAME);
 			if (sparklineViewPoint.sparklinePagingPossible(param2))
 			{
-				param1.cumulativeXOffset = param1.cumulativeXOffset + param2;
+				param1.cumulativeXOffset += param2;
 				param1.moveListenersByOffsets();
 			}
 			else

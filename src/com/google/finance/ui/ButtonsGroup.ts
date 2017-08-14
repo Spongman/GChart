@@ -161,7 +161,7 @@ namespace com.google.finance.ui
 			const nextButtonPosition = this.getNextButtonPosition();
 			const _loc4_ = this.putSeparator(nextButtonPosition.x, nextButtonPosition.y, param1);
 			if (!isNaN(param2))
-				this.currentX = this.currentX + param2;
+				this.currentX += param2;
 			else
 				this.currentX = this.currentX + _loc4_.width;
 		}

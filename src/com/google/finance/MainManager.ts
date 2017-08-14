@@ -185,7 +185,7 @@ namespace com.google.finance
 				Const.DISPLAY_NEWS_PINS = "true" === String(MainManager.paramsObj.displayNewsPins);
 
 			if (Const.INDICATOR_ENABLED)
-				Const.SPARKLINE_HEIGHT = Const.SPARKLINE_HEIGHT - 20;
+				Const.SPARKLINE_HEIGHT -= 20;
 
 			Const.VOLUME_PLUS_ENABLED = "true" === String(this.checkUndefined(MainManager.paramsObj.enableVolumePlus, Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale())));
 			Const.CHART_TYPE_BUTTONS_ENABLED = "true" === String(this.checkUndefined(MainManager.paramsObj.enableChartTypeButtons, Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale())));

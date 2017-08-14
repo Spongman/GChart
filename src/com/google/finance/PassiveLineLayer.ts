@@ -108,7 +108,7 @@ namespace com.google.finance
 						yPos = this.getYPos(context, units[_loc13_]);
 						gr.lineTo(xPos, yPos);
 						_loc13_--;
-						xPos = xPos - _loc14_;
+						xPos -= _loc14_;
 					}
 					break;
 				case Intervals.WEEKLY:
@@ -165,7 +165,7 @@ namespace com.google.finance
 				const _loc11_ = this.localYOffset - (param7.points[_loc12_].value - context.medPrice) * this.localYScale;
 				gr.lineTo(xPos, _loc11_);
 				_loc12_--;
-				xPos = xPos - intervalLength;
+				xPos -= intervalLength;
 			}
 			const xPos2 = viewPoint.getXPos(units[_loc17_]);
 			const yPos2 = this.getYPos(context, units[_loc17_]);
@@ -218,7 +218,7 @@ namespace com.google.finance
 			this.graphics.clear();
 			let lastMinuteIndex = dataSeries.getRelativeMinuteIndex(viewPoint.getLastMinute());
 			if (lastMinuteIndex < dataSeries.points.length - 1)
-				lastMinuteIndex = lastMinuteIndex + 1;
+				lastMinuteIndex++;
 
 			let firstMinuteIndex = dataSeries.getRelativeMinuteIndex(viewPoint.getFirstMinute()) - 1;
 			if (firstMinuteIndex < 0)

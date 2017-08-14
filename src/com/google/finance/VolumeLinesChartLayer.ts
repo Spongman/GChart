@@ -46,7 +46,7 @@ namespace com.google.finance
 				gr.moveTo(xPos, _loc13_);
 				gr.lineTo(xPos, viewPoint.maxy);
 				_loc14_--;
-				xPos = xPos - intervalLength;
+				xPos -= intervalLength;
 			}
 			return param2;
 		}

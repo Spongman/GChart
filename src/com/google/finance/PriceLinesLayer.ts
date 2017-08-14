@@ -71,7 +71,7 @@ namespace com.google.finance
 							this.additionalDistanceBetweenLines = this.getIncreaseInterval(Const.YSCALE_INTERVALS[param2 + 1]);
 							_loc3_ = _loc3_ + this.additionalDistanceBetweenLines;
 							if (param2 < Const.YSCALE_INTERVALS.length - 1 && _loc3_ === Const.YSCALE_INTERVALS[param2 + 2])
-								param2 = param2 + 1;
+								param2++;
 						}
 					}
 				}

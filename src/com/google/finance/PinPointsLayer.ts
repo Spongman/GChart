@@ -162,7 +162,7 @@ namespace com.google.finance
 				const visibleDataUnit = this.getVisibleDataUnit(param2[_loc6_]);
 				_loc9_.push(Math.floor(this.viewPoint.getXPos(visibleDataUnit)));
 				_loc10_.push(this.getYPos(context, visibleDataUnit));
-				_loc6_ = _loc6_ + flagGroupCount;
+				_loc6_ += flagGroupCount;
 			}
 
 			if (_loc7_.length > 0)

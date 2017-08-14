@@ -71,7 +71,7 @@ namespace com.google.finance.indicator
 			let _loc10_ = Number.POSITIVE_INFINITY;
 			let _loc11_ = originalDataSeries.getRelativeMinuteIndex(context.lastMinute, points);
 			if (_loc11_ < points.length - 1)
-				_loc11_ = _loc11_ + 1;
+				_loc11_++;
 
 			let _loc12_ = originalDataSeries.getRelativeMinuteIndex(context.lastMinute - context.count, points) - 1;
 			if (_loc12_ < 0)

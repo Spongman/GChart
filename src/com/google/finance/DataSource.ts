@@ -1332,7 +1332,7 @@ namespace com.google.finance
 				if (this.quoteName.indexOf("CURRENCY") >= 0)
 				{
 					const _loc5_ = (param2.marketCloseMinute - param2.marketOpenMinute) % this.intradayMinutesInterval;
-					param2.marketCloseMinute = param2.marketCloseMinute - _loc5_;
+					param2.marketCloseMinute -= _loc5_;
 				}
 			}
 			if (Number(_loc3_) - Number(_loc4_) < 30)

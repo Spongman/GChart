@@ -23,8 +23,8 @@ namespace com.google.i18n.locale
 
 		constructor(private isUtc = false)
 		{
-			for (let _loc2_ = 0; _loc2_ < this.TOKENS.length; _loc2_++)
-				this.tokensHash[this.TOKENS.substr(_loc2_, 1)] = true;
+			for (let tokenIndex = 0; tokenIndex < this.TOKENS.length; tokenIndex++)
+				this.tokensHash[this.TOKENS.substr(tokenIndex, 1)] = true;
 		}
 
 		applyPattern(pattern: string) 
@@ -122,19 +122,19 @@ namespace com.google.i18n.locale
 
 		applyStandardPattern(param1: DateTimeFormats)
 		{
-			let _loc2_: string;
+			let pattern: string;
 			if (param1 < 4)
-				_loc2_ = (<any>this.symbols).DATEFORMATS[param1];
+				pattern = (<any>this.symbols).DATEFORMATS[param1];
 			else if (param1 < 8)
-				_loc2_ = (<any>this.symbols).TIMEFORMATS[param1 - 4];
+				pattern = (<any>this.symbols).TIMEFORMATS[param1 - 4];
 			else if (param1 < 12)
-				_loc2_ = (<any>this.symbols).DATEFORMATS[param1 - 8] + " " + (<any>this.symbols).TIMEFORMATS[param1 - 8];
+				pattern = (<any>this.symbols).DATEFORMATS[param1 - 8] + " " + (<any>this.symbols).TIMEFORMATS[param1 - 8];
 			else
 			{
 				this.applyStandardPattern(DateTimeFormats.MEDIUM_DATETIME_FORMAT);
 				return;
 			}
-			this.applyPattern(_loc2_);
+			this.applyPattern(pattern);
 		}
 
 		private formatMonth(fieldLength: number, date: Date): string
@@ -179,20 +179,20 @@ namespace com.google.i18n.locale
 		private formatGMT(fieldLength: number, date: Date): string
 		{
 			let timezoneOffset = date.getTimezoneOffset();
-			const _loc4_: string[] = [];
+			const parts: string[] = [];
 			if (timezoneOffset > 0)
 			{
-				_loc4_.push("GMT-");
+				parts.push("GMT-");
 			}
 			else
 			{
 				timezoneOffset = -timezoneOffset;
-				_loc4_.push("GMT+");
+				parts.push("GMT+");
 			}
-			_loc4_.push(this.padNumber(timezoneOffset / 60, 2));
-			_loc4_.push(":");
-			_loc4_.push(this.padNumber(timezoneOffset % 60, 2));
-			return _loc4_.join("");
+			parts.push(this.padNumber(timezoneOffset / 60, 2));
+			parts.push(":");
+			parts.push(this.padNumber(timezoneOffset % 60, 2));
+			return parts.join("");
 		}
 
 		private format1To12Hours(fieldLength: number, date: Date): string
@@ -212,14 +212,14 @@ namespace com.google.i18n.locale
 			if (fieldLength < 4)
 			{
 				let timezoneOffset = date.getTimezoneOffset();
-				let _loc4_ = "-";
+				let sign = "-";
 				if (timezoneOffset < 0)
 				{
 					timezoneOffset = -timezoneOffset;
-					_loc4_ = "+";
+					sign = "+";
 				}
 				timezoneOffset = timezoneOffset / 3 * 5 + timezoneOffset % 60;
-				return _loc4_ + this.padNumber(timezoneOffset, 4);
+				return sign + this.padNumber(timezoneOffset, 4);
 			}
 			return this.formatGMT(fieldLength, date);
 		}
@@ -279,16 +279,16 @@ namespace com.google.i18n.locale
 
 		format(date: Date): string
 		{
-			const _loc2_: string[] = [];
-			for (let _loc3_ = 0; _loc3_ < this.patternParts.length; _loc3_++)
+			const parts: string[] = [];
+			for (let partIndex = 0; partIndex < this.patternParts.length; partIndex++)
 			{
-				const text = this.patternParts[_loc3_].text;
-				if (PatternPartTypes.FIELD === this.patternParts[_loc3_].type)
-					_loc2_.push(this.formatField(text, date));
+				const patternPart = this.patternParts[partIndex].text;
+				if (PatternPartTypes.FIELD === this.patternParts[partIndex].type)
+					parts.push(this.formatField(patternPart, date));
 				else
-					_loc2_.push(text);
+					parts.push(patternPart);
 			}
-			return _loc2_.join("");
+			return parts.join("");
 		}
 
 		private padNumber(param1: number, param2: number): string

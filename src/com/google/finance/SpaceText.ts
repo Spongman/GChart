@@ -135,7 +135,7 @@ namespace com.google.finance
 			}
 			else
 			{
-				_loc2_ = _loc2_ + param1;
+				_loc2_ += param1;
 			}
 			return _loc2_;
 		}
@@ -171,7 +171,7 @@ namespace com.google.finance
 
 		private appendOhlcText(param1: string, param2: number, param3: number) 
 		{
-			this.datesText = this.datesText + param1;
+			this.datesText += param1;
 			const _loc4_ = this.normalizePrice(param2);
 			if (param3 !== -1)
 			{
@@ -192,7 +192,7 @@ namespace com.google.finance
 					});
 				}
 			}
-			this.datesText = this.datesText + _loc4_;
+			this.datesText += _loc4_;
 		}
 
 		setPointInfo(param1: { [key: string]: any }) 

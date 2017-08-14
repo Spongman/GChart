@@ -91,7 +91,7 @@ namespace com.google.finance
 			else if (_loc4_ > maxx)
 				_loc6_ = Number(maxx - _loc4_ - 2);
 
-			this.detailsTextField.x = this.detailsTextField.x + _loc6_;
+			this.detailsTextField.x += _loc6_;
 			const graphics = this.highlightCanvas.graphics;
 			graphics.lineStyle(0, this.textColor, 1);
 			graphics.beginFill(0xffffff, 1);

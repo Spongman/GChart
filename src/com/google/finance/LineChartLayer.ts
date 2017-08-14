@@ -109,8 +109,8 @@ namespace com.google.finance
 								this.checkMinMax(dataSeries.units[dataSeries.days[_loc20_]].getCloseLogValue(param4));
 
 						}
-						_loc6_ = _loc6_ + 1;
-						_loc7_ = _loc7_ - _loc16_;
+						_loc6_++;
+						_loc7_ -= _loc16_;
 					}
 			}
 			return _loc5_ / _loc6_;
@@ -158,10 +158,10 @@ namespace com.google.finance
 						else if (closeLogValue > this.maxPrice)
 							this.maxPrice = closeLogValue;
 					}
-					_loc10_.sum = _loc10_.sum + closeLogValue;
+					_loc10_.sum += closeLogValue;
 					_loc10_.cnt++;
 				}
-				param1 = param1 - _loc13_;
+				param1 -= _loc13_;
 			}
 			return _loc10_;
 		}
@@ -241,11 +241,11 @@ namespace com.google.finance
 				gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
 			}
 			while (param2 > _loc17_)
-				param2 = param2 - _loc13_;
+				param2 -= _loc13_;
 
 			//const _loc18_ = param2;
 			while (param2 > param5 && param2 > param4)
-				param2 = param2 - _loc13_;
+				param2 -= _loc13_;
 
 			let xPos = viewPoint.getXPos(units[param2]);
 			const _loc20_ = _loc13_ * (viewPoint.minutePix * _loc9_);
@@ -255,14 +255,14 @@ namespace com.google.finance
 			{
 				const yPos = this.getYPos(context, units[param2]);
 				gr.lineTo(xPos, yPos);
-				param2 = param2 - _loc13_;
+				param2 -= _loc13_;
 				if (param2 > _loc16_ && param2 > param4 && _loc22_ - units[param2 - 1].relativeMinutes === _loc21_)
 					param2--;
 
 				if (param2 >= _loc16_ && param2 >= param4)
 					_loc22_ = units[param2].relativeMinutes;
 
-				xPos = xPos - _loc20_;
+				xPos -= _loc20_;
 			}
 			const xPos2 = viewPoint.getXPos(units[_loc16_]);
 			const yPos2 = this.getYPos(context, units[_loc16_]);
@@ -383,7 +383,7 @@ namespace com.google.finance
 			gr.clear();
 			let _loc4_ = _loc3_.getRelativeMinuteIndex(viewPoint.getLastMinute());
 			if (_loc4_ < _loc3_.points.length - 1)
-				_loc4_ = _loc4_ + 1;
+				_loc4_++;
 
 			let _loc5_ = _loc3_.getRelativeMinuteIndex(viewPoint.getFirstMinute()) - 1;
 			if (_loc5_ < 0)

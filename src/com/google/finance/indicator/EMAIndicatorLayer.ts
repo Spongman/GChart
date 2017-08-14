@@ -33,7 +33,7 @@ namespace com.google.finance.indicator
 					const _loc11_ = points[pointIndex];
 					if (!this.shouldSkip(_loc11_, dataSeries))
 					{
-						_loc5_ = _loc5_ + 1;
+						_loc5_++;
 						_loc6_ = Number(_loc6_ + _loc11_.close);
 						let _loc9_: IndicatorPoint;
 						if (_loc5_ < this.periods[_loc7_])

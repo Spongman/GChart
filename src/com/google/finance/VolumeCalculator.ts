@@ -109,7 +109,7 @@ namespace com.google.finance
 						dataSeries1.units[_loc9_].time
 					);
 					dataSeries2.points.push(_loc12_);
-					_loc9_ = _loc9_ - _loc5_;
+					_loc9_ -= _loc5_;
 				}
 			}
 		}

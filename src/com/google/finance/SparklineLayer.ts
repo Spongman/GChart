@@ -75,7 +75,7 @@ namespace com.google.finance
 			const skipInterval = this.getSkipInterval(param5, dataSeries.units);
 			let _loc13_ = param5.length - 1;
 			while (_loc13_ >= 0 && param5[_loc13_] > param3)
-				_loc13_ = _loc13_ - skipInterval;
+				_loc13_ -= skipInterval;
 
 			_loc13_ = Math.min(_loc13_ + skipInterval, param5.length - 1);
 			const maxy = param4.maxy;
@@ -94,7 +94,7 @@ namespace com.google.finance
 				const xPos2 = param4.getXPos(maxx, minx, units[param5[_loc13_]]);
 				const yPos2 = this.getYPos(maxy, miny, units[param5[_loc13_]]);
 				gr.lineTo(xPos2, yPos2);
-				_loc13_ = _loc13_ - skipInterval;
+				_loc13_ -= skipInterval;
 			}
 			if (_loc13_ >= 0)
 			{

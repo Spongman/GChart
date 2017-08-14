@@ -56,7 +56,7 @@ namespace com.google.finance
 				{
 					if (index < param1.length && param1[index].dataUnit.time === startTime)
 					{
-						param1[index].coveredMinutes = param1[index].coveredMinutes + totalMinutes;
+						param1[index].coveredMinutes += totalMinutes;
 						param1[index].dataUnit = afterHoursData.units[end];
 					}
 					else if (index + 1 < param1.length)
@@ -115,15 +115,15 @@ namespace com.google.finance
 			const viewPoint = this.viewPoint;
 			let _loc8_ = data.days.length - 1;
 			while (_loc8_ > 0 && data.days[_loc8_] > param4)
-				_loc8_ = _loc8_ - param3;
+				_loc8_ -= param3;
 
-			_loc8_ = _loc8_ + param3;
+			_loc8_ += param3;
 			if (_loc8_ > data.days.length - 1)
 				_loc8_ = data.days.length - 1;
 
 			let _loc9_ = data.fridays.length - 1;
 			while (_loc9_ >= 0 && data.fridays[_loc9_] > data.days[_loc8_])
-				_loc9_ = _loc9_ - param3;
+				_loc9_ -= param3;
 
 			const dayPixel = this.getDayPixel(viewPoint, data, 2);
 			let xPos = viewPoint.getXPos(data.units[data.days[_loc8_]]);
@@ -158,11 +158,11 @@ namespace com.google.finance
 					const _loc15_ = viewPoint.maxy - viewPoint.bottomTextHeight;
 					AbstractLayer.drawVerticalLine(param1, xPos, Const.DAY_LINE_COLOR, 0, _loc14_, _loc15_, ViewPoint.TICK_SIZE_SMALL, this.tickPosition);
 				}
-				_loc8_ = _loc8_ - param3;
+				_loc8_ -= param3;
 				if (data.fridays[_loc9_] > data.days[_loc8_])
 					_loc9_--;
 
-				xPos = xPos - dayPixel;
+				xPos -= dayPixel;
 			}
 			while (xPos >= viewPoint.minx && _loc8_ > 0);
 		}
@@ -197,7 +197,7 @@ namespace com.google.finance
 					const _loc18_ = ViewPoint.TEXT_FIELD_HEIGHT;
 					ViewPoint.addTextField(param2, fullYear, _loc11_, _loc12_, _loc17_, _loc18_, "center", viewPoint.dateTextFormat);
 				}
-				_loc7_ = _loc7_ - param3;
+				_loc7_ -= param3;
 				_loc10_ = xPos;
 			}
 			while (xPos > viewPoint.minx && _loc7_ >= 0);
@@ -212,7 +212,7 @@ namespace com.google.finance
 			const viewPoint = this.viewPoint;
 			let _loc7_ = data.firsts.length - 1;
 			while (data.firsts[_loc7_] > param4)
-				_loc7_ = _loc7_ - param3;
+				_loc7_ -= param3;
 
 			const dayPixel = this.getDayPixel(viewPoint, data, 0);
 			let xPos = viewPoint.getXPos(data.units[data.firsts[_loc7_]]);
@@ -253,7 +253,7 @@ namespace com.google.finance
 						}
 					}
 				}
-				_loc7_ = _loc7_ - param3;
+				_loc7_ -= param3;
 				_loc10_ = xPos;
 			}
 			while (xPos > viewPoint.minx && _loc7_ >= 0);
@@ -320,7 +320,7 @@ namespace com.google.finance
 					const _loc25_ = dayMinute - interval.start;
 					if (_loc25_ >= _loc22_)
 					{
-						dayMinute = dayMinute - _loc22_;
+						dayMinute -= _loc22_;
 						_loc22_ = 0;
 					}
 					else
@@ -338,7 +338,7 @@ namespace com.google.finance
 				if (dayMinute <= startMinute)
 					return;
 
-				coveredMinutes = coveredMinutes - minutesSkip;
+				coveredMinutes -= minutesSkip;
 				const intervalLength2 = this.viewPoint.getIntervalLength(coveredMinutes);
 				if (intervalLength2 < DateLinesLayer.DAY_START_TEXT_MAX_WIDTH)
 					return;
@@ -346,7 +346,7 @@ namespace com.google.finance
 				AbstractLayer.drawVerticalLine(param1, xPos, Const.HOUR_LINE_COLOR, Const.HOUR_LINE_ALPHA, _loc11_, _loc12_, ViewPoint.TICK_SIZE_SMALL, this.tickPosition);
 				const hourTextFromUtcDate = this.getHourTextFromUtcDate(date);
 				ViewPoint.addTextField(param2, hourTextFromUtcDate, xPos, _loc13_, _loc14_, _loc15_, "left", this.viewPoint.hourTextFormat);
-				xPos = xPos - intervalLength;
+				xPos -= intervalLength;
 			}
 		}
 

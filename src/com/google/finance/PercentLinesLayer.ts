@@ -46,7 +46,7 @@ namespace com.google.finance
 			do
 			{
 				_loc4_ = Number(this.getYPos(_loc3_, context));
-				_loc3_ = _loc3_ + param2;
+				_loc3_ += param2;
 			}
 			while (_loc4_ > this.viewPoint.miny);
 

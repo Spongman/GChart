@@ -167,7 +167,7 @@ namespace com.google.finance
 				if (param6)
 					param6[_loc8_].relativeMinutes = _loc7_;
 
-				_loc7_ = _loc7_ - param4;
+				_loc7_ -= param4;
 			}
 		}
 
@@ -632,7 +632,7 @@ namespace com.google.finance
 							_loc11_.coveredDays = _loc14_;
 					}
 					if (_loc11_.coveredDays === 0)
-						_loc10_ = _loc10_ - intradayMinutesInterval;
+						_loc10_ -= intradayMinutesInterval;
 					else
 						_loc10_ = _loc10_ - (data.marketDayLength + 1) * _loc11_.coveredDays;
 				}
@@ -674,11 +674,11 @@ namespace com.google.finance
 								_loc19_ = -1;
 							}
 						}
-						_loc10_ = _loc10_ - intradayMinutesInterval;
+						_loc10_ -= intradayMinutesInterval;
 					}
 					else
 					{
-						_loc10_ = _loc10_ - intradayMinutesInterval;
+						_loc10_ -= intradayMinutesInterval;
 					}
 				}
 			}

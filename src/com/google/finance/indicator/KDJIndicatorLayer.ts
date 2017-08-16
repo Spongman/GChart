@@ -62,14 +62,14 @@ namespace com.google.finance.indicator
 			const dataSeries0 = new DataSeries();
 			const dataSeries1 = new DataSeries();
 			const dataSeries2 = new DataSeries();
-			const _loc15_: DataUnit[] = [];
+			const dataUnits: DataUnit[] = [];
 			for (let pointIndex = 0; pointIndex < points.length; pointIndex++)
 			{
 				const _loc16_ = points[pointIndex];
 				if (!this.shouldSkip(_loc16_, dataSeries0, dataSeries1, dataSeries2))
 				{
-					_loc15_.push(_loc16_);
-					if (_loc15_.length < this.period)
+					dataUnits.push(_loc16_);
+					if (dataUnits.length < this.period)
 					{
 						const indicatorPoint = new IndicatorPoint(NaN, _loc16_);
 						dataSeries0.points.push(indicatorPoint);
@@ -80,10 +80,10 @@ namespace com.google.finance.indicator
 					{
 						let _loc3_ = Number.NEGATIVE_INFINITY;
 						let _loc4_ = Number.POSITIVE_INFINITY;
-						for (let _loc7_ = 0; _loc7_ < this.period; _loc7_++)
+						for (let periodIndex = 0; periodIndex < this.period; periodIndex++)
 						{
-							_loc3_ = Utils.extendedMax(_loc3_, _loc15_[_loc7_].high);
-							_loc4_ = Utils.extendedMin(_loc4_, _loc15_[_loc7_].low);
+							_loc3_ = Utils.extendedMax(_loc3_, dataUnits[periodIndex].high);
+							_loc4_ = Utils.extendedMin(_loc4_, dataUnits[periodIndex].low);
 						}
 						const _loc5_ = (_loc16_.close - _loc4_) / (_loc3_ - _loc4_) * 100;
 						if (isNaN(_loc8_))
@@ -109,7 +109,7 @@ namespace com.google.finance.indicator
 							dataSeries1.points.push(new IndicatorPoint(_loc9_, _loc16_));
 							dataSeries2.points.push(new IndicatorPoint(_loc10_, _loc16_));
 						}
-						_loc15_.shift();
+						dataUnits.shift();
 					}
 				}
 			}

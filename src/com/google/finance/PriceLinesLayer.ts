@@ -3,8 +3,8 @@ namespace com.google.finance
 	// import flash.text.TextFieldAutoSize;
 
 	type LabelPos = {
-		"yPos": number,
-		"label": number
+		yPos: number,
+		label: number
 	};
 
 	export class PriceLinesLayer extends AbstractLayer<ViewPoint>
@@ -21,8 +21,8 @@ namespace com.google.finance
 			const _loc6_ = increaseInterval * Math.ceil(value / increaseInterval);
 			const yPos = this.getYPos(_loc6_, context);
 			return {
-				"yPos": yPos,
-				"label": _loc6_
+				yPos: yPos,
+				label: _loc6_
 			};
 		}
 
@@ -69,7 +69,7 @@ namespace com.google.finance
 						if (_loc7_ < ViewPoint.MIN_DISTANCE_BETWEEN_LOG_H_LINES)
 						{
 							this.additionalDistanceBetweenLines = this.getIncreaseInterval(Const.YSCALE_INTERVALS[param2 + 1]);
-							_loc3_ = _loc3_ + this.additionalDistanceBetweenLines;
+							_loc3_ += this.additionalDistanceBetweenLines;
 							if (param2 < Const.YSCALE_INTERVALS.length - 1 && _loc3_ === Const.YSCALE_INTERVALS[param2 + 2])
 								param2++;
 						}
@@ -166,13 +166,13 @@ namespace com.google.finance
 				if (_loc7_ > this.viewPoint.miny && _loc7_ < this.viewPoint.maxy - bottomTextHeight)
 				{
 					this.drawSingleHorizontalLine({
-						"yPos": _loc7_,
-						"label": _loc3_
+						yPos: _loc7_,
+						label: _loc3_
 					}, _loc2_);
 					if (_loc3_ >= 0)
 						_loc6_[_loc6_.length] = _loc7_;
 				}
-				_loc3_ = _loc3_ + this.distanceBetweenLines;
+				_loc3_ += this.distanceBetweenLines;
 			}
 			while (_loc7_ > this.viewPoint.miny);
 
@@ -206,12 +206,12 @@ namespace com.google.finance
 			this.drawHorizontalLines(context);
 		}
 
-		private drawSingleHorizontalLine(param1: LabelPos, param2: number)
+		private drawSingleHorizontalLine(labelPos: LabelPos, param2: number)
 		{
-			this.graphics.moveTo(this.viewPoint.minx + 1, param1.yPos);
-			this.graphics.lineTo(this.viewPoint.maxx - 1, param1.yPos);
-			const text = this.getTextForValue(param1.label) + this.valueSuffix;
-			const _loc4_ = param1.yPos - ViewPoint.TEXT_VERTICAL_OFFSET + ViewPoint.GRID_TEXT_VERTICAL_OFFSET - ViewPoint.TEXT_FIELD_HEIGHT;
+			this.graphics.moveTo(this.viewPoint.minx + 1, labelPos.yPos);
+			this.graphics.lineTo(this.viewPoint.maxx - 1, labelPos.yPos);
+			const text = this.getTextForValue(labelPos.label) + this.valueSuffix;
+			const _loc4_ = labelPos.yPos - ViewPoint.TEXT_VERTICAL_OFFSET + ViewPoint.GRID_TEXT_VERTICAL_OFFSET - ViewPoint.TEXT_FIELD_HEIGHT;
 			const _loc6_ = ViewPoint.TEXT_FIELD_HEIGHT;
 			ViewPoint.addTextField(this.textCanvas, text, param2, _loc4_, 0, _loc6_, "right", this.viewPoint.priceTextFormat, flash.text.TextFieldAutoSize.RIGHT);
 		}

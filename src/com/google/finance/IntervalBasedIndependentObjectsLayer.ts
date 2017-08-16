@@ -22,32 +22,32 @@ namespace com.google.finance
 		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
 			super(viewPoint, dataSource);
-			(<ViewPoint><any>this.viewPoint).addChildToTopCanvas(this.highlightCanvas);
+			this.viewPoint.addChildToTopCanvas(this.highlightCanvas);
 		}
 
-		private resetCanvas() 
+		private resetCanvas()
 		{
-			for (let movieIndex = 0; movieIndex < this.movies.length; movieIndex++)
-				this.removeChild(this.movies[movieIndex]);
+			for (const movie of this.movies)
+				this.removeChild(movie);
 
 			this.movies.splice(0);
 		}
 
-		private getDataUnit(param1: StockAssociatedObject, param2: number): DataUnit
+		private getDataUnit(stockAssociatedObject: StockAssociatedObject, param2: number): DataUnit
 		{
-			let posInInterval = notnull(param1.posInInterval);
+			let posInInterval = notnull(stockAssociatedObject.posInInterval);
 			const _loc3_ = notnull(posInInterval[param2].refDataSeries);
 			const points = _loc3_.getPointsInIntervalArray(param2);
 			return points[posInInterval[param2].position];
 		}
 
-		getYPos(context: Context, param2: DataUnit): number
+		getYPos(context: Context, dataUnit: DataUnit): number
 		{
 			const viewPoint = this.viewPoint;
-			return viewPoint.miny + viewPoint.V_OFFSET + viewPoint.medPriceY - (param2.close - context.medPrice) * viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
+			return viewPoint.miny + viewPoint.V_OFFSET + viewPoint.medPriceY - (dataUnit.close - context.medPrice) * viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			if (isNaN(context.lastMinute) || isNaN(context.count) || context.count === 0)
 				return;
@@ -71,9 +71,9 @@ namespace com.google.finance
 			const _loc7_ = this.viewPoint.count / this.dataSource.data.marketDayLength;
 			context[this.renderObj] = [];
 			let _loc8_ = 0;
-			for (let _loc9_ = firstVisibleObject; _loc9_ <= lastVisibleObject; _loc9_++)
+			for (let visibleObjectIndex = firstVisibleObject; visibleObjectIndex <= lastVisibleObject; visibleObjectIndex++)
 			{
-				const _loc10_ = _loc2_[_loc9_];
+				const _loc10_ = _loc2_[visibleObjectIndex];
 				if (notnull(_loc10_.posInInterval)[detailLevelInterval])
 				{
 					const position = this.getPosition(_loc10_, detailLevelInterval, context);
@@ -105,16 +105,16 @@ namespace com.google.finance
 					}
 				}
 			}
-			for (let _loc9_ = this.activeMovies; _loc9_ < this.movies.length; _loc9_++)
-				this.removeChild(this.movies[_loc9_]);
+			for (let movieIndex = this.activeMovies; movieIndex < this.movies.length; movieIndex++)
+				this.removeChild(this.movies[movieIndex]);
 
 			this.movies.splice(this.activeMovies);
 		}
 
-		private getPosition(param1: StockAssociatedObject, param2: number, context: Context): Position
+		private getPosition(stockAssociatedObject: StockAssociatedObject, param2: number, context: Context): Position
 		{
 			const position = new Position();
-			const dataUnit = this.getDataUnit(param1, param2);
+			const dataUnit = this.getDataUnit(stockAssociatedObject, param2);
 			const _loc6_ = !isNaN(dataUnit.weeklyXPos) ? Number(dataUnit.weeklyXPos) : this.viewPoint.getXPos(dataUnit);
 			const yPos = this.getYPos(context, dataUnit);
 			//const _loc8_ = (this.viewPoint.maxy + this.viewPoint.miny) / 2;
@@ -145,22 +145,22 @@ namespace com.google.finance
 			return position;
 		}
 
-		private getLastVisibleObject(param1: StockAssociatedObject[], param2: number, context: Context): number
+		private getLastVisibleObject(stockAssociatedObjects: StockAssociatedObject[], param2: number, context: Context): number
 		{
 			const lastMinute = context.lastMinute;
-			for (let _loc5_ = param1.length - 1; _loc5_ >= 0; _loc5_--)
+			for (let objectIndex = stockAssociatedObjects.length - 1; objectIndex >= 0; objectIndex--)
 			{
-				if (notnull(param1[_loc5_].posInInterval)[param2])
+				if (notnull(stockAssociatedObjects[objectIndex].posInInterval)[param2])
 				{
-					const dataUnit = this.getDataUnit(param1[_loc5_], param2);
+					const dataUnit = this.getDataUnit(stockAssociatedObjects[objectIndex], param2);
 					if (dataUnit && dataUnit.relativeMinutes < lastMinute)
-						return _loc5_;
+						return objectIndex;
 				}
 			}
 			return -1;
 		}
 
-		private putObject(param1: StockAssociatedObject, param2: Position): SplitMovie
+		private putObject(stockAssociatedObject: StockAssociatedObject, position: Position): SplitMovie
 		{
 			let _loc3_: SplitMovie;
 			if (this.activeMovies >= this.movies.length)
@@ -187,22 +187,22 @@ namespace com.google.finance
 			{
 				_loc3_ = this.movies[this.activeMovies];
 			}
-			_loc3_.x = param2.x;
-			_loc3_.y = param2.y;
-			_loc3_.setObject(param1);
-			if (param1.originalObject._orientation)
+			_loc3_.x = position.x;
+			_loc3_.y = position.y;
+			_loc3_.setObject(stockAssociatedObject);
+			if (stockAssociatedObject.originalObject._orientation)
 			{
-				switch (param1.originalObject._orientation)
+				switch (stockAssociatedObject.originalObject._orientation)
 				{
 					case "down":
-						param2.orientation = Orientations.DOWN;
+						position.orientation = Orientations.DOWN;
 						break;
 					case "up":
-						param2.orientation = Orientations.UP;
+						position.orientation = Orientations.UP;
 						break;
 				}
 			}
-			_loc3_.setOrientation(param2.orientation);
+			_loc3_.setOrientation(position.orientation);
 			_loc3_.setSupportingLayer(this);
 			_loc3_.setHighlightCanvas(this.highlightCanvas);
 			if (this.activeMovies >= this.movies.length)
@@ -212,16 +212,16 @@ namespace com.google.finance
 			return _loc3_;
 		}
 
-		private getFirstVisibleObject(param1: StockAssociatedObject[], param2: number, context: Context): number
+		private getFirstVisibleObject(stockAssociatedObjects: StockAssociatedObject[], param2: number, context: Context): number
 		{
 			const _loc4_ = context.lastMinute - context.count;
-			for (let _loc5_ = 0; _loc5_ < param1.length; _loc5_++)
+			for (let objectIndex = 0; objectIndex < stockAssociatedObjects.length; objectIndex++)
 			{
-				if (notnull(param1[_loc5_].posInInterval)[param2])
+				if (notnull(stockAssociatedObjects[objectIndex].posInInterval)[param2])
 				{
-					const dataUnit = this.getDataUnit(param1[_loc5_], param2);
+					const dataUnit = this.getDataUnit(stockAssociatedObjects[objectIndex], param2);
 					if (dataUnit && dataUnit.relativeMinutes > _loc4_)
-						return _loc5_;
+						return objectIndex;
 				}
 			}
 			return -1;

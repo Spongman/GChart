@@ -38,8 +38,8 @@ namespace com.google.finance.ui
 		private getNextButtonPosition() 
 		{
 			return {
-				"x": this.currentX,
-				"y": this.currentY
+				x: this.currentX,
+				y: this.currentY
 			};
 		}
 
@@ -131,29 +131,29 @@ namespace com.google.finance.ui
 		buttonPress(event: Event) 
 		{
 			let button = (<any>event.currentTarget).displayObject as flash.display.SimpleButton;
-			const _loc2_ = (<flash.display.DisplayObjectContainer>button.upState).getChildAt(0) as flash.text.TextField;
-			const buttonIndex = this.getButtonIndex(_loc2_.text);
+			const textField = (<flash.display.DisplayObjectContainer>button.upState).getChildAt(0) as flash.text.TextField;
+			const buttonIndex = this.getButtonIndex(textField.text);
 			if (buttonIndex !== -1)
 			{
-				for (let _loc4_ = 0; _loc4_ < this.listenerFunctions.length; _loc4_++)
+				for (let functionIndex = 0; functionIndex < this.listenerFunctions.length; functionIndex++)
 				{
-					const _loc5_ = this.listenerFunctions[_loc4_];
-					_loc5_.call(this.listenerObjects[_loc4_], _loc2_.text);
+					const fn = this.listenerFunctions[functionIndex];
+					fn.call(this.listenerObjects[functionIndex], textField.text);
 				}
 			}
 		}
 
-		setTextFormats(param1: flash.text.TextFormat, param2: flash.text.TextFormat, param3: flash.text.TextFormat) 
+		setTextFormats(buttonTextFormat: flash.text.TextFormat, selectedTextFormat: flash.text.TextFormat, separatorTextFormat: flash.text.TextFormat) 
 		{
-			this.buttonTextFormat = param1;
-			this.selectedTextFormat = param2;
-			this.separatorTextFormat = param3;
+			this.buttonTextFormat = buttonTextFormat;
+			this.selectedTextFormat = selectedTextFormat;
+			this.separatorTextFormat = separatorTextFormat;
 		}
 
-		addListener(param1: { (p1: any, text: string): void }, param2: flash.display.DisplayObject) 
+		addListener(param1: { (p1: any, text: string): void }, displayObject: flash.display.DisplayObject) 
 		{
 			this.listenerFunctions.push(param1);
-			this.listenerObjects.push(param2);
+			this.listenerObjects.push(displayObject);
 		}
 
 		addPlainText(param1: string, param2 = NaN) 

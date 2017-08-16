@@ -12,7 +12,7 @@ namespace com.google.finance
 			return this.hash["series" + param1];
 		}
 
-		setDataSeries(param1: number, dataSeries: DataSeries, param3 = 0) 
+		setDataSeries(param1: number, dataSeries: DataSeries, param3 = 0)
 		{
 			if (!this.hasInterval(param1))
 			{
@@ -38,7 +38,7 @@ namespace com.google.finance
 			return dataSeriesArray;
 		}
 
-		clear(param1:number = 0) 
+		clear(param1:number = 0)
 		{
 			if (param1 === 0)
 			{

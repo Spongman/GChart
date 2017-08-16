@@ -101,18 +101,18 @@ namespace com.google.finance
 			this.positionVolumeLabel();
 		}
 
-		private initTextFields(param1: IViewPoint) 
+		private initTextFields(viewPoint: IViewPoint) 
 		{
 			this.topScaleTextField = new flash.text.TextField();
 			this.topScaleTextField.width = ViewPoint.TEXT_FIELD_WIDTH;
 			this.topScaleTextField.height = ViewPoint.TEXT_FIELD_HEIGHT;
-			this.topScaleTextField.defaultTextFormat = param1.priceTextFormat;
+			this.topScaleTextField.defaultTextFormat = viewPoint.priceTextFormat;
 			this.topScaleTextField.selectable = false;
 			this.addChild(this.topScaleTextField);
 			this.midScaleTextField = new flash.text.TextField();
 			this.midScaleTextField.width = ViewPoint.TEXT_FIELD_WIDTH;
 			this.midScaleTextField.height = ViewPoint.TEXT_FIELD_HEIGHT;
-			this.midScaleTextField.defaultTextFormat = param1.priceTextFormat;
+			this.midScaleTextField.defaultTextFormat = viewPoint.priceTextFormat;
 			this.midScaleTextField.selectable = false;
 			this.addChild(this.midScaleTextField);
 		}

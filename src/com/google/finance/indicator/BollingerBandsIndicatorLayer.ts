@@ -80,8 +80,8 @@ namespace com.google.finance.indicator
 					{
 						const _loc5_ = _loc9_ / this.period;
 						let _loc6_ = 0;
-						for (let _loc4_ = 0; _loc4_ < this.period; _loc4_++)
-							_loc6_ = Number(_loc6_ + (_loc14_[_loc4_] - _loc5_) * (_loc14_[_loc4_] - _loc5_));
+						for (let periodIndex = 0; periodIndex < this.period; periodIndex++)
+							_loc6_ = Number(_loc6_ + (_loc14_[periodIndex] - _loc5_) * (_loc14_[periodIndex] - _loc5_));
 
 						_loc6_ = Number(Math.sqrt(_loc6_ / this.period));
 						const _loc7_ = _loc5_ + this.multiplier * _loc6_;

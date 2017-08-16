@@ -16,10 +16,9 @@ namespace com.google.finance
 		//private listeners: any[];
 		private amount = 0;
 
-		animate(param1: { (param1: flash.display.DisplayObject, param2: number, param3: boolean): void }[], param2: flash.display.DisplayObject[], param3 = NaN, param4 = false) 
+		animate(lfunctions: { (displayObject: flash.display.DisplayObject, amount: number, clicked: boolean): void }[], displayObjects: flash.display.DisplayObject[], param3 = NaN, param4 = false)
 		{
-			let lfunctions = param1;
-			let lobjects = param2;
+			let lobjects = displayObjects;
 			let opt_stepCount = param3;
 			let opt_pinClicked = param4;
 			this.stepCount = !!isNaN(opt_stepCount) ? AnimationManager.MAX_STEPS : opt_stepCount;
@@ -50,7 +49,7 @@ namespace com.google.finance
 			}, AnimationManager.ANIMATION_FRAME_LENGTH_MS);
 		}
 
-		stopAnimation() 
+		stopAnimation()
 		{
 			clearInterval(this.intervalId);
 			this.intervalId = NaN;

@@ -19,12 +19,12 @@ namespace com.google.finance
 			this.content = new flash.text.TextField();
 			this.content.defaultTextFormat = new flash.text.TextFormat("Arial", 11);
 			this.content.selectable = false;
-			this.content.addEventListener(MouseEvents.MOUSE_OVER, (param1: Event) =>
+			this.content.addEventListener(MouseEvents.MOUSE_OVER, (event: Event) =>
 			{
 				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.content);
 			});
-			this.content.addEventListener(MouseEvents.MOUSE_OUT, (param1: Event) =>
+			this.content.addEventListener(MouseEvents.MOUSE_OUT, (event: Event) =>
 			{
 				MainManager.mouseCursor.unlock();
 			});

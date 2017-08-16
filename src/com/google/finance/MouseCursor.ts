@@ -43,7 +43,7 @@ namespace com.google.finance
 			this.setCursor(MouseCursors.OPENED_HAND);
 		}
 
-		onMouseLeave(param1: Event) 
+		onMouseLeave(event: Event) 
 		{
 			this.setCursor(MouseCursors.CLASSIC);
 		}
@@ -60,9 +60,9 @@ namespace com.google.finance
 			*/
 		}
 
-		lockOnDisplayObject(param1: flash.display.DisplayObject) 
+		lockOnDisplayObject(displayObject: flash.display.DisplayObject) 
 		{
-			this.displayObjectLockedOn = param1;
+			this.displayObjectLockedOn = displayObject;
 		}
 
 		setCursor(param1: number) 
@@ -134,7 +134,7 @@ namespace com.google.finance
 			this.displayObjectLockedOn = null;
 		}
 
-		onMouseMove(param1: MouseEvent) 
+		onMouseMove(mouseEvent: MouseEvent) 
 		{
 			this.cursor.x = this.mouseX - this.cursor.width / 2;
 			this.cursor.y = this.mouseY - this.cursor.height / 2;

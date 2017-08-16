@@ -10,21 +10,21 @@ namespace com.google.finance
 		{
 		}
 
-		addObject(param1: any) 
+		addObject(param1: any)
 		{
 			if (this.dataSources[param1._quote])
 				this.dataSources[param1._quote].addObject(param1);
 		}
 
-		expectEvent(param1: ChartEvent | null)
+		expectEvent(chartEvent: ChartEvent | null)
 		{
-			if (!param1)
+			if (!chartEvent)
 				return;
-			this.checkDataSourceExistance(param1.quote);
-			this.dataSources[param1.quote].markEvent(param1, ChartEventPriorities.EXPECTED);
+			this.checkDataSourceExistance(chartEvent.quote);
+			this.dataSources[chartEvent.quote].markEvent(chartEvent, ChartEventPriorities.EXPECTED);
 		}
 
-		syncDataSources(dataSource: DataSource, param2: DisplayManager) 
+		syncDataSources(dataSource: DataSource, displayManager: DisplayManager)
 		{
 			const otherDataSources: DataSource[] = [];
 			for (let dataSourceName in this.dataSources)
@@ -44,12 +44,12 @@ namespace com.google.finance
 			let _loc12_ = false;
 			while (numDays > 0 && numOtherDays > 0)
 			{
-				const units = data.units[data.days[numDays]];
+				const unit = data.units[data.days[numDays]];
 				const otherUnits = otherData.units[otherData.days[numOtherDays]];
-				const _loc16_ = Utils.compareUtcDates(units.exchangeDateInUTC, otherUnits.exchangeDateInUTC);
+				const _loc16_ = Utils.compareUtcDates(unit.exchangeDateInUTC, otherUnits.exchangeDateInUTC);
 				if (_loc16_ < 0)
 				{
-					const _loc3_ = this.cloneDataUnitForTargetExchange(otherUnits, units, Const.DAILY_INTERVAL);
+					const _loc3_ = this.cloneDataUnitForTargetExchange(otherUnits, unit, Const.DAILY_INTERVAL);
 					data.units.splice(data.days[numDays] + 1, 0, _loc3_);
 					numOtherDays--;
 					_loc12_ = true;
@@ -63,7 +63,7 @@ namespace com.google.finance
 						{
 							const _loc18_ = data2.days.length - (otherData.days.length - numOtherDays);
 							const day = data2.days[_loc18_];
-							const _loc3_ = this.cloneDataUnitForTargetExchange(units, data2.units[day], Const.DAILY_INTERVAL);
+							const _loc3_ = this.cloneDataUnitForTargetExchange(unit, data2.units[day], Const.DAILY_INTERVAL);
 							data2.units.splice(day + 1, 0, _loc3_);
 						}
 					}
@@ -79,7 +79,7 @@ namespace com.google.finance
 			if (_loc12_)
 			{
 				dataSource.preCalculate(dataSource.data);
-				param2.computeRelativeTimes(dataSource);
+				displayManager.computeRelativeTimes(dataSource);
 			}
 			if (_loc11_)
 			{
@@ -87,101 +87,101 @@ namespace com.google.finance
 				{
 					const _loc20_ = otherDataSources[dataSourceIndex];
 					_loc20_.preCalculate(_loc20_.data);
-					param2.computeRelativeTimes(_loc20_);
+					displayManager.computeRelativeTimes(_loc20_);
 				}
 			}
 		}
 
-		sortObjects(param1: string, param2: string) 
+		sortObjects(ticker: string, param2: string)
 		{
-			if (this.dataSources[param1])
-				this.dataSources[param1].sortObjects(param2);
+			if (this.dataSources[ticker])
+				this.dataSources[ticker].sortObjects(param2);
 		}
 
-		eventHandler(param1: ChartEvent | null, param2 = true) 
+		eventHandler(chartEvent: ChartEvent | null, param2 = true)
 		{
-			if (!param1)
+			if (!chartEvent)
 				return;
 
-			this.checkDataSourceExistance(param1.quote);
-			if (param1.type !== ChartEventTypes.GET_RT_DATA && param1.type !== ChartEventTypes.GET_RT_AH_DATA && this.dataSources[param1.quote].markEvent(param1, param1.priority) === false)
+			this.checkDataSourceExistance(chartEvent.quote);
+			if (chartEvent.type !== ChartEventTypes.GET_RT_DATA && chartEvent.type !== ChartEventTypes.GET_RT_AH_DATA && this.dataSources[chartEvent.quote].markEvent(chartEvent, chartEvent.priority) === false)
 				return;
 
-			switch (param1.type)
+			switch (chartEvent.type)
 			{
 				case ChartEventTypes.GET_DATA:
 				case ChartEventTypes.GET_AH_DATA:
 				case ChartEventTypes.GET_MUTF_DATA:
 				case ChartEventTypes.GET_RT_DATA:
 				case ChartEventTypes.GET_RT_AH_DATA:
-					this.getQuoteData(this.mainManager.url, this.mainManager.stickyArgs, param1, param2);
+					this.getQuoteData(this.mainManager.url, this.mainManager.stickyArgs, chartEvent, param2);
 			}
 		}
 
-		selectObject(param1: string, param2: string, param3: number, param4?: string) 
+		selectObject(ticker: string, param2: string, param3: number, param4?: string)
 		{
-			return this.dataSources[param1].selectObject(param2, param3, param4);
+			return this.dataSources[ticker].selectObject(param2, param3, param4);
 		}
 
-		private getQuoteData(param1: string, param2: string, param3: ChartEvent, param4: boolean) 
+		private getQuoteData(param1: string, param2: string, chartEvent: ChartEvent, param4: boolean)
 		{
-			const symbol = Utils.getSymbolFromTicker(param3.quote);
-			if (com.google.finance.MainManager.paramsObj[symbol + "_data_" + param3.period] === "javascript")
+			const symbol = Utils.getSymbolFromTicker(chartEvent.quote);
+			if (com.google.finance.MainManager.paramsObj[symbol + "_data_" + chartEvent.period] === "javascript")
 			{
-				com.google.finance.MainManager.jsProxy.getData(param3.quote, param3.period);
+				com.google.finance.MainManager.jsProxy.getData(chartEvent.quote, chartEvent.period);
 				return;
 			}
 			if (!(Const.INDICATOR_ENABLED && param4))
 			{
-				if (com.google.finance.MainManager.paramsObj[symbol + "_data_" + param3.period] !== undefined && param3.type !== ChartEventTypes.GET_AH_DATA)
+				if (com.google.finance.MainManager.paramsObj[symbol + "_data_" + chartEvent.period] !== undefined && chartEvent.type !== ChartEventTypes.GET_AH_DATA)
 				{
-					this.addData(param3, decodeURIComponent(com.google.finance.MainManager.paramsObj[symbol + "_data_" + param3.period]));
+					this.addData(chartEvent, decodeURIComponent(com.google.finance.MainManager.paramsObj[symbol + "_data_" + chartEvent.period]));
 					return;
 				}
-				if (com.google.finance.MainManager.paramsObj[symbol + "_data_ah"] !== undefined && param3.type === ChartEventTypes.GET_AH_DATA)
+				if (com.google.finance.MainManager.paramsObj[symbol + "_data_ah"] !== undefined && chartEvent.type === ChartEventTypes.GET_AH_DATA)
 				{
-					this.addData(param3, decodeURIComponent(com.google.finance.MainManager.paramsObj[symbol + "_data_ah"]));
+					this.addData(chartEvent, decodeURIComponent(com.google.finance.MainManager.paramsObj[symbol + "_data_ah"]));
 					return;
 				}
 			}
-			const urlString = this.getUrlString(param1, param2, param3);
-			/*const _loc7_ =*/ new DataRequestHandler(this, urlString, param3);
+			const urlString = this.getUrlString(param1, param2, chartEvent);
+			/*const _loc7_ =*/ new DataRequestHandler(this, urlString, chartEvent);
 		}
 
-		clearAllObjects(param1: string, param2: string) 
+		clearAllObjects(ticker: string, param2: string)
 		{
-			this.dataSources[param1].clearAllObjects(param2);
+			this.dataSources[ticker].clearAllObjects(param2);
 		}
 
-		removeObject(param1: string, param2: string, param3: string) 
+		removeObject(ticker: string, param2: string, param3: string)
 		{
 			// TODO: is param2 always a number?
-			this.dataSources[param1].removeObject(param3, Number(param2));
+			this.dataSources[ticker].removeObject(param3, Number(param2));
 		}
 
-		private hasDataSource(param1: string): boolean
+		private hasDataSource(ticker: string): boolean
 		{
-			return !!this.dataSources[param1];
+			return !!this.dataSources[ticker];
 		}
 
-		addData(param1: ChartEvent, param2: string) 
+		addData(chartEvent: ChartEvent, param2: string)
 		{
-			const result = this.dataSources[param1.quote].addStream(param2, param1);
-			this.mainManager.dataIsHere(this.dataSources[param1.quote], result);
+			const result = this.dataSources[chartEvent.quote].addStream(param2, chartEvent);
+			this.mainManager.dataIsHere(this.dataSources[chartEvent.quote], result);
 		}
 
-		dataUnavailableOnServer(param1: string): boolean
+		dataUnavailableOnServer(ticker: string): boolean
 		{
-			const _loc2_ = this.dataSources[param1];
+			const _loc2_ = this.dataSources[ticker];
 			if (!_loc2_)
 				return false;
 			return _loc2_.dataUnavailableOnServer;
 		}
 
-		private getUrlString(param1: string, param2: string, param3: ChartEvent): string
+		private getUrlString(param1: string, param2: string, chartEvent: ChartEvent): string
 		{
-			let symbolFromTicker = Utils.getSymbolFromTicker(param3.quote);
-			let exchangeFromTicker = Utils.getExchangeFromTicker(param3.quote);
+			let symbolFromTicker = Utils.getSymbolFromTicker(chartEvent.quote);
+			let exchangeFromTicker = Utils.getExchangeFromTicker(chartEvent.quote);
 			let _loc6_ = "";
 			if (symbolFromTicker.indexOf("@") !== -1)
 			{
@@ -197,14 +197,14 @@ namespace com.google.finance
 				if (exchangeFromTicker !== "")
 					_loc7_ = _loc7_ + ("&x=" + exchangeFromTicker);
 
-				_loc7_ = _loc7_ + ("&i=" + param3.interval);
-				if (param3.type === ChartEventTypes.GET_AH_DATA || param3.type === ChartEventTypes.GET_RT_AH_DATA)
+				_loc7_ = _loc7_ + ("&i=" + chartEvent.interval);
+				if (chartEvent.type === ChartEventTypes.GET_AH_DATA || chartEvent.type === ChartEventTypes.GET_RT_AH_DATA)
 					_loc7_ = _loc7_ + "&sessions=ext_hours";
 
 				if (!isNaN(this.startTime) && !isNaN(this.endTime))
 					_loc7_ = _loc7_ + ("&se=" + this.startTime + "&ee=" + this.endTime);
 				else
-					_loc7_ = _loc7_ + ("&p=" + param3.period);
+					_loc7_ = _loc7_ + ("&p=" + chartEvent.period);
 			}
 			else
 			{
@@ -214,43 +214,42 @@ namespace com.google.finance
 				if (exchangeFromTicker !== "")
 					_loc7_ = _loc7_ + ("&exchange=" + exchangeFromTicker);
 
-				_loc7_ = _loc7_ + ("&interval=" + param3.interval + "&period=" + param3.period);
+				_loc7_ = _loc7_ + ("&interval=" + chartEvent.interval + "&period=" + chartEvent.period);
 			}
-			_loc7_ = _loc7_ + ("&f=" + param3.columns + "&df=cpct");
+			_loc7_ = _loc7_ + ("&f=" + chartEvent.columns + "&df=cpct");
 			_loc7_ = _loc7_ + "&auto=1";
 			_loc7_ = _loc7_ + ("&ts=" + new Date().getTime());
 			_loc7_ += param2;
 			return _loc7_;
 		}
 
-		cloneDataUnitForTargetExchange(param1: DataUnit, param2: DataUnit, param3: number): DataUnit
+		cloneDataUnitForTargetExchange(dataUnit1: DataUnit, dataUnit2: DataUnit, param3: number): DataUnit
 		{
-			const dataUnit = new DataUnit(param2.close, NaN, NaN, NaN);	// TODO
-			const time = Date.UTC(param1.exchangeDateInUTC.fullYearUTC, param1.exchangeDateInUTC.monthUTC, param1.exchangeDateInUTC.dateUTC, param2.dayMinute / 60, param2.dayMinute % 60);
-			dataUnit.setExchangeDateInUTC(time, param2.timezoneOffset);
-			dataUnit.coveredDays = param1.coveredDays;
+			const dataUnit = new DataUnit(dataUnit2.close, NaN, NaN, NaN);	// TODO
+			const time = Date.UTC(dataUnit1.exchangeDateInUTC.fullYearUTC, dataUnit1.exchangeDateInUTC.monthUTC, dataUnit1.exchangeDateInUTC.dateUTC, dataUnit2.dayMinute / 60, dataUnit2.dayMinute % 60);
+			dataUnit.setExchangeDateInUTC(time, dataUnit2.timezoneOffset);
+			dataUnit.coveredDays = dataUnit1.coveredDays;
 			dataUnit.volumes[param3] = 0;
 			dataUnit.intervals[0] = param3;
 			return dataUnit;
 		}
 
-		checkDataSourceExistance(param1: string, param2?: string)
+		checkDataSourceExistance(ticker: string, param2?: string)
 		{
-			let _loc3_ = 0;
-			if (!this.hasDataSource(param1))
+			if (!this.hasDataSource(ticker))
 			{
-				_loc3_ = this.mainManager ? this.mainManager.weekdayBitmap : Const.DEFAULT_WEEKDAY_BITMAP;
-				this.dataSources[param1] = new DataSource(param1, _loc3_, param2);
+				const _loc3_ = this.mainManager ? this.mainManager.weekdayBitmap : Const.DEFAULT_WEEKDAY_BITMAP;
+				this.dataSources[ticker] = new DataSource(ticker, _loc3_, param2);
 			}
-			else if (!this.dataSources[param1].displayName && param2)
+			else if (!this.dataSources[ticker].displayName && param2)
 			{
-				this.dataSources[param1].displayName = param2;
+				this.dataSources[ticker].displayName = param2;
 			}
 		}
 
-		hasNonEmptyDataSource(param1: string): boolean
+		hasNonEmptyDataSource(ticker: string): boolean
 		{
-			return this.dataSources[param1] && !this.dataSources[param1].isEmpty();
+			return this.dataSources[ticker] && !this.dataSources[ticker].isEmpty();
 		}
 	}
 }

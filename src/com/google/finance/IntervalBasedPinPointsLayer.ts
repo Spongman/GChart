@@ -29,34 +29,34 @@ namespace com.google.finance
 			viewPoint.addChildToTopCanvas(this.pinPointContentMovie);
 		}
 
-		private getDataUnit(param1: StockAssociatedObject, param2: number): DataUnit
+		private getDataUnit(stockAssociatedObject: StockAssociatedObject, param2: number): DataUnit
 		{
-			let posInInterval = notnull(param1.posInInterval);
+			let posInInterval = notnull(stockAssociatedObject.posInInterval);
 			const refDataSeries = posInInterval[param2].refDataSeries;
 			const points = notnull(refDataSeries).getPointsInIntervalArray(param2);
 			return points[posInInterval[param2].position];
 		}
 
-		private getLastVisibleFlagIndex(context: Context, param2: StockAssociatedObject[], param3: number): number
+		private getLastVisibleFlagIndex(context: Context, stockAssociatedObjects: StockAssociatedObject[], param3: number): number
 		{
-			for (let _loc4_ = param2.length - 1; _loc4_ >= 0; _loc4_--)
+			for (let objectIndex = stockAssociatedObjects.length - 1; objectIndex >= 0; objectIndex--)
 			{
-				const _loc5_ = param2[_loc4_];
+				const _loc5_ = stockAssociatedObjects[objectIndex];
 				if (notnull(_loc5_.posInInterval)[param3])
 				{
 					const dataUnit = this.getDataUnit(_loc5_, param3);
 					if (dataUnit.relativeMinutes <= context.lastMinute)
-						return _loc4_;
+						return objectIndex;
 				}
 			}
 			return -1;
 		}
 
-		private getFirstVisibleFlagIndex(context: Context, param2: StockAssociatedObject[], param3: number): number
+		private getFirstVisibleFlagIndex(context: Context, stockAssociatedObjects: StockAssociatedObject[], param3: number): number
 		{
-			for (let objectIndex = 0; objectIndex < param2.length; objectIndex++)
+			for (let objectIndex = 0; objectIndex < stockAssociatedObjects.length; objectIndex++)
 			{
-				const _loc5_ = param2[objectIndex];
+				const _loc5_ = stockAssociatedObjects[objectIndex];
 				if (notnull(_loc5_.posInInterval)[param3])
 				{
 					const dataUnit = this.getDataUnit(_loc5_, param3);
@@ -64,13 +64,13 @@ namespace com.google.finance
 						return objectIndex;
 				}
 			}
-			return param2.length - 1;
+			return stockAssociatedObjects.length - 1;
 		}
 
-		private getPinPointMovieClip(param1: PinPoint): PinPointMovie
+		private getPinPointMovieClip(pinPoint: PinPoint): PinPointMovie
 		{
 			let _loc2_: PinPointMovie | null;
-			const _loc3_ = !!param1.originalObject._color ? param1.originalObject._color : "gray";
+			const _loc3_ = !!pinPoint.originalObject._color ? pinPoint.originalObject._color : "gray";
 			if (this.activeMovies >= this.pinMovies.length)
 			{
 				_loc2_ = _loc3_ === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
@@ -95,23 +95,23 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		private removePinMovies(param1: number) 
+		private removePinMovies(param1: number)
 		{
-			for (let _loc2_ = param1; _loc2_ < this.pinMovies.length; _loc2_++)
+			for (let movieIndex = param1; movieIndex < this.pinMovies.length; movieIndex++)
 			{
-				this.removeChild(this.pinMovies[_loc2_]);
-				this.pinMovies[_loc2_].clearReferences();
-				delete this.pinMovies[_loc2_];
+				this.removeChild(this.pinMovies[movieIndex]);
+				this.pinMovies[movieIndex].clearReferences();
+				delete this.pinMovies[movieIndex];
 			}
 			this.pinMovies.splice(param1);
 		}
 
-		private getYPos(context: Context, param2: DataUnit): number
+		private getYPos(context: Context, dataUnit: DataUnit): number
 		{
-			return this.localYOffset - (param2.getCloseLogValue(context.verticalScaling) - context.medPrice) * this.localYScale;
+			return this.localYOffset - (dataUnit.getCloseLogValue(context.verticalScaling) - context.medPrice) * this.localYScale;
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			if (isNaN(context.lastMinute) || isNaN(context.count) || context.count === 0)
 				return;
@@ -147,62 +147,62 @@ namespace com.google.finance
 				this.pinPointContentMovie.renderMovie();
 		}
 
-		private renderFlagGroups(context: Context, param2: PinPoint[], param3: number, param4: number, param5: number) 
+		private renderFlagGroups(context: Context, pinPoints: PinPoint[], param3: number, param4: number, param5: number)
 		{
 			let _loc11_ = 0;
 			const _loc7_: number[] = [];
 			const _loc8_: number[] = [];
 			const _loc9_: number[] = [];
 			const _loc10_: number[] = []
-			for (let _loc6_ = param3; _loc6_ <= param4; _loc6_ = _loc6_ + _loc11_)
+			for (let _loc6_ = param3; _loc6_ <= param4; _loc6_ += _loc11_)
 			{
 				_loc7_.push(_loc6_);
-				_loc11_ = this.getFlagGroupCount(context, param2, _loc6_, param5);
+				_loc11_ = this.getFlagGroupCount(context, pinPoints, _loc6_, param5);
 				_loc8_.push(_loc11_);
-				const dataUnit = this.getDataUnit(param2[_loc6_], param5);
+				const dataUnit = this.getDataUnit(pinPoints[_loc6_], param5);
 				_loc9_.push(Math.floor(!isNaN(dataUnit.weeklyXPos) ? Number(dataUnit.weeklyXPos) : this.viewPoint.getXPos(dataUnit)));
 				_loc10_.push(this.getYPos(context, dataUnit));
 			}
 			if (_loc7_.length > 0)
 			{
-				const _loc13_: PinOrientations[] = [];
+				const pinOrientations: PinOrientations[] = [];
 				for (let _loc14_ = _loc7_.length - 1; _loc14_ >= 0; _loc14_--)
 				{
-					if ((_loc13_.length === 0 || _loc13_[_loc13_.length - 1] === PinOrientations.LEFT_ORIENTATION) && _loc9_[_loc14_] + (_loc7_.length - _loc14_) * IntervalBasedPinPointsLayer.MIN_FLAGS_DIST > this.viewPoint.maxx)
-						_loc13_.push(PinOrientations.LEFT_ORIENTATION);
+					if ((pinOrientations.length === 0 || pinOrientations[pinOrientations.length - 1] === PinOrientations.LEFT_ORIENTATION) && _loc9_[_loc14_] + (_loc7_.length - _loc14_) * IntervalBasedPinPointsLayer.MIN_FLAGS_DIST > this.viewPoint.maxx)
+						pinOrientations.push(PinOrientations.LEFT_ORIENTATION);
 					else
-						_loc13_.push(PinOrientations.RIGHT_ORIENTATION);
+						pinOrientations.push(PinOrientations.RIGHT_ORIENTATION);
 
 				}
-				_loc13_.reverse();
+				pinOrientations.reverse();
 				for (let _loc14_ = 0; _loc14_ < _loc7_.length; _loc14_++)
-					this.renderFlagsGroup(context, param5, _loc9_[_loc14_], _loc10_[_loc14_], _loc7_[_loc14_], _loc8_[_loc14_], param2, IntervalBasedPinPointsLayer.FLAG_POLE_HEIGHT + IntervalBasedPinPointsLayer.FLAG_HEIGHT, _loc13_[_loc14_]);
+					this.renderFlagsGroup(context, param5, _loc9_[_loc14_], _loc10_[_loc14_], _loc7_[_loc14_], _loc8_[_loc14_], pinPoints, IntervalBasedPinPointsLayer.FLAG_POLE_HEIGHT + IntervalBasedPinPointsLayer.FLAG_HEIGHT, pinOrientations[_loc14_]);
 			}
 		}
 
-		private renderFlag(param1: number, param2: PinOrientations, param3: number, param4: PinPoint, param5?: PinPoint, param6 = 1) 
+		private renderFlag(param1: number, pinOrientation: PinOrientations, param3: number, pinPoint: PinPoint, param5?: PinPoint, param6 = 1)
 		{
-			const pinPointMovieClip = this.getPinPointMovieClip(param4);
+			const pinPointMovieClip = this.getPinPointMovieClip(pinPoint);
 			this.addChild(pinPointMovieClip);
 			pinPointMovieClip.x = param1;
 			pinPointMovieClip.y = this.pinPointYWhenContentDisplayed;
 			pinPointMovieClip.setCount(param6);
-			pinPointMovieClip.setObj(param4);
-			pinPointMovieClip.setOrientation(param2);
+			pinPointMovieClip.setObj(pinPoint);
+			pinPointMovieClip.setOrientation(pinOrientation);
 			pinPointMovieClip.setHeight(param3);
 		}
 
-		private getFlagGroupCount(context: Context, param2: PinPoint[], param3: number, param4: number): number
+		private getFlagGroupCount(context: Context, pinPoints: PinPoint[], param3: number, param4: number): number
 		{
 			let _loc5_ = 1;
-			const _loc6_ = param2[param3];
+			const _loc6_ = pinPoints[param3];
 			const _loc7_ = notnull(_loc6_.posInInterval)[param4];
 			if (!_loc7_)
 				return _loc5_;
 
-			while (param3 + _loc5_ < param2.length)
+			while (param3 + _loc5_ < pinPoints.length)
 			{
-				const _loc8_ = notnull(param2[param3 + _loc5_].posInInterval)[param4];
+				const _loc8_ = notnull(pinPoints[param3 + _loc5_].posInInterval)[param4];
 				if (!_loc8_ || _loc7_.position !== _loc8_.position || _loc7_.refDataSeries !== _loc8_.refDataSeries)
 					break;
 
@@ -211,12 +211,12 @@ namespace com.google.finance
 			return _loc5_;
 		}
 
-		private renderFlagsGroup(context: Context, param2: number, param3: number, param4: number, param5: number, param6: number, param7: PinPoint[], param8: number, param9: PinOrientations)
+		private renderFlagsGroup(context: Context, param2: number, param3: number, param4: number, param5: number, param6: number, pinPoints: PinPoint[], param8: number, pinOrientation: PinOrientations)
 		{
 			this.lastAbsoluteHeightMin = param4 - param8 + IntervalBasedPinPointsLayer.FLAG_HEIGHT;
 			let _loc10_ = false;
 			for (let _loc11_ = param5; _loc11_ < param5 + param6; _loc11_++)
-				_loc10_ = _loc10_ || param7[_loc11_].active || param7[_loc11_].forceExpandInGroup;
+				_loc10_ = _loc10_ || pinPoints[_loc11_].active || pinPoints[_loc11_].forceExpandInGroup;
 
 			let _loc12_: number;
 			if (param6 > 1 && _loc10_ || !Boolean(Const.ENABLE_COMPACT_FLAGS))
@@ -225,18 +225,18 @@ namespace com.google.finance
 				for (let _loc11_ = param5; _loc11_ < param5 + param6; _loc11_++)
 				{
 					const _loc13_ = param8 + (_loc11_ - param5) * IntervalBasedPinPointsLayer.FLAG_HEIGHT;
-					this.renderFlag(param3, param9, _loc13_, param7[_loc11_]);
-					if (param7[_loc11_].active)
-						this.pinPointContentMovie.setActivePinPoint(param7[_loc11_], param3, this.pinPointYWhenContentDisplayed - _loc12_);
+					this.renderFlag(param3, pinOrientation, _loc13_, pinPoints[_loc11_]);
+					if (pinPoints[_loc11_].active)
+						this.pinPointContentMovie.setActivePinPoint(pinPoints[_loc11_], param3, this.pinPointYWhenContentDisplayed - _loc12_);
 				}
 			}
 			else
 			{
 				const _loc14_ = Math.min(param6, PinPointMovie.MAX_SHOWN_GROUP_COUNT) * 2;
 				_loc12_ = param8 + _loc14_;
-				this.renderFlag(param3, param9, param8 + _loc14_, param7[param5 + param6 - 1], param7[param5], param6);
-				if (param7[param5].active)
-					this.pinPointContentMovie.setActivePinPoint(param7[param5], param3, this.pinPointYWhenContentDisplayed - _loc12_);
+				this.renderFlag(param3, pinOrientation, param8 + _loc14_, pinPoints[param5 + param6 - 1], pinPoints[param5], param6);
+				if (pinPoints[param5].active)
+					this.pinPointContentMovie.setActivePinPoint(pinPoints[param5], param3, this.pinPointYWhenContentDisplayed - _loc12_);
 			}
 			this.lastAbsoluteHeightMax = param4 - this.pinMovies[this.activeMovies - 1].getHeight();
 		}

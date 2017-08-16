@@ -114,12 +114,12 @@ namespace com.google.finance
 			return this.associatedSplit.newShares + ":" + this.associatedSplit.oldShares;
 		}
 
-		setOrientation(param1: Orientations) 
+		setOrientation(orientation: Orientations) 
 		{
-			this.checkArrowChange(param1);
+			this.checkArrowChange(orientation);
 			if (this.currentVisibleButton)
 			{
-				switch (param1)
+				switch (orientation)
 				{
 					case Orientations.UP:
 					case Orientations.SIDEWAYS_UP:
@@ -134,7 +134,7 @@ namespace com.google.finance
 						break;
 				}
 			}
-			this.arrowOrientation = param1;
+			this.arrowOrientation = orientation;
 		}
 
 		getDateText(): string
@@ -159,9 +159,9 @@ namespace com.google.finance
 			this.highlightCanvas.graphics.clear();
 		}
 
-		setSupportingLayer(param1: AbstractLayer<ViewPoint>) 
+		setSupportingLayer(abstractLayer: AbstractLayer<ViewPoint>) 
 		{
-			this.supportingLayer = param1;
+			this.supportingLayer = abstractLayer;
 		}
 
 		private initTextField(): flash.text.TextField
@@ -211,9 +211,9 @@ namespace com.google.finance
 			this.arrowSidewaysOver = new SplitMovie.SplitArrowSidewaysOverClass();
 		}
 
-		setObject(param1: StockAssociatedObject) 
+		setObject(stockAssociatedObject: StockAssociatedObject) 
 		{
-			this.associatedSplit = param1 as com.google.finance.Split;
+			this.associatedSplit = stockAssociatedObject as com.google.finance.Split;
 			this.showText();
 		}
 
@@ -238,13 +238,13 @@ namespace com.google.finance
 
 		private attachArrowListeners() 
 		{
-			this.currentVisibleButton.addEventListener(MouseEvents.MOUSE_OVER, (param1: Event) =>
+			this.currentVisibleButton.addEventListener(MouseEvents.MOUSE_OVER, (event: Event) =>
 			{
 				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.currentVisibleButton);
 				this.showDetails();
 			});
-			this.currentVisibleButton.addEventListener(MouseEvents.MOUSE_OUT, (param1: Event) =>
+			this.currentVisibleButton.addEventListener(MouseEvents.MOUSE_OUT, (event: Event) =>
 			{
 				MainManager.mouseCursor.unlock();
 				this.hideDetails();
@@ -269,9 +269,9 @@ namespace com.google.finance
 			this.arrowSidewaysOver.x = this.arrowSideways.x;
 		}
 
-		setHighlightCanvas(param1: flash.display.Sprite) 
+		setHighlightCanvas(sprite: flash.display.Sprite) 
 		{
-			this.highlightCanvas = param1;
+			this.highlightCanvas = sprite;
 		}
 
 		private checkArrowChange(param1: number) 

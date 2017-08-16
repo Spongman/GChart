@@ -39,7 +39,7 @@ namespace com.google.finance
 			return com.google.i18n.locale.DateTimeLocale.formatDateTime(pattern, date, true).toLowerCase();
 		}
 
-		private adjustVisibleDaysWithAfterHours(param1: DayVisibility[]) 
+		private adjustVisibleDaysWithAfterHours(dayVisibilities: DayVisibility[])
 		{
 			const afterHoursData = this.dataSource.afterHoursData;
 			const visibleExtendedHours = this.dataSource.visibleExtendedHours;
@@ -51,24 +51,24 @@ namespace com.google.finance
 				const start = interval.start;
 				const startTime = afterHoursData.units[start].time;
 				const totalMinutes = afterHoursData.units[end].dayMinute - afterHoursData.units[start].dayMinute;
-				const index = Utils.binarySearch(param1, startTime, this.compareVisibleDayPairWithTime, this);
+				const index = Utils.binarySearch(dayVisibilities, startTime, this.compareVisibleDayPairWithTime, this);
 				if (index !== -1)
 				{
-					if (index < param1.length && param1[index].dataUnit.time === startTime)
+					if (index < dayVisibilities.length && dayVisibilities[index].dataUnit.time === startTime)
 					{
-						param1[index].coveredMinutes += totalMinutes;
-						param1[index].dataUnit = afterHoursData.units[end];
+						dayVisibilities[index].coveredMinutes += totalMinutes;
+						dayVisibilities[index].dataUnit = afterHoursData.units[end];
 					}
-					else if (index + 1 < param1.length)
+					else if (index + 1 < dayVisibilities.length)
 					{
-						param1[index + 1].startMinute = param1[index + 1].startMinute - totalMinutes;
-						param1[index + 1].coveredMinutes = param1[index + 1].coveredMinutes + totalMinutes;
+						dayVisibilities[index + 1].startMinute = dayVisibilities[index + 1].startMinute - totalMinutes;
+						dayVisibilities[index + 1].coveredMinutes = dayVisibilities[index + 1].coveredMinutes + totalMinutes;
 					}
 				}
 			}
 		}
 
-		private drawVerticalLines(context: Context) 
+		private drawVerticalLines(context: Context)
 		{
 			const data = this.dataSource.data;
 			const viewPoint = this.viewPoint;
@@ -109,7 +109,7 @@ namespace com.google.finance
 			return DateLinesLayer.HOUR_INTERVALS[_loc2_];
 		}
 
-		private drawWeekStarts(param1: flash.display.DisplayObject, param2: flash.display.Sprite, param3: number, param4: number) 
+		private drawWeekStarts(displayObject: flash.display.DisplayObject, sprite: flash.display.Sprite, param3: number, param4: number)
 		{
 			const data = this.dataSource.data;
 			const viewPoint = this.viewPoint;
@@ -136,7 +136,7 @@ namespace com.google.finance
 					xPos = viewPoint.getXPos(data.units[data.days[_loc8_]]);
 					const _loc14_ = viewPoint.miny + this.topMargin;
 					const _loc15_ = viewPoint.maxy - viewPoint.bottomTextHeight;
-					AbstractLayer.drawVerticalLine(param1, xPos, Const.DAY_LINE_COLOR, Const.DAY_LINE_ALPHA, _loc14_, _loc15_, ViewPoint.TICK_SIZE_BIG, this.tickPosition);
+					AbstractLayer.drawVerticalLine(displayObject, xPos, Const.DAY_LINE_COLOR, Const.DAY_LINE_ALPHA, _loc14_, _loc15_, ViewPoint.TICK_SIZE_BIG, this.tickPosition);
 					if (viewPoint.bottomTextHeight > 0 && _loc8_ >= 0)
 					{
 						const exchangeDateInUTC = data.units[data.days[_loc8_]].exchangeDateInUTC;
@@ -145,18 +145,18 @@ namespace com.google.finance
 						const _loc19_ = ViewPoint.TEXT_FIELD_WIDTH;
 						const _loc5_ = xPos - _loc19_ / 2;
 						const _loc20_ = ViewPoint.TEXT_FIELD_HEIGHT;
-						const _loc21_ = ViewPoint.addTextField(param2, _loc18_, _loc5_, _loc12_, _loc19_, _loc20_, "center", viewPoint.hourTextFormat);
+						const _loc21_ = ViewPoint.addTextField(sprite, _loc18_, _loc5_, _loc12_, _loc19_, _loc20_, "center", viewPoint.hourTextFormat);
 						if (_loc13_ - _loc8_ >= DateLinesLayer.WEEK_TEXT_MIN_DAYS)
 							_loc13_ = _loc8_;
 						else
-							param2.removeChild(_loc21_);
+							sprite.removeChild(_loc21_);
 					}
 				}
 				else
 				{
 					const _loc14_ = viewPoint.miny + this.topMargin;
 					const _loc15_ = viewPoint.maxy - viewPoint.bottomTextHeight;
-					AbstractLayer.drawVerticalLine(param1, xPos, Const.DAY_LINE_COLOR, 0, _loc14_, _loc15_, ViewPoint.TICK_SIZE_SMALL, this.tickPosition);
+					AbstractLayer.drawVerticalLine(displayObject, xPos, Const.DAY_LINE_COLOR, 0, _loc14_, _loc15_, ViewPoint.TICK_SIZE_SMALL, this.tickPosition);
 				}
 				_loc8_ -= param3;
 				if (data.fridays[_loc9_] > data.days[_loc8_])
@@ -167,7 +167,7 @@ namespace com.google.finance
 			while (xPos >= viewPoint.minx && _loc8_ > 0);
 		}
 
-		private drawYearStarts(param1: flash.display.DisplayObject, param2: flash.display.Sprite, param3: number, param4: number) 
+		private drawYearStarts(displayObject: flash.display.DisplayObject, sprite: flash.display.Sprite, param3: number, param4: number)
 		{
 			const data = this.dataSource.data;
 			if (data.years.length === 0)
@@ -184,7 +184,7 @@ namespace com.google.finance
 				xPos = viewPoint.getXPos(data.units[data.years[_loc7_]]);
 				const _loc13_ = viewPoint.miny + this.topMargin;
 				const _loc14_ = viewPoint.maxy - viewPoint.bottomTextHeight;
-				AbstractLayer.drawVerticalLine(param1, xPos - dayPixel, Const.DAY_LINE_COLOR, Const.DAY_LINE_ALPHA, _loc13_, _loc14_, ViewPoint.TICK_SIZE_BIG, this.tickPosition);
+				AbstractLayer.drawVerticalLine(displayObject, xPos - dayPixel, Const.DAY_LINE_COLOR, Const.DAY_LINE_ALPHA, _loc13_, _loc14_, ViewPoint.TICK_SIZE_BIG, this.tickPosition);
 				if (viewPoint.bottomTextHeight > 0 && _loc7_ >= 0)
 				{
 					const exchangeDateInUTC = data.units[data.years[_loc7_]].exchangeDateInUTC;
@@ -195,7 +195,7 @@ namespace com.google.finance
 					const _loc17_ = _loc10_ - xPos;
 					const _loc11_ = xPos;
 					const _loc18_ = ViewPoint.TEXT_FIELD_HEIGHT;
-					ViewPoint.addTextField(param2, fullYear, _loc11_, _loc12_, _loc17_, _loc18_, "center", viewPoint.dateTextFormat);
+					ViewPoint.addTextField(sprite, fullYear, _loc11_, _loc12_, _loc17_, _loc18_, "center", viewPoint.dateTextFormat);
 				}
 				_loc7_ -= param3;
 				_loc10_ = xPos;
@@ -203,7 +203,7 @@ namespace com.google.finance
 			while (xPos > viewPoint.minx && _loc7_ >= 0);
 		}
 
-		private drawMonthStarts(param1: flash.display.DisplayObject, param2: flash.display.Sprite, param3: number, param4: number) 
+		private drawMonthStarts(displayObject: flash.display.DisplayObject, sprite: flash.display.Sprite, param3: number, param4: number)
 		{
 			const data = this.dataSource.data;
 			if (data.firsts.length === 0)
@@ -225,7 +225,7 @@ namespace com.google.finance
 				xPos = viewPoint.getXPos(data.units[data.firsts[_loc7_]]);
 				const _loc15_ = viewPoint.miny + this.topMargin;
 				const _loc16_ = viewPoint.maxy - viewPoint.bottomTextHeight;
-				AbstractLayer.drawVerticalLine(param1, xPos - dayPixel, Const.DAY_LINE_COLOR, Const.DAY_LINE_ALPHA, _loc15_, _loc16_, ViewPoint.TICK_SIZE_BIG, this.tickPosition);
+				AbstractLayer.drawVerticalLine(displayObject, xPos - dayPixel, Const.DAY_LINE_COLOR, Const.DAY_LINE_ALPHA, _loc15_, _loc16_, ViewPoint.TICK_SIZE_BIG, this.tickPosition);
 				if (viewPoint.bottomTextHeight > 0 && _loc7_ >= 0)
 				{
 					const exchangeDateInUTC = data.units[data.firsts[_loc7_]].exchangeDateInUTC;
@@ -242,13 +242,13 @@ namespace com.google.finance
 							if (month % 3 === 0)
 							{
 								_loc12_ = _loc12_ - _loc20_ / 2;
-								ViewPoint.addTextField(param2, _loc19_, _loc12_, _loc13_, _loc20_, _loc21_, "center", viewPoint.dateTextFormat);
+								ViewPoint.addTextField(sprite, _loc19_, _loc12_, _loc13_, _loc20_, _loc21_, "center", viewPoint.dateTextFormat);
 								_loc11_ = xPos;
 							}
 						}
 						else
 						{
-							ViewPoint.addTextField(param2, _loc19_, _loc12_, _loc13_, _loc20_, _loc21_, "center", viewPoint.dateTextFormat);
+							ViewPoint.addTextField(sprite, _loc19_, _loc12_, _loc13_, _loc20_, _loc21_, "center", viewPoint.dateTextFormat);
 							_loc11_ = xPos;
 						}
 					}
@@ -259,17 +259,17 @@ namespace com.google.finance
 			while (xPos > viewPoint.minx && _loc7_ >= 0);
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			this.drawVerticalLines(context);
 		}
 
-		compareVisibleDayPairWithTime(param1: DayVisibility, param2: number): number
+		compareVisibleDayPairWithTime(dayVisibility: DayVisibility, param2: number): number
 		{
-			if (param1.dataUnit.time < param2)
+			if (dayVisibility.dataUnit.time < param2)
 				return -1;
 
-			if (param1.dataUnit.time > param2)
+			if (dayVisibility.dataUnit.time > param2)
 				return 1;
 
 			return 0;
@@ -293,11 +293,11 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		private drawHoursForDay(param1: flash.display.DisplayObject, param2: flash.display.Sprite, param3: DayVisibility, param4: number) 
+		private drawHoursForDay(displayObject: flash.display.DisplayObject, sprite: flash.display.Sprite, dayVisibility: DayVisibility, param4: number)
 		{
-			const dataUnit = param3.dataUnit;
-			const startMinute = param3.startMinute;
-			let coveredMinutes = param3.coveredMinutes;
+			const dataUnit = dayVisibility.dataUnit;
+			const startMinute = dayVisibility.startMinute;
+			let coveredMinutes = dayVisibility.coveredMinutes;
 			const minutesSkip = this.getMinutesSkip();
 			const intervalLength = this.viewPoint.getIntervalLength(minutesSkip);
 			let xPos = this.viewPoint.getXPos(dataUnit) - intervalLength;
@@ -343,31 +343,31 @@ namespace com.google.finance
 				if (intervalLength2 < DateLinesLayer.DAY_START_TEXT_MAX_WIDTH)
 					return;
 
-				AbstractLayer.drawVerticalLine(param1, xPos, Const.HOUR_LINE_COLOR, Const.HOUR_LINE_ALPHA, _loc11_, _loc12_, ViewPoint.TICK_SIZE_SMALL, this.tickPosition);
+				AbstractLayer.drawVerticalLine(displayObject, xPos, Const.HOUR_LINE_COLOR, Const.HOUR_LINE_ALPHA, _loc11_, _loc12_, ViewPoint.TICK_SIZE_SMALL, this.tickPosition);
 				const hourTextFromUtcDate = this.getHourTextFromUtcDate(date);
-				ViewPoint.addTextField(param2, hourTextFromUtcDate, xPos, _loc13_, _loc14_, _loc15_, "left", this.viewPoint.hourTextFormat);
+				ViewPoint.addTextField(sprite, hourTextFromUtcDate, xPos, _loc13_, _loc14_, _loc15_, "left", this.viewPoint.hourTextFormat);
 				xPos -= intervalLength;
 			}
 		}
 
-		private drawDayStarts(param1: flash.display.DisplayObject, param2: flash.display.Sprite, param3: DayVisibility[], param4: number) 
+		private drawDayStarts(displayObject: flash.display.DisplayObject, sprite: flash.display.Sprite, dayVisibilities: DayVisibility[], param4: number)
 		{
 			//const _loc5_ = this.viewPoint.miny + this.topMargin;
 			//const _loc6_ = this.viewPoint.maxy - this.viewPoint.bottomTextHeight;
 			const _loc7_ = this.viewPoint.maxy - ViewPoint.TEXT_VERTICAL_OFFSET - ViewPoint.TEXT_FIELD_HEIGHT;
-			for (let dayVisibilityIndex = 0; dayVisibilityIndex < param3.length; dayVisibilityIndex++)
+			for (let dayVisibilityIndex = 0; dayVisibilityIndex < dayVisibilities.length; dayVisibilityIndex++)
 			{
-				const xPos = this.viewPoint.getXPos(param3[dayVisibilityIndex].dataUnit);
+				const xPos = this.viewPoint.getXPos(dayVisibilities[dayVisibilityIndex].dataUnit);
 				//AbstractLayer.drawVerticalLine(param1, _loc9_, Const.DAY_LINE_COLOR, Const.DAY_LINE_ALPHA, _loc5_, _loc6_, ViewPoint.TICK_SIZE_BIG, this.tickPosition, param4 !== Intervals.DAILY);
 				if (this.viewPoint.bottomTextHeight > 0)
 				{
-					const intervalLength = this.viewPoint.getIntervalLength(param3[dayVisibilityIndex].coveredMinutes);
-					const dayText = this.getDayText(param3, dayVisibilityIndex, intervalLength);
+					const intervalLength = this.viewPoint.getIntervalLength(dayVisibilities[dayVisibilityIndex].coveredMinutes);
+					const dayText = this.getDayText(dayVisibilities, dayVisibilityIndex, intervalLength);
 					let _loc12_ = "center";
 					if (intervalLength >= DateLinesLayer.DISPLAY_HOURS_MIN_DAY_WIDTH && param4 < Intervals.DAILY)
 					{
 						_loc12_ = "left";
-						this.drawHoursForDay(param1, param2, param3[dayVisibilityIndex], intervalLength);
+						this.drawHoursForDay(displayObject, sprite, dayVisibilities[dayVisibilityIndex], intervalLength);
 					}
 					let _loc13_: number;
 					let _loc14_: number;
@@ -381,20 +381,20 @@ namespace com.google.finance
 						_loc13_ = xPos - ViewPoint.TEXT_FIELD_WIDTH / 2;
 						_loc14_ = ViewPoint.TEXT_FIELD_WIDTH;
 					}
-					ViewPoint.addTextField(param2, dayText, _loc13_, _loc7_, _loc14_, ViewPoint.TEXT_FIELD_HEIGHT, _loc12_, this.viewPoint.hourTextFormat);
+					ViewPoint.addTextField(sprite, dayText, _loc13_, _loc7_, _loc14_, ViewPoint.TEXT_FIELD_HEIGHT, _loc12_, this.viewPoint.hourTextFormat);
 				}
 			}
 		}
 
 		private getVisibleDaysArray(context: Context): DayVisibility[]
 		{
-			const _loc2_: DayVisibility[] = [];
+			const dayVisibilities: DayVisibility[] = [];
 			const data = this.dataSource.data;
 			//const _loc4_ = this.dataSource.afterHoursData;
 			let _loc5_ = 1 + DataSource.getMinuteMetaIndex(context.lastMinute, data.days, data.units);
 			_loc5_ = Math.min(_loc5_, data.days.length - 1);
 			const minuteMetaIndex = DataSource.getMinuteMetaIndex(context.lastMinute - context.count, data.days, data.units);
-			for (let _loc7_ = minuteMetaIndex; _loc7_ <= _loc5_; _loc7_++)				
+			for (let _loc7_ = minuteMetaIndex; _loc7_ <= _loc5_; _loc7_++)
 			{
 				const _loc8_ = data.units[data.days[_loc7_]];
 				const marketOpenMinute = data.marketOpenMinute;
@@ -406,18 +406,18 @@ namespace com.google.finance
 					dayVisibility.startMinute = marketOpenMinute;
 					dayVisibility.coveredMinutes = marketDayLength;
 
-					_loc2_.push(dayVisibility);
+					dayVisibilities.push(dayVisibility);
 				}
 			}
-			this.adjustVisibleDaysWithAfterHours(_loc2_);
-			return _loc2_;
+			this.adjustVisibleDaysWithAfterHours(dayVisibilities);
+			return dayVisibilities;
 		}
 
-		private getDayText(param1: DayVisibility[], param2: number, param3: number): string
+		private getDayText(dayVisibilities: DayVisibility[], param2: number, param3: number): string
 		{
-			const exchangeDateInUTC = param1[param2].dataUnit.exchangeDateInUTC;
+			const exchangeDateInUTC = dayVisibilities[param2].dataUnit.exchangeDateInUTC;
 			let _loc5_ = "d";
-			if (param3 > 50 || param2 === 2 || param2 === param1.length - 2)
+			if (param3 > 50 || param2 === 2 || param2 === dayVisibilities.length - 2)
 			{
 				_loc5_ = "MMM " + _loc5_;
 				if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))

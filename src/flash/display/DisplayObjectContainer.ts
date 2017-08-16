@@ -17,7 +17,7 @@ namespace flash.display
 			for (var i = 0; i < this.children.length; i++)
 				this.children[i].stage = value;
 		}
-		
+
 		private prepareChild(child: DisplayObject)
 		{
 			assert(!!child && !!child.element);

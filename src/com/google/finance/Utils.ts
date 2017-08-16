@@ -13,9 +13,9 @@ namespace com.google.finance
 	{
 		private static localTzOffset: number;
 
-		static compareDataUnits(param1: DataUnit, param2: DataUnit): number
+		static compareDataUnits(dataUnit1: DataUnit, dataUnit2: DataUnit): number
 		{
-			return param1.exchangeDateInUTC.getTime() - param2.exchangeDateInUTC.getTime();
+			return dataUnit1.exchangeDateInUTC.getTime() - dataUnit2.exchangeDateInUTC.getTime();
 		}
 
 		static getLocalTimezoneOffset(): number
@@ -25,20 +25,19 @@ namespace com.google.finance
 			return Utils.localTzOffset;
 		}
 
-		static getDateInTimezone(date: Date, param2: number): number
+		static getDateInTimezone(date: Date, minutes: number): number
 		{
-			const _loc3_ = Utils.newDateInTimezone(date, param2);
-			return _loc3_.getUTCDate();
+			return Utils.newDateInTimezone(date, minutes).getUTCDate();
 		}
 
 		static adjustExchangeNameOfArray(param1: { [key: string]: string }[], param2: string) 
 		{
-			for (let _loc3_ = 0; _loc3_ < param1.length; _loc3_++)
+			for (let index = 0; index < param1.length; index++)
 			{
-				if (param1[_loc3_] && param1[_loc3_][param2])
+				if (param1[index] && param1[index][param2])
 				{
-					if (param1[_loc3_][param2].indexOf("NASD:") === 0)
-						param1[_loc3_][param2] = Utils.adjustNasdToNasdaq(param1[_loc3_][param2]);
+					if (param1[index][param2].indexOf("NASD:") === 0)
+						param1[index][param2] = Utils.adjustNasdToNasdaq(param1[index][param2]);
 				}
 			}
 		}
@@ -51,10 +50,10 @@ namespace com.google.finance
 			param1 = decodeURIComponent(param1);
 			const _loc2_: { [key: string]: string }[] = [];
 			const _loc3_ = param1.split(MainManager.paramsObj.objectSeparator);
-			for (let _loc4_ = 0; _loc4_ < _loc3_.length; _loc4_++)
+			for (let partIndex = 0; partIndex < _loc3_.length; partIndex++)
 			{
 				const _loc5_: { [key: string]: string } = {};
-				const _loc6_ = _loc3_[_loc4_].split(MainManager.paramsObj.fieldSeparator);
+				const _loc6_ = _loc3_[partIndex].split(MainManager.paramsObj.fieldSeparator);
 				for (let _loc7_ = 0; _loc7_ < _loc6_.length; _loc7_++)
 				{
 					const _loc8_ = _loc6_[_loc7_].split(":");
@@ -85,28 +84,28 @@ namespace com.google.finance
 				_loc3_ = "";
 			}
 			return {
-				"exchange": _loc3_,
-				"symbol": _loc4_
+				exchange: _loc3_,
+				symbol: _loc4_
 			};
 		}
 
-		static binarySearch<T, T2, T3>(param1: T[], param2: T2, param3: { (p1: T, p2: T2, p3?: T3): number }, param4: T3): number
+		static binarySearch<T, T2, T3>(items: T[], value: T2, param3: { (p1: T, p2: T2): number }, thisObj: T3): number
 		{
-			if (!param1 || param1.length === 0)
+			if (!items || items.length === 0)
 				return -1;
 
-			if (param3.call(param4, param1[0], param2) > 0)
+			if (param3.call(thisObj, items[0], value) > 0)
 				return -1;
 
-			if (param3.call(param4, param1[param1.length - 1], param2) <= 0)
-				return param1.length - 1;
+			if (param3.call(thisObj, items[items.length - 1], value) <= 0)
+				return items.length - 1;
 
 			let _loc5_ = 0;
-			let _loc6_ = param1.length - 1;
+			let _loc6_ = items.length - 1;
 			while (_loc5_ < _loc6_ - 1)
 			{
 				const _loc7_ = Math.round((_loc5_ + _loc6_) / 2);
-				const _loc8_ = param3.call(param4, param1[_loc7_], param2);
+				const _loc8_ = param3.call(thisObj, items[_loc7_], value);
 				if (_loc8_ < 0)
 					_loc5_ = Number(_loc7_);
 				else if (_loc8_ > 0)
@@ -117,17 +116,17 @@ namespace com.google.finance
 			return _loc5_;
 		}
 
-		static assocArrayLength(param1: { [key: string]: any }): number
+		static assocArrayLength(map: Dictionary): number
 		{
 			let _loc2_ = 0;
-			for (let _loc3_ in param1)
+			for (let _ in map)
 				_loc2_++;
 			return _loc2_;
 		}
 
-		static newDateInTimezone(date: Date, param2: number): Date
+		static newDateInTimezone(date: Date, minutes: number): Date
 		{
-			return new Date(date.getTime() + param2 * 60 * 1000);
+			return new Date(date.getTime() + minutes * 60 * 1000);
 		}
 
 		static compareUtcDates(date1: Date, date2: Date): number
@@ -144,9 +143,9 @@ namespace com.google.finance
 			return 0;
 		}
 
-		static logTransform(param1: number): number
+		static logTransform(value: number): number
 		{
-			return Math.log(param1 < Const.LOG_SCALE ? Number((Const.LOG_SCALE - 1) / Const.LOG_SCALE * param1 + 1) : param1) / Const.LOG_SCALE_LOG;
+			return Math.log(value < Const.LOG_SCALE ? Number((Const.LOG_SCALE - 1) / Const.LOG_SCALE * value + 1) : value) / Const.LOG_SCALE_LOG;
 		}
 
 		static getEndOfUTCDayTime(date: Date): number
@@ -161,13 +160,13 @@ namespace com.google.finance
 			return Utils.getTickerParts(param1).symbol;
 		}
 
-		static getLastRealPointIndex(param1: DataUnit[]): number
+		static getLastRealPointIndex(dataUnits: DataUnit[]): number
 		{
-			if (!param1 || param1.length === 0)
+			if (!dataUnits || dataUnits.length === 0)
 				return -1;
 
-			let _loc2_ = param1.length - 1;
-			while (_loc2_ >= 0 && param1[_loc2_].fake)
+			let _loc2_ = dataUnits.length - 1;
+			while (_loc2_ >= 0 && dataUnits[_loc2_].fake)
 				_loc2_--;
 
 			return _loc2_;
@@ -178,22 +177,20 @@ namespace com.google.finance
 			return Utils.getTickerParts(param1).exchange;
 		}
 
-		static numberToString(param1: number, param2: number, param3: number): string
+		static numberToString(value: number, decimals: number, digits: number): string
 		{
-			let _loc4_ = Math.pow(10, param2);
-			param1 = Math.round(param1 * Math.pow(10, param2));
-			let _loc5_ = param1 % _loc4_;
-			let _loc6_ = Math.floor(param1 / _loc4_) + ".";
+			let _loc4_ = Math.pow(10, decimals);
+			value = Math.round(value * _loc4_);
+			let _loc5_ = value % _loc4_;
+			let _loc6_ = Math.floor(value / _loc4_) + ".";
 			while (_loc4_ > 1)
 			{
 				_loc4_ /= 10;
 				_loc6_ += Math.floor(_loc5_ / _loc4_);
 				_loc5_ = _loc5_ % _loc4_;
 			}
-			for (let _loc7_ = 0; _loc7_ < param3 - _loc6_.length; _loc7_++)
-			{
+			for (let _loc7_ = 0; _loc7_ < digits - _loc6_.length; _loc7_++)
 				_loc6_ = "0" + _loc6_;
-			}
 			return _loc6_;
 		}
 
@@ -202,14 +199,14 @@ namespace com.google.finance
 			return date.getUTCFullYear() + "." + (date.getUTCMonth() + 1) + "." + date.getUTCDate() + "/" + date.getUTCHours() + ":" + date.getUTCMinutes();
 		}
 
-		static createLabel(param1: flash.display.Sprite, param2: string, param3: flash.text.TextFormat): flash.text.TextField
+		static createLabel(sprite: flash.display.Sprite, text: string, textFormat: flash.text.TextFormat): flash.text.TextField
 		{
 			const textField = new flash.text.TextField();
-			param1.addChild(textField);
+			sprite.addChild(textField);
 			textField.autoSize = flash.text.TextFieldAutoSize.LEFT;
-			textField.defaultTextFormat = param3;
+			textField.defaultTextFormat = textFormat;
 			textField.selectable = false;
-			textField.text = param2;
+			textField.text = text;
 			return textField;
 		}
 
@@ -224,15 +221,15 @@ namespace com.google.finance
 			return Math.min(param1, param2);
 		}
 
-		static findValueInArray<T>(param1: T, param2: T[]): number
+		static findValueInArray<T>(value: T, items: T[]): number
 		{
-			if (!param2 || !param1)
+			if (!items || !value)
 				return -1;
 
-			for (let _loc3_ = 0; _loc3_ < param2.length; _loc3_++)
+			for (let index = 0; index < items.length; index++)
 			{
-				if (param1 === param2[_loc3_])
-					return _loc3_;
+				if (value === items[index])
+					return index;
 			}
 			return -1;
 		}
@@ -266,26 +263,26 @@ namespace com.google.finance
 			return _loc7_ + _loc8_;
 		}
 
-		static numberToMinTwoChars(param1: number): string
+		static numberToMinTwoChars(value: number): string
 		{
-			if (param1 < 10)
-				return "0" + param1;
+			if (value < 10)
+				return "0" + value;
 
-			return param1.toString();
+			return value.toString();
 		}
 
-		static getLogScaledValue(param1: number, param2: string): number
+		static getLogScaledValue(value: number, logScale: string): number
 		{
-			if (param2 === Const.LOG_VSCALE || param2 === Const.NEW_LOG_VSCALE)
-				return Utils.logTransform(param1);
+			if (logScale === Const.LOG_VSCALE || logScale === Const.NEW_LOG_VSCALE)
+				return Utils.logTransform(value);
 
-			return param1;
+			return value;
 		}
 
-		static removeAllChildren(param1: flash.display.DisplayObjectContainer) 
+		static removeAllChildren(displayObjectContainer: flash.display.DisplayObjectContainer) 
 		{
-			while (param1.numChildren > 0)
-				param1.removeChildAt(param1.numChildren-1);
+			while (displayObjectContainer.numChildren > 0)
+				displayObjectContainer.removeChildAt(displayObjectContainer.numChildren-1);
 		}
 
 		static compareNumbers(param1: number, param2: number): number
@@ -299,20 +296,20 @@ namespace com.google.finance
 			return 0;
 		}
 
-		static checkUndefined(param1: any, param2: any) 
+		static checkUndefined<T>(value1: T, value2: T): T
 		{
-			if (param1 === undefined)
-				return param2;
+			if (value1 === undefined)
+				return value2;
 
-			return param1;
+			return value1;
 		}
 
-		static adjustNasdToNasdaq(param1: string): string
+		static adjustNasdToNasdaq(ticker: string): string
 		{
-			if (param1.indexOf("NASD:") === 0)
-				return "NASDAQ:" + param1.substr(5);
+			if (ticker.indexOf("NASD:") === 0)
+				return "NASDAQ:" + ticker.substr(5);
 
-			return param1;
+			return ticker;
 		}
 
 		static extendedMax(param1: number, param2: number): number
@@ -326,11 +323,11 @@ namespace com.google.finance
 			return Math.max(param1, param2);
 		}
 
-		static isSubset(param1: { [key: string]: any }, param2: { [key: string]: any }): boolean
+		static isSubset(param1: Dictionary, param2: Dictionary): boolean
 		{
-			for (let _loc3_ in param1)
+			for (let key in param1)
 			{
-				if (param1[_loc3_] !== param2[_loc3_])
+				if (param1[key] !== param2[key])
 					return false;
 			}
 			return true;
@@ -339,9 +336,9 @@ namespace com.google.finance
 		static printObjectMembers(param1: string, param2: any) 
 		{
 			console.log(param1);
-			for (let _loc3_ in param2)
+			for (let key in param2)
 			{
-				console.log("  obj." + _loc3_ + " = " + param2[_loc3_]);
+				console.log("  obj." + key + " = " + param2[key]);
 			}
 		}
 
@@ -382,16 +379,16 @@ namespace com.google.finance
 		static appendObjectMembersAsStrings(param1: string, param2: any): string
 		{
 			let _loc3_ = param1 + ":";
-			for (let _loc4_ in param2)
-				_loc3_ += "  obj." + _loc4_ + "=" + param2[_loc4_];
+			for (let key in param2)
+				_loc3_ += "  obj." + key + "=" + param2[key];
 			return _loc3_;
 		}
 
-		static displayObjectToTop(param1: flash.display.DisplayObject, param2: flash.display.DisplayObjectContainer) 
+		static displayObjectToTop(displayObject: flash.display.DisplayObject, displayObjectContainer: flash.display.DisplayObjectContainer) 
 		{
 			let index = 0;
-			let child = param1;
-			let container = param2;
+			let child = displayObject;
+			let container = displayObjectContainer;
 			try
 			{
 				index = container.getChildIndex(child);

@@ -24,19 +24,19 @@ namespace com.google.finance
 			}
 		}
 
-		private ioErrorHandler(event: Event) 
+		private ioErrorHandler(event: Event)
 		{
 			this.setUpDataReload();
 			console.log("ioErrorHandler: " + event);
 		}
 
-		private securityErrorHandler(param1: Event) 
+		private securityErrorHandler(event: Event)
 		{
 			this.setUpDataReload();
-			console.log("security error: " + param1);
+			console.log("security error: " + event);
 		}
 
-		private dataReload() 
+		private dataReload()
 		{
 			if (this.tries === 0)
 				MainManager.console.dataLoading();
@@ -45,12 +45,12 @@ namespace com.google.finance
 			this.urlLoader.load(new flash.net.URLRequest(this.url));
 		}
 
-		protected configReloadInterval(param1: Function, param2: number) 
+		protected configReloadInterval(fn: Function, param2: number)
 		{
-			this.intervalId = setInterval(param1, param2);
+			this.intervalId = setInterval(fn, param2);
 		}
 
-		private completeHandler(event: Event) 
+		private completeHandler(event: Event)
 		{
 			//const _loc2_ = this.event.target as flash.net.URLLoader;
 			clearInterval(this.intervalId);
@@ -71,28 +71,28 @@ namespace com.google.finance
 					this.dataManager.mainManager.dataIsHere(dataSources[this.event.quote], result);
 					if (this.event.callbacks)
 					{
-						for (let callbackIndex = 0; callbackIndex < this.event.callbacks.length; callbackIndex++)
+						for (const callback of this.event.callbacks)
 						{
-							const callbackFunc: { (p1: any): void } = this.event.callbacks[callbackIndex].func;
-							const param = this.event.callbacks[callbackIndex].param;
+							const callbackFunc: { (p1: any): void } = callback.func;
+							const param = callback.param;
 							callbackFunc.apply(this, param);
 						}
 					}
-					flash.display.Graphics.cleanupPending()
+					flash.display.Graphics.cleanupPending();
 					break;
 			}
 		}
 
-		private initListeners() 
+		private initListeners()
 		{
 			this.urlLoader.addEventListener(Events.COMPLETE, this.completeHandler.bind(this));
 			this.urlLoader.addEventListener(SecurityErrorEvents.SECURITY_ERROR, this.securityErrorHandler.bind(this));
 			this.urlLoader.addEventListener(IOErrorEvents.IO_ERROR, this.ioErrorHandler.bind(this));
 		}
 
-		protected setUpDataReload() 
+		protected setUpDataReload()
 		{
-			if (this.event.type == com.google.finance.ChartEventTypes.GET_RT_DATA || this.event.type == com.google.finance.ChartEventTypes.GET_RT_AH_DATA)
+			if (this.event.type === com.google.finance.ChartEventTypes.GET_RT_DATA || this.event.type === com.google.finance.ChartEventTypes.GET_RT_AH_DATA)
 				return;
 
 			if (this.tries < Const.MAX_RELOAD_TRIES)

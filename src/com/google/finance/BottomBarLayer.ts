@@ -10,7 +10,7 @@ namespace com.google.finance
 			viewPoint.bottomTextHeight = this.bottomTextHeight;
 		}
 
-		private drawRectangle(color: number, alpha: number, x1: number, y1: number, x2: number, y2: number) 
+		private drawRectangle(color: number, alpha: number, x1: number, y1: number, x2: number, y2: number)
 		{
 			const gr = this.graphics;
 			gr.lineStyle(0, 0, 0);
@@ -26,7 +26,7 @@ namespace com.google.finance
 			gr.endFill();
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			this.graphics.clear();
 			this.drawRectangle(Const.TEXT_BACKGROUND_COLOR, 80, this.viewPoint.minx, this.viewPoint.maxy - this.bottomTextHeight, this.viewPoint.maxx, this.viewPoint.maxy);

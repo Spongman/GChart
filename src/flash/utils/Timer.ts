@@ -1,7 +1,7 @@
 ﻿namespace flash.utils
 {
 	export class TimerEvent
-		//extends Event
+	//extends Event
 	{
 	}
 

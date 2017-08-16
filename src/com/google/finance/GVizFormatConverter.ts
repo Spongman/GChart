@@ -29,7 +29,7 @@ namespace com.google.finance
 			return true;
 		}
 
-		static convertGVizData(param1:any, param2: number, dataSeries: DataSeries, indicator: Indicator) 
+		static convertGVizData(param1:any, param2: number, dataSeries: DataSeries, indicator: Indicator)
 		{
 			if (!GVizFormatConverter.validateGVizData(param1))
 				return;
@@ -39,9 +39,9 @@ namespace com.google.finance
 				return;
 
 			const _loc6_ = param1[GVizFormatConverter.ROWS_PROPERTY_NAME];
-			const _loc7_: DataSeries[] = [];
+			const dataSeriesArray: DataSeries[] = [];
 			for (let _loc8_= 1; _loc8_ < param1[GVizFormatConverter.COLS_PROPERTY_NAME].length; _loc8_++)
-				_loc7_.push(new DataSeries());
+				dataSeriesArray.push(new DataSeries());
 
 			for (let _loc8_ = 0; _loc8_ < _loc6_.length; _loc8_++)
 			{
@@ -52,13 +52,13 @@ namespace com.google.finance
 				for (let _loc13_ = 1; _loc13_ < _loc6_[_loc8_][GVizFormatConverter.COL_PROPERTY_NAME].length; _loc13_++)
 				{
 					const _loc14_ = _loc6_[_loc8_][GVizFormatConverter.COL_PROPERTY_NAME][_loc13_][GVizFormatConverter.VALUE_PROPERTY_NAME];
-					_loc7_[_loc13_ - 1].points.push(new com.google.finance.indicator.IndicatorPoint(_loc14_, _loc12_));
+					dataSeriesArray[_loc13_ - 1].points.push(new com.google.finance.indicator.IndicatorPoint(_loc14_, _loc12_));
 				}
 			}
 
 			indicator.clear(param2);
-			for (let dataSeriesIndex = 0; dataSeriesIndex < _loc7_.length; dataSeriesIndex++)
-				indicator.setDataSeries(param2, _loc7_[dataSeriesIndex], dataSeriesIndex);
+			for (let dataSeriesIndex = 0; dataSeriesIndex < dataSeriesArray.length; dataSeriesIndex++)
+				indicator.setDataSeries(param2, dataSeriesArray[dataSeriesIndex], dataSeriesIndex);
 		}
 	}
 }

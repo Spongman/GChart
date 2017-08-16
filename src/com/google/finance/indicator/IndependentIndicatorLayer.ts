@@ -24,7 +24,7 @@ namespace com.google.finance.indicator
 			super(viewPoint, dataSource);
 			const textFormat = new flash.text.TextFormat("Verdana", 9);
 			textFormat.align = "right";
-			for (let _loc4_= 0; _loc4_ < IndependentIndicatorLayer.LEVEL_CNT; _loc4_++)
+			for (let levelIndex= 0; levelIndex < IndependentIndicatorLayer.LEVEL_CNT; levelIndex++)
 			{
 				const layerTextFormat = new flash.text.TextField();
 				layerTextFormat.width = IndependentIndicatorLayer.LEVEL_TEXT_WIDTH;
@@ -32,7 +32,7 @@ namespace com.google.finance.indicator
 				layerTextFormat.text = "";
 				layerTextFormat.selectable = false;
 				layerTextFormat.x = viewPoint.maxx - IndependentIndicatorLayer.LEVEL_TEXT_WIDTH;
-				layerTextFormat.y = viewPoint.miny + (viewPoint.maxy - viewPoint.miny - 15) * (IndependentIndicatorLayer.LEVEL_CNT - 1 - _loc4_) / (IndependentIndicatorLayer.LEVEL_CNT - 1);
+				layerTextFormat.y = viewPoint.miny + (viewPoint.maxy - viewPoint.miny - 15) * (IndependentIndicatorLayer.LEVEL_CNT - 1 - levelIndex) / (IndependentIndicatorLayer.LEVEL_CNT - 1);
 				this.textOutCanvas.addChild(layerTextFormat);
 				this.levelTextArray.push(layerTextFormat);
 			}
@@ -77,14 +77,14 @@ namespace com.google.finance.indicator
 			if (_loc12_ < 0)
 				_loc12_ = 0;
 			
-			for (let _loc13_= 0; _loc13_ < dataSeries.length; _loc13_++)
+			for (let dataSeriesIndex= 0; dataSeriesIndex < dataSeries.length; dataSeriesIndex++)
 			{
-				if (this.getLineStyle(_loc13_) === IndicatorLineStyle.NONE)
+				if (this.getLineStyle(dataSeriesIndex) === IndicatorLineStyle.NONE)
 					continue;
 
 				for (let _loc14_ = _loc11_; _loc14_ >= _loc12_; _loc14_--)
 				{
-					let points = dataSeries[_loc13_].points[_loc14_];
+					let points = dataSeries[dataSeriesIndex].points[_loc14_];
 					if (!points)
 						continue;	// TODO: this shouldn't happen
 
@@ -106,13 +106,13 @@ namespace com.google.finance.indicator
 
 		private updateLevelTexts(param1: number, param2: number) 
 		{
-			for (let _loc3_= 0; _loc3_ < this.levelTextArray.length; _loc3_++)
+			for (let levelTextIndex= 0; levelTextIndex < this.levelTextArray.length; levelTextIndex++)
 			{
-				let _loc4_ = param2 + (param1 - param2) * _loc3_ / (this.levelTextArray.length - 1);
+				let _loc4_ = param2 + (param1 - param2) * levelTextIndex / (this.levelTextArray.length - 1);
 				_loc4_ = Math.round(_loc4_ * 100) / 100;
-				this.levelTextArray[_loc3_].text = !!isNaN(_loc4_) ? "" : "" + _loc4_;
-				this.levelTextArray[_loc3_].x = this.viewPoint.maxx - IndependentIndicatorLayer.LEVEL_TEXT_WIDTH;
-				this.levelTextArray[_loc3_].y = this.viewPoint.miny + IndependentIndicatorLayer.NAME_TEXT_BLOCK_HEIGHT + (this.viewPoint.maxy - this.viewPoint.miny - 15 - IndependentIndicatorLayer.NAME_TEXT_BLOCK_HEIGHT) * (this.levelTextArray.length - 1 - _loc3_) / (this.levelTextArray.length - 1);
+				this.levelTextArray[levelTextIndex].text = !!isNaN(_loc4_) ? "" : "" + _loc4_;
+				this.levelTextArray[levelTextIndex].x = this.viewPoint.maxx - IndependentIndicatorLayer.LEVEL_TEXT_WIDTH;
+				this.levelTextArray[levelTextIndex].y = this.viewPoint.miny + IndependentIndicatorLayer.NAME_TEXT_BLOCK_HEIGHT + (this.viewPoint.maxy - this.viewPoint.miny - 15 - IndependentIndicatorLayer.NAME_TEXT_BLOCK_HEIGHT) * (this.levelTextArray.length - 1 - levelTextIndex) / (this.levelTextArray.length - 1);
 			}
 		}
 

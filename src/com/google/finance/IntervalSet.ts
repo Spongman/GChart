@@ -16,7 +16,7 @@ namespace com.google.finance
 			return this.intervals[_loc2_];
 		}
 
-		addInterval(param1: number, param2: number) 
+		addInterval(param1: number, param2: number)
 		{
 			this.addPair(new StartEndPair(param1, param2));
 		}
@@ -85,7 +85,7 @@ namespace com.google.finance
 			return this.intervals[index];
 		}
 
-		addPair(pair: StartEndPair) 
+		addPair(pair: StartEndPair)
 		{
 			if (pair.start > pair.end)
 				return;
@@ -98,7 +98,7 @@ namespace com.google.finance
 					this.intervals.splice(_loc2_, 0, pair);
 					return;
 				}
-				
+
 				if (pair.start <= this.intervals[_loc2_].end)
 				{
 					pair.start = Math.min(pair.start, this.intervals[_loc2_].start);

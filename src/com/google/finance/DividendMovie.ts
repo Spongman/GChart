@@ -17,13 +17,13 @@ namespace com.google.finance
 		private static DividendArrowSidewaysOverClass = DividendMovie_DividendArrowSidewaysOverClass;
 
 		private associatedDividend: com.google.finance.Dividend;
-		
+
 		protected getTextColor(): number
 		{
 			return 0x66dd;
 		}
 
-		protected initArrows() 
+		protected initArrows()
 		{
 			this.arrow = new DividendMovie.DividendArrowClass();
 			this.arrowOnOver = new DividendMovie.DividendArrowOnOverClass();
@@ -41,13 +41,13 @@ namespace com.google.finance
 			return Messages.getMsg(Messages.DIVIDEND_TEXT, this.getShortText(true), _loc2_);
 		}
 
-		setObject(param1: Dividend) 
+		setObject(dividend: Dividend)
 		{
-			this.associatedDividend = param1;
+			this.associatedDividend = dividend;
 			this.showText();
 		}
 
-		protected positionSidewaysArrow() 
+		protected positionSidewaysArrow()
 		{
 			this.currentVisibleButton.x = -1;
 			this.text.autoSize = flash.text.TextFieldAutoSize.RIGHT;

@@ -6,14 +6,14 @@ namespace com.google.finance
 	{
 		private regionsXLimits: com.google.finance.IntervalSet;
 
-		highlightPoint(context: Context, param2: number, param3: { [key: string]: any }) 
+		highlightPoint(context: Context, param2: number, state: Dictionary)
 		{
 			this.clearHighlight();
 			if (!this.regionsXLimits || !this.regionsXLimits.containsValue(param2))
 				return;
 
-			if (param3["volumesetter"])
-				param3["volumesetter"].clearHighlight();
+			if (state["volumesetter"])
+				state["volumesetter"].clearHighlight();
 
 			const dataSeries = this.getDataSeries();
 			const viewPoint = this.viewPoint;
@@ -29,11 +29,11 @@ namespace com.google.finance
 			const yPos = this.getYPos(_loc10_.volumes[detailLevelInterval], viewPoint);
 			this.highlightCanvas.graphics.lineStyle(2, Const.VOLUME_HIGHLIGHT_COLOR, 1);
 			this.drawOneLine(xPos, yPos, viewPoint, this.highlightCanvas);
-			param3[SpaceText.VOLUME_STR] = _loc10_.volumes[detailLevelInterval];
-			param3["ahsetter"] = this;
+			state[SpaceText.VOLUME_STR] = _loc10_.volumes[detailLevelInterval];
+			state["ahsetter"] = this;
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			this.graphics.clear();
 			let vp = this.viewPoint;
@@ -49,7 +49,7 @@ namespace com.google.finance
 				return;
 
 			this.regionsXLimits = new com.google.finance.IntervalSet();
-			
+
 			for (let intervalIndex = 0; intervalIndex < visibleExtendedHours.length(); intervalIndex++)
 			{
 				const interval = visibleExtendedHours.getIntervalAt(intervalIndex);

@@ -121,55 +121,49 @@ namespace com.google.finance.indicator
 			return this.indicatorName;
 		}
 
-		private renderHistogramLine(param1: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, param7: number, param8: string) 
+		private renderHistogramLine(dataSeriesArray: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, param7: number, param8: string) 
 		{
-			let _loc13_ = 0;
-			let _loc14_ = 0;
-			let _loc9_ = Number.MAX_VALUE;
+			let xPos = Number.MAX_VALUE;
 			const yPos = this.getYPos(context, new IndicatorPoint(0, <DataUnit><any>null));	// TODO
-			let _loc12_ = param4;
 			const gr = this.graphics;
-			while (_loc12_ >= param3)
+			for (let _loc12_ = param4; _loc12_ >= param3; _loc12_--)				
 			{
-				if (!isNaN(param1[param2].points[_loc12_].getValue()))
+				if (!isNaN(dataSeriesArray[param2].points[_loc12_].getValue()))
 				{
-					const point = param1[param2].points[_loc12_].getPoint();
+					const point = dataSeriesArray[param2].points[_loc12_].getPoint();
 					if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
-						_loc9_ = this.getWeeklyBarXPos(point, _loc9_);
+						xPos = this.getWeeklyBarXPos(point, xPos);
 
-					_loc13_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
-					_loc14_ = this.getYPos(context, param1[param2].points[_loc12_]);
-					gr.lineStyle(1, this.getColor(param2, param1[param2].points[_loc12_].getValue()));
+					const _loc13_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
+					const _loc14_ = this.getYPos(context, dataSeriesArray[param2].points[_loc12_]);
+					gr.lineStyle(1, this.getColor(param2, dataSeriesArray[param2].points[_loc12_].getValue()));
 					gr.moveTo(_loc13_, yPos);
 					gr.lineTo(_loc13_, _loc14_);
 				}
-				_loc12_--;
 			}
 		}
 
-		private renderSingleLine(param1: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, param7: number, param8: string) 
+		private renderSingleLine(dataSeriesArray: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, param7: number, param8: string) 
 		{
-			let _loc12_ = 0;
-			let _loc13_ = 0;
 			let _loc9_ = Number.MAX_VALUE;
-			let point = param1[param2].points[param4].getPoint();
+			let point = dataSeriesArray[param2].points[param4].getPoint();
 			if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
 				_loc9_ = this.getWeeklyBarXPos(point, _loc9_);
 
 			const gr = this.graphics;
 			gr.lineStyle(1, this.indicatorValueTextArray[param2].textColor);
-			gr.moveTo(!isNaN(point.weeklyXPos) ? Number(point.weeklyXPos) : viewPoint.getXPos(point), this.getYPos(context, param1[param2].points[param4]));
+			gr.moveTo(!isNaN(point.weeklyXPos) ? Number(point.weeklyXPos) : viewPoint.getXPos(point), this.getYPos(context, dataSeriesArray[param2].points[param4]));
 			let _loc11_ = param4 - 1;
 			while (_loc11_ >= param3)
 			{
-				if (!isNaN(param1[param2].points[_loc11_].getValue()))
+				if (!isNaN(dataSeriesArray[param2].points[_loc11_].getValue()))
 				{
-					point = param1[param2].points[_loc11_].getPoint();
+					point = dataSeriesArray[param2].points[_loc11_].getPoint();
 					if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
 						_loc9_ = this.getWeeklyBarXPos(point, _loc9_);
 
-					_loc12_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
-					_loc13_ = this.getYPos(context, param1[param2].points[_loc11_]);
+					const _loc12_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
+					const _loc13_ = this.getYPos(context, dataSeriesArray[param2].points[_loc11_]);
 					if (_loc13_ < viewPoint.miny)
 						gr.moveTo(_loc12_, viewPoint.miny);
 					else if (_loc13_ > viewPoint.maxy)
@@ -181,24 +175,22 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		private renderHistogramLineFromBottom(param1: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, param7: number, param8: string) 
+		private renderHistogramLineFromBottom(dataSeriesArray: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, param7: number, param8: string) 
 		{
-			let _loc12_ = 0;
-			let _loc13_ = 0;
 			let _loc9_ = Number.MAX_VALUE;
 			const gr = this.graphics;
 			gr.lineStyle(1, this.indicatorValueTextArray[param2].textColor);
 			let _loc11_ = param4;
 			while (_loc11_ >= param3)
 			{
-				if (!isNaN(param1[param2].points[_loc11_].getValue()))
+				if (!isNaN(dataSeriesArray[param2].points[_loc11_].getValue()))
 				{
-					const point = param1[param2].points[_loc11_].getPoint();
+					const point = dataSeriesArray[param2].points[_loc11_].getPoint();
 					if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
 						_loc9_ = this.getWeeklyBarXPos(point, _loc9_);
 
-					_loc12_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
-					_loc13_ = this.getYPos(context, param1[param2].points[_loc11_]);
+					const _loc12_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
+					const _loc13_ = this.getYPos(context, dataSeriesArray[param2].points[_loc11_]);
 					gr.moveTo(_loc12_, this.viewPoint.maxy);
 					gr.lineTo(_loc12_, _loc13_);
 				}
@@ -206,24 +198,24 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		protected getYPos(context: Context, param2: IndicatorPoint): number
+		protected getYPos(context: Context, indicatorPoint: IndicatorPoint): number
 		{
 			return 0;
 		}
 
-		protected drawMedianLine(param1: number = -1, param2: flash.display.Sprite) 
+		protected drawMedianLine(param1: number = -1, sprite: flash.display.Sprite) 
 		{
 			if (param1 === -1)
 				param1 = IndicatorLayer.MEDIAN_LINE_COLOR;
 
-			if (!param2)
-				param2 = this.medianLineCanvas;
+			if (!sprite)
+				sprite = this.medianLineCanvas;
 
 			const localYOffset = this.localYOffset;
 			const minx = this.viewPoint.minx;
 			const maxx = this.viewPoint.maxx;
 			let _loc6_ = 0;
-			const gr = param2.graphics;
+			const gr = sprite.graphics;
 			gr.lineStyle(1, param1);
 			do
 			{
@@ -259,11 +251,9 @@ namespace com.google.finance.indicator
 			return null;
 		}
 
-		highlightPoint(context: Context, param2: number, param3: { [key: string]: any }) 
+		highlightPoint(context: Context, param2: number, state: Dictionary) 
 		{
-			let _loc12_ = 0;
-			let _loc13_ = 0;
-			let _loc14_ = 0;
+
 			if (!this._enabled)
 				return;
 
@@ -288,7 +278,8 @@ namespace com.google.finance.indicator
 				let value = point.getValue();
 				if (!isNaN(value))
 				{
-					_loc12_ = !isNaN(_loc9_.weeklyXPos) ? _loc9_.weeklyXPos : viewPoint.getXPos(_loc9_);
+					const _loc12_ = !isNaN(_loc9_.weeklyXPos) ? _loc9_.weeklyXPos : viewPoint.getXPos(_loc9_);
+					let _loc13_;
 					switch (this.getLineStyle(dataSeriesIndex))
 					{
 						case IndicatorLineStyle.SIMPLE_LINE:
@@ -300,7 +291,7 @@ namespace com.google.finance.indicator
 							this.indicatorValueTextArray[dataSeriesIndex].text = this.getIndicatorValueText(dataSeriesIndex, value, intervalText, context);
 							break;
 						case IndicatorLineStyle.HISTOGRAM_LINE:
-							_loc14_ = this.getYPos(context, new IndicatorPoint(0, <DataUnit><any>null)); // TODO
+							const _loc14_ = this.getYPos(context, new IndicatorPoint(0, <DataUnit><any>null)); // TODO
 							_loc13_ = this.getYPos(context, point);
 							this.drawAHighlightLine(_loc12_, _loc14_, _loc12_, _loc13_, this.getColor(dataSeriesIndex, point.getValue()));
 							value = Math.round(value * 100) / 100;
@@ -325,17 +316,16 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		private doCopyLastIndicatorPoint(param1: DataUnit, param2: DataSeries[])
+		private doCopyLastIndicatorPoint(dataUnit: DataUnit, dataSeriesArray: DataSeries[])
 		{
-			let _loc5_ = 0;
-			const indicatorPoint = new IndicatorPoint(NaN, param1);
-			for (let dataSeriesIndex = 0; dataSeriesIndex < param2.length; dataSeriesIndex++)
+			const indicatorPoint = new IndicatorPoint(NaN, dataUnit);
+			for (let dataSeriesIndex = 0; dataSeriesIndex < dataSeriesArray.length; dataSeriesIndex++)
 			{
-				_loc5_ = param2[dataSeriesIndex].points.length;
+				const _loc5_ = dataSeriesArray[dataSeriesIndex].points.length;
 				if (_loc5_ > 0)
-					param2[dataSeriesIndex].points.push(new IndicatorPoint(param2[dataSeriesIndex].points[_loc5_ - 1].getValue(), param1));
+					dataSeriesArray[dataSeriesIndex].points.push(new IndicatorPoint(dataSeriesArray[dataSeriesIndex].points[_loc5_ - 1].getValue(), dataUnit));
 				else
-					param2[dataSeriesIndex].points.push(indicatorPoint);
+					dataSeriesArray[dataSeriesIndex].points.push(indicatorPoint);
 
 				dataSeriesIndex++;
 			}
@@ -378,20 +368,20 @@ namespace com.google.finance.indicator
 			gr.lineTo(param3, param4);
 		}
 
-		copyLastIndicatorPoint(param1: DataUnit, ...rest: DataSeries[]) 
+		copyLastIndicatorPoint(dataUnit: DataUnit, ...rest: DataSeries[]) 
 		{
-			this.doCopyLastIndicatorPoint(param1, rest);
+			this.doCopyLastIndicatorPoint(dataUnit, rest);
 		}
 
-		setIndicator(param1: string, dataSeries: DataSeries) 
+		setIndicator(indicatorName: string, dataSeries: DataSeries) 
 		{
-			this.indicatorName = param1;
-			if (this.dataSource.indicators[param1] === undefined)
-				this.dataSource.indicators[param1] = new Indicator();
+			this.indicatorName = indicatorName;
+			if (this.dataSource.indicators[indicatorName] === undefined)
+				this.dataSource.indicators[indicatorName] = new Indicator();
 
-			this.indicator = this.dataSource.indicators[param1];
+			this.indicator = this.dataSource.indicators[indicatorName];
 			this.originalDataSeries = dataSeries;
-			this.setIndicatorInstanceArray(Const.INDICATOR_PARAMETERS[param1]);
+			this.setIndicatorInstanceArray(Const.INDICATOR_PARAMETERS[indicatorName]);
 		}
 
 		protected getIndicatorNameText(param1: string): string
@@ -399,20 +389,20 @@ namespace com.google.finance.indicator
 			return "";
 		}
 
-		shouldSkip(param1: DataUnit, ...rest: DataSeries[]): boolean
+		shouldSkip(dataUnit: DataUnit, ...rest: DataSeries[]): boolean
 		{
-			if (param1.duplicate)
+			if (dataUnit.duplicate)
 			{
-				const indicatorPoint = new IndicatorPoint(NaN, param1);
+				const indicatorPoint = new IndicatorPoint(NaN, dataUnit);
 				for (let dataSeriesIndex = 0; dataSeriesIndex < rest.length; dataSeriesIndex++)
 				{
 					rest[dataSeriesIndex].points.push(indicatorPoint);
 				}
 				return true;
 			}
-			if (param1.fake)
+			if (dataUnit.fake)
 			{
-				this.doCopyLastIndicatorPoint(param1, rest);
+				this.doCopyLastIndicatorPoint(dataUnit, rest);
 				return true;
 			}
 			return false;
@@ -514,7 +504,7 @@ namespace com.google.finance.indicator
 			return true;
 		}
 
-		getDataSeriesArray(param1: number, param2?: Context): DataSeries[] | null
+		getDataSeriesArray(param1: number, context?: Context): DataSeries[] | null
 		{
 			let _loc6_ = 0;
 			const detailLevelInterval = Const.getDetailLevelInterval(param1);

@@ -97,21 +97,21 @@ namespace flash.display
 				pt.y >= 0 && pt.y < this.height;
 		}
 
-		globalToLocal(param1: flash.display.Point): flash.display.Point
+		globalToLocal(point: flash.display.Point): flash.display.Point
 		{
 			let node: DisplayObject = this;
 			do
 			{
-				param1.x -= node._x;
-				param1.y -= node._y;
+				point.x -= node._x;
+				point.y -= node._y;
 				node = node.parent;
 			}
 			while (node);
-			return param1;
+			return point;
 		}
 	}
 
 	export class Shape extends DisplayObject
 	{
-	}	
+	}
 }

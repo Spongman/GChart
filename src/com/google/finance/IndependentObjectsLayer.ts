@@ -22,7 +22,7 @@ namespace com.google.finance
 		private readonly movies: SplitMovie[] = [];
 		private readonly highlightCanvas = new flash.display.Sprite("highlightCanvas");
 		private activeMovies: number = 0;
-		
+
 		renderObj: string;
 		avoidObj: string;
 		positioning = IndependentObjectsLayer.POSITION_CHART;
@@ -30,10 +30,10 @@ namespace com.google.finance
 		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
 			super(viewPoint, dataSource);
-			(<ViewPoint><any>viewPoint).addChildToTopCanvas(this.highlightCanvas);
+			viewPoint.addChildToTopCanvas(this.highlightCanvas);
 		}
 
-		private resetCanvas() 
+		private resetCanvas()
 		{
 			for (let movieIndex = 0; movieIndex < this.movies.length; movieIndex++)
 				this.removeChild(this.movies[movieIndex]);
@@ -47,7 +47,7 @@ namespace com.google.finance
 			return viewPoint.miny + viewPoint.V_OFFSET + viewPoint.medPriceY - (dataUnit.close - context.medPrice) * viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			if (isNaN(context.lastMinute) || isNaN(context.count) || context.count === 0)
 				return;
@@ -72,10 +72,10 @@ namespace com.google.finance
 			const _loc7_ = this.viewPoint.count / this.dataSource.data.marketDayLength;
 			context[this.renderObj] = [];
 			let _loc8_ = 0;
-			for (let _loc9_ = firstVisibleObject; _loc9_ <= lastVisibleObject; _loc9_++)
+			for (let visibleObjectIndex = firstVisibleObject; visibleObjectIndex <= lastVisibleObject; visibleObjectIndex++)
 			{
-				const position = this.getPosition(_loc2_[_loc9_], units, detailLevel, context);
-				const _loc11_ = this.putObject(_loc2_[_loc9_], position);
+				const position = this.getPosition(_loc2_[visibleObjectIndex], units, detailLevel, context);
+				const _loc11_ = this.putObject(_loc2_[visibleObjectIndex], position);
 				if (_loc7_ > IndependentObjectsLayer.HIDE_TEXT_THRESHOLD)
 				{
 					_loc11_.hideText();
@@ -102,18 +102,18 @@ namespace com.google.finance
 					}
 				}
 			}
-			for (let _loc9_ = this.activeMovies; _loc9_ < this.movies.length; _loc9_++)
-				this.removeChild(this.movies[_loc9_]);
+			for (let movieIndex = this.activeMovies; movieIndex < this.movies.length; movieIndex++)
+				this.removeChild(this.movies[movieIndex]);
 
 			this.movies.splice(this.activeMovies);
 		}
 
-		private getPosition(param1: SeriesPosition, param2: DataUnit[], param3: number, context: Context): Position
+		private getPosition(seriesPosition: SeriesPosition, dataUnits: DataUnit[], param3: number, context: Context): Position
 		{
 			const position = new Position();
-			let dataSeries = notnull(param1.refDataSeries);
-			const xPos = this.viewPoint.getXPos(dataSeries.units[param1.pos]);
-			const yPos = this.getYPos(context, dataSeries.units[param1.pos]);
+			let dataSeries = notnull(seriesPosition.refDataSeries);
+			const xPos = this.viewPoint.getXPos(dataSeries.units[seriesPosition.pos]);
+			const yPos = this.getYPos(context, dataSeries.units[seriesPosition.pos]);
 			//const _loc8_ = (this.viewPoint.maxy + this.viewPoint.miny) / 2;
 			if (this.positioning === IndependentObjectsLayer.POSITION_CHART)
 			{
@@ -142,20 +142,20 @@ namespace com.google.finance
 			return position;
 		}
 
-		private getLastVisibleObject(param1: SeriesPosition[], param2: DataUnit[], context: Context): number
+		private getLastVisibleObject(seriesPositions: SeriesPosition[], dataUnits: DataUnit[], context: Context): number
 		{
 			const lastMinute = context.lastMinute;
-			for (let _loc5_ = param1.length - 1; _loc5_ >= 0; _loc5_--)
+			for (let seriesPositionIndex = seriesPositions.length - 1; seriesPositionIndex >= 0; seriesPositionIndex--)
 			{
-				const _loc6_ = param1[_loc5_];
+				const _loc6_ = seriesPositions[seriesPositionIndex];
 				const relativeMinutes = notnull(_loc6_.refDataSeries).units[_loc6_.pos].relativeMinutes;
 				if (relativeMinutes < lastMinute)
-					return _loc5_;
+					return seriesPositionIndex;
 			}
 			return -1;
 		}
 
-		private putObject(param1: StockAssociatedObject, param2: Position): SplitMovie
+		private putObject(stockAssociatedObject: StockAssociatedObject, position: Position): SplitMovie
 		{
 			let _loc3_: SplitMovie;
 			if (this.activeMovies >= this.movies.length)
@@ -182,21 +182,21 @@ namespace com.google.finance
 			{
 				_loc3_ = this.movies[this.activeMovies];
 			}
-			_loc3_.x = param2.x;
-			_loc3_.y = param2.y;
-			_loc3_.setObject(param1);
-			if (param1.originalObject._orientation)
+			_loc3_.x = position.x;
+			_loc3_.y = position.y;
+			_loc3_.setObject(stockAssociatedObject);
+			if (stockAssociatedObject.originalObject._orientation)
 			{
-				switch (param1.originalObject._orientation)
+				switch (stockAssociatedObject.originalObject._orientation)
 				{
 					case "down":
-						param2.orientation = Orientations.DOWN;
+						position.orientation = Orientations.DOWN;
 						break;
 					case "up":
-						param2.orientation = Orientations.UP;
+						position.orientation = Orientations.UP;
 				}
 			}
-			_loc3_.setOrientation(param2.orientation);
+			_loc3_.setOrientation(position.orientation);
 			_loc3_.setSupportingLayer(this);
 			_loc3_.setHighlightCanvas(this.highlightCanvas);
 			if (this.activeMovies >= this.movies.length)
@@ -206,12 +206,12 @@ namespace com.google.finance
 			return _loc3_;
 		}
 
-		private getFirstVisibleObject(param1: SeriesPosition[], param2: DataUnit[], context: Context): number
+		private getFirstVisibleObject(seriesPositions: SeriesPosition[], dataUnits: DataUnit[], context: Context): number
 		{
 			const _loc4_ = context.lastMinute - context.count;
-			for (let seriesPositionIndex = 0; seriesPositionIndex < param1.length; seriesPositionIndex++)
+			for (let seriesPositionIndex = 0; seriesPositionIndex < seriesPositions.length; seriesPositionIndex++)
 			{
-				const _loc6_ = param1[seriesPositionIndex];
+				const _loc6_ = seriesPositions[seriesPositionIndex];
 				const relativeMinutes = notnull(_loc6_.refDataSeries).units[_loc6_.pos].relativeMinutes;
 				if (relativeMinutes > _loc4_ && _loc6_.pos > 0)
 					return seriesPositionIndex;

@@ -14,7 +14,7 @@ namespace com.google.finance
 		{
 			if (!com.google.finance.MainManager.paramsObj["disableExternalInterface"] && flash.external.ExternalInterface.available)
 			{
-				(<{ [key: string]: any }>mainManager.stage.element)["callAsFunction"] = flash.display.Stage.bind(this.callAsFunction, this);
+				(<Dictionary>mainManager.stage.element)["callAsFunction"] = flash.display.Stage.bind(this.callAsFunction, this);
 				//flash.external.ExternalInterface.addCallback("callAsFunction", this.callAsFunction.bind(this));
 			}
 			//TODO if (Capabilities.os.search(/Linux*/) === 0)
@@ -29,26 +29,26 @@ namespace com.google.finance
 			//return Capabilities.playerType !== "StandAlone" && Capabilities.playerType !== "External";
 		}
 
-		addObject(qname: string, type: string, date: Date, letter: string, id: number) 
+		addObject(ticker: string, type: string, date: Date, letter: string, id: number)
 		{
-			qname = Utils.adjustNasdToNasdaq(qname);
+			ticker = Utils.adjustNasdToNasdaq(ticker);
 			const obj = {
-				"_qname": qname,
-				"_type": type,
-				"_date": date,
-				"_id": id,
-				"_letter": letter
+				_qname: ticker,
+				_type: type,
+				_date: date,
+				_id: id,
+				_letter: letter
 			};
 			this.mainManager.addObject(obj);
 		}
 
-		removeLayerFromStyle(param1: LayerInfo, param2: string) 
+		removeLayerFromStyle(layerInfo: LayerInfo, param2: string)
 		{
 			const layersManager = this.mainManager.layersManager;
-			layersManager.removeLayerFromStyle(param1, param2);
+			layersManager.removeLayerFromStyle(layerInfo, param2);
 		}
 
-		initIndicators() 
+		initIndicators()
 		{
 			if (this.shouldSkipExternalInterfaceCall())
 				return;
@@ -59,12 +59,12 @@ namespace com.google.finance
 			flash.external.ExternalInterface.call("google.finance.initTechnicals");
 		}
 
-		private handleMouseWheel(param1: number) 
+		private handleMouseWheel(delta: number)
 		{
-			this.mainManager.displayManager.mainController.handleMouseWheel(param1);
+			this.mainManager.displayManager.mainController.handleMouseWheel(delta);
 		}
 
-		logIntervalButtonClick(param1: string) 
+		logIntervalButtonClick(param1: string)
 		{
 			if (this.shouldSkipExternalInterfaceCall())
 				return;
@@ -72,10 +72,10 @@ namespace com.google.finance
 			flash.external.ExternalInterface.call("_GF_click", "", "chs_in", param1.replace(/\\/g, "\\\\"), "");
 		}
 
-		changePrimaryTicker(param1: string, param2: string, param3 = false) 
+		changePrimaryTicker(ticker: string, param2: string, param3 = false)
 		{
-			param1 = Utils.adjustNasdToNasdaq(param1);
-			this.mainManager.changePrimaryTicker(param1, param2, param3);
+			ticker = Utils.adjustNasdToNasdaq(ticker);
+			this.mainManager.changePrimaryTicker(ticker, param2, param3);
 		}
 
 		private getIndicatorInstanceArray(indicatorName: string, params: any[]): any[]
@@ -116,19 +116,19 @@ namespace com.google.finance
 			}
 		}
 
-		importGVizData(param1: any, param2: string, param3: number) 
+		importGVizData(param1: any, indicatorName: string, param3: number)
 		{
 			const firstDataSource = this.mainManager.layersManager.getFirstDataSource();
 			if (!firstDataSource)
 				return;
 
-			if (!firstDataSource.indicators[param2])
-				firstDataSource.indicators[param2] = new Indicator();
+			if (!firstDataSource.indicators[indicatorName])
+				firstDataSource.indicators[indicatorName] = new Indicator();
 
-			GVizFormatConverter.convertGVizData(param1, param3, firstDataSource.data, firstDataSource.indicators[param2]);
+			GVizFormatConverter.convertGVizData(param1, param3, firstDataSource.data, firstDataSource.indicators[indicatorName]);
 		}
 
-		updateLastPrice(param1: boolean, param2: number) 
+		updateLastPrice(param1: boolean, param2: number)
 		{
 			const firstDataSource = this.mainManager.layersManager.getFirstDataSource();
 			const displayManager = this.mainManager.displayManager;
@@ -142,16 +142,16 @@ namespace com.google.finance
 			}
 		}
 
-		private playerMouseWheelHandler(param1: MouseWheelEvent) 
+		private playerMouseWheelHandler(mouseWheelEvent: MouseWheelEvent)
 		{
-			let delta = param1.wheelDelta < 0 ? -3 : 3;
+			let delta = mouseWheelEvent.wheelDelta < 0 ? -3 : 3;
 			this.handleMouseWheel(delta);
 
-			param1.preventDefault();
-			param1.stopPropagation();
+			mouseWheelEvent.preventDefault();
+			mouseWheelEvent.stopPropagation();
 		}
 
-		firstDataIsHere() 
+		firstDataIsHere()
 		{
 			if (this.shouldSkipExternalInterfaceCall())
 				return;
@@ -163,7 +163,7 @@ namespace com.google.finance
 			flash.external.ExternalInterface.call("_firstDataIsHere");
 		}
 
-		setChartFocus(param1: boolean) 
+		setChartFocus(param1: boolean)
 		{
 			if (this.shouldSkipExternalInterfaceCall())
 				return;
@@ -171,7 +171,7 @@ namespace com.google.finance
 			flash.external.ExternalInterface.call("_setChartFocus", param1);
 		}
 
-		resetChartHeight(param1: number) 
+		resetChartHeight(param1: number)
 		{
 			if (this.shouldSkipExternalInterfaceCall())
 				return;
@@ -179,7 +179,7 @@ namespace com.google.finance
 			flash.external.ExternalInterface.call("_setChartSize", param1 + "px");
 		}
 
-		setJsCurrentViewParam(param1: string, param2: any) 
+		setJsCurrentViewParam(param1: string, param2: any)
 		{
 			if (this.shouldSkipExternalInterfaceCall())
 				return;
@@ -187,7 +187,7 @@ namespace com.google.finance
 			flash.external.ExternalInterface.call("_setCurrentViewParam", encodeURIComponent(param1), encodeURIComponent(param2.toString()));
 		}
 
-		toggleIndicator(param1: string, param2: string) 
+		toggleIndicator(param1: string, param2: string)
 		{
 			const layersManager = this.mainManager.layersManager;
 			const displayManager = this.mainManager.displayManager;
@@ -235,38 +235,38 @@ namespace com.google.finance
 			}
 		}
 
-		removeCompareTo(param1: string) 
+		removeCompareTo(ticker: string)
 		{
 			if (!this.mainManager.layersManager.getFirstDataSource())
 				return;
 
-			param1 = Utils.adjustNasdToNasdaq(param1);
-			this.mainManager.removeCompareTo(param1);
+			ticker = Utils.adjustNasdToNasdaq(ticker);
+			this.mainManager.removeCompareTo(ticker);
 		}
 
-		addCompareTo(param1: string, param2: string, param3 = false) 
+		addCompareTo(ticker: string, param2: string, param3 = false)
 		{
 			if (!this.mainManager.layersManager.getFirstDataSource())
 				return;
 
-			param1 = Utils.adjustNasdToNasdaq(param1);
-			this.mainManager.addCompareTo(param1, param2, param3);
+			ticker = Utils.adjustNasdToNasdaq(ticker);
+			this.mainManager.addCompareTo(ticker, param2, param3);
 		}
 
-		getData(param1: string, param2: string) 
+		getData(ticker: string, param2: string)
 		{
 			if (this.shouldSkipExternalInterfaceCall())
 				return;
 
-			param1 = Utils.adjustNasdToNasdaq(param1);
+			ticker = Utils.adjustNasdToNasdaq(ticker);
 			if (this.javascriptRequestMade)
 				return;
 
 			this.javascriptRequestMade = true;
-			flash.external.ExternalInterface.call("_sendAllDataToChart", encodeURIComponent(param1), "flash");
+			flash.external.ExternalInterface.call("_sendAllDataToChart", encodeURIComponent(ticker), "flash");
 		}
 
-		setLineStyle(lineStyle: string) 
+		setLineStyle(lineStyle: string)
 		{
 			if (this.mainManager.layersManager.getStyle() === LayersManager.SINGLE)
 			{
@@ -280,13 +280,13 @@ namespace com.google.finance
 			}
 		}
 
-		removeObject(param1: string, param2: string, param3: string) 
+		removeObject(ticker: string, param2: string, param3: string)
 		{
-			param1 = Utils.adjustNasdToNasdaq(param1);
-			this.mainManager.removeObject(param1, param2, param3);
+			ticker = Utils.adjustNasdToNasdaq(ticker);
+			this.mainManager.removeObject(ticker, param2, param3);
 		}
 
-		expandChart() 
+		expandChart()
 		{
 			if (this.shouldSkipExternalInterfaceCall())
 				return;
@@ -295,13 +295,13 @@ namespace com.google.finance
 			flash.external.ExternalInterface.call("_GF_click", "", "chs_ec", "", "");
 		}
 
-		addLayerToStyle(param1: LayerInfo, param2: string) 
+		addLayerToStyle(layerInfo: LayerInfo, param2: string)
 		{
 			const layersManager = this.mainManager.layersManager;
-			layersManager.addLayerToStyle(param1, param2);
+			layersManager.addLayerToStyle(layerInfo, param2);
 		}
 
-		setParameter(param1: string, param2: string) 
+		setParameter(param1: string, param2: string)
 		{
 			const layersManager = this.mainManager.layersManager;
 			const displayManager = this.mainManager.displayManager;
@@ -339,17 +339,17 @@ namespace com.google.finance
 			displayManager.update();
 		}
 
-		addData(param1: string, param2: string, param3: string, param4: string, param5: string) 
+		addData(ticker: string, param2: string, param3: string, param4: string, param5: string)
 		{
-			param1 = Utils.adjustNasdToNasdaq(param1);
+			ticker = Utils.adjustNasdToNasdaq(ticker);
 			const dataManager = this.mainManager.dataManager;
-			const event = EventFactory.getEvent(ChartEventTypes.GET_DATA, param1, ChartEventPriorities.OPTIONAL);
+			const event = EventFactory.getEvent(ChartEventTypes.GET_DATA, ticker, ChartEventPriorities.OPTIONAL);
 			dataManager.addData(event, decodeURIComponent(param3));
 			if (param5)
 				dataManager.addData(event, decodeURIComponent(param5));
 		}
 
-		setJsChartType(param1: string) 
+		setJsChartType(param1: string)
 		{
 			if (this.shouldSkipExternalInterfaceCall())
 				return;
@@ -357,7 +357,7 @@ namespace com.google.finance
 			flash.external.ExternalInterface.call("_setChartType", encodeURIComponent(param1));
 		}
 
-		private callAsFunction(param1: string, ...rest: any[]) 
+		private callAsFunction(param1: string, ...rest: any[])
 		{
 			switch (param1)
 			{
@@ -422,19 +422,19 @@ namespace com.google.finance
 			return false;
 		}
 
-		clearAllPins(param1: string) 
+		clearAllPins(ticker: string)
 		{
-			param1 = Utils.adjustNasdToNasdaq(param1);
-			this.mainManager.clearAllPins(param1);
+			ticker = Utils.adjustNasdToNasdaq(ticker);
+			this.mainManager.clearAllPins(ticker);
 		}
 
-		removeObjectArray(param1: { [key: string]: string }[]) 
+		removeObjectArray(param1: { [key: string]: string }[])
 		{
 			Utils.adjustExchangeNameOfArray(param1, "_quote");
 			this.mainManager.removeObjectArray(param1);
 		}
 
-		shrinkChart() 
+		shrinkChart()
 		{
 			if (this.shouldSkipExternalInterfaceCall())
 				return;
@@ -443,7 +443,7 @@ namespace com.google.finance
 			flash.external.ExternalInterface.call("_GF_click", "", "chs_sc", "", "");
 		}
 
-		addObjectArray(param1: any[]) 
+		addObjectArray(param1: any[])
 		{
 			let pinArray = param1;
 			if (!pinArray)
@@ -467,7 +467,7 @@ namespace com.google.finance
 			return !JSProxy.isPlayingInBrowser() || !flash.external.ExternalInterface.available || com.google.finance.MainManager.paramsObj["disableExternalInterface"];
 		}
 
-		HTMLnotify(startDate: Date, endDate: Date, param3: number, param4: number, param5 = false) 
+		HTMLnotify(startDate: Date, endDate: Date, param3: number, param4: number, param5 = false)
 		{
 			if (this.shouldSkipExternalInterfaceCall())
 				return;
@@ -475,19 +475,19 @@ namespace com.google.finance
 			flash.external.ExternalInterface.call("_visibleChartRangeChanged", startDate, endDate, param3, param4, param5);
 		}
 
-		htmlClicked(param1: string, param2: number) 
+		htmlClicked(ticker: string, param2: number)
 		{
-			param1 = Utils.adjustNasdToNasdaq(param1);
-			this.mainManager.htmlClicked(param1, param2);
+			ticker = Utils.adjustNasdToNasdaq(ticker);
+			this.mainManager.htmlClicked(ticker, param2);
 		}
 
-		setForceDisplayExtendedHours(dataSource: DataSource) 
+		setForceDisplayExtendedHours(dataSource: DataSource)
 		{
 			const _loc2_ = dataSource.visibleExtendedHours.length() !== 0;
 			this.setJsCurrentViewParam("forceDisplayExtendedHours", _loc2_);
 		}
 
-		iClicked(param1: string, param2: string, param3: number, param4: string) 
+		iClicked(param1: string, param2: string, param3: number, param4: string)
 		{
 			if (this.shouldSkipExternalInterfaceCall())
 				return;
@@ -497,7 +497,7 @@ namespace com.google.finance
 			this.mainManager.htmlClicked(param1, param3, param4);
 		}
 
-		logZoomButtonClick(param1: string) 
+		logZoomButtonClick(param1: string)
 		{
 			if (this.shouldSkipExternalInterfaceCall())
 				return;

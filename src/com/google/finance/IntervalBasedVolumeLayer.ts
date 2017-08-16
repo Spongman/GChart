@@ -12,9 +12,9 @@ namespace com.google.finance
 			this.addChild(this.highlightCanvas);
 		}
 
-		protected getYPos(param1: number, param2: IViewPoint): number
+		protected getYPos(param1: number, viewPoint: IViewPoint): number
 		{
-			return param2.maxy - (param1 >= 0 ? param1 : 0) * this.localYScale;
+			return viewPoint.maxy - (param1 >= 0 ? param1 : 0) * this.localYScale;
 		}
 
 		protected findPointIndex(param1: number): number
@@ -44,12 +44,12 @@ namespace com.google.finance
 			return relativeMinuteIndex;
 		}
 
-		clearHighlight() 
+		clearHighlight()
 		{
 			this.highlightCanvas.graphics.clear();
 		}
 
-		private drawHorizontalLine(param1: number) 
+		private drawHorizontalLine(param1: number)
 		{
 			const gr = this.graphics;
 			gr.lineStyle(0, Const.HORIZONTAL_GRID_COLOR, 1);
@@ -57,35 +57,35 @@ namespace com.google.finance
 			gr.lineTo(this.viewPoint.maxx - 1, param1);
 		}
 
-		private drawOneBar(param1: number, param2: number, param3: IViewPoint, param4: flash.display.Sprite, param5: number, param6: number = -1) 
+		private drawOneBar(param1: number, param2: number, viewPoint: IViewPoint, sprite: flash.display.Sprite, param5: number, param6: number = -1)
 		{
-			if (param3.maxy - param2 < 1 && param3.maxy - param2 > 0)
-				param2 = param3.maxy - 1;
-			else if (param2 < param3.miny)
-				param2 = param3.miny;
+			if (viewPoint.maxy - param2 < 1 && viewPoint.maxy - param2 > 0)
+				param2 = viewPoint.maxy - 1;
+			else if (param2 < viewPoint.miny)
+				param2 = viewPoint.miny;
 
-			const gr = param4.graphics;
+			const gr = sprite.graphics;
 			if (param6 !== -1)
 				gr.beginFill(param6);
 
-			gr.drawRect(param1 - param5 / 2, param2, param5, param3.maxy - param2);
+			gr.drawRect(param1 - param5 / 2, param2, param5, viewPoint.maxy - param2);
 			if (param6 !== -1)
 				gr.endFill();
 		}
 
-		protected drawOneLine(param1: number, param2: number, param3: IViewPoint, param4: flash.display.Sprite) 
+		protected drawOneLine(param1: number, param2: number, viewPoint: IViewPoint, sprite: flash.display.Sprite)
 		{
-			if (param3.maxy - param2 < 1 && param3.maxy - param2 > 0)
-				param2 = param3.maxy - 1;
-			else if (param2 < param3.miny)
-				param2 = param3.miny;
+			if (viewPoint.maxy - param2 < 1 && viewPoint.maxy - param2 > 0)
+				param2 = viewPoint.maxy - 1;
+			else if (param2 < viewPoint.miny)
+				param2 = viewPoint.miny;
 
-			const gr = param4.graphics;
+			const gr = sprite.graphics;
 			gr.moveTo(param1, param2);
-			gr.lineTo(param1, param3.maxy);
+			gr.lineTo(param1, viewPoint.maxy);
 		}
 
-		getContext(context: Context, param2 = false) 
+		getContext(context: Context, param2 = false)
 		{
 			const dataSeries = notnull(this.getDataSeries(context));
 			const detailLevel = this.viewPoint.getDetailLevelForTechnicalStyle(context.lastMinute, context.count);
@@ -109,9 +109,9 @@ namespace com.google.finance
 				_loc10_ = Utils.extendedMax(_loc10_, points[_loc11_].volumes[detailLevelInterval]);
 			}
 			let _loc12_ = NaN;
-			for (let _loc11_ = 1; _loc11_ < Const.VOLUME_SCALES.length; _loc11_++)
+			for (let scaleIndex = 1; scaleIndex < Const.VOLUME_SCALES.length; scaleIndex++)
 			{
-				_loc12_ = Const.VOLUME_SCALES[_loc11_];
+				_loc12_ = Const.VOLUME_SCALES[scaleIndex];
 				if (Math.floor(_loc10_ / _loc12_) < 10)
 					break;
 			}
@@ -120,7 +120,7 @@ namespace com.google.finance
 			return context;
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			const dataSeries = notnull(this.getDataSeries());
 			const viewPoint = this.viewPoint;
@@ -197,9 +197,9 @@ namespace com.google.finance
 			this.drawHorizontalLine(viewPoint.miny + Const.BOTTOM_VIEWPOINT_HEADER_HEIGHT);
 		}
 
-		highlightPoint(context: Context, param2: number, param3: { [key: string]: any }) 
+		highlightPoint(context: Context, param2: number, state: Dictionary)
 		{
-			if (param3["ahsetter"])
+			if (state["ahsetter"])
 				return;
 
 			const _loc4_ = notnull(this.getDataSeries());
@@ -228,8 +228,8 @@ namespace com.google.finance
 				gr.lineStyle(2, Const.VOLUME_HIGHLIGHT_COLOR, 1);
 				this.drawOneLine(_loc11_, yPos, viewPoint, this.highlightCanvas);
 			}
-			param3[SpaceText.VOLUME_STR] = _loc10_.volumes[detailLevelInterval];
-			param3["volumesetter"] = this;
+			state[SpaceText.VOLUME_STR] = _loc10_.volumes[detailLevelInterval];
+			state["volumesetter"] = this;
 		}
 	}
 }

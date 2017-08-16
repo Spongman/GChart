@@ -54,9 +54,9 @@ namespace com.google.finance.indicator
 			let _loc10_ = points[0].close;
 			const indicatorPoint = new IndicatorPoint(NaN, points[0]);
 			dataSeries.points.push(indicatorPoint);
-			for (let _loc11_ = 1; _loc11_ < points.length; _loc11_++)
+			for (let pointIndex = 1; pointIndex < points.length; pointIndex++)
 			{
-				const _loc12_ = points[_loc11_];
+				const _loc12_ = points[pointIndex];
 				if (!this.shouldSkip(_loc12_, dataSeries))
 				{
 					let _loc7_ = _loc12_.close - _loc10_;

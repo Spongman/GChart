@@ -4,7 +4,7 @@ namespace com.google.finance
 	{
 		private dashSize = 7;
 
-		private drawLine(context: Context) 
+		private drawLine(context: Context)
 		{
 			//const _loc2_ = this.dataSource.data;
 			const gr = this.graphics;
@@ -38,12 +38,12 @@ namespace com.google.finance
 			}
 		}
 
-		protected getYPos(param1: DataUnit, context: Context): number
+		protected getYPos(dataUnit: DataUnit, context: Context): number
 		{
-			return this.viewPoint.miny + this.viewPoint.V_OFFSET + this.viewPoint.medPriceY - (param1.getCloseLogValue(context.verticalScaling) - context.medPrice) * this.viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
+			return this.viewPoint.miny + this.viewPoint.V_OFFSET + this.viewPoint.medPriceY - (dataUnit.getCloseLogValue(context.verticalScaling) - context.medPrice) * this.viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			this.drawLine(context);
 		}

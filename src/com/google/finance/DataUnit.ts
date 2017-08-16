@@ -49,7 +49,7 @@ namespace com.google.finance
 			return this.low;
 		}
 
-		setExchangeDateInUTC(param1: number, param2: number) 
+		setExchangeDateInUTC(param1: number, param2: number)
 		{
 			this.timezoneOffset = param2;
 			this.time = param1 - param2 * Const.MS_PER_MINUTE;
@@ -58,16 +58,14 @@ namespace com.google.finance
 			assert(!isNaN(this.dayMinute));
 		}
 
-		addVolumeInfo(dataUnit: DataUnit) 
+		addVolumeInfo(dataUnit: DataUnit)
 		{
-			let _loc3_ = 0;
-			for (let intervalIndex = 0; intervalIndex < dataUnit.intervals.length; intervalIndex++)
+			for (const interval of dataUnit.intervals)
 			{
-				_loc3_ = dataUnit.intervals[intervalIndex];
-				if (this.volumes[_loc3_] === undefined)
+				if (this.volumes[interval] === undefined)
 				{
-					this.volumes[_loc3_] = dataUnit.volumes[_loc3_];
-					this.intervals.push(_loc3_);
+					this.volumes[interval] = dataUnit.volumes[interval];
+					this.intervals.push(interval);
 				}
 			}
 		}
@@ -97,7 +95,7 @@ namespace com.google.finance
 			return this.close;
 		}
 
-		setDate(param1: number, param2: number) 
+		setDate(param1: number, param2: number)
 		{
 			this.timezoneOffset = param2;
 			this.time = param1;

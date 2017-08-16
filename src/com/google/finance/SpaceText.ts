@@ -178,29 +178,29 @@ namespace com.google.finance
 				if (param2 > param3)
 				{
 					this.datesTextFormats.push({
-						"start": this.datesText.length,
-						"end": this.datesText.length + _loc4_.length,
-						"format": this.positiveTextFormat
+						start: this.datesText.length,
+						end: this.datesText.length + _loc4_.length,
+						format: this.positiveTextFormat
 					});
 				}
 				else if (param2 < param3)
 				{
 					this.datesTextFormats.push({
-						"start": this.datesText.length,
-						"end": this.datesText.length + _loc4_.length,
-						"format": this.negativeTextFormat
+						start: this.datesText.length,
+						end: this.datesText.length + _loc4_.length,
+						format: this.negativeTextFormat
 					});
 				}
 			}
 			this.datesText += _loc4_;
 		}
 
-		setPointInfo(param1: { [key: string]: any }) 
+		setPointInfo(pointInfo: Dictionary) 
 		{
-			if (param1[SpaceText.POINT_STR] !== undefined)
-				this.setSinglePointInfo(param1);
-			else if (param1[SpaceText.POINTS_STR] !== undefined)
-				this.setComparisonInfo(param1);
+			if (pointInfo[SpaceText.POINT_STR] !== undefined)
+				this.setSinglePointInfo(pointInfo);
+			else if (pointInfo[SpaceText.POINTS_STR] !== undefined)
+				this.setComparisonInfo(pointInfo);
 		}
 
 		private updateAlignAndPadding() 
@@ -239,7 +239,7 @@ namespace com.google.finance
 			this.updateInfoText();
 		}
 
-		private setSinglePointInfo(param1: { [key: string]: any }) 
+		private setSinglePointInfo(param1: Dictionary) 
 		{
 			const _loc2_ = param1[SpaceText.POINT_STR];
 			switch (param1["extraText"])
@@ -282,7 +282,7 @@ namespace com.google.finance
 			this.updateInfoText();
 		}
 
-		private onMouseRollOverInfoText(param1: MouseEvent) 
+		private onMouseRollOverInfoText(mouseEvent: MouseEvent) 
 		{
 			this.startDate.setHighlighted(true);
 			this.endDate.setHighlighted(true);
@@ -296,9 +296,9 @@ namespace com.google.finance
 			return param1.toFixed(3);
 		}
 
-		private onKeyDown(param1: KeyboardEvent) 
+		private onKeyDown(keyboardEvent: KeyboardEvent) 
 		{
-			switch (param1.charCode)
+			switch (keyboardEvent.charCode)
 			{
 				case 27:
 					this.resetInfoText();
@@ -309,15 +309,15 @@ namespace com.google.finance
 			}
 		}
 
-		private registerDateTextFieldListeners(param1: com.google.finance.DateTextField) 
+		private registerDateTextFieldListeners(dateTextField: com.google.finance.DateTextField) 
 		{
 			if (Const.ENABLE_CUSTOM_DATE_ENTRY !== "true")
 				return;
 
-			param1.addEventListener(MouseEvents.ROLL_OVER, flash.display.Stage.bind(this.onMouseRollOverInfoText, this));
-			param1.addEventListener(MouseEvents.ROLL_OUT, flash.display.Stage.bind(this.onMouseRollOutInfoText, this));
-			param1.addEventListener(MouseEvents.CLICK, flash.display.Stage.bind(this.onMouseClickDateField, this));
-			param1.addEventListener(KeyboardEvents.KEY_DOWN, flash.display.Stage.bind(this.onKeyDown, this));
+			dateTextField.addEventListener(MouseEvents.ROLL_OVER, flash.display.Stage.bind(this.onMouseRollOverInfoText, this));
+			dateTextField.addEventListener(MouseEvents.ROLL_OUT, flash.display.Stage.bind(this.onMouseRollOutInfoText, this));
+			dateTextField.addEventListener(MouseEvents.CLICK, flash.display.Stage.bind(this.onMouseClickDateField, this));
+			dateTextField.addEventListener(KeyboardEvents.KEY_DOWN, flash.display.Stage.bind(this.onKeyDown, this));
 		}
 
 		private positionInfoText(param1 = true) 
@@ -350,7 +350,7 @@ namespace com.google.finance
 			}
 		}
 
-		private onMouseRollOutInfoText(param1: MouseEvent) 
+		private onMouseRollOutInfoText(mouseEvent: MouseEvent) 
 		{
 			if (this.dateEntryState === SpaceText.EDIT_DATES)
 				return;
@@ -367,9 +367,9 @@ namespace com.google.finance
 			else if (Const.INFO_TEXT_ALIGN === "left")
 				_loc1_ = SpaceText.LEFT_PADDING + SpaceText.INFO_DOT_PADDING;
 
-			for (let _loc2_ = 0; _loc2_ < this.infoDots.length; _loc2_++)
+			for (let infoDotIndex = 0; infoDotIndex < this.infoDots.length; infoDotIndex++)
 			{
-				const _loc3_ = this.infoDots[_loc2_];
+				const _loc3_ = this.infoDots[infoDotIndex];
 				_loc3_.y = Const.SPACE_HEIGHT - SpaceText.TEXT_HEIGHT / 2 + 3 + Const.INFO_TEXT_TOP_PADDING;
 				if (Const.INFO_TEXT_ALIGN === "right")
 				{
@@ -384,13 +384,13 @@ namespace com.google.finance
 			}
 		}
 
-		private getSinglePointDateFormat(param1: DataUnit): string
+		private getSinglePointDateFormat(dataUnit: DataUnit): string
 		{
 			let _loc2_ = "MMM dd, yyyy";
 			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
 				_loc2_ = "yyyy年M月d日";
 
-			if (param1.dayMinute !== Const.MARKET_CLOSE_MINUTE)
+			if (dataUnit.dayMinute !== Const.MARKET_CLOSE_MINUTE)
 				_loc2_ = _loc2_ + " HH:mm";
 
 			return _loc2_;
@@ -425,9 +425,9 @@ namespace com.google.finance
 			else
 			{
 				this.infoText.text = this.datesText;
-				for (let _loc2_ = 0; _loc2_ < this.datesTextFormats.length; _loc2_++)
+				for (let formatIndex = 0; formatIndex < this.datesTextFormats.length; formatIndex++)
 				{
-					const _loc3_ = this.datesTextFormats[_loc2_];
+					const _loc3_ = this.datesTextFormats[formatIndex];
 					this.infoText.setTextFormat(_loc3_.format, _loc3_.start, _loc3_.end);
 				}
 				this.changeText.text = "";
@@ -437,12 +437,12 @@ namespace com.google.finance
 			this.positionInfoText(false);
 		}
 
-		isDateFieldClicked(param1: MouseEvent): boolean
+		isDateFieldClicked(mouseEvent: MouseEvent): boolean
 		{
-			return param1.target === this.startDate.element || param1.target === this.endDate.element;
+			return mouseEvent.target === this.startDate.element || mouseEvent.target === this.endDate.element;
 		}
 
-		private setComparisonInfo(param1: { [key: string]: any }) 
+		private setComparisonInfo(param1: Dictionary) 
 		{
 			const _loc2_ = param1[SpaceText.POINTS_STR];
 			this.returnText = "";
@@ -458,7 +458,7 @@ namespace com.google.finance
 			this.positionComparisonInfoDots();
 		}
 
-		private onMouseClickDateField(param1: MouseEvent) 
+		private onMouseClickDateField(mouseEvent: MouseEvent) 
 		{
 			if (this.dateEntryState === SpaceText.EDIT_DATES)
 				return;
@@ -468,11 +468,11 @@ namespace com.google.finance
 			this.endDate.type = flash.text.TextFieldType.INPUT;
 			this.endDate.displayDateInParseableFormat();
 			//param1.target.setSelection(0, 10);	// TODO
-			(<HTMLInputElement>param1.target).setSelectionRange(0, 10);
+			(<HTMLInputElement>mouseEvent.target).setSelectionRange(0, 10);
 			this.positionInfoText();
 		}
 
-		setContextualStaticInfo(param1: { [key: string]: any }) 
+		setContextualStaticInfo(param1: Dictionary) 
 		{
 			if (!param1[SpaceText.SETTER_STR])
 				return;
@@ -507,30 +507,30 @@ namespace com.google.finance
 			this.updateInfoText();
 		}
 
-		private getReturnText(param1: DataUnit | null, param2: DataUnit | null, param3: DataSource | null): string
+		private getReturnText(unit1: DataUnit | null, unit2: DataUnit | null, unit3: DataSource | null): string
 		{
-			if (!param1 || !param2)
+			if (!unit1 || !unit2)
 				return "";
 
-			let _loc4_ = "";
-			let _loc5_ = param2.close - param1.close;
-			const _loc6_ = Math.round(_loc5_ / param1.close * 10000) / 100;
-			if (_loc5_ > 0)
-				_loc4_ = _loc4_ + "+";
+			let text = "";
+			let rise = unit2.close - unit1.close;
+			const _loc6_ = Math.round(rise / unit1.close * 10000) / 100;
+			if (rise > 0)
+				text = text + "+";
 
-			if (param3 && param3.tickerName && param3.tickerName.indexOf("CURRENCY:") === 0)
-				_loc5_ = Math.round(_loc5_ * 100000) / 100000;
+			if (unit3 && unit3.tickerName && unit3.tickerName.indexOf("CURRENCY:") === 0)
+				rise = Math.round(rise * 100000) / 100000;
 			else
-				_loc5_ = Math.round(_loc5_ * 100) / 100;
+				rise = Math.round(rise * 100) / 100;
 
-			_loc4_ = _loc4_ + (_loc5_ + " (" + _loc6_ + "%)");
-			return _loc4_;
+			text = text + (rise + " (" + _loc6_ + "%)");
+			return text;
 		}
 
-		setTimePeriod(param1: IDataUnitContainer) 
+		setTimePeriod(dataUnitContainer: IDataUnitContainer) 
 		{
-			let firstDataUnit = param1.getFirstDataUnit();
-			let lastDataUnit = param1.getLastDataUnit();
+			let firstDataUnit = dataUnitContainer.getFirstDataUnit();
+			let lastDataUnit = dataUnitContainer.getLastDataUnit();
 			if (!firstDataUnit || !lastDataUnit)
 				return;
 

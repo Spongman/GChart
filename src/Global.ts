@@ -1,4 +1,6 @@
 ﻿
+type Dictionary = { [key: string]: any };
+
 interface Date
 {
 	dateUTC: number;
@@ -15,7 +17,7 @@ function addGetter<T extends Function>(type: T, name: string, getter: { (): any 
 	Object.defineProperty(type.prototype, name, {
 		get: getter,
 		enumerable: true,
-		configurable: true
+		configurable: true,
 	});
 }
 
@@ -74,11 +76,11 @@ module SecurityErrorEvents
 
 function cssColor(n: number, alpha = 1): string
 {
-	let s = Math.floor(n).toString(16);
+	const s = Math.floor(n).toString(16);
 	if (alpha >= 1)
 		return "#" + "000000".substr(s.length) + s;
 
-	let a = Math.floor(alpha * 255).toString(16);
+	const a = Math.floor(alpha * 255).toString(16);
 	return "#" + "00".substr(a.length) + "000000".substr(s.length) + s;
 }
 
@@ -92,8 +94,8 @@ function getDefinitionByName(name: string): Function
 {
 	let container: any = window;
 	let parts = name.split(".");
-	for (let i = 0; i < parts.length; i++)
-		container = container[parts[i]];
+	for (const part of parts)
+		container = container[part];
 	return container;
 }
 
@@ -111,7 +113,6 @@ function getTimer()
 	return Date.now();
 }
 
-
 function notnull<T>(value: T | null): T
 {
 	if (!value)
@@ -123,16 +124,16 @@ if (!Function.prototype.bind)
 {
 	Function.prototype.bind = function (oThis)
 	{
-		let aArgs = Array.prototype.slice.call(arguments, 1),
-			fToBind = this,
-			fNOP = function () { },
-			fBound = function ()
-			{
-				return fToBind.apply(this instanceof fNOP
-					? this
-					: oThis,
-					aArgs.concat(Array.prototype.slice.call(arguments)));
-			};
+		const aArgs = Array.prototype.slice.call(arguments, 1);
+		const fToBind = this;
+		const fNOP = () => { };
+		const fBound = function ()
+		{
+			return fToBind.apply(this instanceof fNOP
+				? this
+				: oThis,
+				aArgs.concat(Array.prototype.slice.call(arguments)));
+		};
 
 		if (this.prototype)
 		{
@@ -147,13 +148,13 @@ if (!Function.prototype.bind)
 
 function parseQueryString(str: string)
 {
-	var result: { [_: string]: string } = {};
-	var pairs = str.split("&");
-	for (var i = 0; i < pairs.length; i++)
+	const result: { [_: string]: string } = {};
+	const pairs = str.split("&");
+	for (const pair of pairs)
 	{
-		var p = pairs[i].split('=');
-		var key = decodeURIComponent(p[0]);
-		var value = decodeURIComponent(p[1]);
+		const p = pair.split("=");
+		const key = decodeURIComponent(p[0]);
+		const value = decodeURIComponent(p[1]);
 		result[key] = value;
 		//console.log("  " + key + " = " + value);
 	}
@@ -162,14 +163,15 @@ function parseQueryString(str: string)
 
 function offsetOf(elt: HTMLElement)
 {
-	var curleft = 0,
-		curtop = 0;
+	let curleft = 0;
+	let curtop = 0;
 
 	do
 	{
 		curleft += elt.offsetLeft;
 		curtop += elt.offsetTop;
-	} while (elt = elt.offsetParent as HTMLElement);
+		elt = elt.offsetParent as HTMLElement;
+	} while (elt);
 
 	return { left: curleft, top: curtop };
 }

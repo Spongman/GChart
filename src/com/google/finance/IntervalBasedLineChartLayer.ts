@@ -2,7 +2,7 @@ namespace com.google.finance
 {
 	export class IntervalBasedLineChartLayer extends IntervalBasedChartLayer
 	{
-		private drawLine(param1: number, context: Context, param3: DataUnit[], param4: number, param5: number, param6: number, param7: number): number
+		private drawLine(param1: number, context: Context, dataUnit: DataUnit[], param4: number, param5: number, param6: number, param7: number): number
 		{
 			let _loc8_ = NaN;
 			const gr = this.graphics;
@@ -12,8 +12,8 @@ namespace com.google.finance
 				case Intervals.WEEKLY:
 					if (isNaN(param7))
 					{
-						const _loc8_ = this.viewPoint.getXPos(param3[param5]);
-						const closeYPos = this.getCloseYPos(context, param3[param5]);
+						const _loc8_ = this.viewPoint.getXPos(dataUnit[param5]);
+						const closeYPos = this.getCloseYPos(context, dataUnit[param5]);
 						param5--;
 						gr.moveTo(_loc8_, this.viewPoint.maxy);
 						gr.lineStyle(0, 0, 0);
@@ -21,7 +21,7 @@ namespace com.google.finance
 					}
 					else
 					{
-						while (param5 >= param4 && this.viewPoint.getXPos(param3[param5]) >= param6)
+						while (param5 >= param4 && this.viewPoint.getXPos(dataUnit[param5]) >= param6)
 							param5--;
 
 						if (param5 < param4)
@@ -34,21 +34,21 @@ namespace com.google.finance
 					gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
 					for (let _loc13_ = param5; _loc13_ >= param4; _loc13_--)
 					{
-						_loc8_ = this.viewPoint.getXPos(param3[_loc13_]);
-						const closeYPos = this.getCloseYPos(context, param3[_loc13_]);
+						_loc8_ = this.viewPoint.getXPos(dataUnit[_loc13_]);
+						const closeYPos = this.getCloseYPos(context, dataUnit[_loc13_]);
 						gr.lineTo(_loc8_, closeYPos);
 					}
 					return _loc8_;
 				case Intervals.INTRADAY:
 				case Intervals.FIVE_MINUTES:
 				case Intervals.HALF_HOUR:
-					while (param5 >= param4 && this.viewPoint.getXPos(param3[param5]) >= param6)
+					while (param5 >= param4 && this.viewPoint.getXPos(dataUnit[param5]) >= param6)
 						param5--;
 
 					if (param5 < param4)
 						return param6;
 
-					_loc8_ = this.viewPoint.getXPos(param3[param5]);
+					_loc8_ = this.viewPoint.getXPos(dataUnit[param5]);
 					gr.moveTo(_loc8_, this.viewPoint.maxy);
 					let _loc10_ = param5;
 					const _loc11_ = this.dataSource.visibleExtendedHours.length() === 0;
@@ -56,17 +56,17 @@ namespace com.google.finance
 					while (_loc10_ > param4)
 					{
 						gr.lineStyle(0, 0, 0);
-						_loc8_ = this.viewPoint.getXPos(param3[_loc10_]);
-						const closeYPos = this.getCloseYPos(context, param3[_loc10_]);
+						_loc8_ = this.viewPoint.getXPos(dataUnit[_loc10_]);
+						const closeYPos = this.getCloseYPos(context, dataUnit[_loc10_]);
 						gr.lineTo(_loc8_, this.viewPoint.maxy);
 						gr.lineTo(_loc8_, closeYPos);
 						const _loc14_ = notnull(this.getDataSeries());
 						gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
-						while (_loc10_ > param4 && param3[_loc10_].dayMinute !== _loc14_.marketOpenMinute)
+						while (_loc10_ > param4 && dataUnit[_loc10_].dayMinute !== _loc14_.marketOpenMinute)
 						{
 							_loc10_--;
-							_loc8_ = this.viewPoint.getXPos(param3[_loc10_]);
-							const closeYPos = this.getCloseYPos(context, param3[_loc10_]);
+							_loc8_ = this.viewPoint.getXPos(dataUnit[_loc10_]);
+							const closeYPos = this.getCloseYPos(context, dataUnit[_loc10_]);
 							gr.lineTo(_loc8_, closeYPos);
 						}
 						gr.lineStyle(0, 0, 0);
@@ -74,11 +74,11 @@ namespace com.google.finance
 						_loc10_--;
 						if (_loc11_ && _loc10_ > param4)
 						{
-							const _loc15_ = param3[_loc10_].relativeMinutes;
-							const _loc16_ = param3[_loc10_ + 1].relativeMinutes;
+							const _loc15_ = dataUnit[_loc10_].relativeMinutes;
+							const _loc16_ = dataUnit[_loc10_ + 1].relativeMinutes;
 							if (_loc16_ > _loc15_ + marketDayLength)
 							{
-								const closeYPos = this.getCloseYPos(context, param3[_loc10_]);
+								const closeYPos = this.getCloseYPos(context, dataUnit[_loc10_]);
 								_loc8_ = this.viewPoint.getMinuteXPos(_loc16_ - 1);
 								gr.lineTo(_loc8_, this.viewPoint.maxy);
 								gr.lineTo(_loc8_, closeYPos);
@@ -90,13 +90,13 @@ namespace com.google.finance
 							}
 						}
 					}
-					return this.viewPoint.getXPos(param3[param4]);
+					return this.viewPoint.getXPos(dataUnit[param4]);
 				default:
 					return -1;
 			}
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			if (!this.isEnabled())
 				return;

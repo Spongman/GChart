@@ -4,51 +4,51 @@ namespace com.google.finance
 {
 	export class CandleStickChartLayer extends IntervalBasedBarChartLayer
 	{
-		protected drawBarAtDataUnit(context: Context, dataUnits: DataUnit[], param3: number) 
+		protected drawBarAtDataUnit(context: Context, dataUnits: DataUnit[], param3: number)
 		{
-			let _loc9_ = false;
-			const _loc4_ = dataUnits[param3];
-			const _loc5_ = !isNaN(_loc4_.weeklyXPos) ? _loc4_.weeklyXPos : this.viewPoint.getXPos(_loc4_);
-			const ohlcYPos = this.getOhlcYPos(context, _loc4_);
+			const unit = dataUnits[param3];
+			if (unit.fake)
+				return;
+
+			const xPos = !isNaN(unit.weeklyXPos) ? unit.weeklyXPos : this.viewPoint.getXPos(unit);
+			const ohlcYPos = this.getOhlcYPos(context, unit);
 			//const _loc7_ = Math.abs(_loc6_.closeY - _loc6_.openY);
-			const candleStickColor = this.getCandleStickColor(_loc4_);
 			const gr = this.graphics;
+			const candleStickColor = this.getCandleStickColor(unit);
 			gr.lineStyle(1, candleStickColor);
-			if (!_loc4_.fake)
+
+			let _loc9_ = unit.close >= unit.open;
+			if (Math.abs(ohlcYPos.closeY - ohlcYPos.openY) <= 1)
 			{
-				_loc9_ = _loc4_.close >= _loc4_.open;
-				if (Math.abs(ohlcYPos.closeY - ohlcYPos.openY) <= 1)
+				const top = (ohlcYPos.closeY + ohlcYPos.openY) / 2;
+				if (this.barWidth === 0)
 				{
-					const _loc10_ = (ohlcYPos.closeY + ohlcYPos.openY) / 2;
-					if (this.barWidth === 0)
-					{
-						gr.moveTo(_loc5_, _loc10_ - 0.5);
-						gr.lineTo(_loc5_, _loc10_ + 0.5);
-					}
-					else
-					{
-						gr.moveTo(_loc5_ - this.barWidth / 2, _loc10_);
-						gr.lineTo(_loc5_ + this.barWidth / 2, _loc10_);
-					}
+					gr.moveTo(xPos, top - 0.5);
+					gr.lineTo(xPos, top + 0.5);
 				}
 				else
 				{
-					gr.moveTo(_loc5_ - this.barWidth / 2, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
-					if (!_loc9_)
-						gr.beginFill(candleStickColor);
-
-					gr.lineTo(_loc5_ + this.barWidth / 2, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
-					gr.lineTo(_loc5_ + this.barWidth / 2, !!_loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
-					gr.lineTo(_loc5_ - this.barWidth / 2, !!_loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
-					gr.lineTo(_loc5_ - this.barWidth / 2, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
-					if (!_loc9_)
-						gr.endFill();
+					gr.moveTo(xPos - this.barWidth / 2, top);
+					gr.lineTo(xPos + this.barWidth / 2, top);
 				}
-				gr.moveTo(_loc5_, ohlcYPos.lowY);
-				gr.lineTo(_loc5_, !!_loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
-				gr.moveTo(_loc5_, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
-				gr.lineTo(_loc5_, ohlcYPos.highY);
 			}
+			else
+			{
+				gr.moveTo(xPos - this.barWidth / 2, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
+				if (!_loc9_)
+					gr.beginFill(candleStickColor);
+
+				gr.lineTo(xPos + this.barWidth / 2, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
+				gr.lineTo(xPos + this.barWidth / 2, !!_loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
+				gr.lineTo(xPos - this.barWidth / 2, !!_loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
+				gr.lineTo(xPos - this.barWidth / 2, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
+				if (!_loc9_)
+					gr.endFill();
+			}
+			gr.moveTo(xPos, ohlcYPos.lowY);
+			gr.lineTo(xPos, !!_loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
+			gr.moveTo(xPos, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
+			gr.lineTo(xPos, ohlcYPos.highY);
 		}
 	}
 }

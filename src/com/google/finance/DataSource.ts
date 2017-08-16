@@ -21,8 +21,6 @@ namespace com.google.finance
 
 	export class DataSource
 	{
-
-		
 		private static readonly COLUMNS_STR = "COLUMNS";
 		private static readonly INTERVAL_STR = "INTERVAL";
 		private static readonly MARKET_CLOSE_MINUTE_STR = "MARKET_CLOSE_MINUTE";
@@ -51,7 +49,7 @@ namespace com.google.finance
 		private timezoneOffset: number;
 
 		private readonly events: { [key: string]: ChartEventPriorities } = {};
-		
+
 		visibleExtendedHours = new com.google.finance.IntervalSet();
 		readonly objects: { [key: string]: StockAssociatedObject[] } = {};
 		readonly data = new com.google.finance.DataSeries();
@@ -96,7 +94,6 @@ namespace com.google.finance
 
 		static getMinuteMetaIndex(param1: number, param2: number[], dataUnits: DataUnit[]): number
 		{
-			let _loc6_ = 0;
 			if (isNaN(param1) || !dataUnits || dataUnits.length === 0 || param2.length === 0)
 				return -1;
 
@@ -104,7 +101,7 @@ namespace com.google.finance
 			let _loc5_ = param2.length - 1;
 			while (true)
 			{
-				_loc6_ = Math.round((_loc4_ + _loc5_) / 2);
+				const _loc6_ = Math.round((_loc4_ + _loc5_) / 2);
 				if (_loc6_ === 0 && dataUnits[param2[0]].relativeMinutes > param1)
 					break;
 
@@ -156,15 +153,15 @@ namespace com.google.finance
 			return 0;
 		}
 
-		computeStarts(param1: com.google.finance.DataSeries) 
+		computeStarts(dataSeries: com.google.finance.DataSeries)
 		{
 			let _loc3_ = -1;
-			param1.years.length = 0;
-			param1.firsts.length = 0;
-			param1.fridays.length = 0;
-			param1.days.length = 0;
-			const units = param1.units;
-			let session = notnull(param1.getSessionForMinute(units[0].dayMinute));
+			dataSeries.years.length = 0;
+			dataSeries.firsts.length = 0;
+			dataSeries.fridays.length = 0;
+			dataSeries.days.length = 0;
+			const units = dataSeries.units;
+			let session = notnull(dataSeries.getSessionForMinute(units[0].dayMinute));
 			const lastDayOfWeek = Utils.getLastDayOfWeek(this.weekdayBitmap);
 			for (let unitIndex = 0; unitIndex < units.length; unitIndex++)
 			{
@@ -174,13 +171,13 @@ namespace com.google.finance
 				{
 					if (DataSource.unitsInDifferentDays(_loc8_, _loc9_))
 					{
-						param1.days.push(unitIndex);
+						dataSeries.days.push(unitIndex);
 						if (_loc8_.exchangeDateInUTC.getUTCMonth() !== _loc3_)
 						{
-							param1.firsts.push(unitIndex);
+							dataSeries.firsts.push(unitIndex);
 							_loc3_ = _loc8_.exchangeDateInUTC.getUTCMonth();
 							if (_loc3_ === 0)
-								param1.years.push(unitIndex);
+								dataSeries.years.push(unitIndex);
 						}
 						const day = _loc8_.exchangeDateInUTC.getUTCDay();
 						let _loc11_ = Number.POSITIVE_INFINITY;
@@ -188,25 +185,25 @@ namespace com.google.finance
 							_loc11_ = _loc9_.exchangeDateInUTC.getUTCDay();
 
 						if (day === lastDayOfWeek || _loc8_.coveredDays > 1 || unitIndex < units.length - 1 && day > _loc11_)
-							param1.fridays.push(unitIndex);
+							dataSeries.fridays.push(unitIndex);
 					}
 					if (_loc9_)
-						session = notnull(param1.getSessionForMinute(_loc9_.dayMinute));
+						session = notnull(dataSeries.getSessionForMinute(_loc9_.dayMinute));
 				}
 			}
 		}
 
-		addStream(param1: string, param2: ChartEvent): AddStreamResults
+		addStream(param1: string, chartEvent: ChartEvent): AddStreamResults
 		{
 			const _loc3_ = this.data.points.length !== 0;
-			this.clearAllIndicatorsOnAddData(Number(param2.interval));
+			this.clearAllIndicatorsOnAddData(Number(chartEvent.interval));
 			this.clearCoalescedChildren();
 			if (param1.indexOf(DataSource.EXCHANGE_STR) !== 0)
 				return AddStreamResults.ERROR;
 
 			const _loc4_ = param1.split("\n");
 			let data = this.data;
-			switch (param2.type)
+			switch (chartEvent.type)
 			{
 				case ChartEventTypes.GET_AH_DATA:
 				case ChartEventTypes.GET_RT_AH_DATA:
@@ -214,20 +211,20 @@ namespace com.google.finance
 					break;
 			}
 
-			const _loc6_ = this.parseHeader(_loc4_, param2);
+			const _loc6_ = this.parseHeader(_loc4_, chartEvent);
 			if (!_loc6_)
 				return AddStreamResults.ERROR;
 
 			this.checkHeaderSanity(_loc6_, data);
 			const _loc7_ = Utils.assocArrayLength(_loc6_) + 1;
 			this.baseInterval = Number(_loc6_[DataSource.INTERVAL_STR]);
-			if (param2.detailType !== ChartEventStyles.GET_RT_DATA && param2.detailType !== ChartEventStyles.GET_RT_AH_DATA)
+			if (chartEvent.detailType !== ChartEventStyles.GET_RT_DATA && chartEvent.detailType !== ChartEventStyles.GET_RT_AH_DATA)
 			{
 				const _loc15_ = _loc6_[DataSource.COLUMNS_STR].split(",");
 				if (_loc15_.indexOf(this.columnNames[ColumnTypes.COL_OPEN_TYPE]) !== -1 && _loc15_.indexOf(this.columnNames[ColumnTypes.COL_HIGH_TYPE]) !== -1 && _loc15_.indexOf(this.columnNames[ColumnTypes.COL_LOW_TYPE]) !== -1)
-					this.eventOhlcDone(param2.getEventName());
+					this.eventOhlcDone(chartEvent.getEventName());
 				else
-					this.eventDone(param2.getEventName());
+					this.eventDone(chartEvent.getEventName());
 			}
 			const units = data.units;
 			const _loc9_ = this.parseStream(_loc4_.slice(_loc7_), _loc6_, data);
@@ -244,7 +241,7 @@ namespace com.google.finance
 			let _loc11_ = false;
 			if (Const.INDICATOR_ENABLED)
 			{
-				switch (param2.detailType)
+				switch (chartEvent.detailType)
 				{
 					case ChartEventStyles.GET_10D_DATA:
 					case ChartEventStyles.GET_30D_DATA:
@@ -302,10 +299,10 @@ namespace com.google.finance
 			return AddStreamResults.FIRST_DATA;
 		}
 
-		preCalculate(param1: com.google.finance.DataSeries) 
+		preCalculate(dataSeries: com.google.finance.DataSeries)
 		{
-			this.computeStarts(param1);
-			this.computeIntradaySessions(param1);
+			this.computeStarts(dataSeries);
+			this.computeIntradaySessions(dataSeries);
 			this.computeObjectPositions();
 		}
 
@@ -344,44 +341,44 @@ namespace com.google.finance
 			return intervalSet;
 		}
 
-		countEvents(param1: ChartEventPriorities): number
+		countEvents(chartEventPriority: ChartEventPriorities): number
 		{
-			let _loc2_ = 0;
-			for (let _loc3_ in this.events)
+			let count = 0;
+			for (let eventName in this.events)
 			{
-				if (this.events[_loc3_] === param1)
-					_loc2_++;
+				if (this.events[eventName] === chartEventPriority)
+					count++;
 			}
-			return _loc2_;
+			return count;
 		}
 
 		private getColumnTypes(param1: string): ColumnTypes[]
 		{
-			const _loc2_: ColumnTypes[] = [];
+			const columnTypes: ColumnTypes[] = [];
 			const columnNames = param1.split(",");
 			for (let columnNameIndex1 = 0; columnNameIndex1 < columnNames.length; columnNameIndex1++)
 			{
 				for (let columnNameIndex2 = 0; columnNameIndex2 < this.columnNames.length; columnNameIndex2++)
 				{
 					if (columnNames[columnNameIndex1] === this.columnNames[columnNameIndex2])
-						_loc2_[columnNameIndex1] = columnNameIndex2 + 1;
+						columnTypes[columnNameIndex1] = columnNameIndex2 + 1;
 				}
 			}
-			return _loc2_;
+			return columnTypes;
 		}
 
-		eventOhlcDone(param1: string) 
+		eventOhlcDone(param1: string)
 		{
 			this.events[param1] = ChartEventPriorities.OHLC_DONE;
 		}
 
-		hasEventHappened(param1: ChartEvent): boolean
+		hasEventHappened(chartEvent: ChartEvent): boolean
 		{
-			const eventName = param1.getEventName();
+			const eventName = chartEvent.getEventName();
 			return !!this.events[eventName];
 		}
 
-		parseStream(param1: string[], param2: { [key: string]: string }, param3: com.google.finance.DataSeries): DataUnit[]
+		parseStream(param1: string[], param2: { [key: string]: string }, dataSeries: com.google.finance.DataSeries): DataUnit[]
 		{
 			let _loc20_ = 0;
 			let _loc4_ = 0;
@@ -391,7 +388,7 @@ namespace com.google.finance
 				return [];
 
 			const columnTypes = this.getColumnTypes(param2[DataSource.COLUMNS_STR]);
-			const _loc6_: DataUnit[] = [];
+			const dataUnits: DataUnit[] = [];
 			let _loc7_ = 0;
 			this.timezoneOffset = 0;
 			this.lastAbsTime = 0;
@@ -414,7 +411,7 @@ namespace com.google.finance
 					if (!(_loc15_.length !== columnTypes.length || _loc15_[0].charAt(0) === "&"))
 					{
 						const dataUnit = this.getDataUnitNoValidation(_loc15_, columnTypes, param2);
-						dataUnit.duplicate = param3.minuteIsStartOfDataSession(dataUnit.dayMinute);
+						dataUnit.duplicate = dataSeries.minuteIsStartOfDataSession(dataUnit.dayMinute);
 						if (Const.INDICATOR_ENABLED && !isNaN(dataUnit.open))
 						{
 							if (dataUnit.open === 0)
@@ -425,17 +422,17 @@ namespace com.google.finance
 							if (dataUnit.low === 0 || dataUnit.low > _loc18_)
 								dataUnit.low = _loc18_;
 						}
-						if (_loc6_.length === 0)
+						if (dataUnits.length === 0)
 						{
-							_loc12_ = notnull(param3.getSessionForMinute(dataUnit.dayMinute));
+							_loc12_ = notnull(dataSeries.getSessionForMinute(dataUnit.dayMinute));
 							_loc13_ = 0;
 						}
-						if (this.baseInterval < Const.DAILY_INTERVAL && _loc6_.length > 0)
+						if (this.baseInterval < Const.DAILY_INTERVAL && dataUnits.length > 0)
 						{
-							const _loc19_ = (dataUnit.time - _loc6_[_loc6_.length - 1].time) / Const.MS_PER_MINUTE;
+							const _loc19_ = (dataUnit.time - dataUnits[dataUnits.length - 1].time) / Const.MS_PER_MINUTE;
 							if (_loc19_ > this.baseMinutesInterval && _loc19_ - (notnull(_loc12_).end - _loc4_) > this.allowedOffset && _loc13_ > 0)
 							{
-								const session = notnull(param3.getSessionForMinute(dataUnit.dayMinute));
+								const session = notnull(dataSeries.getSessionForMinute(dataUnit.dayMinute));
 								if (dataUnit.dayMinute >= session.start)
 								{
 									_loc10_ = _loc12_;
@@ -461,7 +458,7 @@ namespace com.google.finance
 							}
 							if (this.baseInterval < Const.DAILY_INTERVAL && dataUnit.dayMinute > notnull(_loc12_).end)
 							{
-								this.addAfterHoursUnitToLastMinute(dataUnit, _loc6_, notnull(_loc12_), param3);
+								this.addAfterHoursUnitToLastMinute(dataUnit, dataUnits, notnull(_loc12_), dataSeries);
 								_loc13_++;
 								_loc4_ = notnull(_loc12_).end;
 							}
@@ -470,17 +467,17 @@ namespace com.google.finance
 								let interval = Number(param2[DataSource.INTERVAL_STR]);
 								if (dataUnit.volumes[interval] >= 0)
 								{
-									if (this.quoteType === QuoteTypes.COMPANY && _loc6_.length > 0)
+									if (this.quoteType === QuoteTypes.COMPANY && dataUnits.length > 0)
 									{
-										if (!this.isTradeHaltedInterday(dataUnit, _loc6_[_loc6_.length - 1], this.baseInterval))
+										if (!this.isTradeHaltedInterday(dataUnit, dataUnits[dataUnits.length - 1], this.baseInterval))
 										{
 										}
 									}
-									if (!(_loc6_.length > 0 && dataUnit.time === _loc6_[_loc6_.length - 1].time))
+									if (!(dataUnits.length > 0 && dataUnit.time === dataUnits[dataUnits.length - 1].time))
 									{
-										this.regularSanityCheck(_loc6_, dataUnit, _loc10_, notnull(_loc12_), _loc4_, param3);
+										this.regularSanityCheck(dataUnits, dataUnit, _loc10_, notnull(_loc12_), _loc4_, dataSeries);
 										_loc13_++;
-										_loc6_.push(dataUnit);
+										dataUnits.push(dataUnit);
 										_loc4_ = dataUnit.dayMinute;
 									}
 								}
@@ -491,20 +488,20 @@ namespace com.google.finance
 			}
 			while (_loc7_ < param1.length);
 
-			if (_loc6_.length !== 0 && _loc12_ && Number(param2[DataSource.INTERVAL_STR]) < Const.DAILY_INTERVAL && _loc4_ !== _loc12_.end)
+			if (dataUnits.length !== 0 && _loc12_ && Number(param2[DataSource.INTERVAL_STR]) < Const.DAILY_INTERVAL && _loc4_ !== _loc12_.end)
 			{
 				_loc20_ = (_loc12_.end - _loc4_) / this.baseMinutesInterval;
-				this.addFakeDataUnits(_loc6_, _loc6_[_loc6_.length - 1], param3, _loc20_, Directions.FORWARD);
+				this.addFakeDataUnits(dataUnits, dataUnits[dataUnits.length - 1], dataSeries, _loc20_, Directions.FORWARD);
 				_loc4_ = _loc12_.end;
 			}
 
-			if (_loc6_.length !== 0 && _loc12_ && Number(param2[DataSource.INTERVAL_STR]) < Const.DAILY_INTERVAL && _loc4_ !== param3.marketCloseMinute)
-				this.addFakeDataUnitsForSessions(_loc6_, _loc6_[_loc6_.length - 1], param3, param3.getSessionIndex(_loc4_) + 1, param3.dataSessions.length(), Directions.FORWARD);
+			if (dataUnits.length !== 0 && _loc12_ && Number(param2[DataSource.INTERVAL_STR]) < Const.DAILY_INTERVAL && _loc4_ !== dataSeries.marketCloseMinute)
+				this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], dataSeries, dataSeries.getSessionIndex(_loc4_) + 1, dataSeries.dataSessions.length(), Directions.FORWARD);
 
-			return _loc6_;
+			return dataUnits;
 		}
 
-		sortObjects(param1: string) 
+		sortObjects(param1: string)
 		{
 			if (!param1)
 				param1 = "newspin";
@@ -512,17 +509,16 @@ namespace com.google.finance
 			this.objects[param1].sort(StockAssociatedObject.compare);
 		}
 
-		private addFakeDataUnitsForSessions(dataUnits: DataUnit[], dataUnit: DataUnit, param3: com.google.finance.DataSeries, param4: number, param5: number, param6: number) 
+		private addFakeDataUnitsForSessions(dataUnits: DataUnit[], dataUnit: DataUnit, dataSeries: com.google.finance.DataSeries, param4: number, param5: number, param6: number)
 		{
-			let _loc9_ = 0;
 			let _loc10_ = 0;
-			if (param3 !== this.data)
+			if (dataSeries !== this.data)
 				return;
 
 			for (let _loc7_ = param4; _loc7_ < param5; _loc7_++)
 			{
-				const interval = param3.dataSessions.getIntervalAt(_loc7_);
-				_loc9_ = Math.floor((interval.end - interval.start) / this.baseMinutesInterval) + 1;
+				const interval = dataSeries.dataSessions.getIntervalAt(_loc7_);
+				const _loc9_ = Math.floor((interval.end - interval.start) / this.baseMinutesInterval) + 1;
 				switch (param6)
 				{
 					case Directions.BACKWARD:
@@ -532,11 +528,11 @@ namespace com.google.finance
 						_loc10_ = interval.start - dataUnit.dayMinute - this.baseMinutesInterval;
 						break;
 				}
-				this.addFakeDataUnits(dataUnits, dataUnit, param3, _loc9_, param6, _loc10_);
+				this.addFakeDataUnits(dataUnits, dataUnit, dataSeries, _loc9_, param6, _loc10_);
 			}
 		}
 
-		getFirstRelativeMinute(param1: number): number
+		getFirstRelativeMinute(param1: Intervals): number
 		{
 			const detailLevelInterval = Const.getDetailLevelInterval(param1);
 			const points = this.data.getPointsInIntervalArray(detailLevelInterval);
@@ -548,82 +544,82 @@ namespace com.google.finance
 
 		hasPendingEvents(): boolean
 		{
-			for (let _loc1_ in this.events)
+			for (let eventName in this.events)
 			{
-				if (this.events[_loc1_] !== ChartEventPriorities.DONE && this.events[_loc1_] !== ChartEventPriorities.OHLC_DONE)
+				if (this.events[eventName] !== ChartEventPriorities.DONE && this.events[eventName] !== ChartEventPriorities.OHLC_DONE)
 					return true;
 			}
 			return false;
 		}
 
-		private regularSanityCheck(dataUnits: DataUnit[], dataUnit: DataUnit, param3: StartEndPair|null, param4: StartEndPair, param5: number, param6: com.google.finance.DataSeries) 
+		private regularSanityCheck(dataUnits: DataUnit[], dataUnit: DataUnit, startInterval: StartEndPair|null, endInterval: StartEndPair, param5: number, dataSeries: com.google.finance.DataSeries)
 		{
 			let _loc7_ = 0;
 			if (this.baseInterval < Const.DAILY_INTERVAL)
 			{
-				const sessionIndex = param6.getSessionIndex(param4.start);
-				const _loc9_ = !param3 ? -1 : param6.getSessionIndex(param3.start);
-				if (dataUnit.dayMinute === param4.start)
+				const sessionIndex = dataSeries.getSessionIndex(endInterval.start);
+				const _loc9_ = !startInterval ? -1 : dataSeries.getSessionIndex(startInterval.start);
+				if (dataUnit.dayMinute === endInterval.start)
 				{
-					if (param3 && param5 !== param3.end)
+					if (startInterval && param5 !== startInterval.end)
 					{
-						_loc7_ = Math.floor((param3.end - param5) / this.baseMinutesInterval);
-						this.addFakeDataUnits(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc7_, Directions.FORWARD);
+						_loc7_ = Math.floor((startInterval.end - param5) / this.baseMinutesInterval);
+						this.addFakeDataUnits(dataUnits, dataUnits[dataUnits.length - 1], dataSeries, _loc7_, Directions.FORWARD);
 					}
-					if (!param3)
+					if (!startInterval)
 					{
-						this.addFakeDataUnitsForSessions(dataUnits, dataUnit, param6, 0, sessionIndex, Directions.BACKWARD);
+						this.addFakeDataUnitsForSessions(dataUnits, dataUnit, dataSeries, 0, sessionIndex, Directions.BACKWARD);
 					}
 					else if (!DataSource.unitsInDifferentDays(dataUnits[dataUnits.length - 1], dataUnit))
 					{
-						this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc9_ + 1, sessionIndex, Directions.FORWARD);
+						this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], dataSeries, _loc9_ + 1, sessionIndex, Directions.FORWARD);
 					}
 					else
 					{
-						this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc9_ + 1, param6.dataSessions.length(), Directions.FORWARD);
-						this.addFakeDataUnitsForSessions(dataUnits, dataUnit, param6, 0, sessionIndex, Directions.BACKWARD);
+						this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], dataSeries, _loc9_ + 1, dataSeries.dataSessions.length(), Directions.FORWARD);
+						this.addFakeDataUnitsForSessions(dataUnits, dataUnit, dataSeries, 0, sessionIndex, Directions.BACKWARD);
 					}
 				}
 				else if (dataUnits.length === 0 || dataUnit.time - dataUnits[dataUnits.length - 1].time !== this.baseMinutesInterval * Const.MS_PER_MINUTE)
 				{
 					if (dataUnits.length === 0)
 					{
-						this.addFakeDataUnitsForSessions(dataUnits, dataUnit, param6, 0, sessionIndex, Directions.BACKWARD);
-						if (param6 === this.data || dataUnit.dayMinute !== param4.end)
+						this.addFakeDataUnitsForSessions(dataUnits, dataUnit, dataSeries, 0, sessionIndex, Directions.BACKWARD);
+						if (dataSeries === this.data || dataUnit.dayMinute !== endInterval.end)
 						{
-							_loc7_ = Math.floor((dataUnit.dayMinute - param4.start) / this.baseMinutesInterval);
-							this.addFakeDataUnits(dataUnits, dataUnit, param6, _loc7_, Directions.BACKWARD);
+							_loc7_ = Math.floor((dataUnit.dayMinute - endInterval.start) / this.baseMinutesInterval);
+							this.addFakeDataUnits(dataUnits, dataUnit, dataSeries, _loc7_, Directions.BACKWARD);
 						}
 					}
-					else if (dataUnit.time - dataUnits[dataUnits.length - 1].time <= (dataUnit.dayMinute - param4.start) * Const.MS_PER_MINUTE)
+					else if (dataUnit.time - dataUnits[dataUnits.length - 1].time <= (dataUnit.dayMinute - endInterval.start) * Const.MS_PER_MINUTE)
 					{
 						_loc7_ = Math.floor((dataUnit.dayMinute - param5) / this.baseMinutesInterval) - 1;
-						this.addFakeDataUnits(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc7_, Directions.FORWARD);
+						this.addFakeDataUnits(dataUnits, dataUnits[dataUnits.length - 1], dataSeries, _loc7_, Directions.FORWARD);
 					}
 					else
 					{
-						_loc7_ = Math.floor((notnull(param3).end - param5) / this.baseMinutesInterval);
-						this.addFakeDataUnits(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc7_, Directions.FORWARD);
-						if (!DataSource.unitsInDifferentDays(dataUnits[dataUnits.length - 1], dataUnit) && param6 === this.data)
+						_loc7_ = Math.floor((notnull(startInterval).end - param5) / this.baseMinutesInterval);
+						this.addFakeDataUnits(dataUnits, dataUnits[dataUnits.length - 1], dataSeries, _loc7_, Directions.FORWARD);
+						if (!DataSource.unitsInDifferentDays(dataUnits[dataUnits.length - 1], dataUnit) && dataSeries === this.data)
 						{
-							this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc9_ + 1, sessionIndex, Directions.FORWARD);
-							_loc7_ = Math.floor((dataUnit.dayMinute - param4.start) / this.baseMinutesInterval);
-							const _loc10_ = param4.start - dataUnits[dataUnits.length - 1].dayMinute - this.baseMinutesInterval;
-							this.addFakeDataUnits(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc7_, Directions.FORWARD, _loc10_);
+							this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], dataSeries, _loc9_ + 1, sessionIndex, Directions.FORWARD);
+							_loc7_ = Math.floor((dataUnit.dayMinute - endInterval.start) / this.baseMinutesInterval);
+							const _loc10_ = endInterval.start - dataUnits[dataUnits.length - 1].dayMinute - this.baseMinutesInterval;
+							this.addFakeDataUnits(dataUnits, dataUnits[dataUnits.length - 1], dataSeries, _loc7_, Directions.FORWARD, _loc10_);
 						}
 						else
 						{
-							this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], param6, _loc9_ + 1, param6.dataSessions.length(), Directions.FORWARD);
-							this.addFakeDataUnitsForSessions(dataUnits, dataUnit, param6, 0, sessionIndex, Directions.BACKWARD);
-							_loc7_ = Math.floor((dataUnit.dayMinute - param4.start) / this.baseMinutesInterval);
-							this.addFakeDataUnits(dataUnits, dataUnit, param6, _loc7_, Directions.BACKWARD);
+							this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], dataSeries, _loc9_ + 1, dataSeries.dataSessions.length(), Directions.FORWARD);
+							this.addFakeDataUnitsForSessions(dataUnits, dataUnit, dataSeries, 0, sessionIndex, Directions.BACKWARD);
+							_loc7_ = Math.floor((dataUnit.dayMinute - endInterval.start) / this.baseMinutesInterval);
+							this.addFakeDataUnits(dataUnits, dataUnit, dataSeries, _loc7_, Directions.BACKWARD);
 						}
 					}
 				}
 			}
-			else if ((this.baseInterval === Const.DAILY_INTERVAL || this.baseInterval === Const.WEEKLY_INTERVAL) && dataUnit.dayMinute !== param6.marketCloseMinute)
+			else if ((this.baseInterval === Const.DAILY_INTERVAL || this.baseInterval === Const.WEEKLY_INTERVAL) && dataUnit.dayMinute !== dataSeries.marketCloseMinute)
 			{
-				let _loc11_ = (param6.marketCloseMinute - dataUnit.dayMinute) * Const.MS_PER_MINUTE;
+				let _loc11_ = (dataSeries.marketCloseMinute - dataUnit.dayMinute) * Const.MS_PER_MINUTE;
 				_loc11_ = _loc11_ - dataUnit.exchangeDateInUTC.getUTCSeconds() * 1000;
 				dataUnit.setDate(dataUnit.time + _loc11_, dataUnit.timezoneOffset);
 			}
@@ -637,7 +633,7 @@ namespace com.google.finance
 				posInInterval: SeriesPosition[],
 			}>{};
 			const seriesPosition: SeriesPosition[] = [];
-			for (let detailLevelIndex = Const.DETAIL_LEVELS.length - 1; detailLevelIndex >= 0; detailLevelIndex--)				
+			for (let detailLevelIndex = Const.DETAIL_LEVELS.length - 1; detailLevelIndex >= 0; detailLevelIndex--)
 			{
 				const detailLevelInterval = Const.getDetailLevelInterval(Const.DETAIL_LEVELS[detailLevelIndex]);
 				const points = this.data.getPointsInIntervalArray(detailLevelInterval);
@@ -697,12 +693,12 @@ namespace com.google.finance
 			return objectPosition;
 		}
 
-		private parseHeader(param1: string[], param2: ChartEvent)
+		private parseHeader(param1: string[], chartEvent: ChartEvent)
 		{
 			const _loc3_: { [key: string]: string } = {};
-			for (let keyIndex = 0; keyIndex < param1.length; keyIndex++)
+			for (const pair of param1)
 			{
-				const _loc5_ = param1[keyIndex].split("=");
+				const _loc5_ = pair.split("=");
 				if (_loc5_.length <= 1)
 					return null;
 
@@ -714,22 +710,22 @@ namespace com.google.finance
 			return null;
 		}
 
-		computeIntradaySessions(param1: com.google.finance.DataSeries) 
+		computeIntradaySessions(dataSeries: com.google.finance.DataSeries)
 		{
 			const _loc2_ = Const.INTRADAY_INTERVAL;
-			param1.intradayRegions.length = 0;
+			dataSeries.intradayRegions.length = 0;
 			let _loc3_ = 0;
 			let _loc4_ = 0;
-			for (let _loc5_ = 1; _loc5_ < param1.units.length; _loc5_++)				
+			for (let unitIndex = 1; unitIndex < dataSeries.units.length; unitIndex++)
 			{
-				const _loc6_ = param1.units[_loc5_];
-				const _loc7_ = param1.units[_loc5_ - 1];
+				const _loc6_ = dataSeries.units[unitIndex];
+				const _loc7_ = dataSeries.units[unitIndex - 1];
 				if ((_loc6_.time - _loc7_.time) / 1000 !== _loc2_)
 				{
 					if (_loc4_ > 0)
-						param1.intradayRegions.push(new StartEndPair(_loc3_, _loc5_ - 1));
+						dataSeries.intradayRegions.push(new StartEndPair(_loc3_, unitIndex - 1));
 
-					_loc3_ = _loc5_;
+					_loc3_ = unitIndex;
 					_loc4_ = 0;
 				}
 				else
@@ -738,76 +734,75 @@ namespace com.google.finance
 				}
 			}
 			if (_loc4_ > 0)
-				param1.intradayRegions.push(new StartEndPair(_loc3_, param1.points.length - 1));
+				dataSeries.intradayRegions.push(new StartEndPair(_loc3_, dataSeries.points.length - 1));
 		}
 
-		private addStreamForPointsInIntervals(param1: number, dataUnits: DataUnit[]) 
+		private addStreamForPointsInIntervals(param1: number, dataUnits: DataUnit[])
 		{
 			this.data.setPointsInIntervalArray(param1, dataUnits);
 		}
 
-		private makeDataUnitEndOfDay(dataUnit: DataUnit, dataUnits: DataUnit[], param3: StartEndPair, param4: com.google.finance.DataSeries) 
+		private makeDataUnitEndOfDay(dataUnit: DataUnit, dataUnits: DataUnit[], startEndPair: StartEndPair, dataSeries: com.google.finance.DataSeries)
 		{
-			let _loc8_ = 0;
-			const _loc5_ = param3.end - param3.start;
-			const _loc6_ = dataUnit.dayMinute - param3.end;
+			const _loc5_ = startEndPair.end - startEndPair.start;
+			const _loc6_ = dataUnit.dayMinute - startEndPair.end;
 			let _loc7_ = -_loc6_ * 60 * 1000;
 			_loc7_ = _loc7_ - dataUnit.exchangeDateInUTC.getUTCSeconds() * 1000;
 			dataUnit.setDate(dataUnit.time + _loc7_, dataUnit.timezoneOffset);
 			if (this.baseInterval < Const.DAILY_INTERVAL)
 			{
-				_loc8_ = _loc5_ / this.baseMinutesInterval;
-				this.addFakeDataUnits(dataUnits, dataUnit, param4, _loc8_, Directions.BACKWARD);
+				const _loc8_ = _loc5_ / this.baseMinutesInterval;
+				this.addFakeDataUnits(dataUnits, dataUnit, dataSeries, _loc8_, Directions.BACKWARD);
 			}
 			dataUnits.push(dataUnit);
 		}
 
 		/*
-		private alignDataSeries(param1: com.google.finance.DataSeries, param2: com.google.finance.DataSeries) 
+		private alignDataSeries(ds1: com.google.finance.DataSeries, ds2: com.google.finance.DataSeries)
 		{
-			if (param1.units.length === 0 || param2.units.length === 0)
+			if (ds1.units.length === 0 || ds2.units.length === 0)
 				return;
 
-			const _loc3_ = param1.units[0].time;
-			const _loc4_ = DataSource.getTimeIndex(_loc3_, param2.units);
-			const _loc5_ = param2.units[_loc4_].relativeMinutes;
-			const _loc6_ = param1.units[0].relativeMinutes;
-			for (let _loc7_ = 0; _loc7_ < param1.units.length; _loc7_++)
+			const _loc3_ = ds1.units[0].time;
+			const _loc4_ = DataSource.getTimeIndex(_loc3_, ds2.units);
+			const _loc5_ = ds2.units[_loc4_].relativeMinutes;
+			const _loc6_ = ds1.units[0].relativeMinutes;
+			for (let _loc7_ = 0; _loc7_ < ds1.units.length; _loc7_++)
 			{
-				const _loc8_ = param1.units[_loc7_].relativeMinutes - _loc6_;
-				param1.units[_loc7_].relativeMinutes = _loc5_ + _loc8_;
+				const _loc8_ = ds1.units[_loc7_].relativeMinutes - _loc6_;
+				ds1.units[_loc7_].relativeMinutes = _loc5_ + _loc8_;
 			}
 		}
 		*/
 
 		selectObject(param1: string, param2: number, param3?: string): StockAssociatedObject | null
 		{
-			let _loc4_: StockAssociatedObject | null = null;
+			let selectedObject: StockAssociatedObject | null = null;
 			if (this.objects[param1] === undefined)
 				return null;
 
-			for (let objectIndex = 0; objectIndex < this.objects[param1].length; objectIndex++)
+			for (const object of this.objects[param1])
 			{
-				this.objects[param1][objectIndex].active = false;
+				object.active = false;
 				if (param1 === "newspin")
-					(<PinPoint>this.objects[param1][objectIndex]).forceExpandInGroup = false;
+					(<PinPoint>object).forceExpandInGroup = false;
 
-				if (this.objects[param1][objectIndex].id === param2 && (!param3 || (<PinPoint>this.objects[param1][objectIndex]).letter === param3))
+				if (object.id === param2 && (!param3 || (<PinPoint>object).letter === param3))
 				{
-					this.objects[param1][objectIndex].active = true;
-					_loc4_ = this.objects[param1][objectIndex];
+					object.active = true;
+					selectedObject = object;
 				}
 			}
-			return _loc4_;
+			return selectedObject;
 		}
 
-		private objectInTheFuture(param1: StockAssociatedObject, param2: com.google.finance.DataSeries): boolean
+		private objectInTheFuture(stockAssociatedObject: StockAssociatedObject, dataSeries: com.google.finance.DataSeries): boolean
 		{
 			let _loc3_: DataUnit;
 			if (Const.INDICATOR_ENABLED)
 			{
-				const points = param2.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
-				const _loc7_ = notnull(param1.posInInterval)[Const.INTRADAY_INTERVAL];
+				const points = dataSeries.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
+				const _loc7_ = notnull(stockAssociatedObject.posInInterval)[Const.INTRADAY_INTERVAL];
 				if (!points || points.length === 0 || !_loc7_ || _loc7_.position !== points.length - 1)
 					return false;
 
@@ -815,14 +810,14 @@ namespace com.google.finance
 			}
 			else
 			{
-				const numUnits = param2.units.length;
-				if (param1.pos !== numUnits - 1)
+				const numUnits = dataSeries.units.length;
+				if (stockAssociatedObject.pos !== numUnits - 1)
 					return false;
 
-				_loc3_ = param2.units[numUnits - 1];
+				_loc3_ = dataSeries.units[numUnits - 1];
 			}
 			const exchangeDateInUTC = _loc3_.exchangeDateInUTC;
-			const date = new Date(param1.time + _loc3_.timezoneOffset);
+			const date = new Date(stockAssociatedObject.time + _loc3_.timezoneOffset);
 			if (date.getUTCFullYear() < exchangeDateInUTC.getUTCFullYear())
 				return false;
 
@@ -844,7 +839,7 @@ namespace com.google.finance
 			return false;
 		}
 
-		private extractAfterHoursSessions(param1: com.google.finance.IntervalSet) 
+		private extractAfterHoursSessions(intervalSet: com.google.finance.IntervalSet)
 		{
 			if (this.afterHoursData.units.length === 0)
 				return;
@@ -863,7 +858,7 @@ namespace com.google.finance
 				else if (_loc2_.dayMinute === session.end)
 				{
 					_loc5_ = unitIndex;
-					param1.addInterval(_loc4_, _loc5_);
+					intervalSet.addInterval(_loc4_, _loc5_);
 					if (unitIndex < this.afterHoursData.units.length - 1)
 					{
 						_loc2_ = this.afterHoursData.units[unitIndex + 1];
@@ -873,24 +868,24 @@ namespace com.google.finance
 			}
 		}
 
-		computeObjectPositions() 
+		computeObjectPositions()
 		{
 			let _loc6_ = NaN;
-			for (let _loc1_ in this.objects)
+			for (let objectKey in this.objects)
 			{
-				const _loc2_ = this.objects[_loc1_];
-				for (let _loc3_ = _loc2_.length - 1; _loc3_ >= 0; _loc3_--)
+				const _loc2_ = this.objects[objectKey];
+				for (let objectIndex = _loc2_.length - 1; objectIndex >= 0; objectIndex--)
 				{
-					const _loc4_ = _loc2_[_loc3_];
+					const _loc4_ = _loc2_[objectIndex];
 					if (Const.INDICATOR_ENABLED)
 					{
-						const objectPositions = this.getObjectPositionsInInterval(_loc2_[_loc3_].time);
+						const objectPositions = this.getObjectPositionsInInterval(_loc2_[objectIndex].time);
 						_loc4_.posInInterval = objectPositions.posInInterval;
 						_loc6_ = objectPositions.closePrice;
 					}
 					else
 					{
-						let seriesPosition = this.getObjectPositions(_loc2_[_loc3_].time, this.data);
+						let seriesPosition = this.getObjectPositions(_loc2_[objectIndex].time, this.data);
 						if (seriesPosition.pos >= 0 && seriesPosition.pos < notnull(seriesPosition.refDataSeries).units.length)
 						{
 							_loc4_.pos = seriesPosition.pos;
@@ -899,7 +894,7 @@ namespace com.google.finance
 							_loc6_ = notnull(seriesPosition.refDataSeries).units[seriesPosition.pos].close;
 						}
 					}
-					if (_loc1_ === "dividend")
+					if (objectKey === "dividend")
 					{
 						const _loc7_ = <Dividend>_loc4_;
 						_loc7_.yield = _loc7_.amount / _loc6_;
@@ -922,7 +917,7 @@ namespace com.google.finance
 		mergePoints(dataUnits1: DataUnit[], dataUnits2: DataUnit[], param3: boolean, param4: number): DataUnit[]
 		{
 			let _loc8_: DataUnit;
-			const _loc5_: DataUnit[] = [];
+			const dataUnits: DataUnit[] = [];
 			let _loc6_ = 0;
 			let _loc7_ = 0;
 			while (_loc6_ < dataUnits1.length || _loc7_ < dataUnits2.length)
@@ -931,7 +926,7 @@ namespace com.google.finance
 				{
 					while (_loc7_ < dataUnits2.length)
 					{
-						_loc5_.push(dataUnits2[_loc7_]);
+						dataUnits.push(dataUnits2[_loc7_]);
 						_loc7_++;
 					}
 				}
@@ -939,13 +934,13 @@ namespace com.google.finance
 				{
 					while (_loc6_ < dataUnits1.length)
 					{
-						_loc5_.push(dataUnits1[_loc6_]);
+						dataUnits.push(dataUnits1[_loc6_]);
 						_loc6_++;
 					}
 				}
 				else if (dataUnits1[_loc6_].time < dataUnits2[_loc7_].time)
 				{
-					_loc5_.push(dataUnits1[_loc6_++]);
+					dataUnits.push(dataUnits1[_loc6_++]);
 				}
 				else if (dataUnits1[_loc6_].time === dataUnits2[_loc7_].time)
 				{
@@ -954,7 +949,7 @@ namespace com.google.finance
 					else
 						_loc8_ = dataUnits1[_loc6_];
 
-					_loc5_.push(_loc8_);
+					dataUnits.push(_loc8_);
 					_loc8_.addVolumeInfo(dataUnits1[_loc6_]);
 					_loc8_.addVolumeInfo(dataUnits2[_loc7_]);
 					_loc6_++;
@@ -962,22 +957,22 @@ namespace com.google.finance
 				}
 				else
 				{
-					_loc5_.push(dataUnits2[_loc7_++]);
+					dataUnits.push(dataUnits2[_loc7_++]);
 				}
 			}
-			return _loc5_;
+			return dataUnits;
 		}
 
-		private extractSessions(param1: string, param2: com.google.finance.DataSeries) 
+		private extractSessions(param1: string, dataSeries: com.google.finance.DataSeries)
 		{
 			param1 = param1.slice(1, param1.length - 1);
-			const _loc3_ = param1.split("],[");
-			for (let _loc4_ = 0; _loc4_ < _loc3_.length; _loc4_++)
+			const sessionParts = param1.split("],[");
+			for (const sessionPart of sessionParts)
 			{
-				const _loc5_ = _loc3_[_loc4_].split(",");
+				const _loc5_ = sessionPart.split(",");
 				const _loc6_ = Number(_loc5_[1]);
 				const _loc7_ = Number(_loc5_[2]);
-				param2.addDataSession(_loc6_, _loc7_, _loc5_[0]);
+				dataSeries.addDataSession(_loc6_, _loc7_, _loc5_[0]);
 			}
 		}
 
@@ -1011,7 +1006,7 @@ namespace com.google.finance
 			return _loc3_;
 		}
 
-		addObject(param1: any) 
+		addObject(param1: any)
 		{
 			if (!param1)
 				return;
@@ -1020,7 +1015,7 @@ namespace com.google.finance
 			if (!this.objects[_loc2_])
 				this.objects[_loc2_] = [];
 
-			let _loc3_ = 0;
+			let _loc3_;
 			if (param1._date instanceof Date)
 				_loc3_ = param1._date.getTime();
 			else if (!isNaN(param1._date))
@@ -1092,12 +1087,12 @@ namespace com.google.finance
 			this.objects[_loc2_].push(obj);
 		}
 
-		eventDone(param1: string) 
+		eventDone(param1: string)
 		{
 			this.events[param1] = ChartEventPriorities.DONE;
 		}
 
-		private addAHStreamForPointsInIntervals(dataUnits: DataUnit[]) 
+		private addAHStreamForPointsInIntervals(dataUnits: DataUnit[])
 		{
 			this.afterHoursData.setPointsInIntervalArray(Const.INTRADAY_INTERVAL, dataUnits);
 		}
@@ -1133,20 +1128,20 @@ namespace com.google.finance
 			return _loc3_;
 		}
 
-		private getObjectPositions(param1: number, param2: com.google.finance.DataSeries): SeriesPosition
+		private getObjectPositions(param1: number, dataSeries: com.google.finance.DataSeries): SeriesPosition
 		{
 			let _loc3_: number;
-			const units = param2.units;
-			const days = param2.days;
+			const units = dataSeries.units;
+			const days = dataSeries.days;
 			let timeIndex = DataSource.getTimeIndex(param1, units);
 			if (timeIndex === -1)
 				return new SeriesPosition(null, -1, -1);
 
 			if (timeIndex === 0 && param1 < units[0].time)
-				return new SeriesPosition(param2, 0, 0);
+				return new SeriesPosition(dataSeries, 0, 0);
 
 			const date = new Date(param1);
-			if (units[timeIndex].dayMinute === param2.marketCloseMinute)
+			if (units[timeIndex].dayMinute === dataSeries.marketCloseMinute)
 			{
 				let unitDate = new Date(units[timeIndex].time);
 				const dateInTimezone1 = Utils.getDateInTimezone(unitDate, units[timeIndex].timezoneOffset);
@@ -1165,11 +1160,11 @@ namespace com.google.finance
 					}
 
 					if (_loc14_ === dateInTimezone2)
-						_loc3_ = days[param2.getNextDayStart(timeIndex + 1)];
+						_loc3_ = days[dataSeries.getNextDayStart(timeIndex + 1)];
 					else
 						_loc3_ = timeIndex;
 
-					if (timeIndex < units.length - 1 && units[timeIndex + 1].dayMinute === param2.marketCloseMinute)
+					if (timeIndex < units.length - 1 && units[timeIndex + 1].dayMinute === dataSeries.marketCloseMinute)
 						timeIndex = _loc3_;
 				}
 				else if (dateInTimezone1 > dateInTimezone2)
@@ -1178,7 +1173,7 @@ namespace com.google.finance
 					let _loc16_: number;
 					if (timeIndex > 0)
 					{
-						_loc16_ = param2.getPrevDayStart(timeIndex);
+						_loc16_ = dataSeries.getPrevDayStart(timeIndex);
 						unitDate = new Date(units[_loc16_].time);
 						_loc15_ = Utils.getDateInTimezone(unitDate, units[timeIndex].timezoneOffset);
 					}
@@ -1189,11 +1184,11 @@ namespace com.google.finance
 					}
 
 					if (_loc15_ === dateInTimezone2)
-						_loc3_ = days[param2.getPrevDayStart(timeIndex)];
+						_loc3_ = days[dataSeries.getPrevDayStart(timeIndex)];
 					else
 						_loc3_ = timeIndex;
 
-					if (timeIndex === 0 || units[timeIndex - 1].dayMinute === param2.marketCloseMinute)
+					if (timeIndex === 0 || units[timeIndex - 1].dayMinute === dataSeries.marketCloseMinute)
 						timeIndex = _loc3_;
 				}
 				else
@@ -1203,15 +1198,15 @@ namespace com.google.finance
 			}
 			else
 			{
-				_loc3_ = days[param2.getNextDayStart(timeIndex)];
+				_loc3_ = days[dataSeries.getNextDayStart(timeIndex)];
 			}
 			const _loc8_ = units[timeIndex];
 			let _loc9_: DataUnit | null = null;
 			if (timeIndex < units.length - 1)
 				_loc9_ = units[timeIndex + 1];
 
-			let _loc10_ = param2;
-			if (!_loc9_ && _loc8_.relativeMinutes !== 0 || _loc9_ && _loc8_.dayMinute === param2.marketCloseMinute && _loc9_.dayMinute === param2.marketOpenMinute && _loc9_.relativeMinutes - _loc8_.relativeMinutes > 1)
+			let _loc10_ = dataSeries;
+			if (!_loc9_ && _loc8_.relativeMinutes !== 0 || _loc9_ && _loc8_.dayMinute === dataSeries.marketCloseMinute && _loc9_.dayMinute === dataSeries.marketOpenMinute && _loc9_.relativeMinutes - _loc8_.relativeMinutes > 1)
 			{
 				if (this.afterHoursData.units.length !== 0)
 				{
@@ -1231,34 +1226,34 @@ namespace com.google.finance
 		objectsToString(): string
 		{
 			let _loc1_ = "";
-			for (let _loc2_ in this.objects)
-				_loc1_ = _loc1_ + (", " + this.objects[_loc2_].toString());
+			for (let objectKey in this.objects)
+				_loc1_ = _loc1_ + (", " + this.objects[objectKey].toString());
 			return _loc1_;
 		}
 
-		markEvent(param1: ChartEvent, param2: ChartEventPriorities): boolean
+		markEvent(chartEvent: ChartEvent, chartEventPriority: ChartEventPriorities): boolean
 		{
-			const eventName = param1.getEventName();
-			if (param1.period === "5Y")
+			const eventName = chartEvent.getEventName();
+			if (chartEvent.period === "5Y")
 			{
-				const eventName2 = param1.getEventName("40Y");
+				const eventName2 = chartEvent.getEventName("40Y");
 				if (this.hasEvent(eventName2))
 					return false;
 			}
 			if (this.hasEvent(eventName))
 			{
-				if (this.events[eventName] < param2)
+				if (this.events[eventName] < chartEventPriority)
 				{
-					this.events[eventName] = param2;
+					this.events[eventName] = chartEventPriority;
 					return true;
 				}
 				return false;
 			}
-			this.events[eventName] = param2;
+			this.events[eventName] = chartEventPriority;
 			return true;
 		}
 
-		clearAllObjects(param1: string) 
+		clearAllObjects(param1: string)
 		{
 			this.objects[param1] = [];
 		}
@@ -1319,37 +1314,37 @@ namespace com.google.finance
 			return _loc7_;
 		}
 
-		private checkHeaderSanity(param1: { [key: string]: string }, param2: com.google.finance.DataSeries) 
+		private checkHeaderSanity(param1: { [key: string]: string }, dataSeries: com.google.finance.DataSeries)
 		{
 			const _loc3_ = param1[DataSource.MARKET_CLOSE_MINUTE_STR];
 			const _loc4_ = param1[DataSource.MARKET_OPEN_MINUTE_STR];
 			if (_loc4_)
-				param2.marketOpenMinute = Number(_loc4_);
+				dataSeries.marketOpenMinute = Number(_loc4_);
 
 			if (_loc3_)
 			{
-				param2.marketCloseMinute = Number(_loc3_);
+				dataSeries.marketCloseMinute = Number(_loc3_);
 				if (this.quoteName.indexOf("CURRENCY") >= 0)
 				{
-					const _loc5_ = (param2.marketCloseMinute - param2.marketOpenMinute) % this.intradayMinutesInterval;
-					param2.marketCloseMinute -= _loc5_;
+					const _loc5_ = (dataSeries.marketCloseMinute - dataSeries.marketOpenMinute) % this.intradayMinutesInterval;
+					dataSeries.marketCloseMinute -= _loc5_;
 				}
 			}
 			if (Number(_loc3_) - Number(_loc4_) < 30)
 			{
-				param2.marketCloseMinute = Const.MARKET_CLOSE_MINUTE;
-				param2.marketOpenMinute = Const.MARKET_OPEN_MINUTE;
+				dataSeries.marketCloseMinute = Const.MARKET_CLOSE_MINUTE;
+				dataSeries.marketOpenMinute = Const.MARKET_OPEN_MINUTE;
 			}
 
 			if (param1[DataSource.DATA_SESSIONS_STR])
-				this.extractSessions(param1[DataSource.DATA_SESSIONS_STR], param2);
+				this.extractSessions(param1[DataSource.DATA_SESSIONS_STR], dataSeries);
 			else
-				param2.addDataSession(param2.marketOpenMinute, param2.marketCloseMinute, Const.REGULAR_MARKET_NAME);
+				dataSeries.addDataSession(dataSeries.marketOpenMinute, dataSeries.marketCloseMinute, Const.REGULAR_MARKET_NAME);
 
-			param2.marketDayLength = param2.allSessionsLength();
+			dataSeries.marketDayLength = dataSeries.allSessionsLength();
 		}
 
-		setRelativeMinutesState(param1: number) 
+		setRelativeMinutesState(param1: number)
 		{
 			this.relativeMinutesState = param1;
 		}
@@ -1359,15 +1354,15 @@ namespace com.google.finance
 			if (this.objects[param1] === undefined)
 				return -1;
 
-			for (let _loc3_ = this.objects[param1].length - 1; _loc3_ >= 0; _loc3_--)				
+			for (let objectIndex = this.objects[param1].length - 1; objectIndex >= 0; objectIndex--)
 			{
-				if (this.objects[param1][_loc3_].id === param2)
-					return _loc3_;
+				if (this.objects[param1][objectIndex].id === param2)
+					return objectIndex;
 			}
 			return -1;
 		}
 
-		private addFakeDataUnits(dataUnits: DataUnit[], dataUnit: DataUnit, param3: com.google.finance.DataSeries, param4: number, param5: number, param6 = 0) 
+		private addFakeDataUnits(dataUnits: DataUnit[], dataUnit: DataUnit, dataSeries: com.google.finance.DataSeries, param4: number, param5: number, param6 = 0)
 		{
 			if (param4 === 0)
 				return;
@@ -1389,88 +1384,88 @@ namespace com.google.finance
 				}
 				fakeDataUnit.setDate(_loc9_, dataUnit.timezoneOffset);
 				fakeDataUnit.fake = true;
-				fakeDataUnit.duplicate = param3.minuteIsStartOfDataSession(fakeDataUnit.dayMinute);
+				fakeDataUnit.duplicate = dataSeries.minuteIsStartOfDataSession(fakeDataUnit.dayMinute);
 				dataUnits.push(fakeDataUnit);
 			}
 		}
 
-		clearAllIndicatorsOnAddData(param1: number) 
+		clearAllIndicatorsOnAddData(param1: number)
 		{
-			for (let _loc2_ in this.indicators)
+			for (let indicatorKey in this.indicators)
 			{
-				if (this.indicators[_loc2_].clearAllOnAddData)
-					this.indicators[_loc2_].clear();
+				if (this.indicators[indicatorKey].clearAllOnAddData)
+					this.indicators[indicatorKey].clear();
 				else
-					this.indicators[_loc2_].clear(param1);
+					this.indicators[indicatorKey].clear(param1);
 			}
 		}
 
-		clearCoalescedChildren() 
+		clearCoalescedChildren()
 		{
 			this.data.clearCoalescedChildren();
 		}
 
-		clearAllIndicators() 
+		clearAllIndicators()
 		{
-			for (let _loc1_ in this.indicators)
-				this.indicators[_loc1_].clear();
+			for (let indicatorKey in this.indicators)
+				this.indicators[indicatorKey].clear();
 		}
 
-		isTradeHaltedInterday(param1: DataUnit, param2: DataUnit, param3: number): boolean
+		isTradeHaltedInterday(dataUnit1: DataUnit, dataUnit2: DataUnit, param3: number): boolean
 		{
 			if (param3 < Const.DAILY_INTERVAL)
 				return false;
 
-			if (param1.volumes[param3] > 0)
+			if (dataUnit1.volumes[param3] > 0)
 				return false;
 
-			return param2.close === param1.close && (isNaN(param1.open) || param1.open === param1.close) && (isNaN(param1.high) || param1.high === param1.close) && (isNaN(param1.low) || param1.low === param1.close);
+			return dataUnit2.close === dataUnit1.close && (isNaN(dataUnit1.open) || dataUnit1.open === dataUnit1.close) && (isNaN(dataUnit1.high) || dataUnit1.high === dataUnit1.close) && (isNaN(dataUnit1.low) || dataUnit1.low === dataUnit1.close);
 		}
 
-		removeObject(param1: string, param2: number) 
+		removeObject(param1: string, param2: number)
 		{
 			const objPos = this.getObjPos(param1, param2);
 			if (objPos !== -1)
 				this.objects[param1].splice(objPos, 1);
 		}
 
-		private addAfterHoursUnitToLastMinute(dataUnit: DataUnit, dataUnits: DataUnit[], param3: StartEndPair | undefined, param4: com.google.finance.DataSeries) 
+		private addAfterHoursUnitToLastMinute(dataUnit: DataUnit, dataUnits: DataUnit[], startEndPair: StartEndPair | undefined, dataSeries: com.google.finance.DataSeries)
 		{
 			let _loc5_ = 0;
-			if (!param3)
+			if (!startEndPair)
 				return;
 
-			const sessionIndex = param4.getSessionIndex(param3.start);
+			const sessionIndex = dataSeries.getSessionIndex(startEndPair.start);
 			if (dataUnits.length === 0)
 			{
-				this.addFakeDataUnitsForSessions(dataUnits, dataUnit, param4, 0, sessionIndex, Directions.BACKWARD);
-				this.makeDataUnitEndOfDay(dataUnit, dataUnits, param3, param4);
+				this.addFakeDataUnitsForSessions(dataUnits, dataUnit, dataSeries, 0, sessionIndex, Directions.BACKWARD);
+				this.makeDataUnitEndOfDay(dataUnit, dataUnits, startEndPair, dataSeries);
 				return;
 			}
 			let _loc7_ = dataUnits[dataUnits.length - 1];
-			const _loc8_ = notnull(param4.getSessionForMinute(_loc7_.dayMinute));
-			const _loc9_ = param4.getSessionIndex(_loc7_.dayMinute);
+			const _loc8_ = notnull(dataSeries.getSessionForMinute(_loc7_.dayMinute));
+			const _loc9_ = dataSeries.getSessionIndex(_loc7_.dayMinute);
 			if (_loc7_ && _loc7_.dayMinute < _loc8_.end)
 			{
 				_loc5_ = (_loc8_.end - _loc7_.dayMinute) / this.baseMinutesInterval;
-				this.addFakeDataUnits(dataUnits, _loc7_, param4, _loc5_, Directions.FORWARD);
+				this.addFakeDataUnits(dataUnits, _loc7_, dataSeries, _loc5_, Directions.FORWARD);
 				_loc7_ = dataUnits[dataUnits.length - 1];
 			}
 			const _loc10_ = (dataUnit.time - _loc7_.time) / Const.MS_PER_MINUTE;
-			const _loc11_ = param3.end - param3.start;
-			const _loc12_ = dataUnit.dayMinute - param3.end;
+			const _loc11_ = startEndPair.end - startEndPair.start;
+			const _loc12_ = dataUnit.dayMinute - startEndPair.end;
 			if (_loc10_ > _loc12_ + _loc11_)
 			{
 				if (!DataSource.unitsInDifferentDays(_loc7_, dataUnit))
 				{
-					this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], param4, _loc9_ + 1, sessionIndex, Directions.FORWARD);
+					this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], dataSeries, _loc9_ + 1, sessionIndex, Directions.FORWARD);
 				}
 				else
 				{
-					this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], param4, _loc9_ + 1, param4.dataSessions.length(), Directions.FORWARD);
-					this.addFakeDataUnitsForSessions(dataUnits, dataUnit, param4, 0, sessionIndex, Directions.BACKWARD);
+					this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], dataSeries, _loc9_ + 1, dataSeries.dataSessions.length(), Directions.FORWARD);
+					this.addFakeDataUnitsForSessions(dataUnits, dataUnit, dataSeries, 0, sessionIndex, Directions.BACKWARD);
 				}
-				this.makeDataUnitEndOfDay(dataUnit, dataUnits, param3, param4);
+				this.makeDataUnitEndOfDay(dataUnit, dataUnits, startEndPair, dataSeries);
 			}
 			else
 			{
@@ -1486,12 +1481,12 @@ namespace com.google.finance
 			}
 		}
 
-		private getDataUnitNoValidation(param1: string[], param2: ColumnTypes[], param3: { [key: string]: string }): DataUnit
+		private getDataUnitNoValidation(param1: string[], columnTypes: ColumnTypes[], param3: { [key: string]: string }): DataUnit
 		{
 			const dataUnit = new DataUnit(NaN, NaN, NaN, NaN);
-			for (let columnTypeIndex = 0; columnTypeIndex < param2.length; columnTypeIndex++)
+			for (let columnTypeIndex = 0; columnTypeIndex < columnTypes.length; columnTypeIndex++)
 			{
-				if (param2[columnTypeIndex] === ColumnTypes.COL_DATE_TYPE)
+				if (columnTypes[columnTypeIndex] === ColumnTypes.COL_DATE_TYPE)
 				{
 					let _loc6_: number;
 					if (isNaN(Number(param1[columnTypeIndex])))
@@ -1506,29 +1501,29 @@ namespace com.google.finance
 					}
 					dataUnit.setDate(_loc6_, this.timezoneOffset);
 				}
-				else if (param2[columnTypeIndex] === ColumnTypes.COL_CLOSE_TYPE)
+				else if (columnTypes[columnTypeIndex] === ColumnTypes.COL_CLOSE_TYPE)
 				{
 					dataUnit.close = Number(param1[columnTypeIndex]);
 				}
-				else if (param2[columnTypeIndex] === ColumnTypes.COL_OPEN_TYPE)
+				else if (columnTypes[columnTypeIndex] === ColumnTypes.COL_OPEN_TYPE)
 				{
 					dataUnit.open = Number(param1[columnTypeIndex]);
 				}
-				else if (param2[columnTypeIndex] === ColumnTypes.COL_LOW_TYPE)
+				else if (columnTypes[columnTypeIndex] === ColumnTypes.COL_LOW_TYPE)
 				{
 					dataUnit.low = Number(param1[columnTypeIndex]);
 				}
-				else if (param2[columnTypeIndex] === ColumnTypes.COL_HIGH_TYPE)
+				else if (columnTypes[columnTypeIndex] === ColumnTypes.COL_HIGH_TYPE)
 				{
 					dataUnit.high = Number(param1[columnTypeIndex]);
 				}
-				else if (param2[columnTypeIndex] === ColumnTypes.COL_VOLUME_TYPE)
+				else if (columnTypes[columnTypeIndex] === ColumnTypes.COL_VOLUME_TYPE)
 				{
 					// TODO
 					dataUnit.volumes[Number(param3[DataSource.INTERVAL_STR])] = Number(param1[columnTypeIndex]);
 					dataUnit.intervals.push(this.baseInterval);
 				}
-				else if (param2[columnTypeIndex] === ColumnTypes.COL_CDAYS_TYPE)
+				else if (columnTypes[columnTypeIndex] === ColumnTypes.COL_CDAYS_TYPE)
 				{
 					dataUnit.coveredDays = Number(param1[columnTypeIndex]);
 				}

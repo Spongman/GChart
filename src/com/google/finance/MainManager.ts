@@ -165,10 +165,10 @@ namespace com.google.finance
 				Const.DEFAULT_DISPLAY_DAYS = Const.MIN_DISPLAY_DAYS;
 
 			MainManager.paramsObj.sparklineType = MainManager.paramsObj.sparklineType || Const.DYNAMIC;
-			MainManager.paramsObj.snapping = this.checkUndefined(MainManager.paramsObj.snapping, "true");
-			MainManager.paramsObj.displayExtendedHours = this.checkUndefined(MainManager.paramsObj.displayExtendedHours, "true");
-			MainManager.paramsObj.hasExtendedHours = this.checkUndefined(MainManager.paramsObj.hasExtendedHours, "false");
-			MainManager.paramsObj.displayExtendedHours = this.checkUndefined(MainManager.paramsObj.displayExtendedHours, "false");
+			MainManager.paramsObj.snapping = Utils.checkUndefined(MainManager.paramsObj.snapping, "true");
+			MainManager.paramsObj.displayExtendedHours = Utils.checkUndefined(MainManager.paramsObj.displayExtendedHours, "true");
+			MainManager.paramsObj.hasExtendedHours = Utils.checkUndefined(MainManager.paramsObj.hasExtendedHours, "false");
+			MainManager.paramsObj.displayExtendedHours = Utils.checkUndefined(MainManager.paramsObj.displayExtendedHours, "false");
 			if (!Boolean(MainManager.paramsObj.hasExtendedHours))
 				MainManager.paramsObj.displayExtendedHours = "false";
 
@@ -177,21 +177,21 @@ namespace com.google.finance
 			Const.DISPLAY_DIVIDENDS_UNITS = MainManager.paramsObj.displayDividendsUnits || Const.DISPLAY_DIVIDENDS_UNITS;
 			Const.POSITIVE_DIFFERENCE_COLOR = MainManager.paramsObj.positiveColor || Const.POSITIVE_DIFFERENCE_COLOR;
 			Const.NEGATIVE_DIFFERENCE_COLOR = MainManager.paramsObj.negativeColor || Const.NEGATIVE_DIFFERENCE_COLOR;
-			Const.ENABLE_CUSTOM_DATE_ENTRY = this.checkUndefined(MainManager.paramsObj.enableCustomDateEntry, "false");
-			Const.ENABLE_COMPACT_FLAGS = this.checkUndefined(MainManager.paramsObj.enableCompactFlags, "true");
-			Const.INDICATOR_ENABLED = "true" === String(this.checkUndefined(MainManager.paramsObj.enableIndicator, false));
-			Const.REALTIME_CHART_ENABLED = "true" === String(this.checkUndefined(MainManager.paramsObj.enableRealtimeChart, false));
+			Const.ENABLE_CUSTOM_DATE_ENTRY = Utils.checkUndefined(MainManager.paramsObj.enableCustomDateEntry, "false");
+			Const.ENABLE_COMPACT_FLAGS = Utils.checkUndefined(MainManager.paramsObj.enableCompactFlags, "true");
+			Const.INDICATOR_ENABLED = "true" === String(Utils.checkUndefined(MainManager.paramsObj.enableIndicator, false));
+			Const.REALTIME_CHART_ENABLED = "true" === String(Utils.checkUndefined(MainManager.paramsObj.enableRealtimeChart, false));
 			if (MainManager.paramsObj.displayNewsPins !== undefined)
 				Const.DISPLAY_NEWS_PINS = "true" === String(MainManager.paramsObj.displayNewsPins);
 
 			if (Const.INDICATOR_ENABLED)
 				Const.SPARKLINE_HEIGHT -= 20;
 
-			Const.VOLUME_PLUS_ENABLED = "true" === String(this.checkUndefined(MainManager.paramsObj.enableVolumePlus, Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale())));
-			Const.CHART_TYPE_BUTTONS_ENABLED = "true" === String(this.checkUndefined(MainManager.paramsObj.enableChartTypeButtons, Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale())));
-			Const.APPLY_CHINESE_STYLE_MACD = "true" === String(this.checkUndefined(MainManager.paramsObj.applyChineseStyleMacd, com.google.i18n.locale.DateTimeLocale.getLocale() === Const.ZH_CN_LOCALE));
-			Const.EXPAND_BUTTON_ENABLED = "true" === String(this.checkUndefined(MainManager.paramsObj.expandButtonEnabled, false));
-			Const.SHRINK_BUTTON_ENABLED = "true" === String(this.checkUndefined(MainManager.paramsObj.shrinkButtonEnabled, false));
+			Const.VOLUME_PLUS_ENABLED = "true" === String(Utils.checkUndefined(MainManager.paramsObj.enableVolumePlus, Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale())));
+			Const.CHART_TYPE_BUTTONS_ENABLED = "true" === String(Utils.checkUndefined(MainManager.paramsObj.enableChartTypeButtons, Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale())));
+			Const.APPLY_CHINESE_STYLE_MACD = "true" === String(Utils.checkUndefined(MainManager.paramsObj.applyChineseStyleMacd, com.google.i18n.locale.DateTimeLocale.getLocale() === Const.ZH_CN_LOCALE));
+			Const.EXPAND_BUTTON_ENABLED = "true" === String(Utils.checkUndefined(MainManager.paramsObj.expandButtonEnabled, false));
+			Const.SHRINK_BUTTON_ENABLED = "true" === String(Utils.checkUndefined(MainManager.paramsObj.shrinkButtonEnabled, false));
 			if (MainManager.paramsObj.lclc !== undefined)
 				Const.LINE_CHART_LINE_COLOR = MainManager.paramsObj.lclc;
 
@@ -245,14 +245,6 @@ namespace com.google.finance
 			return this.quoteType;
 		}
 
-		private checkUndefined<T>(param1: T, param2: T): T
-		{
-			if (param1 === undefined)
-				return param2;
-
-			return param1;
-		}
-
 		private checkSize()
 		{
 			if (this.stage.stageWidth !== 0)
@@ -265,8 +257,8 @@ namespace com.google.finance
 		clearAllPins(param1: string) 
 		{
 			this.dataManager.clearAllObjects(param1, "newspin");
-			const _loc2_ = <ViewPoint>this.displayManager.getMainViewPoint();
-			_loc2_.updateObjectLayers();
+			const mainViewPoint = this.displayManager.getMainViewPoint();
+			mainViewPoint.updateObjectLayers();
 		}
 
 		removeObjectArray(param1: any[]) 
@@ -276,14 +268,14 @@ namespace com.google.finance
 				const _loc4_ = param1[_loc2_];
 				this.dataManager.removeObject(_loc4_._quote, _loc4_._type, _loc4_._id.toString());
 			}
-			const _loc3_ = <ViewPoint>this.displayManager.getMainViewPoint();
+			const _loc3_ = this.displayManager.getMainViewPoint();
 			_loc3_.updateObjectLayers();
 		}
 
 		addObject(param1: any) 
 		{
 			this.dataManager.addObject(param1);
-			const _loc2_ = <ViewPoint>this.displayManager.getMainViewPoint();
+			const _loc2_ = this.displayManager.getMainViewPoint();
 			_loc2_.updateObjectLayers();
 		}
 
@@ -294,11 +286,11 @@ namespace com.google.finance
 				const _loc1_ = MainManager.paramsObj.compareTo.split(";");
 				const _loc2_ = this.parseSettingString(MainManager.paramsObj.compareToDisplayName, _loc1_.length);
 				const _loc3_ = this.parseSettingString(MainManager.paramsObj.compareToDiffMarketSessions, _loc1_.length);
-				for (let _loc4_ = 0; _loc4_ < _loc1_.length; _loc4_++)
+				for (let partIndex = 0; partIndex < _loc1_.length; partIndex++)
 				{
-					const _loc5_ = Utils.adjustNasdToNasdaq(_loc1_[_loc4_]);
+					const _loc5_ = Utils.adjustNasdToNasdaq(_loc1_[partIndex]);
 					if (_loc5_ !== "" && _loc5_ !== this.quote)
-						this.addCompareTo(_loc5_, _loc2_ && _loc2_[_loc4_] || undefined, _loc3_ && _loc3_[_loc4_] === "1" || undefined);	// TODO
+						this.addCompareTo(_loc5_, _loc2_ && _loc2_[partIndex] || undefined, _loc3_ && _loc3_[partIndex] === "1" || undefined);	// TODO
 				}
 			}
 		}
@@ -384,7 +376,7 @@ namespace com.google.finance
 
 		changePrimaryTicker(param1: string, param2: string, param3: boolean = false) 
 		{
-			const _loc4_ = String(this.checkUndefined(param1, this.quote));
+			const _loc4_ = String(Utils.checkUndefined(param1, this.quote));
 			if (_loc4_ === this.quote)
 				return;
 
@@ -409,7 +401,7 @@ namespace com.google.finance
 		removeObject(param1: string, param2: string, param3: string) 
 		{
 			this.dataManager.removeObject(param1, param2, param3);
-			const _loc4_ = <ViewPoint>this.displayManager.getMainViewPoint();
+			const _loc4_ = this.displayManager.getMainViewPoint();
 			_loc4_.updateObjectLayers();
 		}
 
@@ -470,7 +462,7 @@ namespace com.google.finance
 			this.dataManager.eventHandler(_loc7_, !param3);
 		}
 
-		private onResize(param1: Event)
+		private onResize(event: Event)
 		{
 			if (this.stage.stageWidth !== 0)
 				Const.MOVIE_WIDTH = this.stage.stageWidth;
@@ -482,7 +474,7 @@ namespace com.google.finance
 			{
 				this.displayManager.windowResized(Const.MOVIE_WIDTH, Const.MOVIE_HEIGHT);
 				MainManager.console.positionLoadingMessage();
-				(<ViewPoint>this.displayManager.getMainViewPoint()).checkEvents();
+				(this.displayManager.getMainViewPoint()).checkEvents();
 			}
 		}
 
@@ -511,14 +503,14 @@ namespace com.google.finance
 			catch (er /*: TypeError*/)
 			{
 			}
-			let mvp = <ViewPoint>this.displayManager.getMainViewPoint();
+			let mvp = this.displayManager.getMainViewPoint();
 			mvp.updateObjectLayers();
 		}
 
-		htmlClicked(param1: string, param2: number, param3?: string)
+		htmlClicked(ticker: string, param2: number, param3?: string)
 		{
-			const _loc4_ = <PinPoint>this.dataManager.selectObject(param1, "newspin", param2, param3);
-			const _loc5_ = <ViewPoint>this.displayManager.getMainViewPoint();
+			const _loc4_ = <PinPoint>this.dataManager.selectObject(ticker, "newspin", param2, param3);
+			const _loc5_ = this.displayManager.getMainViewPoint();
 			_loc5_.updateObjectLayers();
 			this.displayManager.animateToSelectedPin(_loc4_);
 		}

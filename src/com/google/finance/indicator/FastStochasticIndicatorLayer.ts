@@ -31,15 +31,15 @@ namespace com.google.finance.indicator
 			let _loc5_ = 0;
 			const dataSeries0 = new DataSeries();
 			const dataSeries1 = new DataSeries();
-			const _loc12_: DataUnit[] = [];
+			const dataUnits: DataUnit[] = [];
 			const _loc13_: number[] = [];
 			for (let pointIndex = 0; pointIndex < points.length; pointIndex++)
 			{
 				const _loc14_ = points[pointIndex];
 				if (!this.shouldSkip(_loc14_, dataSeries0, dataSeries1))
 				{
-					_loc12_.push(_loc14_);
-					if (_loc12_.length < this.kPeriod)
+					dataUnits.push(_loc14_);
+					if (dataUnits.length < this.kPeriod)
 					{
 						const indicatorPoint = new IndicatorPoint(NaN, _loc14_);
 						dataSeries0.points.push(indicatorPoint);
@@ -51,8 +51,8 @@ namespace com.google.finance.indicator
 						let _loc4_ = Number.POSITIVE_INFINITY;
 						for (let _loc7_ = 0; _loc7_ < this.kPeriod; _loc7_++)
 						{
-							_loc3_ = Utils.extendedMax(_loc3_, _loc12_[_loc7_].high);
-							_loc4_ = Utils.extendedMin(_loc4_, _loc12_[_loc7_].low);
+							_loc3_ = Utils.extendedMax(_loc3_, dataUnits[_loc7_].high);
+							_loc4_ = Utils.extendedMin(_loc4_, dataUnits[_loc7_].low);
 						}
 						if (_loc3_ === _loc4_)
 						{
@@ -74,7 +74,7 @@ namespace com.google.finance.indicator
 								_loc5_ = Number(_loc5_ - _loc13_.shift()!);
 							}
 						}
-						_loc12_.shift();
+						dataUnits.shift();
 					}
 				}
 			}

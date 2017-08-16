@@ -85,9 +85,9 @@ namespace com.google.finance.indicator
 
 			this.indicator.clear();
 			this.periods = [];
-			for (let _loc2_ = 0; _loc2_ < param1.length; _loc2_++)
+			for (let indicatorIndex = 0; indicatorIndex < param1.length; indicatorIndex++)
 			{
-				this.periods.push(param1[_loc2_].period);
+				this.periods.push(param1[indicatorIndex].period);
 			}
 		}
 	}

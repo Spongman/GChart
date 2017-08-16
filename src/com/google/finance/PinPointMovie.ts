@@ -53,7 +53,7 @@ namespace com.google.finance
 			PinPointMovie.passiveTextFormat.color = 0x444444;
 			PinPointMovie.overPassiveTextFormat.color = 0;
 			PinPointMovie.overActiveTextFormat.color = 0xeeeeee;
-			this.pinButton.addEventListener(MouseEvents.MOUSE_DOWN, (param1: Event) =>
+			this.pinButton.addEventListener(MouseEvents.MOUSE_DOWN, (event: Event) =>
 			{
 				if (!this.object)
 					throw new Error();
@@ -69,13 +69,13 @@ namespace com.google.finance
 					MainManager.jsProxy.iClicked(this.object.qname, this.getPinPointType(), this.object.id, this.object.letter);
 				}
 			});
-			this.pinButton.addEventListener(MouseEvents.MOUSE_OVER, (param1: Event) =>
+			this.pinButton.addEventListener(MouseEvents.MOUSE_OVER, (event: Event) =>
 			{
 				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.pinButton);
 				this.letter.defaultTextFormat = this.object && this.object.active ? PinPointMovie.overActiveTextFormat : PinPointMovie.overPassiveTextFormat;
 			});
-			this.pinButton.addEventListener(MouseEvents.MOUSE_OUT, (param1: Event) =>
+			this.pinButton.addEventListener(MouseEvents.MOUSE_OUT, (event: Event) =>
 			{
 				MainManager.mouseCursor.unlock();
 				this.letter.defaultTextFormat = this.object && this.object.active ? PinPointMovie.activeTextFormat : PinPointMovie.passiveTextFormat;
@@ -146,14 +146,14 @@ namespace com.google.finance
 			this.borders = [];
 		}
 
-		setPinPointContentMovie(param1: com.google.finance.PinPointContentMovie) 
+		setPinPointContentMovie(pinPointContentMovie: com.google.finance.PinPointContentMovie) 
 		{
-			this.pinPointContentMovie = param1;
+			this.pinPointContentMovie = pinPointContentMovie;
 		}
 
-		setOrientation(param1: PinOrientations) 
+		setOrientation(pinOrientation: PinOrientations) 
 		{
-			if (param1 === PinOrientations.LEFT_ORIENTATION)
+			if (pinOrientation === PinOrientations.LEFT_ORIENTATION)
 			{
 				this.activeOverlay.scaleX = -1;
 				this.activeOverlay.x = 1;
@@ -196,13 +196,13 @@ namespace com.google.finance
 			return -this.pinButton.y;
 		}
 
-		setObj(param1: com.google.finance.PinPoint) 
+		setObj(pinPoint: com.google.finance.PinPoint) 
 		{
-			this.object = param1;
-			if (this.letter.text !== param1.letter)
-				this.letter.text = param1.letter;
+			this.object = pinPoint;
+			if (this.letter.text !== pinPoint.letter)
+				this.letter.text = pinPoint.letter;
 
-			if (param1.active)
+			if (pinPoint.active)
 			{
 				if (!this.contains(this.activeOverlay))
 				{

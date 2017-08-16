@@ -119,10 +119,8 @@ namespace com.google.finance.indicator
 
 			this.indicator.clear();
 			this.periods = [];
-			for (let _loc2_ = 0; _loc2_ < param1.length; _loc2_++)
-			{
-				this.periods.push(param1[_loc2_].period);
-			}
+			for (let index = 0; index < param1.length; index++)
+				this.periods.push(param1[index].period);
 		}
 	}
 }

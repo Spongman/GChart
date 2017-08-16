@@ -13,9 +13,9 @@ namespace com.google.finance
 			return units[param1].close;
 		}
 
-		protected getYPos(context: Context, param2: DataUnit): number
+		protected getYPos(context: Context, dataUnit: DataUnit): number
 		{
-			return this.localYOffset + context.plusSize - (Utils.getLogScaledValue(param2.close / this.localStartPrice, context.verticalScaling) - Utils.getLogScaledValue(1, context.verticalScaling)) * this.localYScale;
+			return this.localYOffset + context.plusSize - (Utils.getLogScaledValue(dataUnit.close / this.localStartPrice, context.verticalScaling) - Utils.getLogScaledValue(1, context.verticalScaling)) * this.localYScale;
 		}
 
 		private getQuoteText(param1: string): string
@@ -61,9 +61,9 @@ namespace com.google.finance
 
 			}
 			return {
-				"startPrice": this.calculatePercentChangeBase(_loc5_),
-				"minPrice": _loc7_,
-				"maxPrice": _loc8_
+				startPrice: this.calculatePercentChangeBase(_loc5_),
+				minPrice: _loc7_,
+				maxPrice: _loc8_
 			};
 		}
 
@@ -107,7 +107,7 @@ namespace com.google.finance
 			gr.lineTo(point.x, point.y);
 		}
 
-		highlightPoint(context: Context, param2: number, param3: { [key: string]: any }) 
+		highlightPoint(context: Context, param2: number, state: Dictionary) 
 		{
 			this.clearHighlight();
 			const dataSeries = this.getDataSeries();
@@ -129,8 +129,8 @@ namespace com.google.finance
 			gr.lineStyle(5, this.lineColor, 1);
 			gr.moveTo(_loc8_, _loc9_ - 0.2);
 			gr.lineTo(_loc8_, _loc9_ + 0.2);
-			if (param3["points"] === undefined)
-				param3["points"] = [];
+			if (state["points"] === undefined)
+				state["points"] = [];
 
 			const _loc10_ = Math.round((_loc5_.close / this.localStartPrice - 1) * 10000) / 100;
 			const _loc11_ = " " + this.getPercentText(_loc10_) + "%";
@@ -147,8 +147,8 @@ namespace com.google.finance
 			if (this.dataSource.displayName)
 				infoDotInfo.displayName = this.dataSource.displayName;
 
-			param3["points"].push(infoDotInfo);
-			param3["setter"] = this;
+			state["points"].push(infoDotInfo);
+			state["setter"] = this;
 		}
 
 		private getPercentText(param1: number): string

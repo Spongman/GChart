@@ -15,9 +15,8 @@ namespace com.google.finance
 			if (!IntervalBasedChartManagerLayer.enabledChartLayerName)
 				IntervalBasedChartManagerLayer.enabledChartLayerName = Const.DEFAULT_CHART_STYLE_NAME;
 
-			for (let index = 0; index < Const.CHART_STYLE_NAMES.length; index++)
+			for (const styleName of Const.CHART_STYLE_NAMES)
 			{
-				const styleName = Const.CHART_STYLE_NAMES[index];
 				const className = getDefinitionByName("com.google.finance." + styleName) as typeof IntervalBasedChartLayer;
 				const chartLayer = new className(viewPoint, dataSource);
 				chartLayer.name = styleName;
@@ -43,7 +42,7 @@ namespace com.google.finance
 			return this.enabledChartLayer ? this.enabledChartLayer.getLayerName() : "";
 		}
 
-		setEnabledLayer(param1: string) 
+		setEnabledLayer(param1: string)
 		{
 			if (this.getEnabledLayerName() === param1)
 				return;
@@ -54,37 +53,36 @@ namespace com.google.finance
 				this.enabledChartLayer = null;
 				IntervalBasedChartManagerLayer.enabledChartLayerName = null;
 			}
-			for (let layerIndex = 0; layerIndex < this.chartLayers.length; layerIndex++)
+			for (const layer of this.chartLayers)
 			{
-				const _loc3_ = this.chartLayers[layerIndex];
-				if (_loc3_.getLayerName() === param1)
+				if (layer.getLayerName() === param1)
 				{
-					_loc3_.setEnabled(true);
-					this.enabledChartLayer = _loc3_;
+					layer.setEnabled(true);
+					this.enabledChartLayer = layer;
 					IntervalBasedChartManagerLayer.enabledChartLayerName = param1;
 					break;
 				}
 			}
 		}
 
-		getContext(context: Context, param2 = false) 
+		getContext(context: Context, param2 = false)
 		{
 			return this.enabledChartLayer ? this.enabledChartLayer.getContext(context, param2) : context;
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			if (this.enabledChartLayer)
 				this.enabledChartLayer.renderLayer(context);
 		}
 
-		highlightPoint(context: Context, param2: number, param3: { [key: string]: any }) 
+		highlightPoint(context: Context, param2: number, state: Dictionary)
 		{
 			if (this.enabledChartLayer)
-				this.enabledChartLayer.highlightPoint(context, param2, param3);
+				this.enabledChartLayer.highlightPoint(context, param2, state);
 		}
 
-		clearHighlight() 
+		clearHighlight()
 		{
 			if (this.enabledChartLayer)
 				this.enabledChartLayer.clearHighlight();

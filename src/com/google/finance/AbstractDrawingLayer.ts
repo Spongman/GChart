@@ -9,15 +9,15 @@ namespace com.google.finance
 			return context;
 		}
 
-		protected getBarWidth(param1: Intervals, dataSeries: DataSeries): number
+		protected getBarWidth(interval: Intervals, dataSeries: DataSeries): number
 		{
 			let numDays = 0;
-			if (param1 === Intervals.WEEKLY)
+			if (interval === Intervals.WEEKLY)
 				numDays = dataSeries.marketDayLength * 5;
-			else if (param1 === Intervals.DAILY)
+			else if (interval === Intervals.DAILY)
 				numDays = dataSeries.marketDayLength;
 			else
-				numDays = Const.getDetailLevelInterval(param1) / 60;
+				numDays = Const.getDetailLevelInterval(interval) / 60;
 
 			if (this.viewPoint.count === 0)
 				return 0;
@@ -29,7 +29,7 @@ namespace com.google.finance
 			return width;
 		}
 
-		clearHighlight() 
+		clearHighlight()
 		{
 		}
 
@@ -37,9 +37,9 @@ namespace com.google.finance
 		{
 			let xPos = (<ViewPoint><any>this.viewPoint).getXPos(dataUnit);
 			const marketDayLength = this.dataSource.data.marketDayLength;
-			const _loc5_ = this.viewPoint.minutePix * marketDayLength * 4;
-			if (param2 < xPos + _loc5_)
-				xPos = param2 - _loc5_;
+			const width = this.viewPoint.minutePix * marketDayLength * 4;
+			if (param2 < xPos + width)
+				xPos = param2 - width;
 
 			dataUnit.weeklyXPos = xPos;
 			return xPos;
@@ -61,7 +61,7 @@ namespace com.google.finance
 			return Utils.getLastRealPointIndex(dataUnits);
 		}
 
-		highlightPoint(context: Context, param2: number, param3: { [key: string]: any })
+		highlightPoint(context: Context, param2: number, state: Dictionary)
 		{
 		}
 

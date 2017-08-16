@@ -43,9 +43,9 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		setObject(param1: StockDividend) 
+		setObject(stockDividend: StockDividend) 
 		{
-			this.associatedStockDividend = param1;
+			this.associatedStockDividend = stockDividend;
 			this.showText();
 		}
 

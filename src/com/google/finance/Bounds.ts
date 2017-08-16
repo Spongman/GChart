@@ -9,12 +9,12 @@ namespace com.google.finance
 			return "[" + this.minx + "," + this.miny + "][" + this.maxx + "," + this.maxy + "]";
 		}
 
-		containsPoint(param1: number, param2: number): boolean
+		containsPoint(x: number, y: number): boolean
 		{
-			return param1 > this.minx && param1 < this.maxx && param2 > this.miny && param2 < this.maxy;
+			return x > this.minx && x < this.maxx && y > this.miny && y < this.maxy;
 		}
 
-		append(bounds: Bounds) 
+		append(bounds: Bounds)
 		{
 			this.minx = Math.min(this.minx, bounds.minx);
 			this.miny = Math.min(this.miny, bounds.miny);
@@ -22,11 +22,11 @@ namespace com.google.finance
 			this.maxy = Math.max(this.maxy, bounds.maxy);
 		}
 
-		equals(param1: any): boolean
+		equals(otherBounds: any): boolean
 		{
-			const _loc2_ = param1 as Bounds;
-			if (_loc2_)
-				return _loc2_.minx === this.minx && _loc2_.miny === this.miny && _loc2_.maxx === this.maxx && _loc2_.maxy === this.maxy;
+			const bounds = otherBounds as Bounds;
+			if (bounds)
+				return bounds.minx === this.minx && bounds.miny === this.miny && bounds.maxx === this.maxx && bounds.maxy === this.maxy;
 
 			return false;
 		}

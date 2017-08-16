@@ -11,13 +11,13 @@ namespace com.google.i18n.locale
 
 	class PatternPart
 	{
-		constructor(public text:string, public type:PatternPartTypes) {}
+		constructor(public text: string, public type: PatternPartTypes) { }
 	}
-	
+
 	export class DateTimeFormat
 	{
 		private tokensHash: { [key: string]: boolean } = {};
-		private symbols: { [key: string]: any } = DateTimeLocale.getResource(DateTimeLocale.getLocale());
+		private symbols: Dictionary = DateTimeLocale.getResource(DateTimeLocale.getLocale());
 		private TOKENS = "GyMkSEahKHcLQdmsvzZ";
 		private patternParts: PatternPart[] = [];
 
@@ -27,14 +27,13 @@ namespace com.google.i18n.locale
 				this.tokensHash[this.TOKENS.substr(tokenIndex, 1)] = true;
 		}
 
-		applyPattern(pattern: string) 
+		applyPattern(pattern: string)
 		{
-			let _loc5_ = 0;
 			let _loc2_ = 0;
 			const length = pattern.length;
 			while (_loc2_ < pattern.length)
 			{
-				_loc5_ = _loc2_;
+				let _loc5_ = _loc2_;
 				while (_loc5_ < length && !this.tokensHash[pattern.substr(_loc5_, 1)])
 					_loc5_++;
 
@@ -120,15 +119,15 @@ namespace com.google.i18n.locale
 			}
 		}
 
-		applyStandardPattern(param1: DateTimeFormats)
+		applyStandardPattern(dateTimeFormat: DateTimeFormats)
 		{
 			let pattern: string;
-			if (param1 < 4)
-				pattern = (<any>this.symbols).DATEFORMATS[param1];
-			else if (param1 < 8)
-				pattern = (<any>this.symbols).TIMEFORMATS[param1 - 4];
-			else if (param1 < 12)
-				pattern = (<any>this.symbols).DATEFORMATS[param1 - 8] + " " + (<any>this.symbols).TIMEFORMATS[param1 - 8];
+			if (dateTimeFormat < 4)
+				pattern = (<any>this.symbols).DATEFORMATS[dateTimeFormat];
+			else if (dateTimeFormat < 8)
+				pattern = (<any>this.symbols).TIMEFORMATS[dateTimeFormat - 4];
+			else if (dateTimeFormat < 12)
+				pattern = (<any>this.symbols).DATEFORMATS[dateTimeFormat - 8] + " " + (<any>this.symbols).TIMEFORMATS[dateTimeFormat - 8];
 			else
 			{
 				this.applyStandardPattern(DateTimeFormats.MEDIUM_DATETIME_FORMAT);
@@ -296,7 +295,7 @@ namespace com.google.i18n.locale
 			const _loc3_ = Math.floor(param1);
 			const _loc4_ = String(_loc3_);
 			let _loc5_ = "";
-			
+
 			for (let _loc6_ = 0; _loc6_ < Math.max(0, param2 - _loc4_.length); _loc6_++)
 				_loc5_ = _loc5_ + "0";
 

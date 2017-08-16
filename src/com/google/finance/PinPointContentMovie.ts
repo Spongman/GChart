@@ -34,12 +34,12 @@ namespace com.google.finance
 			this.viewPoint = viewPoint;
 			this.content.defaultTextFormat = new flash.text.TextFormat("Arial", 11);
 			this.content.selectable = false;
-			this.content.addEventListener(MouseEvents.MOUSE_OVER, (param1: Event) =>
+			this.content.addEventListener(MouseEvents.MOUSE_OVER, (event: Event) =>
 			{
 				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.content);
 			});
-			this.content.addEventListener(MouseEvents.MOUSE_OUT, (param1: Event) =>
+			this.content.addEventListener(MouseEvents.MOUSE_OUT, (event: Event) =>
 			{
 				MainManager.mouseCursor.unlock();
 			});
@@ -55,16 +55,16 @@ namespace com.google.finance
 			this.closeButton.hitTestState = closeButtonBitmap;
 			this.closeButton.upState = closeButtonBitmap;
 			this.closeButton.useHandCursor = true;
-			this.closeButton.addEventListener(MouseEvents.MOUSE_OVER, (param1: Event) =>
+			this.closeButton.addEventListener(MouseEvents.MOUSE_OVER, (event: Event) =>
 			{
 				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.closeButton);
 			});
-			this.closeButton.addEventListener(MouseEvents.MOUSE_OUT, (param1: Event) =>
+			this.closeButton.addEventListener(MouseEvents.MOUSE_OUT, (event: Event) =>
 			{
 				MainManager.mouseCursor.unlock();
 			});
-			this.closeButton.addEventListener(MouseEvents.CLICK, (param1: Event) =>
+			this.closeButton.addEventListener(MouseEvents.CLICK, (event: Event) =>
 			{
 				let activePinPoint = notnull(this.activePinPoint);
 				activePinPoint.active = false;
@@ -75,9 +75,9 @@ namespace com.google.finance
 			});
 		}
 
-		setActivePinPoint(param1: com.google.finance.PinPoint, param2: number, param3: number) 
+		setActivePinPoint(pinPoint: com.google.finance.PinPoint, param2: number, param3: number) 
 		{
-			this.activePinPoint = param1;
+			this.activePinPoint = pinPoint;
 			this.movieLeftX = param2;
 			this.movieBottomY = param3;
 		}

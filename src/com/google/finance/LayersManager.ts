@@ -87,48 +87,48 @@ namespace com.google.finance
 			this.chartHeightInStyle[LayersManager.PERCENT] = Const.MOVIE_HEIGHT;
 		}
 
-		static moveVolumeBelowPrice(param1: IViewPoint[])
+		static moveVolumeBelowPrice(viewPoints: IViewPoint[])
 		{
-			const viewPointIndex1 = LayersManager.getViewPointIndex(Const.MAIN_VIEW_POINT_NAME, param1, "name");
-			const viewPointIndex2 = LayersManager.getViewPointIndex(Const.BOTTOM_VIEW_POINT_NAME, param1, "name");
+			const viewPointIndex1 = LayersManager.getViewPointIndex(Const.MAIN_VIEW_POINT_NAME, viewPoints, "name");
+			const viewPointIndex2 = LayersManager.getViewPointIndex(Const.BOTTOM_VIEW_POINT_NAME, viewPoints, "name");
 			if (viewPointIndex1 >= 0 && viewPointIndex2 >= 0 && viewPointIndex2 > viewPointIndex1 + 1)
 			{
-				const _loc4_ = param1[viewPointIndex2];
-				param1.splice(viewPointIndex2, 1);
-				param1.splice(viewPointIndex1 + 1, 0, _loc4_);
+				const _loc4_ = viewPoints[viewPointIndex2];
+				viewPoints.splice(viewPointIndex2, 1);
+				viewPoints.splice(viewPointIndex1 + 1, 0, _loc4_);
 			}
 		}
 
-		static getViewPointIndex(param1: string, param2: IViewPoint[], param3: string): number
+		static getViewPointIndex(param1: string, viewPoints: IViewPoint[], param3: string): number
 		{
-			let _loc4_ = param2.length - 1;
-			while (_loc4_ >= 0 && (<any>param2[_loc4_])[param3] !== param1)	// TODO:
+			let _loc4_ = viewPoints.length - 1;
+			while (_loc4_ >= 0 && (<any>viewPoints[_loc4_])[param3] !== param1)	// TODO:
 			{
 				_loc4_--;
 			}
 			return _loc4_;
 		}
 
-		removeLayerFromStyle(param1: LayerInfo, param2: string)
+		removeLayerFromStyle(layerInfo: LayerInfo, param2: string)
 		{
 			if (this.config[param2] === undefined)
 				return;
 
 			let _loc3_ = -1;
-			for (let _loc4_ = 0; _loc4_ < this.config[param2].layers.length; _loc4_++)
+			for (let layerIndex = 0; layerIndex < this.config[param2].layers.length; layerIndex++)
 			{
-				if (Utils.isSubset(param1, this.config[param2].layers[_loc4_]))
-					_loc3_ = _loc4_;
+				if (Utils.isSubset(layerInfo, this.config[param2].layers[layerIndex]))
+					_loc3_ = layerIndex;
 			}
 			if (_loc3_ !== -1)
 			{
 				this.config[param2].layers.splice(_loc3_, 1);
-				_loc3_ = this.getLayerModelIndex(param1);
+				_loc3_ = this.getLayerModelIndex(layerInfo);
 				if (_loc3_ !== -1)
 					this.layers.splice(_loc3_, 1);
 
-				const layerId = this.getLayerId(param1);
-				this.displayManager.removeLayer(layerId, param1.vp);
+				const layerId = this.getLayerId(layerInfo);
+				this.displayManager.removeLayer(layerId, layerInfo.vp);
 			}
 		}
 
@@ -142,58 +142,57 @@ namespace com.google.finance
 			if (this.mainManager.quote === param1)
 				return Const.LINE_CHART_LINE_COLOR;
 
-			for (let _loc2_ = 0; _loc2_ < this.takenColors.length; _loc2_++)
+			for (let colorIndex = 0; colorIndex < this.takenColors.length; colorIndex++)
 			{
-				if (this.takenColors[_loc2_].quote === param1)
-					return this.takenColors[_loc2_].color;
+				if (this.takenColors[colorIndex].quote === param1)
+					return this.takenColors[colorIndex].color;
 			}
 
-			for (let _loc2_ = 0; _loc2_ < this.lineColors.length; _loc2_++)
+			for (let colorIndex = 0; colorIndex < this.lineColors.length; colorIndex++)
 			{
 				let _loc3_ = false;
-				for (let _loc4_ = 0; _loc4_ < this.takenColors.length; _loc4_++)
+				for (let takenColorIndex = 0; takenColorIndex < this.takenColors.length; takenColorIndex++)
 				{
-					if (this.takenColors[_loc4_].color === this.lineColors[_loc2_])
+					if (this.takenColors[takenColorIndex].color === this.lineColors[colorIndex])
 						_loc3_ = true;
 
-					_loc4_++;
+					takenColorIndex++;
 				}
 				if (!_loc3_)
 				{
 					this.takenColors.push({
-						"quote": param1,
-						"color": this.lineColors[_loc2_]
+						quote: param1,
+						color: this.lineColors[colorIndex]
 					});
-					return this.lineColors[_loc2_];
+					return this.lineColors[colorIndex];
 				}
 			}
 			return 0;
 		}
 
-		private removeViewPoints(param1: IViewPoint[], param2: IViewPoint[])
+		private removeViewPoints(remove: IViewPoint[], except: IViewPoint[])
 		{
-			let _loc5_ = 0;
-			for (let _loc3_ = 0; _loc3_ < param1.length; _loc3_++)
+			for (let removeIndex = 0; removeIndex < remove.length; removeIndex++)
 			{
-				const _loc4_ = param1[_loc3_];
-				_loc5_ = LayersManager.getViewPointIndex(_loc4_.name, param2, "name");
+				const _loc4_ = remove[removeIndex];
+				const _loc5_ = LayersManager.getViewPointIndex(_loc4_.name, except, "name");
 				if (_loc5_ === -1)
 					this.displayManager.removeViewPoint(_loc4_.name);
 			}
 		}
 
-		private applyStartEndToViewPoints(param1: StartEndPair)
+		private applyStartEndToViewPoints(startEndPair: StartEndPair)
 		{
 			const viewPoints = this.displayManager.getViewPoints();
-			for (let _loc3_ = 0; _loc3_ < viewPoints.length; _loc3_++)
+			for (let viewPointIndex = 0; viewPointIndex < viewPoints.length; viewPointIndex++)
 			{
-				const _loc4_ = viewPoints[_loc3_];
-				_loc4_.lastMinute = param1.end;
-				_loc4_.setNewCount(param1.end - param1.start);
+				const _loc4_ = viewPoints[viewPointIndex];
+				_loc4_.lastMinute = startEndPair.end;
+				_loc4_.setNewCount(startEndPair.end - startEndPair.start);
 			}
 		}
 
-		addIndicatorLayer(param1: string, param2: string, param3: string, source: DataSource, param5: LayerInfo): AbstractLayer<ViewPoint> | null
+		addIndicatorLayer(param1: string, param2: string, param3: string, source: DataSource, layerInfo: LayerInfo): AbstractLayer<ViewPoint> | null
 		{
 			switch (param1)
 			{
@@ -237,11 +236,11 @@ namespace com.google.finance
 
 		private getAnyLayerModelIndexForDatasource(dataSource: DataSource): number
 		{
-			for (let _loc2_ = 0; _loc2_ < this.layers.length; _loc2_++)
+			for (let layerIndex = 0; layerIndex < this.layers.length; layerIndex++)
 			{
-				const _loc3_ = this.layers[_loc2_];
+				const _loc3_ = this.layers[layerIndex];
 				if (dataSource === _loc3_.ds)
-					return _loc2_;
+					return layerIndex;
 			}
 			return -1;
 		}
@@ -251,12 +250,12 @@ namespace com.google.finance
 			//const _loc4_ = this.mainManager.layersManager;
 			const dataManager = this.mainManager.dataManager;
 			const mainController = this.displayManager.mainController;
-			const _loc7_ = <ViewPoint><any>this.displayManager.getMainViewPoint();
+			const mainViewPoint = this.displayManager.getMainViewPoint();
 			this.updateColors(param1);
 			this.deleteDataSources();
 			const _loc8_ = this.displayManager.isDifferentMarketSessionComparison();
-			const lastMinute = _loc7_.lastMinute;
-			const count = _loc7_.count;
+			const lastMinute = mainViewPoint.lastMinute;
+			const count = mainViewPoint.count;
 			let _loc11_ = _loc8_;
 			if (_loc8_ && !param2)
 				_loc11_ = this.isDifferentMarketSessionComparison(param1);
@@ -326,25 +325,25 @@ namespace com.google.finance
 			this.displayManager.showContextualStaticInfo();
 		}
 
-		private getLayerId(param1: AbstractLayer<ViewPoint> | LayerInfo): string
+		private getLayerId(layer: AbstractLayer<ViewPoint> | LayerInfo): string
 		{
-			switch (param1.name)
+			switch (layer.name)
 			{
 				case "SimpleMovingAverage":
-					return param1.name + "-" + (<any>param1).length;	// TODO
+					return layer.name + "-" + (<any>layer).length;	// TODO
 				case "IndependentObjectsLayer":
-					return "Objects" + (<IndependentObjectsLayer>param1).renderObj;
+					return "Objects" + (<IndependentObjectsLayer>layer).renderObj;
 				case "IntervalBasedIndependentObjectsLayer":
-					return "Objects" + (<IntervalBasedIndependentObjectsLayer>param1).renderObj;
+					return "Objects" + (<IntervalBasedIndependentObjectsLayer>layer).renderObj;
 				default:
-					return param1.name;
+					return layer.name;
 			}
 		}
 
-		private removeAllLayers(param1: IViewPoint[]) 
+		private removeAllLayers(viewPoints: IViewPoint[]) 
 		{
-			for (let _loc2_ = 0; _loc2_ < param1.length; _loc2_++)
-				param1[_loc2_].removeAllLayers();
+			for (let viewPointIndex = 0; viewPointIndex < viewPoints.length; viewPointIndex++)
+				viewPoints[viewPointIndex].removeAllLayers();
 
 			this.layers = [];
 		}
@@ -387,14 +386,14 @@ namespace com.google.finance
 			this.syncDataSources(_loc2_, false);
 		}
 
-		private getLayerModelIndex(param1: LayerInfo, param2?: DataSource): number
+		private getLayerModelIndex(layerInfo: LayerInfo, dataSource?: DataSource): number
 		{
-			const layerId = this.getLayerId(param1);
-			for (let _loc3_ = this.layers.length - 1; _loc3_ >= 0; _loc3_--)
+			const layerId = this.getLayerId(layerInfo);
+			for (let layerIndex = this.layers.length - 1; layerIndex >= 0; layerIndex--)
 			{
-				const _loc5_ = this.layers[_loc3_];
-				if (this.getLayerId(_loc5_) === layerId && _loc5_.vp === param1.vp && (!param2 || param2 === _loc5_.ds)) // TODO:_loc5_.dataSource?
-					return _loc3_;
+				const _loc5_ = this.layers[layerIndex];
+				if (this.getLayerId(_loc5_) === layerId && _loc5_.vp === layerInfo.vp && (!dataSource || dataSource === _loc5_.ds)) // TODO:_loc5_.dataSource?
+					return layerIndex;
 			}
 			return -1;
 		}
@@ -404,7 +403,7 @@ namespace com.google.finance
 			return this.comparedTickers.length;
 		}
 
-		addLayerToStyle(param1: LayerInfo, param2: string)
+		addLayerToStyle(layerInfo: LayerInfo, param2: string)
 		{
 			if (this.config[param2] === undefined)
 				this.config[param2] = new LayerConfig();
@@ -412,80 +411,80 @@ namespace com.google.finance
 			if (this.config[param2].layers === undefined)
 				this.config[param2].layers = [];
 
-			this.config[param2].layers.push(param1);
+			this.config[param2].layers.push(layerInfo);
 			if (this.style_ === param2)
 			{
-				for (let _loc3_ = 0; _loc3_ < this.dataSources.length; _loc3_++)
-					this.addLayer(param1, this.dataSources[_loc3_]);
+				for (let dataSourceIndex = 0; dataSourceIndex < this.dataSources.length; dataSourceIndex++)
+					this.addLayer(layerInfo, this.dataSources[dataSourceIndex]);
 			}
 			this.displayManager.update();
 		}
 
 		dataSourcePos(dataSource: DataSource): number
 		{
-			for (let _loc2_ = 0; _loc2_ < this.dataSources.length; _loc2_++)
+			for (let dataSourceIndex = 0; dataSourceIndex < this.dataSources.length; dataSourceIndex++)
 			{
-				if (this.dataSources[_loc2_] === dataSource)
-					return _loc2_;
+				if (this.dataSources[dataSourceIndex] === dataSource)
+					return dataSourceIndex;
 			}
 			return 0;
 		}
 
-		private addLayer(param1: LayerInfo, param2: DataSource)
+		private addLayer(layerInfo: LayerInfo, dataSource: DataSource)
 		{
 			let _loc3_ = -1;
-			if (param1.arity === "Unique")
-				_loc3_ = Number(this.getLayerModelIndex(param1));
-			else if (param1.arity === "MultipleNonPrimary")
-				_loc3_ = Number(this.getAnyLayerModelIndexForDatasource(param2));
+			if (layerInfo.arity === "Unique")
+				_loc3_ = Number(this.getLayerModelIndex(layerInfo));
+			else if (layerInfo.arity === "MultipleNonPrimary")
+				_loc3_ = Number(this.getAnyLayerModelIndexForDatasource(dataSource));
 			else
-				_loc3_ = Number(this.getLayerModelIndex(param1, param2));
+				_loc3_ = Number(this.getLayerModelIndex(layerInfo, dataSource));
 
 			if (_loc3_ === -1)
 			{
 				let _loc5_: AbstractLayer<IViewPoint> | null = null;
-				const layerId = this.getLayerId(param1);
-				switch (param1.type)
+				const layerId = this.getLayerId(layerInfo);
+				switch (layerInfo.type)
 				{
 					case "simple":
-						_loc5_ = this.displayManager.addLayer(param1.name, param1.vp, param2, layerId);
+						_loc5_ = this.displayManager.addLayer(layerInfo.name, layerInfo.vp, dataSource, layerId);
 						break;
 					case "indicator":
-						const layerInfo = new LayerInfo();
-						for (let _loc4_ in param1)
+						const newIndicatorLayerInfo = new LayerInfo();
+						for (let key in layerInfo)
 						{
-							if (_loc4_ !== "name" && _loc4_ !== "vp" && _loc4_ !== "arity" && _loc4_ !== "type")
+							if (key !== "name" && key !== "vp" && key !== "arity" && key !== "type")
 							{
-								(<any>layerInfo)[_loc4_] = (<any>param1)[_loc4_];	// TODO
+								(<any>newIndicatorLayerInfo)[key] = (<any>layerInfo)[key];	// TODO
 							}
 						}
-						_loc5_ = this.addIndicatorLayer(param1.name, layerId, param1.vp, param2, layerInfo);
+						_loc5_ = this.addIndicatorLayer(layerInfo.name, layerId, layerInfo.vp, dataSource, newIndicatorLayerInfo);
 						break;
 				}
 				if (!_loc5_)
 					return;
-				if (param1.arity === "Multiple" || param1.arity === "MultipleNonPrimary" || param1.name === "PrecalculatedPercentLineChartLayer")
+				if (layerInfo.arity === "Multiple" || layerInfo.arity === "MultipleNonPrimary" || layerInfo.name === "PrecalculatedPercentLineChartLayer")
 				{
-					_loc5_.lineColor = this.getNextColor(param2.quoteName);
+					_loc5_.lineColor = this.getNextColor(dataSource.quoteName);
 					_loc5_.lineThickness = Const.LINE_CHART_LINE_THICKNESS;
 					_loc5_.lineVisibility = Const.LINE_CHART_LINE_VISIBILITY;
 				}
-				const layerInfo = new LayerInfo();
-				layerInfo.name = param1.name;
-				layerInfo.type = param1.type;
-				layerInfo.vp = param1.vp;
-				layerInfo.layer = _loc5_;
-				layerInfo.ds = param2;
-				layerInfo.id = layerId;
-				for (let _loc4_ in param1)
+				const newLayerInfo = new LayerInfo();
+				newLayerInfo.name = layerInfo.name;
+				newLayerInfo.type = layerInfo.type;
+				newLayerInfo.vp = layerInfo.vp;
+				newLayerInfo.layer = _loc5_;
+				newLayerInfo.ds = dataSource;
+				newLayerInfo.id = layerId;
+				for (let key in layerInfo)
 				{
-					if (_loc4_ !== "name" && _loc4_ !== "vp" && _loc4_ !== "arity")
+					if (key !== "name" && key !== "vp" && key !== "arity")
 					{
-						(<any>_loc5_)[_loc4_] = (<any>param1)[_loc4_];
-						(<any>layerInfo)[_loc4_] = (<any>param1)[_loc4_];
+						(<any>_loc5_)[key] = (<any>layerInfo)[key];
+						(<any>newLayerInfo)[key] = (<any>layerInfo)[key];
 					}
 				}
-				this.layers.push(layerInfo);
+				this.layers.push(newLayerInfo);
 			}
 		}
 
@@ -512,44 +511,44 @@ namespace com.google.finance
 
 		addCompareTo(param1: string, param2 = false)
 		{
-			let _loc3_: string[] = [];
+			let tickers: string[] = [];
 			const value = Utils.findValueInArray(param1, this.comparedTickers);
 			if (value === -1)
 			{
 				this.comparedTickers.push(param1);
 				if (this.dataSources.length > 0)
-					_loc3_.push(this.dataSources[0].quoteName);
+					tickers.push(this.dataSources[0].quoteName);
 
-				_loc3_ = _loc3_.concat(this.comparedTickers);
+				tickers = tickers.concat(this.comparedTickers);
 				delete this.refuseDataSources[param1];
-				this.syncDataSources(_loc3_, true, param2);
-				(<ViewPoint>this.displayManager.getMainViewPoint()).checkEvents();
+				this.syncDataSources(tickers, true, param2);
+				(this.displayManager.getMainViewPoint()).checkEvents();
 			}
 		}
 
 		figureOutDefaultLastMinute(dataSource: DataSource)
 		{
-			const _loc2_ = <ViewPoint><any>this.displayManager.getMainViewPoint();
-			this.displayManager.setLastMinute(_loc2_.getNewestMinute());
+			const mainViewPoint = this.displayManager.getMainViewPoint();
+			this.displayManager.setLastMinute(mainViewPoint.getNewestMinute());
 		}
 
 		addLayers(dataSource: DataSource)
 		{
-			const _loc2_ = Const.SPARKLINE_VIEW_POINT_NAME;
+			const viewPointName = Const.SPARKLINE_VIEW_POINT_NAME;
 			if (dataSource.quoteName === this.mainManager.quote)
 			{
 				const layerInfo = new LayerInfo();
 				layerInfo.name = Const.WINDOW_LAYER;
 				layerInfo.arity = "Unique";
 				layerInfo.type = "simple";
-				layerInfo.vp = _loc2_;
+				layerInfo.vp = viewPointName;
 				const layerId = this.getLayerId(layerInfo);
-				this.displayManager.addLayer(Const.WINDOW_LAYER, _loc2_, dataSource, layerId);
+				this.displayManager.addLayer(Const.WINDOW_LAYER, viewPointName, dataSource, layerId);
 			}
 			const layers = this.config[this.style_].layers;
-			for (let _loc4_ = 0; _loc4_ < layers.length; _loc4_++)
+			for (let layerIndex = 0; layerIndex < layers.length; layerIndex++)
 			{
-				this.addLayer(layers[_loc4_], dataSource);
+				this.addLayer(layers[layerIndex], dataSource);
 			}
 		}
 
@@ -629,43 +628,43 @@ namespace com.google.finance
 
 		getContextualStaticInfo()
 		{
-			const _loc1_: { [key: string]: any } = {};
+			const _loc1_: Dictionary = {};
 			const viewPoints = this.displayManager.getViewPoints();
-			for (let _loc3_ = 1; _loc3_ < viewPoints.length; _loc3_++)
+			for (let viewPointIndex = 1; viewPointIndex < viewPoints.length; viewPointIndex++)
 			{
-				const _loc4_ = viewPoints[_loc3_];
+				const _loc4_ = viewPoints[viewPointIndex];
 				_loc4_.highlightPoint(Const.MOVIE_WIDTH, _loc1_);
 				_loc4_.clearPointInformation();
 			}
 			return _loc1_;
 		}
 
-		private moveViewPointBtArrays(param1: string, param2: IViewPoint[], param3: IViewPoint[])
+		private moveViewPointBtArrays(param1: string, from: IViewPoint[], to: IViewPoint[])
 		{
-			const viewPointIndex = LayersManager.getViewPointIndex(param1, param2, "name");
+			const viewPointIndex = LayersManager.getViewPointIndex(param1, from, "name");
 			if (viewPointIndex === -1)
 				return;
 
-			param3.push(param2[viewPointIndex]);
-			param2.splice(viewPointIndex, 1);
+			to.push(from[viewPointIndex]);
+			from.splice(viewPointIndex, 1);
 		}
 
-		private addViewPoints(param1: ViewPoint[], param2: IViewPoint[], param3: number)
+		private addViewPoints(viewPoints: ViewPoint[], except: IViewPoint[], param3: number)
 		{
-			const _loc4_ = <ViewPoint><any>this.displayManager.getMainViewPoint();
-			for (let _loc5_ = 0; _loc5_ < param1.length; _loc5_++)
+			const mainViewPoint = this.displayManager.getMainViewPoint();
+			for (let viewPointIndex = 0; viewPointIndex < viewPoints.length; viewPointIndex++)
 			{
-				const _loc6_ = param1[_loc5_];
-				const viewPointIndex = LayersManager.getViewPointIndex(_loc6_.name, param2, "name");
-				if (viewPointIndex === -1)
+				const _loc6_ = viewPoints[viewPointIndex];
+				const exceptIndex = LayersManager.getViewPointIndex(_loc6_.name, except, "name");
+				if (exceptIndex === -1)
 				{
-					this.displayManager.addViewPoint("ViewPoint", _loc6_.name, 0, _loc6_.height, Number(_loc6_.topMargin), this.mainManager.stage.stageWidth, this.mainManager.stage.stageHeight, _loc4_);
+					this.displayManager.addViewPoint("ViewPoint", _loc6_.name, 0, _loc6_.height, Number(_loc6_.topMargin), this.mainManager.stage.stageWidth, this.mainManager.stage.stageHeight, mainViewPoint);
 					//const _loc8_ = this.displayManager.getViewPoint(_loc6_.name);
 				}
 				else
 				{
-					const _loc9_ = <ViewPoint>this.displayManager.getViewPoint(_loc6_.name);
-					_loc9_.topMargin = Number(_loc6_.topMargin);
+					const existingViewPoint = <ViewPoint>this.displayManager.getViewPoint(_loc6_.name);
+					existingViewPoint.topMargin = Number(_loc6_.topMargin);
 				}
 			}
 		}
@@ -688,14 +687,14 @@ namespace com.google.finance
 					this.displayManager.addLayer(Const.WINDOW_LAYER, Const.SPARKLINE_VIEW_POINT_NAME, dataSource, Const.WINDOW_LAYER);
 					this.displayManager.makeBorderLayerTop();
 					this.displayManager.update();
-					this.displayManager.topBorderLayer.update();
+					//this.displayManager.topBorderLayer.update();
 					return;
 				}
 				if (dataSource.quoteName === this.mainManager.quote && this.dataSources.length !== 0)
 				{
-					const _loc2_ = this.dataSources[0];
+					const tmp = this.dataSources[0];
 					this.dataSources[0] = dataSource;
-					this.dataSources.push(_loc2_);
+					this.dataSources.push(tmp);
 				}
 				else
 				{
@@ -757,11 +756,11 @@ namespace com.google.finance
 			}
 		}
 
-		private haveDataSource(param1: DataSource): boolean
+		private haveDataSource(dataSource: DataSource): boolean
 		{
-			for (let _loc2_ = 0; _loc2_ < this.dataSources.length; _loc2_++)
+			for (let dataSourceIndex = 0; dataSourceIndex < this.dataSources.length; dataSourceIndex++)
 			{
-				if (this.dataSources[_loc2_] === param1)
+				if (this.dataSources[dataSourceIndex] === dataSource)
 					return true;
 			}
 			return false;
@@ -769,15 +768,14 @@ namespace com.google.finance
 
 		setStyle(param1: string)
 		{
-			let _loc7_ = 0;
 			if (Const.INDICATOR_ENABLED)
 				com.google.finance.MainManager.jsProxy.resetChartHeight(this.chartHeightInStyle[param1]);
 
 			const viewpoints = this.config[param1].viewpoints;
 			const viewPoints = this.displayManager.getViewPoints();
-			const _loc4_ = <ViewPoint><any>this.displayManager.getMainViewPoint();
-			_loc4_.clearAllChildrenFromTopCanvas();
-			this.config[this.style_].lastMinute = _loc4_.lastMinute;
+			const mainViewPoint = this.displayManager.getMainViewPoint();
+			mainViewPoint.clearAllChildrenFromTopCanvas();
+			this.config[this.style_].lastMinute = mainViewPoint.lastMinute;
 			this.style_ = param1;
 			this.removeAllLayers(viewPoints.slice(1));
 			this.removeViewPoints(viewPoints.slice(1), viewpoints);
@@ -785,10 +783,10 @@ namespace com.google.finance
 			this.addViewPoints(viewpoints, viewPoints, this.config[this.style_].lastMinute);
 			LayersManager.moveVolumeBelowPrice(viewPoints);
 			this.displayManager.makeBorderLayerTop();
-			for (let _loc5_ = 0; _loc5_ < this.dataSources.length; _loc5_++)
+			for (let dataSourceIndex = 0; dataSourceIndex < this.dataSources.length; dataSourceIndex++)
 			{
-				const _loc6_ = this.dataSources[_loc5_];
-				this.addLayers(_loc6_);
+				const dataSource = this.dataSources[dataSourceIndex];
+				this.addLayers(dataSource);
 			}
 			if (param1 === LayersManager.COMPARISON)
 			{
@@ -797,10 +795,11 @@ namespace com.google.finance
 			else if (param1 === LayersManager.SINGLE)
 			{
 				const _loc8_ = !!Const.INDICATOR_ENABLED ? this.displayManager.getEnabledChartLayer() : "";
+				let _loc7_;
 				if (this.displayManager.mainController.currentIntervalLevel === -1 && (_loc8_ === Const.CANDLE_STICK || _loc8_ === Const.OHLC_CHART))
 					_loc7_ = Const.DEFAULT_D;
 				else
-					_loc7_ = !!Const.INDICATOR_ENABLED ? _loc4_.getDetailLevelForTechnicalStyle() : _loc4_.getDetailLevel();
+					_loc7_ = !!Const.INDICATOR_ENABLED ? mainViewPoint.getDetailLevelForTechnicalStyle() : mainViewPoint.getDetailLevel();
 
 				if (_loc7_ === Intervals.INTRADAY && Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
 					this.displayManager.toggleAllAfterHoursSessions(true);
@@ -813,27 +812,27 @@ namespace com.google.finance
 			this.style_ = param2;
 			this.fullRedrawWithNextData_ = true;
 			const viewPoints = this.displayManager.getViewPoints();
-			const _loc4_: IViewPoint[] = [];
+			const remove: IViewPoint[] = [];
 			for (let _loc5_ = 0; _loc5_ < viewPoints.length; _loc5_++)
 			{
 				if (viewPoints[_loc5_].name === Const.MAIN_VIEW_POINT_NAME)
-					_loc4_.push(viewPoints[_loc5_]);
+					remove.push(viewPoints[_loc5_]);
 				else if (viewPoints[_loc5_].name === Const.SPARKLINE_VIEW_POINT_NAME)
 					(<SparklineViewPoint>viewPoints[_loc5_]).replaceSparklineDataSource(dataSource);
 			}
-			this.removeAllLayers(_loc4_);
+			this.removeAllLayers(remove);
 		}
 
-		private separateHiddenViewPoints(param1: LayerConfig)
+		private separateHiddenViewPoints(layerConfig: LayerConfig)
 		{
-			const viewpoints = param1.viewpoints;
-			const hiddenViewpoints = param1.hiddenViewpoints;
-			for (let _loc4_ = 0; _loc4_ < viewpoints.length; _loc4_++)
+			const viewpoints = layerConfig.viewpoints;
+			const hiddenViewpoints = layerConfig.hiddenViewpoints;
+			for (let viewPointIndex = 0; viewPointIndex < viewpoints.length; viewPointIndex++)
 			{
-				if (viewpoints[_loc4_].display === "hidden")
+				if (viewpoints[viewPointIndex].display === "hidden")
 				{
-					this.moveViewPointBtArrays(viewpoints[_loc4_].name, viewpoints, hiddenViewpoints);
-					_loc4_--;
+					this.moveViewPointBtArrays(viewpoints[viewPointIndex].name, viewpoints, hiddenViewpoints);
+					viewPointIndex--;
 				}
 			}
 		}

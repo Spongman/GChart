@@ -13,8 +13,8 @@ namespace com.google.finance.ui
 		{
 			super.buttonPress(event);
 			let button = (<any>event.currentTarget).displayObject as flash.display.SimpleButton;
-			const _loc2_ = (<flash.display.DisplayObjectContainer>button.upState).getChildAt(0) as flash.text.TextField;
-			this.selectButton(_loc2_.text);
+			const textField = (<flash.display.DisplayObjectContainer>button.upState).getChildAt(0) as flash.text.TextField;
+			this.selectButton(textField.text);
 		}
 
 		private selectButton(param1: string): number
@@ -29,9 +29,9 @@ namespace com.google.finance.ui
 			this.deselectButton(this.currentButton);
 			if (param1 >= 0 && param1 < this.buttons.length)
 			{
-				const _loc2_ = this.buttons[param1];
-				const _loc3_ = (<flash.display.DisplayObjectContainer>_loc2_.upState).getChildAt(0) as flash.text.TextField;
-				_loc3_.setTextFormat(this.selectedTextFormat);
+				const button = this.buttons[param1];
+				const textField = (<flash.display.DisplayObjectContainer>button.upState).getChildAt(0) as flash.text.TextField;
+				textField.setTextFormat(this.selectedTextFormat);
 				this.currentButton = param1;
 			}
 		}
@@ -46,9 +46,9 @@ namespace com.google.finance.ui
 		{
 			if (param1 !== -1)
 			{
-				const _loc2_ = this.buttons[param1];
-				const _loc3_ = (<flash.display.DisplayObjectContainer>_loc2_.upState).getChildAt(0) as flash.text.TextField;
-				_loc3_.setTextFormat(this.buttonTextFormat);
+				const button = this.buttons[param1];
+				const textField = (<flash.display.DisplayObjectContainer>button.upState).getChildAt(0) as flash.text.TextField;
+				textField.setTextFormat(this.buttonTextFormat);
 			}
 		}
 	}

@@ -7,10 +7,9 @@ namespace mx.utils
 
 	export class NameUtil
 	{
-		static displayObjectToString(param1: flash.display.DisplayObject): string|null
+		static displayObjectToString(displayObject: flash.display.DisplayObject): string|null
 		{
 			let result: string|null = null;
-			let displayObject = param1;
 			try
 			{
 				let o: flash.display.DisplayObject | null = displayObject;
@@ -40,7 +39,7 @@ namespace mx.utils
 
 		/*
 		private static counter = 0;
-		
+
 		static createUniqueName(param1): string
 		{
 			if (!param1)

@@ -21,11 +21,11 @@ namespace com.google.finance.indicator
 				return;
 
 			const points = this.originalDataSeries.getPointsInIntervalArray(param1);
-			for (let _loc7_ = 0; _loc7_ < this.periods.length; _loc7_++)
+			for (let periodIndex = 0; periodIndex < this.periods.length; periodIndex++)
 			{
 				const dataSeries = new DataSeries();
 				let _loc3_ = NaN;
-				const _loc4_ = 2 / (Number(this.periods[_loc7_]) + 1);
+				const _loc4_ = 2 / (Number(this.periods[periodIndex]) + 1);
 				let _loc6_ = 0;
 				let _loc5_ = 0;
 				for (let pointIndex = 0; pointIndex < points.length; pointIndex++)
@@ -36,11 +36,11 @@ namespace com.google.finance.indicator
 						_loc5_++;
 						_loc6_ = Number(_loc6_ + _loc11_.close);
 						let _loc9_: IndicatorPoint;
-						if (_loc5_ < this.periods[_loc7_])
+						if (_loc5_ < this.periods[periodIndex])
 						{
 							_loc9_ = new IndicatorPoint(NaN, _loc11_);
 						}
-						else if (_loc5_ === this.periods[_loc7_])
+						else if (_loc5_ === this.periods[periodIndex])
 						{
 							_loc3_ = _loc6_ / _loc5_;
 							_loc9_ = new IndicatorPoint(_loc3_, _loc11_);
@@ -53,7 +53,7 @@ namespace com.google.finance.indicator
 						dataSeries.points.push(_loc9_);
 					}
 				}
-				this.indicator.setDataSeries(param1, dataSeries, _loc7_);
+				this.indicator.setDataSeries(param1, dataSeries, periodIndex);
 			}
 		}
 

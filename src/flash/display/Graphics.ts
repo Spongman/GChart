@@ -69,7 +69,7 @@ namespace flash.display
 			}
 
 			this.ensureCanvas();
-		
+
 			let context = this._context;
 			let canvas = context.canvas;
 
@@ -94,7 +94,7 @@ namespace flash.display
 				context.lineWidth = this._thickness;
 				context.lineCap = (this._thickness > 4) ? "round" : "butt";
 				context.strokeStyle = cssColor(this._color, this._alpha);
-					
+
 				return;
 			}
 
@@ -237,7 +237,7 @@ namespace flash.display
 			this.endStroke();
 
 			this.ensureCanvas();
-		
+
 			if (this._thickness !== thickness)
 			{
 				this._thickness = thickness;

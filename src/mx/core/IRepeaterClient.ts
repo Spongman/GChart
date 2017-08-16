@@ -1,5 +1,3 @@
-
-
 namespace mx.core
 {
 	export interface IRepeaterClient

@@ -6,9 +6,9 @@ namespace com.google.finance
 	{
 		protected barWidth: number;
 
-		protected abstract drawBarAtDataUnit(context: Context, param2: DataUnit[], param3: number):void;
+		protected abstract drawBarAtDataUnit(context: Context, dataUnits: DataUnit[], param3: number): void;
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			if (!this.isEnabled())
 				return;
@@ -30,16 +30,16 @@ namespace com.google.finance
 			const detailLevel = vp.getDetailLevelForTechnicalStyle();
 			this.barWidth = this.getBarWidth(detailLevel, dataSeries);
 			let _loc7_ = Number.MAX_VALUE;
-			for (let _loc8_ = lastMinuteIndex; _loc8_ >= firstMinuteIndex; _loc8_--)
+			for (let minuteIndex = lastMinuteIndex; minuteIndex >= firstMinuteIndex; minuteIndex--)
 			{
-				if (!dataSeries.minuteIsStartOfDataSession(points[_loc8_].dayMinute))
+				if (!dataSeries.minuteIsStartOfDataSession(points[minuteIndex].dayMinute))
 				{
-					if (!(isNaN(points[_loc8_].high) || isNaN(points[_loc8_].low) || isNaN(points[_loc8_].open)))
+					if (!(isNaN(points[minuteIndex].high) || isNaN(points[minuteIndex].low) || isNaN(points[minuteIndex].open)))
 					{
 						if (detailLevel === Intervals.WEEKLY)
-							_loc7_ = this.getWeeklyBarXPos(points[_loc8_], _loc7_);
+							_loc7_ = this.getWeeklyBarXPos(points[minuteIndex], _loc7_);
 
-						this.drawBarAtDataUnit(context, points, _loc8_);
+						this.drawBarAtDataUnit(context, points, minuteIndex);
 					}
 				}
 			}

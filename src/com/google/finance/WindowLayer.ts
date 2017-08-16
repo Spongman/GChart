@@ -111,16 +111,16 @@ namespace com.google.finance
 			return this.rightHandle.x + this.rightHandle.width / 2;
 		}
 
-		private checkHandlePosition(param1: flash.display.DisplayObject) 
+		private checkHandlePosition(displayObject: flash.display.DisplayObject) 
 		{
-			if (param1.x < this.viewPoint.minx - param1.width / 2)
-				param1.x = this.viewPoint.minx - param1.width / 2;
+			if (displayObject.x < this.viewPoint.minx - displayObject.width / 2)
+				displayObject.x = this.viewPoint.minx - displayObject.width / 2;
 
-			if (param1.x > this.viewPoint.maxx - param1.width / 2)
-				param1.x = this.viewPoint.maxx - param1.width / 2;
+			if (displayObject.x > this.viewPoint.maxx - displayObject.width / 2)
+				displayObject.x = this.viewPoint.maxx - displayObject.width / 2;
 		}
 
-		renderLayer(param1?: Context) 
+		renderLayer(context?: Context) 
 		{
 			if (this.stage.stageWidth === 0)
 				return;
@@ -211,7 +211,7 @@ namespace com.google.finance
 			return data.units[data.getRelativeMinuteIndex(minute) + 1];
 		}
 
-		handleReleased(param1: com.google.finance.DraggableHandle) 
+		handleReleased(draggableHandle: com.google.finance.DraggableHandle) 
 		{
 			let _loc7_ = NaN;
 			const _loc2_ = this.rightHandle.x + this.rightHandle.width / 2;
@@ -222,7 +222,7 @@ namespace com.google.finance
 			//const _loc4_ = this.dataSource.data;
 			const sparklineViewPoint = <SparklineViewPoint><any>this.viewPoint;
 			const _loc6_ = sparklineViewPoint.sparkCount * Math.abs(_loc2_ - _loc3_) / (sparklineViewPoint.maxx - sparklineViewPoint.minx);
-			switch (param1)
+			switch (draggableHandle)
 			{
 				case this.leftHandle:
 					if (_loc3_ < _loc2_)
@@ -242,7 +242,7 @@ namespace com.google.finance
 
 			sparklineViewPoint.myController.clearCurrentZoom();
 			sparklineViewPoint.myController.animateTo(_loc7_, _loc6_);
-			param1.x = this.initialX;
+			draggableHandle.x = this.initialX;
 			this.leftHandleXOffset = 0;
 			this.rightHandleXOffset = 0;
 		}

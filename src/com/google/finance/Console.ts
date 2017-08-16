@@ -25,20 +25,20 @@ namespace com.google.finance
 			}
 		}
 
-		println(param1: string) 
+		println(param1: string)
 		{
 			if (Boolean(MainManager.paramsObj.debug))
 				this.t.appendText(param1 + "\n");
 		}
 
-		dataLoading() 
+		dataLoading()
 		{
 			this.pendingLoadings++;
 			this.positionLoadingMessage();
 			this.loading.visible = true;
 		}
 
-		positionLoadingMessage() 
+		positionLoadingMessage()
 		{
 			const mainViewPoint = this.mainManager.displayManager.getMainViewPoint();
 			if (mainViewPoint)
@@ -48,7 +48,7 @@ namespace com.google.finance
 			}
 		}
 
-		dataLoaded() 
+		dataLoaded()
 		{
 			this.pendingLoadings--;
 			if (this.pendingLoadings <= 0)

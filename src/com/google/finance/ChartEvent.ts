@@ -19,8 +19,7 @@ namespace com.google.finance
 		OHLC_REQUIRED = 4,
 		OHLC_DONE = 5,
 		POLLING = 6,
-	}	
-
+	}
 
 	export class ChartEvent
 	{

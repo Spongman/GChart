@@ -24,7 +24,7 @@ namespace com.google.finance
 	export interface IDataUnitContainer
 	{
 		getFirstDataUnit(): DataUnit | null;
-		getLastDataUnit(param1?: DataSeries): DataUnit | null;
+		getLastDataUnit(dataSeries?: DataSeries): DataUnit | null;
 	}
 
 	export abstract class IViewPoint
@@ -61,7 +61,7 @@ namespace com.google.finance
 
 		abstract getNewContext(param1: number, param2: number): Context;
 
-		abstract highlightPoint(param1: number, param2: { [key: string]: any }): void;
+		abstract highlightPoint(param1: number, state: Dictionary): void;
 		abstract getMinuteOfX(param1: number): number;
 
 		abstract getIntervalLength(param1: number): number;
@@ -70,7 +70,7 @@ namespace com.google.finance
 		abstract update(): void;
 		abstract removeAllLayers(): void;
 
-		abstract addLayer(param1: string, param2: DataSource, param3: string): AbstractLayer<IViewPoint> | null;
+		abstract addLayer(param1: string, dataSource: DataSource, param3: string): AbstractLayer<IViewPoint> | null;
 		abstract clearPointInformation(): void;
 
 		abstract getFirstMinute(): number;
@@ -95,17 +95,17 @@ namespace com.google.finance
 
 		abstract setNewCount(param1: number, param2?: boolean): void;
 
-		abstract setNewSize(param1: Bounds): void;
+		abstract setNewSize(bounds: Bounds): void;
 
 
 		abstract zoomIn_Handler(p1: number, p2: number): void;
-		abstract zoomingAnimation_ticker(param1: IViewPoint, param2: number, param3: boolean): void;
+		abstract zoomingAnimation_ticker(viewPoint: IViewPoint, param2: number, param3: boolean): void;
 		abstract zoomChart_Handler(p1: number, p2: number): void;
 		abstract moveChartBy_Handler(p1: number): void;
 		abstract commitOffset_Handler(): void;
 		abstract zoomInMinutes_Handler(p1: Context, p2: boolean): void;
 		abstract zoomingAnimation_init(p1: Context): void;
-		abstract newFinalAnimationState(param1: ViewPointState): void;
+		abstract newFinalAnimationState(viewPointState: ViewPointState): void;
 	}
 
 
@@ -272,13 +272,13 @@ namespace com.google.finance
 
 		removeAllLayers()
 		{
-			for (let _loc1_ = 0; _loc1_ < this.drawingLayers.length; _loc1_++)
+			for (let layerIndex = 0; layerIndex < this.drawingLayers.length; layerIndex++)
 			{
-				this.removeChild(this.drawingLayers[_loc1_]);
+				this.removeChild(this.drawingLayers[layerIndex]);
 			}
-			for (let _loc1_ = 0; _loc1_ < this.descriptiveLayers.length; _loc1_++)
+			for (let layerIndex = 0; layerIndex < this.descriptiveLayers.length; layerIndex++)
 			{
-				this.removeChild(this.descriptiveLayers[_loc1_]);
+				this.removeChild(this.descriptiveLayers[layerIndex]);
 			}
 			this.drawingLayers = [];
 			this.descriptiveLayers = [];
@@ -308,7 +308,7 @@ namespace com.google.finance
 			return Snaps.SNAP_YEAR;
 		}
 
-		static addTextField(param1: flash.display.Sprite, param2: string, param3: number, param4: number, param5: number, param6: number, param7: string, param8: flash.text.TextFormat, param9?: string): flash.text.TextField
+		static addTextField(sprite: flash.display.Sprite, param2: string, param3: number, param4: number, param5: number, param6: number, param7: string, textFormat: flash.text.TextFormat, param9?: string): flash.text.TextField
 		{
 			//if (!param2)
 			//	return null;
@@ -317,8 +317,8 @@ namespace com.google.finance
 			textField.y = param4;
 			textField.width = param5;
 			textField.height = param6;
-			param8.align = param7;
-			textField.defaultTextFormat = param8;
+			textFormat.align = param7;
+			textField.defaultTextFormat = textFormat;
 			textField.selectable = false;
 			if (param7 === "center")
 			{
@@ -330,19 +330,19 @@ namespace com.google.finance
 				textField.autoSize = param9;
 
 			textField.text = param2;
-			param1.addChild(textField);
+			sprite.addChild(textField);
 			return textField;
 		}
 
-		removeLayer(param1: string, param2?: DataSource)
+		removeLayer(layerId: string, dataSource?: DataSource)
 		{
-			let layerIndex = this.getLayerIndex(param1, this.drawingLayers, param2);
+			let layerIndex = this.getLayerIndex(layerId, this.drawingLayers, dataSource);
 			if (layerIndex !== -1)
 			{
 				this.removeChild(this.drawingLayers[layerIndex]);
 				this.drawingLayers.splice(layerIndex, 1);
 			}
-			layerIndex = this.getLayerIndex(param1, this.descriptiveLayers, param2);
+			layerIndex = this.getLayerIndex(layerId, this.descriptiveLayers, dataSource);
 			if (layerIndex !== -1)
 			{
 				this.removeChild(this.descriptiveLayers[layerIndex]);
@@ -350,25 +350,24 @@ namespace com.google.finance
 			}
 		}
 
-		getXPos(param1: DataUnit): number
+		getXPos(dataUnit: DataUnit): number
 		{
-			return this.getMinuteXPos(param1.relativeMinutes);
+			return this.getMinuteXPos(dataUnit.relativeMinutes);
 		}
 
-		private generateEvent(param1: number, param2: DataSource, param3 = 2, param4?: EventCallback[])
+		private generateEvent(param1: number, dataSource: DataSource, param3 = 2, eventCallbacks?: EventCallback[])
 		{
-			const event = EventFactory.getEvent(param1, param2.quoteName, param3);
-			event.callbacks = param4;
+			const event = EventFactory.getEvent(param1, dataSource.quoteName, param3);
+			event.callbacks = eventCallbacks;
 			const dataManager = this.displayManager.mainManager.dataManager;
 			dataManager.expectEvent(event);
 			dataManager.eventHandler(event);
 		}
 
-		addLayer(param1: string, param2: DataSource, param3: string): AbstractLayer<IViewPoint> | null
+		addLayer(param1: string, dataSource: DataSource, param3: string): AbstractLayer<IViewPoint> | null
 		{
 			let LayerClass: typeof AbstractLayer;
 			let layerType = param1;
-			let dataSource = param2;
 			let id = param3;
 			if (layerType === "")
 				return null;
@@ -399,24 +398,24 @@ namespace com.google.finance
 			return layer;
 		}
 
-		highlightPoint(param1: number, param2: { [key: string]: any })
+		highlightPoint(param1: number, state: Dictionary)
 		{
-			for (let _loc3_ = 0; _loc3_ < this.drawingLayers.length; _loc3_++)
+			for (let layerIndex = 0; layerIndex < this.drawingLayers.length; layerIndex++)
 			{
-				const _loc4_ = this.drawingLayers[_loc3_];
-				_loc4_.highlightPoint(this.layersContext, param1, param2);
+				const layer = this.drawingLayers[layerIndex];
+				layer.highlightPoint(this.layersContext, param1, state);
 			}
 		}
 
 		getNewestMinute(): number
 		{
 			let _loc1_ = 0;
-			for (let _loc2_ = 0; _loc2_ < this.drawingLayers.length; _loc2_++)
+			for (let layerIndex = 0; layerIndex < this.drawingLayers.length; layerIndex++)
 			{
-				const _loc3_ = this.drawingLayers[_loc2_];
-				const newestMinute = _loc3_.getNewestMinute();
+				const layer = this.drawingLayers[layerIndex];
+				const newestMinute = layer.getNewestMinute();
 				if (_loc1_ < newestMinute)
-					_loc1_ = Number(newestMinute);
+					_loc1_ = newestMinute;
 			}
 			return _loc1_;
 		}
@@ -426,7 +425,7 @@ namespace com.google.finance
 			return this.lastMinute + this.minutesOffset;
 		}
 
-		checkEvents(param1: number = -1, param2?: EventCallback[])
+		checkEvents(interval: Intervals = -1, eventCallbacks?: EventCallback[])
 		{
 			let _loc9_ = false;
 			const baseDataSource = this.getBaseDataSource();
@@ -442,13 +441,13 @@ namespace com.google.finance
 			const _loc7_ = _loc4_ - _loc5_;
 			if (Const.INDICATOR_ENABLED && !this.displayManager.isDifferentMarketSessionComparison())
 			{
-				const _loc8_ = param1 >= 0 ? param1 : this.getDetailLevelForTechnicalStyle();
+				const _loc8_ = interval >= 0 ? interval : this.getDetailLevelForTechnicalStyle();
 				_loc9_ = !this.myController || this.myController.currentIntervalLevel === -1;
 				const _loc10_ = this.displayManager.hasOhlcRequiredIndicator() || !_loc9_ ? ChartEventPriorities.OHLC_REQUIRED : ChartEventPriorities.OPTIONAL;
 				switch (_loc8_)
 				{
 					case Intervals.INTRADAY:
-						this.generateEventForAllSources(ChartEventStyles.GET_5D_DATA, _loc10_, param2);
+						this.generateEventForAllSources(ChartEventStyles.GET_5D_DATA, _loc10_, eventCallbacks);
 						if (Boolean(MainManager.paramsObj.forceDisplayExtendedHours) || Boolean(MainManager.paramsObj.displayExtendedHours))
 							this.generateEventForAllSources(ChartEventStyles.GET_AH_DATA, _loc10_);
 
@@ -460,7 +459,7 @@ namespace com.google.finance
 						break;
 					case Intervals.FIVE_MINUTES:
 						this.generateEventForAllSources(ChartEventStyles.GET_1Y_DATA, _loc10_);
-						this.generateEventForAllSources(ChartEventStyles.GET_10D_DATA, _loc10_, param2);
+						this.generateEventForAllSources(ChartEventStyles.GET_10D_DATA, _loc10_, eventCallbacks);
 						if (_loc9_ && (Boolean(MainManager.paramsObj.forceDisplayExtendedHours) || Boolean(MainManager.paramsObj.displayExtendedHours)))
 						{
 							this.generateEventForAllSources(ChartEventStyles.GET_AH_DATA, _loc10_);
@@ -469,7 +468,7 @@ namespace com.google.finance
 						break;
 					case Intervals.HALF_HOUR:
 						this.generateEventForAllSources(ChartEventStyles.GET_1Y_DATA, _loc10_);
-						this.generateEventForAllSources(ChartEventStyles.GET_30D_DATA, _loc10_, param2);
+						this.generateEventForAllSources(ChartEventStyles.GET_30D_DATA, _loc10_, eventCallbacks);
 						if (_loc9_ && (Boolean(MainManager.paramsObj.forceDisplayExtendedHours) || Boolean(MainManager.paramsObj.displayExtendedHours)))
 						{
 							this.generateEventForAllSources(ChartEventStyles.GET_AH_DATA, _loc10_);
@@ -477,10 +476,10 @@ namespace com.google.finance
 						}
 						break;
 					case Intervals.DAILY:
-						this.generateEventForAllSources(ChartEventStyles.GET_1Y_DATA, _loc10_, param2);
+						this.generateEventForAllSources(ChartEventStyles.GET_1Y_DATA, _loc10_, eventCallbacks);
 						break;
 					case Intervals.WEEKLY:
-						this.generateEventForAllSources(ChartEventStyles.GET_5Y_DATA, _loc10_, param2);
+						this.generateEventForAllSources(ChartEventStyles.GET_5Y_DATA, _loc10_, eventCallbacks);
 						break;
 				}
 			}
@@ -497,13 +496,13 @@ namespace com.google.finance
 
 		getDetailLevelForDifferentMarketSessionComparison(param1 = NaN, param2 = NaN): Intervals
 		{
-			let _loc3_ = 0;
-			let _loc4_ = 0;
+			let _loc3_;
 			if (!isNaN(param2))
 				_loc3_ = param2;
 			else
 				_loc3_ = this.getLastMinute();
 
+			let _loc4_;
 			if (!isNaN(param1))
 				_loc4_ = param1;
 			else
@@ -517,8 +516,8 @@ namespace com.google.finance
 
 		getLayers(): AbstractLayer<IViewPoint>[]
 		{
-			const _loc1_: AbstractLayer<ViewPoint>[] = [];
-			return _loc1_.concat(this.drawingLayers, this.descriptiveLayers);
+			const abstractLayers: AbstractLayer<ViewPoint>[] = [];
+			return abstractLayers.concat(this.drawingLayers, this.descriptiveLayers);
 		}
 
 		clearAllChildrenFromTopCanvas()
@@ -605,12 +604,12 @@ namespace com.google.finance
 			}
 		}
 
-		private generateEventForAllSources(param1: number, param2 = 2, param3?: EventCallback[])
+		private generateEventForAllSources(param1: number, param2 = 2, eventCallbacks?: EventCallback[])
 		{
-			for (let _loc4_ = 0; _loc4_ < this.drawingLayers.length; _loc4_++)
+			for (let layerIndex = 0; layerIndex < this.drawingLayers.length; layerIndex++)
 			{
-				const dataSource = this.drawingLayers[_loc4_].dataSource;
-				this.generateEvent(param1, dataSource, param2, param3);
+				const dataSource = this.drawingLayers[layerIndex].dataSource;
+				this.generateEvent(param1, dataSource, param2, eventCallbacks);
 			}
 		}
 
@@ -627,9 +626,9 @@ namespace com.google.finance
 		getOldestMinute(): number
 		{
 			let _loc1_ = 0;
-			for (let _loc2_ = 0; _loc2_ < this.drawingLayers.length; _loc2_++)
+			for (let layerIndex = 0; layerIndex < this.drawingLayers.length; layerIndex++)
 			{
-				const _loc3_ = this.drawingLayers[_loc2_];
+				const _loc3_ = this.drawingLayers[layerIndex];
 				const oldestMinute = _loc3_.getOldestMinute();
 				if (_loc1_ > oldestMinute)
 					_loc1_ = Number(oldestMinute);
@@ -642,12 +641,12 @@ namespace com.google.finance
 			const zoomingInitialState = viewPoint.zoomingInitialState;
 			const _loc5_ = notnull(viewPoint.zoomingFinalState);
 			const _loc6_ = Utils.cloneObject(zoomingInitialState);
-			for (let _loc7_ in zoomingInitialState)
+			for (let key in zoomingInitialState)
 			{
-				if (!isNaN(zoomingInitialState[_loc7_]) && !isNaN(_loc5_[_loc7_]))
+				if (!isNaN(zoomingInitialState[key]) && !isNaN(_loc5_[key]))
 				{
-					const _loc8_ = zoomingInitialState[_loc7_] + (_loc5_[_loc7_] - zoomingInitialState[_loc7_]) * (1 - param2);
-					_loc6_[_loc7_] = _loc8_;
+					const _loc8_ = zoomingInitialState[key] + (_loc5_[key] - zoomingInitialState[key]) * (1 - param2);
+					_loc6_[key] = _loc8_;
 				}
 			}
 			viewPoint.zoomInMinutes_Handler(_loc6_);
@@ -661,20 +660,20 @@ namespace com.google.finance
 
 		renderLayers()
 		{
-			for (let _loc1_ = 0; _loc1_ < this.drawingLayers.length; _loc1_++)
-				this.drawingLayers[_loc1_].renderLayer(this.layersContext);
+			for (let layerIndex = 0; layerIndex < this.drawingLayers.length; layerIndex++)
+				this.drawingLayers[layerIndex].renderLayer(this.layersContext);
 
-			for (let _loc1_ = 0; _loc1_ < this.descriptiveLayers.length; _loc1_++)
-				this.descriptiveLayers[_loc1_].renderLayer(this.layersContext);
+			for (let layerIndex = 0; layerIndex < this.descriptiveLayers.length; layerIndex++)
+				this.descriptiveLayers[layerIndex].renderLayer(this.layersContext);
 		}
 
-		getLastDataUnit(param1?: DataSeries): DataUnit | null
+		getLastDataUnit(dataSeries?: DataSeries): DataUnit | null
 		{
 			let _loc2_: DataSeries | null = null;
 			let _loc3_: DataSource | null = null;
-			if (param1)
+			if (dataSeries)
 			{
-				_loc2_ = param1;
+				_loc2_ = dataSeries;
 			}
 			else
 			{
@@ -704,7 +703,7 @@ namespace com.google.finance
 			return _loc2_.units[_loc2_.getRelativeMinuteIndex(this.getLastMinute())];
 		}
 
-		getDetailLevel(param1 = NaN, param2 = NaN, param3?: DataSource): Intervals
+		getDetailLevel(param1 = NaN, param2 = NaN, dataSource?: DataSource): Intervals
 		{
 			if (this.displayManager.isDifferentMarketSessionComparison())
 				return this.getDetailLevelForDifferentMarketSessionComparison(param1, param2);
@@ -724,8 +723,8 @@ namespace com.google.finance
 			if (!isNaN(param2))
 				lastMinute = param2;
 
-			if (param3)
-				baseDataSource = param3;
+			if (dataSource)
+				baseDataSource = dataSource;
 
 			const data = baseDataSource.data;
 			if (!data)
@@ -774,19 +773,19 @@ namespace com.google.finance
 
 		getDetailLevelForTechnicalStyle(param1 = NaN, param2 = NaN): Intervals
 		{
-			let _loc3_ = 0;
-			let _loc4_ = 0;
 			if (this.displayManager.isDifferentMarketSessionComparison())
 				return this.getDetailLevelForDifferentMarketSessionComparison(param1, param2);
 
 			if (this.myController && this.myController.currentIntervalLevel >= 0)
 				return this.myController.currentIntervalLevel;
 
+			let _loc3_;
 			if (!isNaN(param2))
 				_loc3_ = param2;
 			else
 				_loc3_ = this.getLastMinute();
 
+			let _loc4_;
 			if (!isNaN(param1))
 				_loc4_ = param1;
 			else
@@ -812,14 +811,14 @@ namespace com.google.finance
 				}
 			}
 			const _loc7_ = Math.abs(_loc3_ - _loc4_) / (this.getMarketDayLength() + 1) + 1;
-			const _loc8_: DataSeries | null = !!baseDataSource ? baseDataSource.data : null;
-			if (_loc7_ <= Const.FIVE_MINUTE_DAYS && quoteType === QuoteTypes.COMPANY && !(_loc8_ && _loc8_.hasNoPointsInIntervalArray(Const.FIVE_MINUTE_INTERVAL)))
+			const dataSeries: DataSeries | null = !!baseDataSource ? baseDataSource.data : null;
+			if (_loc7_ <= Const.FIVE_MINUTE_DAYS && quoteType === QuoteTypes.COMPANY && !(dataSeries && dataSeries.hasNoPointsInIntervalArray(Const.FIVE_MINUTE_INTERVAL)))
 				return Intervals.FIVE_MINUTES;
 
-			if (_loc7_ <= Const.HALF_HOUR_DAYS && quoteType === QuoteTypes.COMPANY && !(_loc8_ && _loc8_.hasNoPointsInIntervalArray(Const.HALF_HOUR_INTERVAL)))
+			if (_loc7_ <= Const.HALF_HOUR_DAYS && quoteType === QuoteTypes.COMPANY && !(dataSeries && dataSeries.hasNoPointsInIntervalArray(Const.HALF_HOUR_INTERVAL)))
 				return Intervals.HALF_HOUR;
 
-			if (_loc7_ <= Const.DAILY_DAYS && !(_loc8_ && _loc8_.hasNoPointsInIntervalArray(Const.DAILY_INTERVAL)))
+			if (_loc7_ <= Const.DAILY_DAYS && !(dataSeries && dataSeries.hasNoPointsInIntervalArray(Const.DAILY_INTERVAL)))
 				return Intervals.DAILY;
 
 			return Intervals.WEEKLY;
@@ -834,12 +833,12 @@ namespace com.google.finance
 			return baseDataSource.data.marketDayLength;
 		}
 
-		setController(param1: com.google.finance.Controller)
+		setController(controller: com.google.finance.Controller)
 		{
-			param1.addControlListener(this);
+			controller.addControlListener(this);
 			const bounds = new Bounds(this.minx, this.miny, this.maxx, this.maxy);
-			param1.addBounds(bounds);
-			this.myController = param1;
+			controller.addBounds(bounds);
+			this.myController = controller;
 		}
 
 		checkAfterHoursVisibility(param1: number, param2: number)
@@ -871,13 +870,13 @@ namespace com.google.finance
 			}
 		}
 
-		getLayer(param1: string, param2?: DataSource): AbstractLayer<ViewPoint> | null
+		getLayer(layerId: string, dataSource?: DataSource): AbstractLayer<ViewPoint> | null
 		{
-			let layerIndex = this.getLayerIndex(param1, this.drawingLayers, param2);
+			let layerIndex = this.getLayerIndex(layerId, this.drawingLayers, dataSource);
 			if (layerIndex !== -1)
 				return this.drawingLayers[layerIndex];
 
-			layerIndex = this.getLayerIndex(param1, this.descriptiveLayers, param2);
+			layerIndex = this.getLayerIndex(layerId, this.descriptiveLayers, dataSource);
 			if (layerIndex !== -1)
 				return this.descriptiveLayers[layerIndex];
 
@@ -893,9 +892,9 @@ namespace com.google.finance
 		{
 			const _loc2_ = Math.floor(this.lastMinute - Number(param1 / this.POINTS_DISTANCE) * this.unitsPerUnit);
 			const _loc3_ = Math.ceil(_loc2_ - this.count);
-			for (let _loc4_ = 0; _loc4_ < this.drawingLayers.length; _loc4_++)
+			for (let layerIndex = 0; layerIndex < this.drawingLayers.length; layerIndex++)
 			{
-				const dataSource = this.drawingLayers[_loc4_].dataSource;
+				const dataSource = this.drawingLayers[layerIndex].dataSource;
 				const firstRelativeMinute = dataSource.data.getFirstRelativeMinute();
 				if (_loc3_ < firstRelativeMinute)
 				{
@@ -991,10 +990,10 @@ namespace com.google.finance
 			}
 		}
 
-		adjustLineChartContext(param1: Context)
+		adjustLineChartContext(context: Context)
 		{
-			let _loc2_ = param1.count;
-			let _loc3_ = param1.lastMinute;
+			let _loc2_ = context.count;
+			let _loc3_ = context.lastMinute;
 			const _loc4_ = this.getMinDisplayMinutes(this.getBaseDataSource());
 			if (_loc2_ < _loc4_)
 			{
@@ -1013,19 +1012,19 @@ namespace com.google.finance
 			if (_loc3_ >= newestMinute)
 				_loc3_ = newestMinute;
 
-			if (_loc2_ !== param1.count || _loc3_ !== param1.lastMinute)
+			if (_loc2_ !== context.count || _loc3_ !== context.lastMinute)
 				return this.getNewContext(_loc3_, _loc2_);
 
-			return param1;
+			return context;
 		}
 
-		update(param1?: Context)
+		update(context?: Context)
 		{
 			if (!this.stage || this.stage.stageWidth === 0)
 				return;
 
-			if (param1)
-				this.layersContext = param1;
+			if (context)
+				this.layersContext = context;
 			else if (this.forcedLayersContext)
 				this.layersContext = this.forcedLayersContext;
 			else
@@ -1117,17 +1116,17 @@ namespace com.google.finance
 				this.displayManager.toggleAllAfterHoursSessions(true);
 		}
 
-		addChildToTopCanvas(param1: flash.display.Sprite)
+		addChildToTopCanvas(sprite: flash.display.Sprite)
 		{
-			this.topCanvas.addChild(param1);
+			this.topCanvas.addChild(sprite);
 		}
 
 		updateObjectLayers()
 		{
-			for (let _loc1_ = 0; _loc1_ < this.descriptiveLayers.length; _loc1_++)
+			for (let layerIndex = 0; layerIndex < this.descriptiveLayers.length; layerIndex++)
 			{
-				if (this.descriptiveLayers[_loc1_] instanceof PinPointsLayer || this.descriptiveLayers[_loc1_] instanceof IntervalBasedPinPointsLayer || this.descriptiveLayers[_loc1_] instanceof IndependentObjectsLayer || this.descriptiveLayers[_loc1_] instanceof IntervalBasedIndependentObjectsLayer)
-					this.descriptiveLayers[_loc1_].renderLayer(this.layersContext);
+				if (this.descriptiveLayers[layerIndex] instanceof PinPointsLayer || this.descriptiveLayers[layerIndex] instanceof IntervalBasedPinPointsLayer || this.descriptiveLayers[layerIndex] instanceof IndependentObjectsLayer || this.descriptiveLayers[layerIndex] instanceof IntervalBasedIndependentObjectsLayer)
+					this.descriptiveLayers[layerIndex].renderLayer(this.layersContext);
 			}
 		}
 
@@ -1150,9 +1149,9 @@ namespace com.google.finance
 
 		clearPointInformation()
 		{
-			for (let _loc1_ = 0; _loc1_ < this.drawingLayers.length; _loc1_++)
+			for (let layerIndex = 0; layerIndex < this.drawingLayers.length; layerIndex++)
 			{
-				this.drawingLayers[_loc1_].clearHighlight();
+				this.drawingLayers[layerIndex].clearHighlight();
 			}
 		}
 
@@ -1162,11 +1161,8 @@ namespace com.google.finance
 			context.lastMinute = param1;
 			context.count = param2;
 			context.verticalScaling = MainManager.paramsObj.verticalScaling;
-			for (let _loc4_ = 0; _loc4_ < this.drawingLayers.length; _loc4_++)
-			{
-				const _loc5_ = this.drawingLayers[_loc4_];
-				context = _loc5_.getContext(context);
-			}
+			for (let layerIndex = 0; layerIndex < this.drawingLayers.length; layerIndex++)
+				context = this.drawingLayers[layerIndex].getContext(context);
 			return context;
 		}
 
@@ -1194,13 +1190,13 @@ namespace com.google.finance
 			this.update();
 		}
 
-		private getLayerIndex(param1: string, param2: AbstractLayer<ViewPoint>[], param3?: DataSource): number
+		private getLayerIndex(layerId: string, abstractLayers: AbstractLayer<ViewPoint>[], dataSource?: DataSource): number
 		{
-			for (let _loc4_ = 0; _loc4_ < param2.length; _loc4_++)
+			for (let layerIndex = 0; layerIndex < abstractLayers.length; layerIndex++)
 			{
-				const _loc5_ = param2[_loc4_];
-				if (_loc5_.layerId === param1 && (!param3 || _loc5_.dataSource === param3))
-					return _loc4_;
+				const _loc5_ = abstractLayers[layerIndex];
+				if (_loc5_.layerId === layerId && (!dataSource || _loc5_.dataSource === dataSource))
+					return layerIndex;
 			}
 			return -1;
 		}
@@ -1231,23 +1227,23 @@ namespace com.google.finance
 			return Const.MIN_DISPLAY_DAYS * _loc2_;
 		}
 
-		zoomingAnimation_init(param1: Context)
+		zoomingAnimation_init(context: Context)
 		{
 			this.zoomingInitialState = Utils.cloneObject(this.layersContext);
-			this.newFinalAnimationState(param1);
+			this.newFinalAnimationState(context);
 		}
 
-		getMinuteOfX(param1: number): number
+		getMinuteOfX(xPos: number): number
 		{
-			return this.getLastMinute() - (this.maxx - param1) * this.count / (this.maxx - this.minx);
+			return this.getLastMinute() - (this.maxx - xPos) * this.count / (this.maxx - this.minx);
 		}
 
-		setNewSize(param1: Bounds)
+		setNewSize(bounds: Bounds)
 		{
-			if (this.minx === param1.minx &&
-				this.miny === param1.miny &&
-				this.maxx === param1.maxx &&
-				this.maxy === param1.maxy)
+			if (this.minx === bounds.minx &&
+				this.miny === bounds.miny &&
+				this.maxx === bounds.maxx &&
+				this.maxy === bounds.maxy)
 			{
 				return;
 			}
@@ -1255,12 +1251,12 @@ namespace com.google.finance
 			if (this.myController)
 			{
 				const bounds = new Bounds(this.minx, this.miny, this.maxx, this.maxy);
-				this.myController.replaceBounds(bounds, param1);
+				this.myController.replaceBounds(bounds, bounds);
 			}
-			this.minx = param1.minx;
-			this.miny = param1.miny;
-			this.maxx = param1.maxx;
-			this.maxy = param1.maxy;
+			this.minx = bounds.minx;
+			this.miny = bounds.miny;
+			this.maxx = bounds.maxx;
+			this.maxy = bounds.maxy;
 			this.drawBorders();
 			if (this.myLabel)
 			{
@@ -1282,8 +1278,7 @@ namespace com.google.finance
 			}
 			else
 			{
-				const _loc5_ = Math.abs(this.lastMinute - this.getOldestBaseMinute());
-				this.count = Math.min(_loc2_, _loc5_);
+				this.count = Math.min(_loc2_, Math.abs(this.lastMinute - this.getOldestBaseMinute()));
 			}
 			this.minutePix = (this.maxx - this.minx) / this.count;
 			this.precomputeContexts();

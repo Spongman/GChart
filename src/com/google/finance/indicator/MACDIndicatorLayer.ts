@@ -90,9 +90,9 @@ namespace com.google.finance.indicator
 			dataSeries0.points.push(indicatorPoint);
 			dataSeries1.points.push(indicatorPoint);
 			dataSeries2.points.push(indicatorPoint);
-			for (let _loc8_ = 1; _loc8_ < points.length; _loc8_++)
+			for (let pointIndex = 1; pointIndex < points.length; pointIndex++)
 			{
-				const _loc14_ = points[_loc8_];
+				const _loc14_ = points[pointIndex];
 				if (!this.shouldSkip(_loc14_, dataSeries0, dataSeries1, dataSeries2))
 				{
 					_loc3_ = (_loc3_ * (this.shortPeriod - 1) + _loc14_.close * 2) / (this.shortPeriod + 1);
@@ -110,15 +110,15 @@ namespace com.google.finance.indicator
 			this.indicator.setDataSeries(param1, dataSeries2, 2);
 		}
 
-		setIndicatorInstanceArray(param1: com.google.finance.indicator.MACDIndicatorLayer[]) 
+		setIndicatorInstanceArray(layers: com.google.finance.indicator.MACDIndicatorLayer[]) 
 		{
-			if (!param1 || param1.length !== 1)
+			if (!layers || layers.length !== 1)
 				return;
 
 			this.indicator.clear();
-			this.shortPeriod = param1[0].shortPeriod;
-			this.longPeriod = param1[0].longPeriod;
-			this.emaPeriod = param1[0].emaPeriod;
+			this.shortPeriod = layers[0].shortPeriod;
+			this.longPeriod = layers[0].longPeriod;
+			this.emaPeriod = layers[0].emaPeriod;
 		}
 
 		getContext(context: Context, param2 = false) 

@@ -15,37 +15,37 @@ namespace com.google.finance
 
 		hasText: boolean;
 		type: string;
-		
+
 		constructor(public readonly viewPoint: T, public dataSource: com.google.finance.DataSource)
 		{
 			super();
 		}
 
-		static drawVerticalLine(displayObject: flash.display.DisplayObject, x: number, color: number, alpha: number, param5: number, param6: number, param7: number, param8: number, param9 = true) 
+		static drawVerticalLine(displayObject: flash.display.DisplayObject, x: number, color: number, alpha: number, top: number, bottom: number, tickHeight: number, tickPosition: TickPositions, param9 = true)
 		{
 			x = Math.floor(x) + 0.5;
 			const gr = displayObject.graphics;
-			gr.moveTo(x, param5 + 1);
-			switch (param8)
+			gr.moveTo(x, top + 1);
+			switch (tickPosition)
 			{
 				case TickPositions.BOTTOM:
 					gr.lineStyle(0, color, alpha);
-					gr.lineTo(x, param6 - param7);
+					gr.lineTo(x, bottom - tickHeight);
 					gr.lineStyle(0, Const.BOTTOM_TICK_COLOR, 1);
-					gr.lineTo(x, param6);
+					gr.lineTo(x, bottom);
 					break;
 				case TickPositions.TOP:
 					gr.lineStyle(0, Const.TOP_TICK_COLOR, 1);
-					gr.lineTo(x, param5 + 1 + param7);
+					gr.lineTo(x, top + 1 + tickHeight);
 					if (param9)
 					{
 						gr.lineStyle(0, color, alpha);
-						gr.lineTo(x, param6);
+						gr.lineTo(x, bottom);
 					}
 					break;
 			}
 		}
-		
+
 		renderLayer(context?: Context)
 		{
 		}

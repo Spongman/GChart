@@ -22,7 +22,7 @@ namespace flash.display
 			super(elt);
 
 			flash.display.Graphics.initialize();
-		
+
 			this.stage = this;
 			this.mouseEnabled = false;
 

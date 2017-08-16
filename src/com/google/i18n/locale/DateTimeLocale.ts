@@ -21,10 +21,10 @@ namespace com.google.i18n.locale
 
 		static readonly DATE_TIME_CONSTANTS = "DateTimeConstants";
 
-		static readonly constantsRepository: { [key: string]: { [key: string]: any } } = {};
+		static readonly constantsRepository: { [key: string]: Dictionary } = {};
 
 		private static activeLocale: string;
-		
+
 
 		static getStandardDateTimeFormatter(pattern: DateTimeFormats, isUtc = false): DateTimeFormat
 		{
@@ -33,7 +33,7 @@ namespace com.google.i18n.locale
 			return format;
 		}
 
-		static getResource(locale: string) 
+		static getResource(locale: string)
 		{
 			return DateTimeLocale.constantsRepository[locale || DateTimeLocale.getLocale()];
 		}
@@ -67,14 +67,14 @@ namespace com.google.i18n.locale
 			return format.format(date);
 		}
 
-		static registerResource(param1: { [key: string]: any }, param2: string) 
+		static registerResource(param1: Dictionary, param2: string)
 		{
 			DateTimeLocale.constantsRepository[param2] = param1;
 			if (!DateTimeLocale.activeLocale)
 				DateTimeLocale.activeLocale = param2;
 		}
 
-		static setLocale(param1: string) 
+		static setLocale(param1: string)
 		{
 			DateTimeLocale.activeLocale = param1;
 		}

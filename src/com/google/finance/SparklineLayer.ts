@@ -23,13 +23,13 @@ namespace com.google.finance
 			this.lineColor = Const.LINE_CHART_LINE_COLOR;
 		}
 
-		private getYPos(param1: number, param2: number, param3: DataUnit): number
+		private getYPos(param1: number, param2: number, dataUnit: DataUnit): number
 		{
 			let _loc4_ = Number(this.maxPriceLog - this.minPriceLog);
 			if (_loc4_ === 0)
 				_loc4_ = 0.01;
 
-			return param1 - 2 - (this.LogPreserveSign(param3.close) - this.minPriceLog) * (param1 - param2 - 5) / _loc4_;
+			return param1 - 2 - (this.LogPreserveSign(dataUnit.close) - this.minPriceLog) * (param1 - param2 - 5) / _loc4_;
 		}
 
 		private drawBackground(param1: boolean) 
@@ -66,7 +66,7 @@ namespace com.google.finance
 			}
 		}
 
-		private drawLine(param1: flash.display.Sprite, param2: number, param3: number, param4: SparklineViewPoint, param5: number[]): number
+		private drawLine(sprite: flash.display.Sprite, param2: number, param3: number, sparklineViewPoint: SparklineViewPoint, param5: number[]): number
 		{
 			const dataSeries = notnull(this.getDataSeries());
 			const units = dataSeries.units;
@@ -78,37 +78,37 @@ namespace com.google.finance
 				_loc13_ -= skipInterval;
 
 			_loc13_ = Math.min(_loc13_ + skipInterval, param5.length - 1);
-			const maxy = param4.maxy;
-			const miny = param4.miny;
-			const maxx = param4.maxx;
-			const minx = param4.minx;
-			const xPos = param4.getXPos(maxx, minx, units[param3]);
+			const maxy = sparklineViewPoint.maxy;
+			const miny = sparklineViewPoint.miny;
+			const maxx = sparklineViewPoint.maxx;
+			const minx = sparklineViewPoint.minx;
+			const xPos = sparklineViewPoint.getXPos(maxx, minx, units[param3]);
 			const yPos = this.getYPos(maxy, miny, units[param3]);
-			const gr = param1.graphics;
-			gr.moveTo(xPos, param4.maxy);
+			const gr = sprite.graphics;
+			gr.moveTo(xPos, sparklineViewPoint.maxy);
 			gr.lineStyle(0, 0, 0);
 			gr.lineTo(xPos, yPos);
 			gr.lineStyle(Const.LINE_CHART_LINE_THICKNESS, this.lineColor, Const.LINE_CHART_LINE_VISIBILITY);
 			while (_loc13_ >= 0 && param5[_loc13_] >= param2)
 			{
-				const xPos2 = param4.getXPos(maxx, minx, units[param5[_loc13_]]);
+				const xPos2 = sparklineViewPoint.getXPos(maxx, minx, units[param5[_loc13_]]);
 				const yPos2 = this.getYPos(maxy, miny, units[param5[_loc13_]]);
 				gr.lineTo(xPos2, yPos2);
 				_loc13_ -= skipInterval;
 			}
 			if (_loc13_ >= 0)
 			{
-				const xPos3 = param4.getXPos(maxx, minx, units[param5[_loc13_]]);
+				const xPos3 = sparklineViewPoint.getXPos(maxx, minx, units[param5[_loc13_]]);
 				const yPos3 = this.getYPos(maxy, miny, units[param5[_loc13_]]);
 				gr.lineTo(xPos3, yPos3);
 			}
-			const xPos4 = param4.getXPos(maxx, minx, units[param2]);
+			const xPos4 = sparklineViewPoint.getXPos(maxx, minx, units[param2]);
 			const yPos4 = this.getYPos(maxy, miny, units[param2]);
 			gr.lineTo(xPos4, yPos4);
 			return xPos4;
 		}
 
-		renderLayer(param1?: Context) 
+		renderLayer(context?: Context) 
 		{
 			const sparklineViewPoint = <SparklineViewPoint><any>this.viewPoint;
 			const dataSeries = notnull(this.getDataSeries());
@@ -178,13 +178,13 @@ namespace com.google.finance
 			this.checkMinMax(units[param1].close);
 		}
 
-		private getSkipInterval(param1: number[], param2: DataUnit[]): number
+		private getSkipInterval(param1: number[], dataUnits: DataUnit[]): number
 		{
-			if (param1.length < 2 || param2.length < 2)
+			if (param1.length < 2 || dataUnits.length < 2)
 				return 1;
 
 			const _loc3_ = param1.length - 1;
-			const _loc4_ = param2[param1[_loc3_]].relativeMinutes - param2[param1[_loc3_ - 1]].relativeMinutes;
+			const _loc4_ = dataUnits[param1[_loc3_]].relativeMinutes - dataUnits[param1[_loc3_ - 1]].relativeMinutes;
 			const intervalLength = this.viewPoint.getIntervalLength(_loc4_);
 			if (intervalLength === 0)
 				return 1;

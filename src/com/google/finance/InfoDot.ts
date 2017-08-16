@@ -38,9 +38,9 @@ namespace com.google.finance
 			this.addChild(this.valueText);
 		}
 
-		setInfo(param1: InfoDotInfo)
+		setInfo(infoDotInfo: InfoDotInfo)
 		{
-			const quoteColor = param1.quoteColor;
+			const quoteColor = infoDotInfo.quoteColor;
 			const gr = this.graphics;
 			gr.clear();
 			gr.lineStyle(10, quoteColor, 1);
@@ -50,14 +50,14 @@ namespace com.google.finance
 			InfoDot.tickerFormat.color = quoteColor;
 			this.tickerText.defaultTextFormat = InfoDot.tickerFormat;
 			this.tickerText.x = this.tickerText.x + InfoDot.TEXT_SPACING;
-			if (param1.displayName)
-				this.tickerText.text = param1.displayName;
+			if (infoDotInfo.displayName)
+				this.tickerText.text = infoDotInfo.displayName;
 			else
-				this.tickerText.text = param1.quote;
+				this.tickerText.text = infoDotInfo.quote;
 
-			InfoDot.valueFormat.color = param1.valueColor;
+			InfoDot.valueFormat.color = infoDotInfo.valueColor;
 			this.valueText.defaultTextFormat = InfoDot.valueFormat;
-			this.valueText.text = param1.value;
+			this.valueText.text = infoDotInfo.value;
 			this.valueText.y = this.tickerText.height - this.valueText.height;
 			this.valueText.x = this.tickerText.width + this.tickerText.x - InfoDot.TEXT_SPACING;
 		}

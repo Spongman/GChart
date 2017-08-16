@@ -7,7 +7,7 @@ namespace com.google.finance
 	{
 		private enabled: boolean;
 		private layerName: string;
-		
+
 		protected localYOffset: number;
 		protected localYScale: number;
 		protected readonly highlightCanvas = new flash.display.Sprite("highlightCanvas");
@@ -19,9 +19,9 @@ namespace com.google.finance
 			this.setEnabled(false);
 		}
 
-		protected getCloseYPos(context: Context, param2: DataUnit): number
+		protected getCloseYPos(context: Context, dataUnit: DataUnit): number
 		{
-			return this.getYPos(context, param2.getCloseLogValue(context.verticalScaling));
+			return this.getYPos(context, dataUnit.getCloseLogValue(context.verticalScaling));
 		}
 
 		getLayerName(): string
@@ -31,7 +31,7 @@ namespace com.google.finance
 
 		protected getPointsForCurrentDetailLevel(param1 = NaN, param2 = NaN): DataUnit[]
 		{
-			let _loc3_ = 0;
+			let _loc3_;
 			let vp = this.viewPoint;
 			if (!isNaN(param1) && !isNaN(param2))
 				_loc3_ = vp.getDetailLevelForTechnicalStyle(param1, param2);
@@ -42,25 +42,25 @@ namespace com.google.finance
 			return notnull(this.getDataSeries()).getPointsInIntervalArray(detailLevelInterval);
 		}
 
-		shouldDisplayOhlcText(param1: DataUnit): boolean
+		shouldDisplayOhlcText(dataUnit: DataUnit): boolean
 		{
 			const enabledChartLayer = this.viewPoint.getDisplayManager().getEnabledChartLayer();
 			if (enabledChartLayer !== Const.CANDLE_STICK && enabledChartLayer !== Const.OHLC_CHART)
 				return false;
 
-			if (isNaN(param1.open) || isNaN(param1.high) || isNaN(param1.low))
+			if (isNaN(dataUnit.open) || isNaN(dataUnit.high) || isNaN(dataUnit.low))
 				return false;
 
 			return true;
 		}
 
-		protected getOhlcYPos(context: Context, param2: DataUnit) 
+		protected getOhlcYPos(context: Context, dataUnit: DataUnit)
 		{
 			return {
-				"closeY": this.getYPos(context, param2.getCloseLogValue(context.verticalScaling)),
-				"openY": this.getYPos(context, param2.getOpenLogValue(context.verticalScaling)),
-				"highY": this.getYPos(context, param2.getHighLogValue(context.verticalScaling)),
-				"lowY": this.getYPos(context, param2.getLowLogValue(context.verticalScaling))
+				closeY: this.getYPos(context, dataUnit.getCloseLogValue(context.verticalScaling)),
+				openY: this.getYPos(context, dataUnit.getOpenLogValue(context.verticalScaling)),
+				highY: this.getYPos(context, dataUnit.getHighLogValue(context.verticalScaling)),
+				lowY: this.getYPos(context, dataUnit.getLowLogValue(context.verticalScaling))
 			};
 		}
 
@@ -70,23 +70,23 @@ namespace com.google.finance
 			return this.localYOffset - this.localYScale * (param2 - context.medPrice);
 		}
 
-		getOhlcBasePrice(param1: DataUnit, param2: DataUnit | null): number
+		getOhlcBasePrice(dataUnit1: DataUnit, dataUnit2: DataUnit | null): number
 		{
 			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
-				return !param2 ? Number(param1.open) : param2.close;
+				return !dataUnit2 ? Number(dataUnit1.open) : dataUnit2.close;
 
 			return -1;
 		}
 
-		getCandleStickColor(param1: DataUnit): number
+		getCandleStickColor(dataUnit: DataUnit): number
 		{
 			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
-				return param1.close >= param1.open ? Number(Const.POSITIVE_DIFFERENCE_COLOR) : Const.NEGATIVE_DIFFERENCE_COLOR;
+				return dataUnit.close >= dataUnit.open ? Number(Const.POSITIVE_DIFFERENCE_COLOR) : Const.NEGATIVE_DIFFERENCE_COLOR;
 
 			return Const.LINE_CHART_LINE_COLOR;
 		}
 
-		clearHighlight() 
+		clearHighlight()
 		{
 			this.highlightCanvas.graphics.clear();
 		}
@@ -96,7 +96,7 @@ namespace com.google.finance
 			return this.enabled;
 		}
 
-		getContext(context: Context, param2 = false) 
+		getContext(context: Context, param2 = false)
 		{
 			if (!this.isEnabled())
 				return context;
@@ -134,9 +134,9 @@ namespace com.google.finance
 						while (lastMinuteIndex >= 0 && (isNaN(points[lastMinuteIndex].relativeMinutes) || points[lastMinuteIndex].relativeMinutes - lastMinute >= _loc19_))
 							lastMinuteIndex--;
 					}
-					for (let _loc23_ = lastMinuteIndex; _loc23_ >= _loc7_; _loc23_--)
+					for (let minuteIndex = lastMinuteIndex; minuteIndex >= _loc7_; minuteIndex--)
 					{
-						const _loc20_ = points[_loc23_];
+						const _loc20_ = points[minuteIndex];
 						const _loc21_ = !_loc4_ && _loc20_.low ? _loc20_.low : _loc20_.close;
 						_loc10_ = Utils.extendedMin(_loc10_, _loc21_);
 						const _loc22_ = !_loc4_ && _loc20_.high ? _loc20_.high : _loc20_.close;
@@ -172,7 +172,7 @@ namespace com.google.finance
 			return context;
 		}
 
-		setLayerName(param1: string) 
+		setLayerName(param1: string)
 		{
 			this.layerName = param1;
 		}
@@ -202,7 +202,7 @@ namespace com.google.finance
 			return relativeMinuteIndex;
 		}
 
-		highlightPoint(context: Context, param2: number, param3: { [key: string]: any }) 
+		highlightPoint(context: Context, param2: number, state: Dictionary)
 		{
 			if (!this.isEnabled())
 				return;
@@ -215,8 +215,8 @@ namespace com.google.finance
 			const _loc6_ = points[pointIndex];
 			const _loc7_ = !isNaN(_loc6_.weeklyXPos) ? Number(_loc6_.weeklyXPos) : this.viewPoint.getXPos(_loc6_);
 			const closeYPos = this.getCloseYPos(context, _loc6_);
-			if (param3[SpaceText.SETTER_STR])
-				param3[SpaceText.SETTER_STR].clearHighlight();
+			if (state[SpaceText.SETTER_STR])
+				state[SpaceText.SETTER_STR].clearHighlight();
 
 			const gr = this.highlightCanvas.graphics;
 			gr.clear();
@@ -224,22 +224,22 @@ namespace com.google.finance
 			gr.lineStyle(5, dataSeries, 1);
 			gr.moveTo(_loc7_, closeYPos - 0.2);
 			gr.lineTo(_loc7_, closeYPos + 0.2);
-			param3[SpaceText.POINT_STR] = _loc6_;
-			param3[SpaceText.EXTRA_TEXT_STR] = "";
-			param3[SpaceText.SETTER_STR] = this;
-			param3[SpaceText.OHLC_INFO_FLAG_STR] = this.shouldDisplayOhlcText(_loc6_);
-			param3[SpaceText.OHLC_BASE_PRICE_STR] = this.getOhlcBasePrice(_loc6_, pointIndex === 0 ? null : points[pointIndex - 1]);
+			state[SpaceText.POINT_STR] = _loc6_;
+			state[SpaceText.EXTRA_TEXT_STR] = "";
+			state[SpaceText.SETTER_STR] = this;
+			state[SpaceText.OHLC_INFO_FLAG_STR] = this.shouldDisplayOhlcText(_loc6_);
+			state[SpaceText.OHLC_BASE_PRICE_STR] = this.getOhlcBasePrice(_loc6_, pointIndex === 0 ? null : points[pointIndex - 1]);
 		}
 
-		getOhlcColor(param1: DataUnit, param2: DataUnit): number
+		getOhlcColor(dataUnit1: DataUnit, dataUnit2: DataUnit): number
 		{
 			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
-				return param1.close >= param1.open ? Number(Const.POSITIVE_DIFFERENCE_COLOR) : Const.NEGATIVE_DIFFERENCE_COLOR;
+				return dataUnit1.close >= dataUnit1.open ? Number(Const.POSITIVE_DIFFERENCE_COLOR) : Const.NEGATIVE_DIFFERENCE_COLOR;
 
-			return param1.close >= param2.close ? Number(Const.POSITIVE_DIFFERENCE_COLOR) : Const.NEGATIVE_DIFFERENCE_COLOR;
+			return dataUnit1.close >= dataUnit2.close ? Number(Const.POSITIVE_DIFFERENCE_COLOR) : Const.NEGATIVE_DIFFERENCE_COLOR;
 		}
 
-		setEnabled(param1 = true) 
+		setEnabled(param1 = true)
 		{
 			this.enabled = param1;
 			this.visible = param1;

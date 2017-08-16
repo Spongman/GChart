@@ -50,14 +50,14 @@ namespace com.google.finance.indicator
 				return;
 
 			const dataSeries = new DataSeries();
-			const _loc8_: DataUnit[] = [];
+			const dataUnits: DataUnit[] = [];
 			for (let pointIndex = 0; pointIndex < pointsInIntervalArray.length; pointIndex++)
 			{
 				const _loc10_ = pointsInIntervalArray[pointIndex];
 				if (!this.shouldSkip(_loc10_, dataSeries))
 				{
-					_loc8_.push(_loc10_);
-					if (_loc8_.length < this.period)
+					dataUnits.push(_loc10_);
+					if (dataUnits.length < this.period)
 					{
 						dataSeries.points.push(new IndicatorPoint(NaN, _loc10_));
 					}
@@ -67,8 +67,8 @@ namespace com.google.finance.indicator
 						let _loc4_ = Number.POSITIVE_INFINITY;
 						for (let _loc7_ = 0; _loc7_ < this.period; _loc7_++)
 						{
-							_loc3_ = Utils.extendedMax(_loc3_, _loc8_[_loc7_].high);
-							_loc4_ = Utils.extendedMin(_loc4_, _loc8_[_loc7_].low);
+							_loc3_ = Utils.extendedMax(_loc3_, dataUnits[_loc7_].high);
+							_loc4_ = Utils.extendedMin(_loc4_, dataUnits[_loc7_].low);
 						}
 						if (_loc3_ !== _loc4_)
 						{
@@ -79,7 +79,7 @@ namespace com.google.finance.indicator
 						{
 							this.copyLastIndicatorPoint(_loc10_, dataSeries);
 						}
-						_loc8_.shift();
+						dataUnits.shift();
 					}
 				}
 			}

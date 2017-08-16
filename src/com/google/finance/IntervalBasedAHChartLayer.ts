@@ -13,18 +13,18 @@ namespace com.google.finance
 			this.setEnabled(true);
 		}
 
-		private drawOhlcBars(param1: DataUnit[], param2: number, param3: number, context: Context)
+		private drawOhlcBars(dataUnits: DataUnit[], param2: number, param3: number, context: Context)
 		{
 			const afterHoursBarWidth = this.getAfterHoursBarWidth();
 			const gr = this.graphics;
 			for (let _loc6_ = param3; _loc6_ > param2; _loc6_--)
 			{
-				if (!(isNaN(param1[_loc6_].high) || isNaN(param1[_loc6_].low) || isNaN(param1[_loc6_].open)))
+				if (!(isNaN(dataUnits[_loc6_].high) || isNaN(dataUnits[_loc6_].low) || isNaN(dataUnits[_loc6_].open)))
 				{
-					const _loc7_ = param1[_loc6_];
+					const _loc7_ = dataUnits[_loc6_];
 					const xPos = this.viewPoint.getXPos(_loc7_);
 					const ohlcYPos = this.getOhlcYPos(context, _loc7_);
-					const ohlcColor = this.getOhlcColor(_loc7_, param1[Math.max(_loc6_ - 1, 0)]);
+					const ohlcColor = this.getOhlcColor(_loc7_, dataUnits[Math.max(_loc6_ - 1, 0)]);
 					gr.lineStyle(1, ohlcColor);
 					if (!_loc7_.fake)
 					{
@@ -56,7 +56,7 @@ namespace com.google.finance
 			}
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			this.graphics.clear();
 			let vp = <ViewPoint>this.viewPoint;
@@ -81,40 +81,40 @@ namespace com.google.finance
 			}
 		}
 
-		highlightPoint(context: Context, param2: number, param3: { [key: string]: any }) 
+		highlightPoint(context: Context, param2: number, state: Dictionary)
 		{
 			if (!this.regionsXLimits || !this.regionsXLimits.containsValue(param2))
 			{
 				this.clearHighlight();
 				return;
 			}
-			super.highlightPoint(context, param2, param3);
+			super.highlightPoint(context, param2, state);
 		}
 
-		private getVisibleSessionsTimes(context: Context, param2: DataUnit[]): com.google.finance.IntervalSet
+		private getVisibleSessionsTimes(context: Context, dataUnits: DataUnit[]): com.google.finance.IntervalSet
 		{
 			const intervalSet = new com.google.finance.IntervalSet();
 			const visibleExtendedHours = this.dataSource.visibleExtendedHours;
 			for (let _loc5_ = visibleExtendedHours.length() - 1; _loc5_ >= 0; _loc5_--)
 			{
 				const interval = visibleExtendedHours.getIntervalAt(_loc5_);
-				const _loc7_ = param2[interval.start];
-				const _loc8_ = param2[interval.end];
+				const _loc7_ = dataUnits[interval.start];
+				const _loc8_ = dataUnits[interval.end];
 				if (ViewPoint.sessionVisible(_loc7_, _loc8_, context))
 					intervalSet.addInterval(_loc7_.time, _loc8_.time);
 			}
 			return intervalSet;
 		}
 
-		private drawCandleSticks(param1: DataUnit[], param2: number, param3: number, context: Context) 
+		private drawCandleSticks(dataUnits: DataUnit[], param2: number, param3: number, context: Context)
 		{
 			const afterHoursBarWidth = this.getAfterHoursBarWidth();
 			const gr = this.graphics;
 			for (let _loc6_ = param3; _loc6_ > param2; _loc6_--)
 			{
-				if (!(isNaN(param1[_loc6_].high) || isNaN(param1[_loc6_].low) || isNaN(param1[_loc6_].open)))
+				if (!(isNaN(dataUnits[_loc6_].high) || isNaN(dataUnits[_loc6_].low) || isNaN(dataUnits[_loc6_].open)))
 				{
-					const _loc7_ = param1[_loc6_];
+					const _loc7_ = dataUnits[_loc6_];
 					const xPos = this.viewPoint.getXPos(_loc7_);
 					const ohlcYPos = this.getOhlcYPos(context, _loc7_);
 					//const _loc10_ = Math.abs(_loc9_.closeY - _loc9_.openY);
@@ -159,7 +159,7 @@ namespace com.google.finance
 			}
 		}
 
-		getContext(context: Context, param2 = false) 
+		getContext(context: Context, param2 = false)
 		{
 			if (this.dataSource.visibleExtendedHours.length() > 0)
 				return super.getContext(context, param2);
@@ -167,10 +167,10 @@ namespace com.google.finance
 			return context;
 		}
 
-		private drawLines(param1: DataUnit[], param2: number, param3: number, context: Context) 
+		private drawLines(dataUnits: DataUnit[], param2: number, param3: number, context: Context)
 		{
-			let xPos = this.viewPoint.getXPos(param1[param3]);
-			let closeYPos = this.getCloseYPos(context, param1[param3]);
+			let xPos = this.viewPoint.getXPos(dataUnits[param3]);
+			let closeYPos = this.getCloseYPos(context, dataUnits[param3]);
 			const gr = this.graphics;
 			gr.lineStyle(0, 0, 0);
 			gr.beginFill(Const.ECN_LINE_CHART_FILL_COLOR, Const.ECN_LINE_CHART_FILL_VISIBILITY);
@@ -179,8 +179,8 @@ namespace com.google.finance
 			gr.lineStyle(Const.ECN_LINE_CHART_LINE_THICKNESS, Const.ECN_LINE_CHART_LINE_COLOR, Const.ECN_LINE_CHART_LINE_VISIBILITY);
 			for (let _loc7_ = param3; _loc7_ > param2; _loc7_--)
 			{
-				xPos = this.viewPoint.getXPos(param1[_loc7_]);
-				closeYPos = this.getCloseYPos(context, param1[_loc7_]);
+				xPos = this.viewPoint.getXPos(dataUnits[_loc7_]);
+				closeYPos = this.getCloseYPos(context, dataUnits[_loc7_]);
 				gr.lineTo(xPos, closeYPos);
 			}
 			gr.lineStyle(0, 0, 0);
@@ -199,24 +199,24 @@ namespace com.google.finance
 			return this.dataSource.afterHoursData;
 		}
 
-		private drawAfterHoursSession(param1: number, param2: number, context: Context, param4: DataUnit[]) 
+		private drawAfterHoursSession(param1: number, param2: number, context: Context, dataUnits: DataUnit[])
 		{
-			const timeIndex1 = DataSource.getTimeIndex(param2, param4);
-			const timeIndex2 = DataSource.getTimeIndex(param1, param4);
-			const _loc7_ = Math.min(timeIndex1, this.getLastRealPointIndex(param4));
+			const timeIndex1 = DataSource.getTimeIndex(param2, dataUnits);
+			const timeIndex2 = DataSource.getTimeIndex(param1, dataUnits);
+			const _loc7_ = Math.min(timeIndex1, this.getLastRealPointIndex(dataUnits));
 			switch (this.viewPoint.getDisplayManager().getEnabledChartLayer())
 			{
 				case Const.CANDLE_STICK:
-					this.drawCandleSticks(param4, timeIndex2, _loc7_, context);
+					this.drawCandleSticks(dataUnits, timeIndex2, _loc7_, context);
 					break;
 				case Const.OHLC_CHART:
-					this.drawOhlcBars(param4, timeIndex2, _loc7_, context);
+					this.drawOhlcBars(dataUnits, timeIndex2, _loc7_, context);
 					break;
 				default:
-					this.drawLines(param4, timeIndex2, _loc7_, context);
+					this.drawLines(dataUnits, timeIndex2, _loc7_, context);
 					break;
 			}
-			this.regionsXLimits.addInterval(this.viewPoint.getXPos(param4[timeIndex2]), this.viewPoint.getXPos(param4[timeIndex1]));
+			this.regionsXLimits.addInterval(this.viewPoint.getXPos(dataUnits[timeIndex2]), this.viewPoint.getXPos(dataUnits[timeIndex1]));
 		}
 	}
 }

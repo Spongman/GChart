@@ -33,7 +33,7 @@ namespace com.google.finance
 			while (dataSeries.fridays[_loc9_] > dataSeries.days[tNextDayStart])
 				_loc9_--;
 
-			_loc9_ = _loc9_ + (dataSeries.fridays.length - 1 - _loc9_) % skipInterval.skip;
+			_loc9_ += (dataSeries.fridays.length - 1 - _loc9_) % skipInterval.skip;
 			_loc9_ = Math.min(_loc9_, dataSeries.fridays.length - 1);
 			let _loc10_: DataUnit | null = null;
 			while (_loc9_ >= 0 && dataSeries.fridays[_loc9_] >= param2)
@@ -140,7 +140,7 @@ namespace com.google.finance
 			const _loc14_ = dataSeries.marketDayLength / (Const.INTRADAY_INTERVAL / 60);
 			const _loc15_ = _loc11_ / _loc14_;
 			while (_loc15_ * _loc13_ < viewPoint.POINTS_DISTANCE)
-				_loc13_ = _loc13_ * 2;
+				_loc13_ *= 2;
 
 			const _loc16_ = param1 - _loc14_ + 1;
 			while (param1 > _loc16_ && param1 > param2)
@@ -221,7 +221,7 @@ namespace com.google.finance
 			}
 			let _loc13_ = 1;
 			while (viewPoint.minutePix * _loc9_ * _loc13_ < viewPoint.POINTS_DISTANCE)
-				_loc13_ = _loc13_ * 2;
+				_loc13_ *= 2;
 
 			const sessionIndex = dataSeries.getSessionIndex(units[param2].dayMinute);
 			const _loc15_ = Math.max(sessionIndex, 0);
@@ -422,7 +422,7 @@ namespace com.google.finance
 				return this.getPrevOrNextClosestToX(dataSeries.units, dataSeries.days, _loc3_, param2, 1);
 			}
 			let _loc9_ = dataSeries.getNextWeekEnd(_loc5_);
-			_loc9_ = _loc9_ - (dataSeries.fridays.length - 1 - _loc9_) % skip;
+			_loc9_ -= (dataSeries.fridays.length - 1 - _loc9_) % skip;
 			_loc9_ = Math.min(_loc9_, dataSeries.fridays.length - 1);
 			return this.getPrevOrNextClosestToX(dataSeries.units, dataSeries.fridays, _loc9_, param2, skip);
 		}

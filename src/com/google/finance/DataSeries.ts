@@ -153,12 +153,12 @@ namespace com.google.finance
 
 		getIntradaySessionsString(param1: string): string
 		{
-			param1 = param1 + ": ";
+			param1 += ": ";
 
 			for (const intradayRegion of this.intradayRegions)
 			{
-				param1 = param1 + ("[" + intradayRegion.start + ", " + intradayRegion.end + "] ");
-				param1 = param1 + (this.units[intradayRegion.end].dayMinute + "\n");
+				param1 += "[" + intradayRegion.start + ", " + intradayRegion.end + "] ";
+				param1 += this.units[intradayRegion.end].dayMinute + "\n";
 			}
 			return param1;
 		}

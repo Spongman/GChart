@@ -253,7 +253,7 @@ namespace com.google.finance
 			const relativeMinutes = units[days[minuteMetaIndex]].relativeMinutes;
 			let _loc11_ = dataSource.getEndOfDayDataUnitFor(relativeMinutes);
 			if (Utils.compareUtcDates(_loc11_.exchangeDateInUTC, endOfDayDataUnit.exchangeDateInUTC) !== 0)
-				_loc8_ = _loc8_ + (dataSource.afterHoursData.getSessionLength(Const.PRE_MARKET_NAME) + 1);
+				_loc8_ += dataSource.afterHoursData.getSessionLength(Const.PRE_MARKET_NAME) + 1;
 
 			while (minuteMetaIndex >= 0 && _loc9_ < param2)
 			{
@@ -261,23 +261,23 @@ namespace com.google.finance
 				let _loc12_ = units[days[minuteMetaIndex]];
 				if (_loc11_.coveredDays > 0)
 				{
-					_loc8_ = _loc8_ + _loc11_.coveredDays * (dataSource.data.marketDayLength + 1);
+					_loc8_ += _loc11_.coveredDays * (dataSource.data.marketDayLength + 1);
 					_loc9_ += _loc11_.coveredDays;
 				}
 				else if (_loc12_)
 				{
 					_loc12_ = dataSource.getEndOfDayDataUnitFor(_loc12_.relativeMinutes);
-					_loc8_ = _loc8_ + (_loc11_.relativeMinutes - _loc12_.relativeMinutes);
+					_loc8_ += _loc11_.relativeMinutes - _loc12_.relativeMinutes;
 					_loc9_++;
 				}
 				else
 				{
-					_loc8_ = _loc8_ + (dataSource.data.marketDayLength + 1);
+					_loc8_ += dataSource.data.marketDayLength + 1;
 					_loc9_++;
 				}
 				_loc11_ = _loc12_;
 			}
-			_loc8_ = _loc8_ + (param2 - _loc9_) * (dataSource.data.marketDayLength + 1);
+			_loc8_ += param2 - _loc9_) * (dataSource.data.marketDayLength + 1;
 			return _loc8_;
 		}
 
@@ -620,7 +620,7 @@ namespace com.google.finance
 					const interval = dataSource.visibleExtendedHours.getIntervalAt(intervalIndex);
 					const _loc7_ = dataSource.afterHoursData.units[interval.start];
 					const _loc8_ = dataSource.afterHoursData.units[interval.end];
-					param1 = param1 - (_loc8_.dayMinute - _loc7_.dayMinute);
+					param1 -= _loc8_.dayMinute - _loc7_.dayMinute;
 				}
 			}
 			else if (startInterval > Intervals.INTRADAY && endInterval === Intervals.INTRADAY)
@@ -630,7 +630,7 @@ namespace com.google.finance
 					const interval = dataSource.hiddenExtendedHours.getIntervalAt(intervalIndex);
 					const _loc7_ = dataSource.afterHoursData.units[interval.start];
 					const _loc8_ = dataSource.afterHoursData.units[interval.end];
-					param1 = param1 + (_loc8_.dayMinute - _loc7_.dayMinute);
+					param1 += _loc8_.dayMinute - _loc7_.dayMinute;
 				}
 			}
 			return param1;
@@ -1259,7 +1259,7 @@ namespace com.google.finance
 				param1 = !param1;
 				param2 = !!param1 ? minutes : Const.MIN_PER_DAY - minutes;
 			}
-			param2 = param2 - Const.REALTIME_CHART_POLLING_INTERVAL / Const.MS_PER_MINUTE;
+			param2 -= Const.REALTIME_CHART_POLLING_INTERVAL / Const.MS_PER_MINUTE;
 			return {
 				isMarketOpen: param1,
 				stateRemainingMinutes: param2

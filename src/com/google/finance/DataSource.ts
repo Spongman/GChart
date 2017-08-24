@@ -620,7 +620,7 @@ namespace com.google.finance
 			else if ((this.baseInterval === Const.DAILY_INTERVAL || this.baseInterval === Const.WEEKLY_INTERVAL) && dataUnit.dayMinute !== dataSeries.marketCloseMinute)
 			{
 				let _loc11_ = (dataSeries.marketCloseMinute - dataUnit.dayMinute) * Const.MS_PER_MINUTE;
-				_loc11_ = _loc11_ - dataUnit.exchangeDateInUTC.getUTCSeconds() * 1000;
+				_loc11_ -= dataUnit.exchangeDateInUTC.getUTCSeconds() * 1000;
 				dataUnit.setDate(dataUnit.time + _loc11_, dataUnit.timezoneOffset);
 			}
 		}
@@ -747,7 +747,7 @@ namespace com.google.finance
 			const _loc5_ = startEndPair.end - startEndPair.start;
 			const _loc6_ = dataUnit.dayMinute - startEndPair.end;
 			let _loc7_ = -_loc6_ * 60 * 1000;
-			_loc7_ = _loc7_ - dataUnit.exchangeDateInUTC.getUTCSeconds() * 1000;
+			_loc7_ -= dataUnit.exchangeDateInUTC.getUTCSeconds() * 1000;
 			dataUnit.setDate(dataUnit.time + _loc7_, dataUnit.timezoneOffset);
 			if (this.baseInterval < Const.DAILY_INTERVAL)
 			{
@@ -1227,7 +1227,7 @@ namespace com.google.finance
 		{
 			let _loc1_ = "";
 			for (let objectKey in this.objects)
-				_loc1_ = _loc1_ + (", " + this.objects[objectKey].toString());
+				_loc1_ += ", " + this.objects[objectKey].toString();
 			return _loc1_;
 		}
 
@@ -1376,10 +1376,10 @@ namespace com.google.finance
 				switch (param5)
 				{
 					case Directions.BACKWARD:
-						_loc9_ = _loc9_ + (dataUnit.time - _loc8_ * this.baseInterval * 1000);
+						_loc9_ += dataUnit.time - _loc8_ * this.baseInterval * 1000;
 						break;
 					case Directions.FORWARD:
-						_loc9_ = _loc9_ + (dataUnit.time + (param4 - _loc8_ + 1) * this.baseInterval * 1000);
+						_loc9_ += dataUnit.time + (param4 - _loc8_ + 1) * this.baseInterval * 1000;
 						break;
 				}
 				fakeDataUnit.setDate(_loc9_, dataUnit.timezoneOffset);
@@ -1477,7 +1477,7 @@ namespace com.google.finance
 					_loc7_.low = _loc7_.close;
 
 				const _loc13_ = dataUnit.intervals[0];
-				_loc7_.volumes[_loc13_] = _loc7_.volumes[_loc13_] + dataUnit.volumes[_loc13_];
+				_loc7_.volumes[_loc13_] += dataUnit.volumes[_loc13_];
 			}
 		}
 

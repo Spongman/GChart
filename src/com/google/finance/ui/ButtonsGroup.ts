@@ -54,10 +54,10 @@ namespace com.google.finance.ui
 			if (this.buttons.length > 0 && this.separator !== "")
 			{
 				const _loc6_ = this.putSeparator(this.currentX, this.currentY, this.separator);
-				this.currentX = this.currentX + _loc6_.width;
+				this.currentX += _loc6_.width;
 			}
 			const _loc5_ = this.attachButton(param1, param2, param3, param4);
-			this.currentX = this.currentX + (_loc5_.width + this.spacing);
+			this.currentX += _loc5_.width + this.spacing;
 			this.buttons.push(_loc5_);
 			_loc5_.addEventListener(MouseEvents.MOUSE_DOWN, (event) => { this.buttonPress(event); });
 		}
@@ -163,7 +163,7 @@ namespace com.google.finance.ui
 			if (!isNaN(param2))
 				this.currentX += param2;
 			else
-				this.currentX = this.currentX + _loc4_.width;
+				this.currentX += _loc4_.width;
 		}
 	}
 }

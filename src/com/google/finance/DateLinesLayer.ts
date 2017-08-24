@@ -241,7 +241,7 @@ namespace com.google.finance
 							const month = exchangeDateInUTC.getUTCMonth();
 							if (month % 3 === 0)
 							{
-								_loc12_ = _loc12_ - _loc20_ / 2;
+								_loc12_ -= _loc20_ / 2;
 								ViewPoint.addTextField(sprite, _loc19_, _loc12_, _loc13_, _loc20_, _loc21_, "center", viewPoint.dateTextFormat);
 								_loc11_ = xPos;
 							}

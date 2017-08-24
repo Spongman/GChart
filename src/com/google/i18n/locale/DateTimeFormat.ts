@@ -217,7 +217,7 @@ namespace com.google.i18n.locale
 					timezoneOffset = -timezoneOffset;
 					sign = "+";
 				}
-				timezoneOffset = timezoneOffset / 3 * 5 + timezoneOffset % 60;
+				timezoneOffset /= 3 * 5 + timezoneOffset % 60;
 				return sign + this.padNumber(timezoneOffset, 4);
 			}
 			return this.formatGMT(fieldLength, date);
@@ -297,7 +297,7 @@ namespace com.google.i18n.locale
 			let _loc5_ = "";
 
 			for (let _loc6_ = 0; _loc6_ < Math.max(0, param2 - _loc4_.length); _loc6_++)
-				_loc5_ = _loc5_ + "0";
+				_loc5_ += "0";
 
 			return _loc5_ + _loc3_;
 		}

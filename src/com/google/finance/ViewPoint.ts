@@ -234,7 +234,7 @@ namespace com.google.finance
 					if (_loc5_ < _loc6_)
 					{
 						_loc3_ = _loc6_;
-						_loc4_ = _loc4_ + (_loc6_ - _loc5_);
+						_loc4_ += _loc6_ - _loc5_;
 					}
 					else if (_loc3_ > _loc5_)
 					{
@@ -262,7 +262,7 @@ namespace com.google.finance
 			const point = this.getClosestPoint(this.getLastMinute(), snapLevel);
 			const intervalLength = this.getIntervalLength(Math.abs(point.relativeMinutes - this.getLastMinute()));
 			if (intervalLength < 15)
-				this.minutesOffset = this.minutesOffset + (point.relativeMinutes - this.getLastMinute());
+				this.minutesOffset += point.relativeMinutes - this.getLastMinute();
 		}
 
 		getIntervalForLength(param1: { count: number }, param2: number): number
@@ -733,7 +733,7 @@ namespace com.google.finance
 			const _loc9_ = baseDataSource.data.allSessionsLength() + 1;
 			let _loc10_ = _loc9_;
 			if (baseDataSource.afterHoursData)
-				_loc10_ = _loc10_ + (baseDataSource.afterHoursData.allSessionsLength() + baseDataSource.afterHoursData.dataSessions.length());
+				_loc10_ += baseDataSource.afterHoursData.allSessionsLength() + baseDataSource.afterHoursData.dataSessions.length();
 
 			const _loc11_ = data.getRelativeMinuteIndex(lastMinute);
 			const time = data.units[_loc11_].time;
@@ -943,7 +943,7 @@ namespace com.google.finance
 		{
 			let _loc3_ = Math.floor(this.count / 40);
 			if (!isNaN(param2))
-				_loc3_ = _loc3_ * param2;
+				_loc3_ *= param2;
 
 			_loc3_ = Math.max(_loc3_, ViewPoint.MIN_ZOOM_CHART_AMOUNT);
 			const _loc4_ = this.POINTS_DISTANCE * _loc3_ / this.unitsPerUnit;
@@ -960,7 +960,7 @@ namespace com.google.finance
 
 		commitOffset_Handler()
 		{
-			this.lastMinute = this.lastMinute + this.minutesOffset;
+			this.lastMinute += this.minutesOffset;
 			this.minutesOffset = 0;
 			this.update();
 			this.checkEvents();

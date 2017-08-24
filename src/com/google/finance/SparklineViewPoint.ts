@@ -180,7 +180,7 @@ namespace com.google.finance
 
 		commitSparklineOffset_Handler() 
 		{
-			this.sparkLastMinute = this.sparkLastMinute + this.sparkMinutesOffset;
+			this.sparkLastMinute += this.sparkMinutesOffset;
 			this.sparkMinutesOffset = 0;
 		}
 
@@ -685,9 +685,9 @@ namespace com.google.finance
 			const sparkLastMinute = this.getSparkLastMinute();
 			const sparkFirstMinute = this.getSparkFirstMinute();
 			if (lastMinute > sparkLastMinute && lastMinute <= 0)
-				this.sparkLastMinute = this.sparkLastMinute + (lastMinute - sparkLastMinute);
+				this.sparkLastMinute += lastMinute - sparkLastMinute;
 			else if (firstMinute < sparkFirstMinute)
-				this.sparkLastMinute = this.sparkLastMinute + (firstMinute - sparkFirstMinute);
+				this.sparkLastMinute += firstMinute - sparkFirstMinute;
 			else
 				return;
 

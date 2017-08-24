@@ -17,7 +17,7 @@ namespace com.google.finance
 			const interval = notnull(this.visibleSessionsTimes.getIntervalForValue(time));
 			const timeIndex = DataSource.getTimeIndex(interval.end, dataSeries.units);
 			const skipInterval = this.viewPoint.getSkipInterval().skip;
-			relativeMinuteIndex = relativeMinuteIndex - (relativeMinuteIndex - timeIndex) % skipInterval;
+			relativeMinuteIndex -= (relativeMinuteIndex - timeIndex) % skipInterval;
 			while (dataSeries.units[relativeMinuteIndex].fake && dataSeries.units[relativeMinuteIndex].time > interval.start)
 				relativeMinuteIndex--;
 
@@ -184,7 +184,7 @@ namespace com.google.finance
 			const xPos = vp.getXPos(units[timeIndex1]);
 			let _loc10_ = 1;
 			while (this.viewPoint.minutePix * intradayInterval * _loc10_ < vp.POINTS_DISTANCE)
-				_loc10_ = _loc10_ * 2;
+				_loc10_ *= 2;
 
 			let _loc11_ = timeIndex1;
 			if (units[_loc11_].relativeMinutes === 0)
@@ -192,7 +192,7 @@ namespace com.google.finance
 				while (units[_loc11_].time > param2 && units[_loc11_].fake)
 					_loc11_--;
 			}
-			_loc11_ = _loc11_ + (timeIndex1 - _loc11_) % _loc10_;
+			_loc11_ += (timeIndex1 - _loc11_) % _loc10_;
 			let _loc12_ = vp.getXPos(units[_loc11_]);
 			let _loc13_ = this.getYPos(context, units[_loc11_]);
 			const gr = layer.graphics;

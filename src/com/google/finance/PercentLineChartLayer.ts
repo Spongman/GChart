@@ -155,15 +155,15 @@ namespace com.google.finance
 		{
 			let _loc2_ = "";
 			if (param1 > 0)
-				_loc2_ = _loc2_ + "+";
+				_loc2_ += "+";
 			else
-				_loc2_ = _loc2_ + "-";
+				_loc2_ += "-";
 
 			param1 = Math.abs(param1);
 			const _loc3_ = Math.floor(param1);
 			_loc2_ += _loc3_;
-			_loc2_ = _loc2_ + ".";
-			_loc2_ = _loc2_ + Utils.numberToMinTwoChars(Math.floor((param1 - _loc3_) * 100));
+			_loc2_ += ".";
+			_loc2_ += Utils.numberToMinTwoChars(Math.floor((param1 - _loc3_) * 100));
 			return _loc2_;
 		}
 	}

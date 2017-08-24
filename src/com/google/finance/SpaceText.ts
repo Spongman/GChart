@@ -109,27 +109,27 @@ namespace com.google.finance
 
 			if (param1 > 3 * _loc3_ * _loc3_)
 			{
-				_loc2_ = _loc2_ + Utils.numberToString(param1 / (_loc3_ * _loc3_), 2, 5);
+				_loc2_ += Utils.numberToString(param1 / (_loc3_ * _loc3_), 2, 5);
 				switch (_loc3_)
 				{
 					case 1000:
-						_loc2_ = _loc2_ + Messages.getMsg(Messages.MILLION_ONE_LETTER);
+						_loc2_ += Messages.getMsg(Messages.MILLION_ONE_LETTER);
 						break;
 					case 10000:
-						_loc2_ = _loc2_ + Messages.getMsg(Messages.HUNDRED_MILLION_ONE_LETTER);
+						_loc2_ += Messages.getMsg(Messages.HUNDRED_MILLION_ONE_LETTER);
 						break;
 				}
 			}
 			else if (param1 > _loc3_)
 			{
-				_loc2_ = _loc2_ + Utils.numberToString(param1 / _loc3_, 2, 5);
+				_loc2_ += Utils.numberToString(param1 / _loc3_, 2, 5);
 				switch (_loc3_)
 				{
 					case 1000:
-						_loc2_ = _loc2_ + Messages.getMsg(Messages.THOUSAND_ONE_LETTER);
+						_loc2_ += Messages.getMsg(Messages.THOUSAND_ONE_LETTER);
 						break;
 					case 10000:
-						_loc2_ = _loc2_ + Messages.getMsg(Messages.TEN_THOUSAND_ONE_LETTER);
+						_loc2_ += Messages.getMsg(Messages.TEN_THOUSAND_ONE_LETTER);
 						break;
 				}
 			}
@@ -257,7 +257,7 @@ namespace com.google.finance
 			this.datesTextFormats = [];
 			const singlePointDateFormat = this.getSinglePointDateFormat(_loc2_);
 			const exchangeDateInUTC = _loc2_.exchangeDateInUTC;
-			this.datesText = this.datesText + com.google.i18n.locale.DateTimeLocale.formatDateTime(singlePointDateFormat, exchangeDateInUTC, true);
+			this.datesText += com.google.i18n.locale.DateTimeLocale.formatDateTime(singlePointDateFormat, exchangeDateInUTC, true);
 			if (param1[SpaceText.OHLC_INFO_FLAG_STR])
 			{
 				this.appendOhlcText(SpaceText.OPEN_TEXT, _loc2_.open, param1[SpaceText.OHLC_BASE_PRICE_STR]);
@@ -267,16 +267,16 @@ namespace com.google.finance
 			}
 			else
 			{
-				this.datesText = this.datesText + SpaceText.PRICE_TEXT;
+				this.datesText += SpaceText.PRICE_TEXT;
 				if (param1[SpaceText.SETTER_STR] && param1[SpaceText.SETTER_STR].dataSource && param1[SpaceText.SETTER_STR].dataSource.tickerName && param1[SpaceText.SETTER_STR].dataSource.tickerName.indexOf("CURRENCY:") === 0)
-					this.datesText = this.datesText + Math.round(_loc2_.close * 10000) / 10000;
+					this.datesText += Math.round(_loc2_.close * 10000) / 10000;
 				else
-					this.datesText = this.datesText + this.normalizePrice(_loc2_.close);
+					this.datesText += this.normalizePrice(_loc2_.close);
 			}
 			if (!isNaN(param1[SpaceText.VOLUME_STR]))
 			{
-				this.datesText = this.datesText + (" " + Messages.getMsg(Messages.VOLUME_SHORT) + ": ");
-				this.datesText = this.datesText + this.getHumanReadableVolume(param1["volume"]);
+				this.datesText += " " + Messages.getMsg(Messages.VOLUME_SHORT) + ": ";
+				this.datesText += this.getHumanReadableVolume(param1["volume"]);
 			}
 			this.returnText = "";
 			this.updateInfoText();
@@ -374,12 +374,12 @@ namespace com.google.finance
 				if (Const.INFO_TEXT_ALIGN === "right")
 				{
 					_loc3_.x = _loc1_ - _loc3_.width;
-					_loc1_ = _loc1_ - _loc3_.width - 3;
+					_loc1_ -= _loc3_.width - 3;
 				}
 				else if (Const.INFO_TEXT_ALIGN === "left")
 				{
 					_loc3_.x = _loc1_;
-					_loc1_ = _loc1_ + _loc3_.width + 3;
+					_loc1_ += _loc3_.width + 3;
 				}
 			}
 		}
@@ -391,7 +391,7 @@ namespace com.google.finance
 				_loc2_ = "yyyy年M月d日";
 
 			if (dataUnit.dayMinute !== Const.MARKET_CLOSE_MINUTE)
-				_loc2_ = _loc2_ + " HH:mm";
+				_loc2_ += " HH:mm";
 
 			return _loc2_;
 		}
@@ -516,14 +516,14 @@ namespace com.google.finance
 			let rise = unit2.close - unit1.close;
 			const _loc6_ = Math.round(rise / unit1.close * 10000) / 100;
 			if (rise > 0)
-				text = text + "+";
+				text += "+";
 
 			if (unit3 && unit3.tickerName && unit3.tickerName.indexOf("CURRENCY:") === 0)
 				rise = Math.round(rise * 100000) / 100000;
 			else
 				rise = Math.round(rise * 100) / 100;
 
-			text = text + (rise + " (" + _loc6_ + "%)");
+			text += rise + " (" + _loc6_ + "%)";
 			return text;
 		}
 

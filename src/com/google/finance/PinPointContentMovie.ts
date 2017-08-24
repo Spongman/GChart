@@ -132,18 +132,18 @@ namespace com.google.finance
 			{
 				const _loc5_ = "_GF_click(\'\', \'n-cn-\', \'" + encodeURIComponent(param1) + "\', \'\');";
 				const _loc6_ = "self.location=\'" + encodeURIComponent(param3) + "\';";
-				_loc4_ = _loc4_ + ("<a href=\"javascript:" + _loc5_ + _loc6_ + "\">");
-				_loc4_ = _loc4_ + "<u><font color=\'#0000CC\' size=\'12\'>";
+				_loc4_ += "<a href=\"javascript:" + _loc5_ + _loc6_ + "\">";
+				_loc4_ += "<u><font color=\'#0000CC\' size=\'12\'>";
 			}
 			else
 			{
-				_loc4_ = _loc4_ + "<font size=\'12\'>";
+				_loc4_ += "<font size=\'12\'>";
 			}
-			_loc4_ = _loc4_ + this.escapeHtml(param2);
+			_loc4_ += this.escapeHtml(param2);
 			if (param3)
-				_loc4_ = _loc4_ + "</font></u></a>";
+				_loc4_ += "</font></u></a>";
 			else
-				_loc4_ = _loc4_ + "</font>";
+				_loc4_ += "</font>";
 
 			return _loc4_;
 		}
@@ -187,15 +187,15 @@ namespace com.google.finance
 			const originalObject = activePinPoint.originalObject;
 			let letterHtml = this.getLetterHtml(activePinPoint.letter);
 			if (activePinPoint.exchangeDateInUTC)
-				letterHtml = letterHtml + (" " + this.getDateHtml(activePinPoint.exchangeDateInUTC));
+				letterHtml += " " + this.getDateHtml(activePinPoint.exchangeDateInUTC);
 
 			if (originalObject._title && originalObject._title !== "")
-				letterHtml = letterHtml + ("\n" + this.getTitleHtml(activePinPoint.letter, originalObject._title, originalObject._url));
+				letterHtml += "\n" + this.getTitleHtml(activePinPoint.letter, originalObject._title, originalObject._url);
 
 			if (originalObject._author && originalObject._author !== "")
-				letterHtml = letterHtml + ("\n" + this.getAuthorHtml(originalObject._author));
+				letterHtml += "\n" + this.getAuthorHtml(originalObject._author);
 			else if (originalObject._snippet && originalObject._snippet !== "")
-				letterHtml = letterHtml + ("\n" + this.getAuthorHtml(originalObject._snippet));
+				letterHtml += "\n" + this.getAuthorHtml(originalObject._snippet);
 
 			return letterHtml;
 		}

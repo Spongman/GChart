@@ -61,13 +61,13 @@ namespace com.google.finance
 			{
 				const _loc3_ = Math.floor(param1 * 100) % 100;
 				if (_loc3_ % 10 === 0)
-					_loc2_ = _loc2_ + (" " + param1 + "0");
+					_loc2_ += " " + param1 + "0";
 				else
-					_loc2_ = _loc2_ + (" " + param1);
+					_loc2_ += " " + param1;
 			}
 			else
 			{
-				_loc2_ = _loc2_ + (" " + param1 + ".00");
+				_loc2_ += " " + param1 + ".00";
 			}
 			return _loc2_;
 		}
@@ -117,7 +117,7 @@ namespace com.google.finance
 					while (dataSeries.fridays[_loc16_] > dataSeries.days[nextDayStart])
 						_loc16_--;
 
-					_loc16_ = _loc16_ + (dataSeries.fridays.length - 1 - _loc16_) % skipInterval.skip;
+					_loc16_ += (dataSeries.fridays.length - 1 - _loc16_) % skipInterval.skip;
 					_loc16_ = Math.min(_loc16_, dataSeries.fridays.length - 1);
 					while (_loc16_ >= 0 && dataSeries.fridays[_loc16_] >= param2)
 					{

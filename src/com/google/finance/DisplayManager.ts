@@ -638,18 +638,18 @@ namespace com.google.finance
 					if (_loc11_.coveredDays === 0)
 						_loc10_ -= intradayMinutesInterval;
 					else
-						_loc10_ = _loc10_ - (data.marketDayLength + 1) * _loc11_.coveredDays;
+						_loc10_ -= (data.marketDayLength + 1) * _loc11_.coveredDays;
 				}
 				else if (_loc11_.dayMinute === session.end && data.minuteIsEndOfDataSession(data.units[unitIndex - 1].dayMinute))
 				{
-					_loc10_ = _loc10_ - (data.marketDayLength + 1);
+					_loc10_ -= data.marketDayLength + 1;
 				}
 				else
 				{
 					const _loc15_ = _loc11_.dayMinute - session.start;
 					if (_loc15_ >= 0 && _loc15_ < intradayMinutesInterval)
 					{
-						_loc10_ = _loc10_ - (_loc15_ + (session.start === data.marketOpenMinute ? 1 : 0));
+						_loc10_ -= _loc15_ + (session.start === data.marketOpenMinute ? 1 : 0);
 						const _loc16_ = data.units[unitIndex - 1].dayMinute;
 						if (!isNaN(_loc16_))
 							session = notnull(data.getSessionForMinute(_loc16_));
@@ -662,9 +662,9 @@ namespace com.google.finance
 						while (_loc11_.time <= _loc19_)
 						{
 							const _loc20_ = afterHoursData.units[end].dayMinute - afterHoursData.units[start].dayMinute;
-							_loc11_.relativeMinutes = _loc11_.relativeMinutes - (_loc20_ + 1);
+							_loc11_.relativeMinutes -= _loc20_ + 1;
 							this.positionAfterHoursTimes(start, end, _loc10_, intradayMinutesInterval, afterHoursData, _loc4_);
-							_loc10_ = _loc10_ - (_loc20_ + 1);
+							_loc10_ -= _loc20_ + 1;
 							_loc6_--;
 							_loc5_ = dataSource.visibleExtendedHours.getIntervalAt(_loc6_);
 							if (_loc5_)
@@ -821,7 +821,7 @@ namespace com.google.finance
 				{
 					const exchangeDate = new Date(exchangeDateInUTC.fullYearUTC, exchangeDateInUTC.monthUTC, exchangeDateInUTC.dateUTC);
 					const _loc13_ = this.mainManager ? this.mainManager.weekdayBitmap : Const.DEFAULT_WEEKDAY_BITMAP;
-					_loc4_ = _loc4_ - Utils.getWeekdaysDifference(exchangeDate, date, _loc13_);
+					_loc4_ -= Utils.getWeekdaysDifference(exchangeDate, date, _loc13_);
 					date = exchangeDate;
 				}
 				_loc10_.relativeMinutes = _loc4_;

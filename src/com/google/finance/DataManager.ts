@@ -195,30 +195,30 @@ namespace com.google.finance
 			{
 				_loc7_ = param1 + "?" + "q=" + symbolFromTicker;
 				if (exchangeFromTicker !== "")
-					_loc7_ = _loc7_ + ("&x=" + exchangeFromTicker);
+					_loc7_ += "&x=" + exchangeFromTicker;
 
-				_loc7_ = _loc7_ + ("&i=" + chartEvent.interval);
+				_loc7_ += "&i=" + chartEvent.interval;
 				if (chartEvent.type === ChartEventTypes.GET_AH_DATA || chartEvent.type === ChartEventTypes.GET_RT_AH_DATA)
-					_loc7_ = _loc7_ + "&sessions=ext_hours";
+					_loc7_ += "&sessions=ext_hours";
 
 				if (!isNaN(this.startTime) && !isNaN(this.endTime))
-					_loc7_ = _loc7_ + ("&se=" + this.startTime + "&ee=" + this.endTime);
+					_loc7_ += "&se=" + this.startTime + "&ee=" + this.endTime;
 				else
-					_loc7_ = _loc7_ + ("&p=" + chartEvent.period);
+					_loc7_ += "&p=" + chartEvent.period;
 			}
 			else
 			{
 				_loc7_ = param1.substr(0, param1.indexOf("getprices")) + "gettechnicals";
-				_loc7_ = _loc7_ + ("?symbol=" + symbolFromTicker);
-				_loc7_ = _loc7_ + ("&technicals=" + _loc6_);
+				_loc7_ += "?symbol=" + symbolFromTicker;
+				_loc7_ += "&technicals=" + _loc6_;
 				if (exchangeFromTicker !== "")
-					_loc7_ = _loc7_ + ("&exchange=" + exchangeFromTicker);
+					_loc7_ += "&exchange=" + exchangeFromTicker;
 
-				_loc7_ = _loc7_ + ("&interval=" + chartEvent.interval + "&period=" + chartEvent.period);
+				_loc7_ += "&interval=" + chartEvent.interval + "&period=" + chartEvent.period;
 			}
-			_loc7_ = _loc7_ + ("&f=" + chartEvent.columns + "&df=cpct");
-			_loc7_ = _loc7_ + "&auto=1";
-			_loc7_ = _loc7_ + ("&ts=" + new Date().getTime());
+			_loc7_ += "&f=" + chartEvent.columns + "&df=cpct";
+			_loc7_ += "&auto=1";
+			_loc7_ += "&ts=" + new Date().getTime();
 			_loc7_ += param2;
 			return _loc7_;
 		}

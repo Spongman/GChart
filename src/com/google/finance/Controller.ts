@@ -277,7 +277,7 @@ namespace com.google.finance
 				}
 				_loc11_ = _loc12_;
 			}
-			_loc8_ += param2 - _loc9_) * (dataSource.data.marketDayLength + 1;
+			_loc8_ += (param2 - _loc9_) * (dataSource.data.marketDayLength + 1);
 			return _loc8_;
 		}
 

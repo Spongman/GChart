@@ -18,8 +18,8 @@ namespace flash.display
 
 		static initialize()
 		{
-			Graphics._blitCanvas = document.createElement('canvas');
-			Graphics._blitContext = Graphics._blitCanvas.getContext('2d')!;
+			Graphics._blitCanvas = document.createElement("canvas");
+			Graphics._blitContext = Graphics._blitCanvas.getContext("2d")!;
 		}
 
 		static cleanupPending()

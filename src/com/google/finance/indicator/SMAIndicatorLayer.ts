@@ -48,24 +48,24 @@ namespace com.google.finance.indicator
 			{
 				const dataSeries = new DataSeries();
 				let _loc3_ = 0;
-				const _loc8_: number[] = [];
-				for (const point of pointsInIntervalArray)
+				const closes: number[] = [];
+				for (const originalPoint of pointsInIntervalArray)
 				{
-					if (!this.shouldSkip(point, dataSeries))
+					if (!this.shouldSkip(originalPoint, dataSeries))
 					{
-						_loc3_ = Number(_loc3_ + point.close);
-						_loc8_.push(point.close);
-						let _loc7_: IndicatorPoint;
-						if (_loc8_.length < this.periods[pointIndex])
+						_loc3_ = Number(_loc3_ + originalPoint.close);
+						closes.push(originalPoint.close);
+						let point: IndicatorPoint;
+						if (closes.length < this.periods[pointIndex])
 						{
-							_loc7_ = new IndicatorPoint(NaN, point);
+							point = new IndicatorPoint(NaN, originalPoint);
 						}
 						else
 						{
-							_loc7_ = new IndicatorPoint(_loc3_ / this.periods[pointIndex], point);
-							_loc3_ = Number(_loc3_ - _loc8_.shift()!);
+							point = new IndicatorPoint(_loc3_ / this.periods[pointIndex], originalPoint);
+							_loc3_ = Number(_loc3_ - closes.shift()!);
 						}
-						dataSeries.points.push(_loc7_);
+						dataSeries.points.push(point);
 					}
 				}
 				this.indicator.setDataSeries(param1, dataSeries, pointIndex);

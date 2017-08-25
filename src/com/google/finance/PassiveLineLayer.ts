@@ -56,20 +56,20 @@ namespace com.google.finance
 
 		private getFormattedClosePrice(param1: number): string
 		{
-			let _loc2_ = "";
+			let value = "";
 			if (Math.floor(param1) !== param1)
 			{
 				const _loc3_ = Math.floor(param1 * 100) % 100;
 				if (_loc3_ % 10 === 0)
-					_loc2_ += " " + param1 + "0";
+					value += " " + param1 + "0";
 				else
-					_loc2_ += " " + param1;
+					value += " " + param1;
 			}
 			else
 			{
-				_loc2_ += " " + param1 + ".00";
+				value += " " + param1 + ".00";
 			}
-			return _loc2_;
+			return value;
 		}
 
 		private drawLine_(sprite: flash.display.Sprite, param2: number, param3: number, viewPoint: ViewPoint, context: Context, dataSeries: com.google.finance.DataSeries)

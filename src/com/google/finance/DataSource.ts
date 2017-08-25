@@ -8,6 +8,13 @@ namespace com.google.finance
 		}
 	}
 
+	export interface ObjectPositions
+	{
+		exchangeTimezoneOffset: number;
+		closePrice: number;
+		posInInterval: SeriesPosition[];
+	};
+
 	enum ColumnTypes
 	{
 		COL_DATE_TYPE = 1,
@@ -627,11 +634,7 @@ namespace com.google.finance
 
 		getObjectPositionsInInterval(param1: number)
 		{
-			const objectPosition = <{
-				exchangeTimezoneOffset: number,
-				closePrice: number,
-				posInInterval: SeriesPosition[],
-			}>{};
+			const objectPositions = {} as ObjectPositions;
 			const seriesPosition: SeriesPosition[] = [];
 			for (let detailLevelIndex = Const.DETAIL_LEVELS.length - 1; detailLevelIndex >= 0; detailLevelIndex--)
 			{
@@ -642,7 +645,7 @@ namespace com.google.finance
 					let timeIndex = DataSource.getTimeIndex(param1, points);
 					if (timeIndex === 0 && points[0].time > param1)
 					{
-						objectPosition.exchangeTimezoneOffset = points[timeIndex].timezoneOffset;
+						objectPositions.exchangeTimezoneOffset = points[timeIndex].timezoneOffset;
 					}
 					else
 					{
@@ -650,8 +653,8 @@ namespace com.google.finance
 							timeIndex = Math.min(timeIndex + 1, points.length - 1);
 
 						seriesPosition[detailLevelInterval] = new SeriesPosition(this.data, timeIndex);
-						objectPosition.exchangeTimezoneOffset = points[timeIndex].timezoneOffset;
-						objectPosition.closePrice = points[timeIndex].close;
+						objectPositions.exchangeTimezoneOffset = points[timeIndex].timezoneOffset;
+						objectPositions.closePrice = points[timeIndex].close;
 					}
 				}
 			}
@@ -673,24 +676,24 @@ namespace com.google.finance
 						if (unitTime >= param1 && pointTime >= param1 && pointTime < unitTime || unitTime < param1 && pointTime > unitTime)
 						{
 							seriesPosition[Const.INTRADAY_INTERVAL] = new SeriesPosition(this.afterHoursData, timeIndex);
-							objectPosition.exchangeTimezoneOffset = points2[timeIndex].timezoneOffset;
-							objectPosition.closePrice = points2[timeIndex].close;
+							objectPositions.exchangeTimezoneOffset = points2[timeIndex].timezoneOffset;
+							objectPositions.closePrice = points2[timeIndex].close;
 						}
 					}
 					else
 					{
 						seriesPosition[Const.INTRADAY_INTERVAL] = new SeriesPosition(this.afterHoursData, timeIndex);
-						objectPosition.exchangeTimezoneOffset = points2[timeIndex].timezoneOffset;
-						objectPosition.closePrice = points2[timeIndex].close;
+						objectPositions.exchangeTimezoneOffset = points2[timeIndex].timezoneOffset;
+						objectPositions.closePrice = points2[timeIndex].close;
 					}
 				}
 				else
 				{
-					objectPosition.exchangeTimezoneOffset = points2[timeIndex].timezoneOffset;
+					objectPositions.exchangeTimezoneOffset = points2[timeIndex].timezoneOffset;
 				}
 			}
-			objectPosition.posInInterval = seriesPosition;
-			return objectPosition;
+			objectPositions.posInInterval = seriesPosition;
+			return objectPositions;
 		}
 
 		private parseHeader(param1: string[], chartEvent: ChartEvent)
@@ -750,10 +753,8 @@ namespace com.google.finance
 			_loc7_ -= dataUnit.exchangeDateInUTC.getUTCSeconds() * 1000;
 			dataUnit.setDate(dataUnit.time + _loc7_, dataUnit.timezoneOffset);
 			if (this.baseInterval < Const.DAILY_INTERVAL)
-			{
-				const _loc8_ = _loc5_ / this.baseMinutesInterval;
-				this.addFakeDataUnits(dataUnits, dataUnit, dataSeries, _loc8_, Directions.BACKWARD);
-			}
+				this.addFakeDataUnits(dataUnits, dataUnit, dataSeries, _loc5_ / this.baseMinutesInterval, Directions.BACKWARD);
+
 			dataUnits.push(dataUnit);
 		}
 
@@ -1225,10 +1226,10 @@ namespace com.google.finance
 
 		objectsToString(): string
 		{
-			let _loc1_ = "";
+			let value = "";
 			for (const objectKey of Object.keys(this.objects))
-				_loc1_ += ", " + this.objects[objectKey].toString();
-			return _loc1_;
+				value += ", " + this.objects[objectKey].toString();
+			return value;
 		}
 
 		markEvent(chartEvent: ChartEvent, chartEventPriority: ChartEventPriorities): boolean

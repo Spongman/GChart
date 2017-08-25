@@ -154,7 +154,7 @@ namespace com.google.finance
 			const _loc8_: number[] = [];
 			const _loc9_: number[] = [];
 			const _loc10_: number[] = [];
-			for (let _loc6_ = param3; _loc6_ <= param4; )
+			for (let _loc6_ = param3; _loc6_ <= param4;)
 			{
 				_loc7_.push(_loc6_);
 				const flagGroupCount = this.getFlagGroupCount(context, pinPoints, _loc6_, param5);

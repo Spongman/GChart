@@ -127,25 +127,25 @@ namespace com.google.finance
 
 		protected getTitleHtml(param1: string, param2: string, param3: string): string
 		{
-			let _loc4_ = "";
+			let titleHtml = "";
 			if (param3)
 			{
 				const _loc5_ = "_GF_click(\'\', \'n-cn-\', \'" + encodeURIComponent(param1) + "\', \'\');";
 				const _loc6_ = "self.location=\'" + encodeURIComponent(param3) + "\';";
-				_loc4_ += "<a href=\"javascript:" + _loc5_ + _loc6_ + "\">";
-				_loc4_ += "<u><font color=\'#0000CC\' size=\'12\'>";
+				titleHtml += "<a href=\"javascript:" + _loc5_ + _loc6_ + "\">";
+				titleHtml += "<u><font color=\'#0000CC\' size=\'12\'>";
 			}
 			else
 			{
-				_loc4_ += "<font size=\'12\'>";
+				titleHtml += "<font size=\'12\'>";
 			}
-			_loc4_ += this.escapeHtml(param2);
+			titleHtml += this.escapeHtml(param2);
 			if (param3)
-				_loc4_ += "</font></u></a>";
+				titleHtml += "</font></u></a>";
 			else
-				_loc4_ += "</font>";
+				titleHtml += "</font>";
 
-			return _loc4_;
+			return titleHtml;
 		}
 
 		protected escapeHtml(param1: string): string

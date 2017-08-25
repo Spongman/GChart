@@ -99,44 +99,44 @@ namespace com.google.finance
 			this.bg.height = param2 + Const.INFO_TEXT_TOP_PADDING;
 		}
 
-		private getHumanReadableVolume(param1: number): string
+		private getHumanReadableVolume(value: number): string
 		{
-			let _loc2_ = "";
-			let _loc3_ = 1000;
+			let text = "";
+			let scale = 1000;
 			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
-				_loc3_ = 10000;
+				scale = 10000;
 
-			if (param1 > 3 * _loc3_ * _loc3_)
+			if (value > 3 * scale * scale)
 			{
-				_loc2_ += Utils.numberToString(param1 / (_loc3_ * _loc3_), 2, 5);
-				switch (_loc3_)
+				text += Utils.numberToString(value / (scale * scale), 2, 5);
+				switch (scale)
 				{
 					case 1000:
-						_loc2_ += Messages.getMsg(Messages.MILLION_ONE_LETTER);
+						text += Messages.getMsg(Messages.MILLION_ONE_LETTER);
 						break;
 					case 10000:
-						_loc2_ += Messages.getMsg(Messages.HUNDRED_MILLION_ONE_LETTER);
+						text += Messages.getMsg(Messages.HUNDRED_MILLION_ONE_LETTER);
 						break;
 				}
 			}
-			else if (param1 > _loc3_)
+			else if (value > scale)
 			{
-				_loc2_ += Utils.numberToString(param1 / _loc3_, 2, 5);
-				switch (_loc3_)
+				text += Utils.numberToString(value / scale, 2, 5);
+				switch (scale)
 				{
 					case 1000:
-						_loc2_ += Messages.getMsg(Messages.THOUSAND_ONE_LETTER);
+						text += Messages.getMsg(Messages.THOUSAND_ONE_LETTER);
 						break;
 					case 10000:
-						_loc2_ += Messages.getMsg(Messages.TEN_THOUSAND_ONE_LETTER);
+						text += Messages.getMsg(Messages.TEN_THOUSAND_ONE_LETTER);
 						break;
 				}
 			}
 			else
 			{
-				_loc2_ += param1;
+				text += value;
 			}
-			return _loc2_;
+			return text;
 		}
 
 		private setDateEntryState(param1: number)

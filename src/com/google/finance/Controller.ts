@@ -64,7 +64,7 @@ namespace com.google.finance
 		private chartSizeChangeToolTip: com.google.finance.ToolTipMovie;
 		private buttonTextFormat: flash.text.TextFormat;
 		private intId: number;
-		private chartTypeNameMapping: Map<string>;
+		private chartTypeNameMapping: { [key: string]: string };
 		private scrollMouseMaxX: number;
 		private isMarketOpen: boolean;
 		private initialXMouse: number;
@@ -150,7 +150,11 @@ namespace com.google.finance
 				this.removeChild(this.chartSizeChangeButton);
 
 			this.chartSizeChangeButton = new flash.display.SimpleButton("chartSizeChangeButton");
-			const buttonBitmap: flash.display.Bitmap = showExpand ? new Controller_ExpandIcon() : new Controller_ShrinkIcon();
+			let buttonBitmap: flash.display.Bitmap;
+			if (showExpand)
+				buttonBitmap = new Controller_ExpandIcon();
+			else
+				buttonBitmap = new Controller_ShrinkIcon();
 
 			this.chartSizeChangeButton.overState = buttonBitmap;
 			this.chartSizeChangeButton.downState = buttonBitmap;
@@ -273,7 +277,7 @@ namespace com.google.finance
 				}
 				_loc11_ = _loc12_;
 			}
-			_loc8_ += (param2 - _loc9_) * (dataSource.data.marketDayLength + 1);
+			_loc8_ = _loc8_ + (param2 - _loc9_) * (dataSource.data.marketDayLength + 1);
 			return _loc8_;
 		}
 
@@ -1163,11 +1167,11 @@ namespace com.google.finance
 			{
 				const numUnits = firstDataSource.data.units.length;
 				const _loc12_ = firstDataSource.data.units[numUnits - 1];
-				const _loc13_ = new Date(_loc12_.time);
-				_loc13_.setMonth(0);
-				_loc13_.setDate(1);
+				const date = new Date(_loc12_.time);
+				date.setMonth(0);
+				date.setDate(1);
 				const units = firstDataSource.data.units;
-				const timeIndex = DataSource.getTimeIndex(_loc13_.getTime(), units);
+				const timeIndex = DataSource.getTimeIndex(date.getTime(), units);
 				lastMinute = 0;
 				count = lastMinute - units[timeIndex].relativeMinutes;
 			}

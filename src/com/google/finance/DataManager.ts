@@ -189,37 +189,37 @@ namespace com.google.finance
 				_loc6_ = _loc8_[1];
 			}
 			exchangeFromTicker = exchangeFromTicker === "NASDAQ" ? "NASD" : exchangeFromTicker;
-			let _loc7_ = "";
+			let urlString = "";
 			if (_loc6_ === "")
 			{
-				_loc7_ = param1 + "?" + "q=" + symbolFromTicker;
+				urlString = param1 + "?" + "q=" + symbolFromTicker;
 				if (exchangeFromTicker !== "")
-					_loc7_ += "&x=" + exchangeFromTicker;
+					urlString += "&x=" + exchangeFromTicker;
 
-				_loc7_ += "&i=" + chartEvent.interval;
+				urlString += "&i=" + chartEvent.interval;
 				if (chartEvent.type === ChartEventTypes.GET_AH_DATA || chartEvent.type === ChartEventTypes.GET_RT_AH_DATA)
-					_loc7_ += "&sessions=ext_hours";
+					urlString += "&sessions=ext_hours";
 
 				if (!isNaN(this.startTime) && !isNaN(this.endTime))
-					_loc7_ += "&se=" + this.startTime + "&ee=" + this.endTime;
+					urlString += "&se=" + this.startTime + "&ee=" + this.endTime;
 				else
-					_loc7_ += "&p=" + chartEvent.period;
+					urlString += "&p=" + chartEvent.period;
 			}
 			else
 			{
-				_loc7_ = param1.substr(0, param1.indexOf("getprices")) + "gettechnicals";
-				_loc7_ += "?symbol=" + symbolFromTicker;
-				_loc7_ += "&technicals=" + _loc6_;
+				urlString = param1.substr(0, param1.indexOf("getprices")) + "gettechnicals";
+				urlString += "?symbol=" + symbolFromTicker;
+				urlString += "&technicals=" + _loc6_;
 				if (exchangeFromTicker !== "")
-					_loc7_ += "&exchange=" + exchangeFromTicker;
+					urlString += "&exchange=" + exchangeFromTicker;
 
-				_loc7_ += "&interval=" + chartEvent.interval + "&period=" + chartEvent.period;
+				urlString += "&interval=" + chartEvent.interval + "&period=" + chartEvent.period;
 			}
-			_loc7_ += "&f=" + chartEvent.columns + "&df=cpct";
-			_loc7_ += "&auto=1";
-			_loc7_ += "&ts=" + new Date().getTime();
-			_loc7_ += param2;
-			return _loc7_;
+			urlString += "&f=" + chartEvent.columns + "&df=cpct";
+			urlString += "&auto=1";
+			urlString += "&ts=" + new Date().getTime();
+			urlString += param2;
+			return urlString;
 		}
 
 		cloneDataUnitForTargetExchange(dataUnit1: DataUnit, dataUnit2: DataUnit, param3: number): DataUnit

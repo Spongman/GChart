@@ -57,30 +57,30 @@ namespace com.google.finance.indicator
 				const dataSeries = new DataSeries();
 				let _loc3_ = 0;
 				const _loc8_: number[] = [];
-				for (const point of pointsInIntervalArray)
+				for (const originalPoint of pointsInIntervalArray)
 				{
-					if (!this.shouldSkip(point, dataSeries))
+					if (!this.shouldSkip(originalPoint, dataSeries))
 					{
-						const _loc11_ = point.volumes[param1];
+						const _loc11_ = originalPoint.volumes[param1];
 						if (_loc11_ === 0)
 						{
-							this.copyLastIndicatorPoint(point, dataSeries);
+							this.copyLastIndicatorPoint(originalPoint, dataSeries);
 						}
 						else
 						{
 							_loc3_ = Number(_loc3_ + _loc11_);
 							_loc8_.push(_loc11_);
-							let _loc7_: IndicatorPoint;
+							let point: IndicatorPoint;
 							if (_loc8_.length < this.periods[_loc4_])
 							{
-								_loc7_ = new IndicatorPoint(NaN, point);
+								point = new IndicatorPoint(NaN, originalPoint);
 							}
 							else
 							{
-								_loc7_ = new IndicatorPoint(_loc3_ / this.periods[_loc4_], point);
+								point = new IndicatorPoint(_loc3_ / this.periods[_loc4_], originalPoint);
 								_loc3_ = Number(_loc3_ - _loc8_.shift()!);
 							}
-							dataSeries.points.push(_loc7_);
+							dataSeries.points.push(point);
 						}
 					}
 				}

@@ -9,7 +9,11 @@ namespace com.google.finance
 	// import flash.utils.getDefinitionByName;
 	// import flash.text.TextFormatAlign;
 
-	export type ViewPointState = { count: number, lastMinute: number };
+	interface ViewPointState
+	{
+		count: number;
+		lastMinute: number;
+	};
 
 	export class SkipInterval
 	{
@@ -486,21 +490,14 @@ namespace com.google.finance
 				this.generateEventForAllSources(ChartEventStyles.GET_40Y_DATA);
 		}
 
-		getDetailLevelForDifferentMarketSessionComparison(param1 = NaN, param2 = NaN): Intervals
+		getDetailLevelForDifferentMarketSessionComparison(count = NaN, minute = NaN): Intervals
 		{
-			let _loc3_;
-			if (!isNaN(param2))
-				_loc3_ = param2;
-			else
-				_loc3_ = this.getLastMinute();
+			if (isNaN(count))
+				count = this.count;
+			if (isNaN(minute))
+				minute = this.getLastMinute();
 
-			let _loc4_;
-			if (!isNaN(param1))
-				_loc4_ = param1;
-			else
-				_loc4_ = this.count;
-
-			if (_loc4_ - _loc3_ <= Const.DAILY_DAYS)
+			if (count - minute <= Const.DAILY_DAYS)
 				return Intervals.DAILY;
 
 			return Intervals.WEEKLY;
@@ -550,17 +547,13 @@ namespace com.google.finance
 			if (minuteMetaIndex < _loc4_.length - 1)
 			{
 				let _loc8_: DataUnit;
-
 				if (_loc4_ === baseDataSource.days)
 					_loc8_ = baseDataSource.units[_loc4_[minuteMetaIndex + 1]];
 				else
 					_loc8_ = baseDataSource.units[_loc4_[minuteMetaIndex + 1] - 1];
 
 				const _loc9_ = this.getIntervalLength(_loc8_.relativeMinutes - param1);
-				if (_loc9_ < intervalLength)
-					return _loc8_;
-
-				return _loc6_;
+				return (_loc9_ < intervalLength) ? _loc8_ : _loc6_;
 			}
 			return _loc6_;
 		}
@@ -767,17 +760,8 @@ namespace com.google.finance
 			if (this.myController && this.myController.currentIntervalLevel >= 0)
 				return this.myController.currentIntervalLevel;
 
-			let _loc3_;
-			if (!isNaN(param2))
-				_loc3_ = param2;
-			else
-				_loc3_ = this.getLastMinute();
-
-			let _loc4_;
-			if (!isNaN(param1))
-				_loc4_ = param1;
-			else
-				_loc4_ = this.count;
+			const _loc3_ = !isNaN(param2) ? param2 : this.getLastMinute();
+			const _loc4_ = !isNaN(param1) ? param1 : this.count;
 
 			const quoteType = this.getQuoteType();
 			const baseDataSource = this.getBaseDataSource();

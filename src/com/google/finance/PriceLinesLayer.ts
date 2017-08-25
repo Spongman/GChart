@@ -2,9 +2,10 @@ namespace com.google.finance
 {
 	// import flash.text.TextFieldAutoSize;
 
-	type LabelPos = {
-		yPos: number,
-		label: number
+	interface LabelPos
+	{
+		yPos: number;
+		label: number;
 	};
 
 	export class PriceLinesLayer extends AbstractLayer<ViewPoint>
@@ -21,7 +22,7 @@ namespace com.google.finance
 			const _loc6_ = increaseInterval * Math.ceil(value / increaseInterval);
 			const yPos = this.getYPos(_loc6_, context);
 			return {
-				yPos: yPos,
+				yPos,
 				label: _loc6_
 			};
 		}
@@ -80,32 +81,32 @@ namespace com.google.finance
 			return _loc3_;
 		}
 
-		private getTextForValue(param1: number): string
+		private getTextForValue(value: number): string
 		{
-			let _loc2_ = "";
-			let _loc3_ = "";
-			if (param1 < 0)
+			let text = "";
+			let prefix = "";
+			if (value < 0)
 			{
-				_loc3_ = "-";
-				param1 = Math.abs(param1);
+				prefix = "-";
+				value = Math.abs(value);
 			}
 			let _loc4_ = 1;
 			while (this.distanceBetweenLines * _loc4_ % 1 !== 0)
 				_loc4_ = Number(_loc4_ * 10);
 
-			param1 = Math.round(param1 * _loc4_);
+			value = Math.round(value * _loc4_);
 			while (_loc4_ > 1)
 			{
-				_loc2_ = String(param1 - Math.floor(param1 / 10) * 10) + _loc2_;
-				param1 = Math.floor(param1 / 10);
+				text = String(value - Math.floor(value / 10) * 10) + text;
+				value = Math.floor(value / 10);
 				_loc4_ = Number(Math.floor(_loc4_ / 10));
 			}
-			if (_loc2_ !== "")
-				_loc2_ = _loc3_ + String(Math.floor(param1)) + "." + _loc2_;
+			if (text !== "")
+				text = prefix + String(Math.floor(value)) + "." + text;
 			else
-				_loc2_ = _loc3_ + String(Math.floor(param1));
+				text = prefix + String(Math.floor(value));
 
-			return _loc2_;
+			return text;
 		}
 
 		private getInitialLinesList_(context: Context)

@@ -343,38 +343,38 @@ namespace com.google.finance
 			}
 		}
 
-		static hourToString(param1: number, param2: number): string
+		static hourToString(hour: number, minute: number): string
 		{
-			let _loc3_ = "";
-			if (param2 === 0)
+			let text = "";
+			if (minute === 0)
 			{
-				if (param1 > 12)
+				if (hour > 12)
 				{
-					param1 -= 12;
-					_loc3_ = param1 + " pm";
+					hour -= 12;
+					text = hour + " pm";
 				}
-				else if (param1 === 12)
+				else if (hour === 12)
 				{
-					_loc3_ = "12 pm";
+					text = "12 pm";
 				}
 				else
 				{
-					_loc3_ = param1 + " am";
+					text = hour + " am";
 				}
 			}
 			else
 			{
-				let _loc4_ = "" + param1;
-				let _loc5_ = "" + param2;
-				if (param1 < 10)
-					_loc4_ = "0" + param1;
+				let _loc4_ = "" + hour;
+				let _loc5_ = "" + minute;
+				if (hour < 10)
+					_loc4_ = "0" + hour;
 
-				if (param2 < 10)
-					_loc5_ = "0" + param2;
+				if (minute < 10)
+					_loc5_ = "0" + minute;
 
-				_loc3_ = _loc4_ + ":" + _loc5_;
+				text = _loc4_ + ":" + _loc5_;
 			}
-			return _loc3_;
+			return text;
 		}
 
 		static appendObjectMembersAsStrings(param1: string, param2: any): string
@@ -414,7 +414,7 @@ namespace com.google.finance
 
 		static cloneObject<T>(obj: T): T
 		{
-			const clone = <T>{};
+			const clone:T = <T>{};
 			for (const key of Object.keys(obj))
 				(<any>clone)[key] = (<any>obj)[key]; // TODO
 			return clone;

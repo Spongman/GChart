@@ -16,7 +16,7 @@ namespace com.google.i18n.locale
 
 	export class DateTimeFormat
 	{
-		private tokensHash: Map<boolean> = {};
+		private tokensHash: { [key: string]: boolean } = {};
 		private symbols: Dictionary = DateTimeLocale.getResource(DateTimeLocale.getLocale());
 		private TOKENS = "GyMkSEahKHcLQdmsvzZ";
 		private patternParts: PatternPart[] = [];
@@ -217,7 +217,7 @@ namespace com.google.i18n.locale
 					timezoneOffset = -timezoneOffset;
 					sign = "+";
 				}
-				timezoneOffset /= 3 * 5 + timezoneOffset % 60;
+				timezoneOffset = timezoneOffset / 3 * 5 + timezoneOffset % 60;
 				return sign + this.padNumber(timezoneOffset, 4);
 			}
 			return this.formatGMT(fieldLength, date);
@@ -281,24 +281,25 @@ namespace com.google.i18n.locale
 			const parts: string[] = [];
 			for (const part of this.patternParts)
 			{
+				const partText = part.text;
 				if (PatternPartTypes.FIELD === part.type)
-					parts.push(this.formatField(part.text, date));
+					parts.push(this.formatField(partText, date));
 				else
-					parts.push(part.text);
+					parts.push(partText);
 			}
 			return parts.join("");
 		}
 
-		private padNumber(param1: number, param2: number): string
+		private padNumber(value: number, param2: number): string
 		{
-			const _loc3_ = Math.floor(param1);
+			const _loc3_ = Math.floor(value);
 			const _loc4_ = String(_loc3_);
-			let _loc5_ = "";
+			let padding = "";
 
 			for (let _loc6_ = 0; _loc6_ < Math.max(0, param2 - _loc4_.length); _loc6_++)
-				_loc5_ += "0";
+				padding += "0";
 
-			return _loc5_ + _loc3_;
+			return padding + _loc3_;
 		}
 
 		private formatDayOfWeek(fieldLength: number, date: Date): string

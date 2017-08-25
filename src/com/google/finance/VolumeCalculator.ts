@@ -8,24 +8,24 @@ namespace com.google.finance
 			for (let _loc6_ = input.fridays.length - 1; _loc6_ >= 0; _loc6_ -= weeks)
 			{
 				let _loc7_ = Number(_loc6_);
-				let _loc8_ = 0;
+				let volume = 0;
 				output.fridays.push(output.points.length);
 				while (_loc7_ > _loc6_ - weeks && _loc7_ >= 0)
 				{
-					_loc8_ = Number(_loc8_ + input.units[input.fridays[_loc7_]].volumes[Const.WEEKLY_INTERVAL]);
+					volume = Number(volume + input.units[input.fridays[_loc7_]].volumes[Const.WEEKLY_INTERVAL]);
 					_loc7_--;
 				}
 				if (_loc7_ < 0)
 					_loc7_ = 0;
 
-				const _loc9_ = new indicator.VolumeIndicatorPoint(
-					_loc8_,
+				const point = new indicator.VolumeIndicatorPoint(
+					volume,
 					(input.units[input.fridays[_loc6_]]).relativeMinutes,
 					(<indicator.IndicatorPoint>input.points[input.fridays[_loc6_]]).point,
 					(input.units[input.fridays[_loc7_]]).time
 				);
 
-				output.points.push(_loc9_);
+				output.points.push(point);
 			}
 		}
 
@@ -36,24 +36,24 @@ namespace com.google.finance
 			for (let _loc6_ = input.days.length - 1; _loc6_ >= 0; _loc6_ -= _loc5_)
 			{
 				let _loc7_ = Number(_loc6_);
-				let _loc8_ = 0;
+				let volume = 0;
 				output.days.push(output.points.length);
 				while (_loc7_ > _loc6_ - _loc5_ && _loc7_ >= 0)
 				{
-					_loc8_ = Number(_loc8_ + Number(input.units[input.days[_loc7_]].volumes[_loc4_]));
+					volume = Number(volume + Number(input.units[input.days[_loc7_]].volumes[_loc4_]));
 					_loc7_--;
 				}
 				if (_loc7_ < 0)
 					_loc7_ = 0;
 
-				const _loc9_ = new indicator.VolumeIndicatorPoint(
-					_loc8_,
+				const point = new indicator.VolumeIndicatorPoint(
+					volume,
 					(input.units[input.days[_loc6_]]).relativeMinutes,
 					(<indicator.IndicatorPoint>input.points[input.days[_loc6_]]).point,
 					(input.units[input.days[_loc7_]]).time
 				);
 
-				output.points.push(_loc9_);
+				output.points.push(point);
 			}
 		}
 
@@ -96,17 +96,17 @@ namespace com.google.finance
 				let _loc9_ = end;
 				while (_loc9_ >= start)
 				{
-					let _loc11_ = 0;
+					let volume = 0;
 					for (let _loc10_ = _loc9_; _loc10_ > _loc9_ - _loc5_ && _loc10_ >= start; _loc10_--)
-						_loc11_ = Number(_loc11_ + input.units[_loc10_].volumes[_loc4_]);
+						volume = Number(volume + input.units[_loc10_].volumes[_loc4_]);
 
-					const _loc12_ = new indicator.VolumeIndicatorPoint(
-						_loc11_,
+					const point = new indicator.VolumeIndicatorPoint(
+						volume,
 						input.units[_loc9_].relativeMinutes,
 						(<indicator.IndicatorPoint>input.points[_loc9_]).point,
 						input.units[_loc9_].time
 					);
-					output.points.push(_loc12_);
+					output.points.push(point);
 					_loc9_ -= _loc5_;
 				}
 			}

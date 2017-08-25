@@ -162,34 +162,34 @@ namespace com.google.finance
 
 		private putObject(stockAssociatedObject: StockAssociatedObject, position: Position): SplitMovie
 		{
-			let _loc3_: SplitMovie;
+			let movie: SplitMovie;
 			if (this.activeMovies >= this.movies.length)
 			{
-				let _loc4_: typeof SplitMovie;
+				let movieType: typeof SplitMovie;
 				switch (this.renderObj)
 				{
 					case "split":
-						_loc4_ = SplitMovie;
+						movieType = SplitMovie;
 						break;
 					case "dividend":
-						_loc4_ = DividendMovie;
+						movieType = DividendMovie;
 						break;
 					case "stock_dividend":
-						_loc4_ = StockDividendMovie;
+						movieType = StockDividendMovie;
 						break;
 					default:
 						throw new Error();
 				}
-				_loc3_ = new _loc4_();
-				this.addChild(_loc3_);
+				movie = new movieType();
+				this.addChild(movie);
 			}
 			else
 			{
-				_loc3_ = this.movies[this.activeMovies];
+				movie = this.movies[this.activeMovies];
 			}
-			_loc3_.x = position.x;
-			_loc3_.y = position.y;
-			_loc3_.setObject(stockAssociatedObject);
+			movie.x = position.x;
+			movie.y = position.y;
+			movie.setObject(stockAssociatedObject);
 			if (stockAssociatedObject.originalObject._orientation)
 			{
 				switch (stockAssociatedObject.originalObject._orientation)
@@ -202,14 +202,14 @@ namespace com.google.finance
 						break;
 				}
 			}
-			_loc3_.setOrientation(position.orientation);
-			_loc3_.setSupportingLayer(this);
-			_loc3_.setHighlightCanvas(this.highlightCanvas);
+			movie.setOrientation(position.orientation);
+			movie.setSupportingLayer(this);
+			movie.setHighlightCanvas(this.highlightCanvas);
 			if (this.activeMovies >= this.movies.length)
-				this.movies.push(_loc3_);
+				this.movies.push(movie);
 
 			this.activeMovies++;
-			return _loc3_;
+			return movie;
 		}
 
 		private getFirstVisibleObject(stockAssociatedObjects: StockAssociatedObject[], param2: number, context: Context): number

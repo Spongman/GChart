@@ -277,20 +277,20 @@ namespace com.google.finance
 
 		private getMonthStartDateFormat(param1: number): string
 		{
-			let _loc2_ = "";
+			let format = "";
 			if (param1 > 90)
 			{
 				if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
-					_loc2_ = "yyyy年MMMMM";
+					format = "yyyy年MMMMM";
 				else
-					_loc2_ = "MMM yyyy";
+					format = "MMM yyyy";
 			}
 			else if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
-				_loc2_ = "yy年MMMMM";
+				format = "yy年MMMMM";
 			else
-				_loc2_ = "MMM\'yy";
+				format = "MMM\'yy";
 
-			return _loc2_;
+			return format;
 		}
 
 		private drawHoursForDay(displayObject: flash.display.DisplayObject, sprite: flash.display.Sprite, dayVisibility: DayVisibility, param4: number)

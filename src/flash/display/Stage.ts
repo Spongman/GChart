@@ -59,9 +59,9 @@ namespace flash.display
 
 		static bind(fToBind: Function, oThis: any, ...rest: any[]): EventListener
 		{
-			const aArgs = Array.prototype.slice.call(arguments, 2),
-				fNOP = function () { },
-				fBound = function ()
+			const aArgs = Array.prototype.slice.call(arguments, 2);
+			const fNOP = () => { };
+			const fBound = function()
 				{
 					const value = fToBind.apply(this instanceof fNOP
 						? this
@@ -73,11 +73,10 @@ namespace flash.display
 					return value;
 				};
 
+			// Function.prototype doesn't have a prototype property
 			if (this.prototype)
-			{
-				// Function.prototype doesn't have a prototype property
 				fNOP.prototype = this.prototype;
-			}
+
 			fBound.prototype = new (<any>fNOP)();
 
 			return fBound;

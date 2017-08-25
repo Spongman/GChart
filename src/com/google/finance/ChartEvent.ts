@@ -38,25 +38,25 @@ namespace com.google.finance
 
 		getEventName(period?: string): string
 		{
-			let _loc2_ = "";
+			let eventName = "";
 			if (this.quote)
-				_loc2_ = _loc2_ + ("" + this.quote);
+				eventName = eventName + ("" + this.quote);
 
 			if (this.type)
-				_loc2_ = _loc2_ + ("-t:" + this.type);
+				eventName = eventName + ("-t:" + this.type);
 
 			if (this.interval)
-				_loc2_ = _loc2_ + ("-i:" + this.interval);
+				eventName = eventName + ("-i:" + this.interval);
 
 			if (period)
-				_loc2_ = _loc2_ + ("-p:" + period);
+				eventName = eventName + ("-p:" + period);
 			else if (this.period)
-				_loc2_ = _loc2_ + ("-p:" + this.period);
+				eventName = eventName + ("-p:" + this.period);
 
 			if (this.startTime)
-				_loc2_ = _loc2_ + ("-st:" + this.startTime);
+				eventName = eventName + ("-st:" + this.startTime);
 
-			return _loc2_;
+			return eventName;
 		}
 	}
 }

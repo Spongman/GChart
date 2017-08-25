@@ -152,18 +152,18 @@ namespace com.google.finance
 
 		private getPercentText(param1: number): string
 		{
-			let _loc2_ = "";
+			let percentText = "";
 			if (param1 > 0)
-				_loc2_ += "+";
+				percentText += "+";
 			else
-				_loc2_ += "-";
+				percentText += "-";
 
 			param1 = Math.abs(param1);
 			const _loc3_ = Math.floor(param1);
-			_loc2_ += _loc3_;
-			_loc2_ += ".";
-			_loc2_ += Utils.numberToMinTwoChars(Math.floor((param1 - _loc3_) * 100));
-			return _loc2_;
+			percentText += _loc3_;
+			percentText += ".";
+			percentText += Utils.numberToMinTwoChars(Math.floor((param1 - _loc3_) * 100));
+			return percentText;
 		}
 	}
 }

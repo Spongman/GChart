@@ -151,31 +151,31 @@ namespace com.google.finance
 			this.dataManager.eventHandler(event);
 		}
 
-		addLayer(param1: string, dataSource: com.google.finance.DataSource, param3: string): AbstractLayer<IViewPoint> | null
+		addLayer(layerTypeName: string, dataSource: com.google.finance.DataSource, param3: string): AbstractLayer<IViewPoint> | null
 		{
-			if (param1 === "")
+			if (layerTypeName === "")
 				return null;
 
 			this.addDataSource(dataSource);
-			const _loc4_ = getDefinitionByName("com.google.finance." + param1) as typeof AbstractLayer;
-			const _loc5_ = new _loc4_(this, dataSource);
-			_loc5_.name = param3;
-			_loc5_.layerId = param3;
-			if (_loc5_ instanceof com.google.finance.WindowLayer)
+			const layerType = getDefinitionByName("com.google.finance." + layerTypeName) as typeof AbstractLayer;
+			const layer = new layerType(this, dataSource);
+			layer.name = param3;
+			layer.layerId = param3;
+			if (layer instanceof com.google.finance.WindowLayer)
 			{
 				if (this.windowLayer && this.contains(this.windowLayer))
 				{
 					this.removeChild(this.windowLayer);
-					const _loc6_ = this.layers.indexOf(this.windowLayer);
-					if (_loc6_ !== -1)
-						this.layers.splice(_loc6_, 1);
+					const indexOfWindow = this.layers.indexOf(this.windowLayer);
+					if (indexOfWindow !== -1)
+						this.layers.splice(indexOfWindow, 1);
 				}
-				this.windowLayer = _loc5_;
+				this.windowLayer = layer;
 			}
-			this.addChild(_loc5_);
-			this.layers.push(_loc5_);
+			this.addChild(layer);
+			this.layers.push(layer);
 
-			return _loc5_;
+			return layer;
 		}
 
 		commitSparklineOffset_Handler()

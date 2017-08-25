@@ -40,7 +40,7 @@ namespace com.google.finance.indicator
 			return Messages.getMsg(Messages.BIAS_INTERVAL, this.period, param1);
 		}
 
-		computeIntervalIndicator(param1: number) 
+		computeIntervalIndicator(param1: number)
 		{
 			if (this.indicator.hasInterval(param1))
 				return;
@@ -53,13 +53,12 @@ namespace com.google.finance.indicator
 			let _loc5_ = 0;
 			let _loc6_ = 0;
 			const _loc8_: number[] = [];
-			for (let pointIndex = 0; pointIndex < points.length; pointIndex++)
+			for (const point of points)
 			{
-				const _loc10_ = points[pointIndex];
-				if (!this.shouldSkip(_loc10_, dataSeries))
+				if (!this.shouldSkip(point, dataSeries))
 				{
-					_loc5_ = Number(_loc5_ + _loc10_.close);
-					_loc8_.push(_loc10_.close);
+					_loc5_ = Number(_loc5_ + point.close);
+					_loc8_.push(point.close);
 					let _loc4_: number;
 					if (_loc8_.length < this.period)
 					{
@@ -68,23 +67,23 @@ namespace com.google.finance.indicator
 					else
 					{
 						_loc6_ = Number(_loc5_ / this.period);
-						_loc4_ = (_loc10_.close - _loc6_) / _loc6_ * 100;
+						_loc4_ = (point.close - _loc6_) / _loc6_ * 100;
 						_loc5_ = Number(_loc5_ - _loc8_.shift()!);
 					}
-					const indicatorPoint = new IndicatorPoint(_loc4_, points[pointIndex]);
+					const indicatorPoint = new IndicatorPoint(_loc4_, point);
 					dataSeries.points.push(indicatorPoint);
 				}
 			}
 			this.indicator.setDataSeries(param1, dataSeries, 0);
 		}
 
-		setIndicatorInstanceArray(param1: any[]) 
+		setIndicatorInstanceArray(indicators: any[])
 		{
-			if (!param1 || param1.length !== 1)
+			if (!indicators || indicators.length !== 1)
 				return;
 
 			this.indicator.clear();
-			this.period = (<BIASIndicatorLayer><any>param1[0]).period;
+			this.period = (<BIASIndicatorLayer><any>indicators[0]).period;
 		}
 	}
 }

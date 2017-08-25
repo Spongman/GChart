@@ -266,12 +266,7 @@ namespace com.google.finance
 			//const _loc6_ = param1 % Const.INTRADAY_INTERVAL;
 			for (let dayIndex = this.getLastDailyDayIndex(); dayIndex < this.days.length - 1; dayIndex++)
 			{
-				let _loc7_: number;
-				if (dayIndex === this.days.length - 1)
-					_loc7_ = this.units.length - 1;
-				else
-					_loc7_ = this.days[dayIndex + 1];
-
+				const _loc7_ = (dayIndex === this.days.length - 1) ? this.units.length - 1 : this.days[dayIndex + 1];
 				let _loc8_ = this.days[dayIndex] + 1;
 				while (_loc8_ <= _loc7_)
 				{
@@ -487,7 +482,7 @@ namespace com.google.finance
 			{
 				if (param1)
 				{
-					let o:any = unit
+					const o: any = unit;
 					console.log(unit.relativeMinutes + " " + o[param1]);
 				}
 				else if (unit instanceof DataUnit)

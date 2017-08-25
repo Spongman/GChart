@@ -35,7 +35,7 @@ namespace com.google.finance.ui
 			this.resetButtonsGroup();
 		}
 
-		private getNextButtonPosition() 
+		private getNextButtonPosition()
 		{
 			return {
 				x: this.currentX,
@@ -43,13 +43,13 @@ namespace com.google.finance.ui
 			};
 		}
 
-		setSpacing(param1: string, param2: number) 
+		setSpacing(param1: string, param2: number)
 		{
 			this.separator = param1;
 			this.spacing = param2;
 		}
 
-		addButton(param1: string, param2?: flash.text.TextFormat, param3 = NaN, param4 = NaN) 
+		addButton(param1: string, param2?: flash.text.TextFormat, param3 = NaN, param4 = NaN)
 		{
 			if (this.buttons.length > 0 && this.separator !== "")
 			{
@@ -107,13 +107,13 @@ namespace com.google.finance.ui
 			return simpleButton;
 		}
 
-		setLeftPadding(param1: number) 
+		setLeftPadding(param1: number)
 		{
 			this.leftPadding = param1;
 			this.currentX = param1;
 		}
 
-		resetButtonsGroup() 
+		resetButtonsGroup()
 		{
 			const _loc1_ = !!this.buttons ? this.buttons.length : 0;
 			for (let _loc2_ = 0; _loc2_ < _loc1_; _loc2_++)
@@ -128,9 +128,9 @@ namespace com.google.finance.ui
 			this.currentY = 0;
 		}
 
-		buttonPress(event: Event) 
+		buttonPress(event: Event)
 		{
-			let button = (<any>event.currentTarget).displayObject as flash.display.SimpleButton;
+			const button = (<any>event.currentTarget).displayObject as flash.display.SimpleButton;
 			const textField = (<flash.display.DisplayObjectContainer>button.upState).getChildAt(0) as flash.text.TextField;
 			const buttonIndex = this.getButtonIndex(textField.text);
 			if (buttonIndex !== -1)
@@ -143,20 +143,20 @@ namespace com.google.finance.ui
 			}
 		}
 
-		setTextFormats(buttonTextFormat: flash.text.TextFormat, selectedTextFormat: flash.text.TextFormat, separatorTextFormat: flash.text.TextFormat) 
+		setTextFormats(buttonTextFormat: flash.text.TextFormat, selectedTextFormat: flash.text.TextFormat, separatorTextFormat: flash.text.TextFormat)
 		{
 			this.buttonTextFormat = buttonTextFormat;
 			this.selectedTextFormat = selectedTextFormat;
 			this.separatorTextFormat = separatorTextFormat;
 		}
 
-		addListener(param1: { (p1: any, text: string): void }, displayObject: flash.display.DisplayObject) 
+		addListener(param1: { (p1: any, text: string): void }, displayObject: flash.display.DisplayObject)
 		{
 			this.listenerFunctions.push(param1);
 			this.listenerObjects.push(displayObject);
 		}
 
-		addPlainText(param1: string, param2 = NaN) 
+		addPlainText(param1: string, param2 = NaN)
 		{
 			const nextButtonPosition = this.getNextButtonPosition();
 			const _loc4_ = this.putSeparator(nextButtonPosition.x, nextButtonPosition.y, param1);

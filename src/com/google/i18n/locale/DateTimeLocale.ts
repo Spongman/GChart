@@ -21,10 +21,9 @@ namespace com.google.i18n.locale
 
 		static readonly DATE_TIME_CONSTANTS = "DateTimeConstants";
 
-		static readonly constantsRepository: { [key: string]: Dictionary } = {};
+		static readonly constantsRepository: Map<Dictionary> = {};
 
 		private static activeLocale: string;
-
 
 		static getStandardDateTimeFormatter(pattern: DateTimeFormats, isUtc = false): DateTimeFormat
 		{

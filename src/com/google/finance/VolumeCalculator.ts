@@ -2,7 +2,7 @@ namespace com.google.finance
 {
 	export class VolumeCalculator
 	{
-		private static computeWeekly(input: DataSeries, output: DataSeries, duration: number) 
+		private static computeWeekly(input: DataSeries, output: DataSeries, duration: number)
 		{
 			const weeks = duration / Const.WEEKLY_INTERVAL;
 			for (let _loc6_ = input.fridays.length - 1; _loc6_ >= 0; _loc6_ -= weeks)
@@ -29,7 +29,7 @@ namespace com.google.finance
 			}
 		}
 
-		private static computeDaily(input: DataSeries, output: DataSeries, param3: number) 
+		private static computeDaily(input: DataSeries, output: DataSeries, param3: number)
 		{
 			const _loc4_ = Const.DAILY_INTERVAL;
 			const _loc5_ = param3 / Const.DAILY_INTERVAL;
@@ -57,7 +57,7 @@ namespace com.google.finance
 			}
 		}
 
-		static computeInterval(param1: number, indicator: Indicator, intput: DataSeries) 
+		static computeInterval(param1: number, indicator: Indicator, intput: DataSeries)
 		{
 			if (indicator.hasInterval(param1))
 				return;
@@ -84,7 +84,7 @@ namespace com.google.finance
 			indicator.setDataSeries(param1, output);
 		}
 
-		private static computeIntraday(input: DataSeries, output: DataSeries, param3: number) 
+		private static computeIntraday(input: DataSeries, output: DataSeries, param3: number)
 		{
 			const _loc4_ = Const.INTRADAY_INTERVAL;
 			const _loc5_ = param3 / Const.INTRADAY_INTERVAL;

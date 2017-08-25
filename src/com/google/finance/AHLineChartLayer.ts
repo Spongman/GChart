@@ -124,7 +124,7 @@ namespace com.google.finance
 			this.visibleSessionsTimes = this.getVisibleSessionsTimes(context);
 			this.graphics.clear();
 			this.regionsXLimits = new com.google.finance.IntervalSet();
-			let vp = this.viewPoint;
+			const vp = this.viewPoint;
 			this.localYOffset = this.viewPoint.miny + vp.medPriceY + vp.V_OFFSET;
 			this.localYScale = vp.maxPriceRangeViewSize / context.maxPriceRange;
 
@@ -153,7 +153,7 @@ namespace com.google.finance
 				return;
 
 			const point = this.getPoint(dataSeries, param2);
-			let vp = this.viewPoint;
+			const vp = this.viewPoint;
 			const xPos = vp.getXPos(point);
 			const yPos = this.getYPos(context, point);
 			const gr = this.highlightCanvas.graphics;
@@ -180,7 +180,7 @@ namespace com.google.finance
 			const units = this.dataSource.afterHoursData.units;
 			const timeIndex1 = DataSource.getTimeIndex(param3, units);
 			const timeIndex2 = DataSource.getTimeIndex(param2, units);
-			let vp = this.viewPoint;
+			const vp = this.viewPoint;
 			const xPos = vp.getXPos(units[timeIndex1]);
 			let _loc10_ = 1;
 			while (this.viewPoint.minutePix * intradayInterval * _loc10_ < vp.POINTS_DISTANCE)

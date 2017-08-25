@@ -20,7 +20,7 @@ namespace com.google.finance
 				if (closeLogValue > context.maxPrice || closeLogValue < context.minPrice)
 					return;
 			}
-			let vp = this.viewPoint;
+			const vp = this.viewPoint;
 			const xPos1 = vp.getXPos(_loc5_);
 			const xPos2 = vp.getXPos(_loc6_);
 			const detailLevel = vp.getDetailLevel();

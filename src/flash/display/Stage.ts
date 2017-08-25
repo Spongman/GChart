@@ -52,18 +52,18 @@ namespace flash.display
 
 		setMouse(x: number, y: number)
 		{
-			let offset = offsetOf(this.element);
+			const offset = offsetOf(this.element);
 			this._mouseX = x - offset.left;
 			this._mouseY = y - offset.top;
 		}
 
 		static bind(fToBind: Function, oThis: any, ...rest: any[]): EventListener
 		{
-			let aArgs = Array.prototype.slice.call(arguments, 2),
+			const aArgs = Array.prototype.slice.call(arguments, 2),
 				fNOP = function () { },
 				fBound = function ()
 				{
-					let value = fToBind.apply(this instanceof fNOP
+					const value = fToBind.apply(this instanceof fNOP
 						? this
 						: oThis,
 						aArgs.concat(Array.prototype.slice.call(arguments)));

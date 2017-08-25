@@ -43,14 +43,14 @@ namespace com.google.finance.indicator
 			return this.localYOffset - (point.getValue() - this.localMedianValue) * this.localYScale;
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			super.renderLayer(context);
 			this.drawHorizontalLine(this.viewPoint.miny + IndependentIndicatorLayer.NAME_TEXT_BLOCK_HEIGHT);
 			this.updateLevelTexts(context.maxValue, context.minValue);
 		}
 
-		getContext(context: Context, param2 = false) 
+		getContext(context: Context, param2 = false)
 		{
 			if (!this._enabled)
 				return context;
@@ -76,19 +76,18 @@ namespace com.google.finance.indicator
 			let _loc12_ = originalDataSeries.getRelativeMinuteIndex(context.lastMinute - context.count, points) - 1;
 			if (_loc12_ < 0)
 				_loc12_ = 0;
-			
+
 			for (let dataSeriesIndex= 0; dataSeriesIndex < dataSeries.length; dataSeriesIndex++)
 			{
 				if (this.getLineStyle(dataSeriesIndex) === IndicatorLineStyle.NONE)
 					continue;
 
-				for (let _loc14_ = _loc11_; _loc14_ >= _loc12_; _loc14_--)
+				for (const point of dataSeries[dataSeriesIndex].points)
 				{
-					let points = dataSeries[dataSeriesIndex].points[_loc14_];
-					if (!points)
+					if (!point)
 						continue;	// TODO: this shouldn't happen
 
-					const value = points.getValue();
+					const value = point.getValue();
 					if (!isNaN(value))
 					{
 						_loc9_ = Math.max(_loc9_, value);
@@ -104,7 +103,7 @@ namespace com.google.finance.indicator
 			return context;
 		}
 
-		private updateLevelTexts(param1: number, param2: number) 
+		private updateLevelTexts(param1: number, param2: number)
 		{
 			for (let levelTextIndex= 0; levelTextIndex < this.levelTextArray.length; levelTextIndex++)
 			{
@@ -116,7 +115,7 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		private drawHorizontalLine(param1: number) 
+		private drawHorizontalLine(param1: number)
 		{
 			const gr = this.graphics;
 			gr.lineStyle(0, Const.HORIZONTAL_GRID_COLOR, 1);
@@ -124,7 +123,7 @@ namespace com.google.finance.indicator
 			gr.lineTo(this.viewPoint.maxx - 1, param1);
 		}
 
-		protected calculateLocalScaleMeters(context: Context) 
+		protected calculateLocalScaleMeters(context: Context)
 		{
 			const viewPoint = this.viewPoint;
 			this.localYOffset = viewPoint.miny + viewPoint.medPriceY + IndependentIndicatorLayer.NAME_TEXT_BLOCK_HEIGHT / 2;

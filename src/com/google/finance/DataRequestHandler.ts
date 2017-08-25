@@ -73,9 +73,7 @@ namespace com.google.finance
 					{
 						for (const callback of this.event.callbacks)
 						{
-							const callbackFunc: { (p1: any): void } = callback.func;
-							const param = callback.param;
-							callbackFunc.apply(this, param);
+							callback.func.apply(this, callback.param);
 						}
 					}
 					flash.display.Graphics.cleanupPending();

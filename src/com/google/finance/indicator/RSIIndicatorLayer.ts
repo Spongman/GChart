@@ -38,7 +38,7 @@ namespace com.google.finance.indicator
 			return Messages.getMsg(Messages.RSI_INTERVAL, this.period, param1);
 		}
 
-		computeIntervalIndicator(param1: number) 
+		computeIntervalIndicator(param1: number)
 		{
 			if (this.indicator.hasInterval(param1))
 				return;
@@ -93,13 +93,13 @@ namespace com.google.finance.indicator
 			this.indicator.setDataSeries(param1, dataSeries, 0);
 		}
 
-		setIndicatorInstanceArray(param1: any[]) 
+		setIndicatorInstanceArray(indicators: any[])
 		{
-			if (!param1 || param1.length !== 1)
+			if (!indicators || indicators.length !== 1)
 				return;
 
 			this.indicator.clear();
-			this.period = (<RSIIndicatorLayer><any>param1[0]).period;
+			this.period = (<RSIIndicatorLayer><any>indicators[0]).period;
 		}
 	}
 }

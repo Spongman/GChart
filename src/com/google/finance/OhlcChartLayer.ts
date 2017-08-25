@@ -2,7 +2,7 @@ namespace com.google.finance
 {
 	export class OhlcChartLayer extends IntervalBasedBarChartLayer
 	{
-		protected drawBarAtDataUnit(context: Context, dataUnits: DataUnit[], param3: number) 
+		protected drawBarAtDataUnit(context: Context, dataUnits: DataUnit[], param3: number)
 		{
 			const _loc4_ = dataUnits[param3];
 			if (_loc4_.fake)
@@ -12,7 +12,7 @@ namespace com.google.finance
 			const ohlcYPos = this.getOhlcYPos(context, _loc4_);
 			const ohlcColor = this.getOhlcColor(_loc4_, dataUnits[Math.max(param3 - 1, 0)]);
 
-			let gr = this.graphics;
+			const gr = this.graphics;
 			gr.lineStyle(1, ohlcColor);
 
 			if (Math.abs(ohlcYPos.highY - ohlcYPos.lowY) <= 1)

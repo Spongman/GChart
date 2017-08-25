@@ -32,7 +32,7 @@ namespace com.google.finance
 			return param1 - 2 - (this.LogPreserveSign(dataUnit.close) - this.minPriceLog) * (param1 - param2 - 5) / _loc4_;
 		}
 
-		private drawBackground(param1: boolean) 
+		private drawBackground(param1: boolean)
 		{
 			const sparklineViewPoint = <SparklineViewPoint><any>this.viewPoint;
 			if (this.hasBackground)
@@ -54,7 +54,7 @@ namespace com.google.finance
 				gr.drawRect(
 					firstRelativeMinuteXPos, sparklineViewPoint.my_miny - 1,
 					lastRelativeMinuteXPos - firstRelativeMinuteXPos - 1, sparklineViewPoint.my_maxy - sparklineViewPoint.my_miny
-				)
+				);
 				/*
 				gr.moveTo(_loc4_, _loc2_.my_miny - 1);
 				gr.lineTo(_loc4_, _loc2_.my_maxy - 1);
@@ -108,7 +108,7 @@ namespace com.google.finance
 			return xPos4;
 		}
 
-		renderLayer(context?: Context) 
+		renderLayer(context?: Context)
 		{
 			const sparklineViewPoint = <SparklineViewPoint><any>this.viewPoint;
 			const dataSeries = notnull(this.getDataSeries());
@@ -137,7 +137,7 @@ namespace com.google.finance
 			this.drawBackground(false);
 		}
 
-		private checkMinMax(param1: number) 
+		private checkMinMax(param1: number)
 		{
 			const _loc2_ = this.LogPreserveSign(param1);
 			if (_loc2_ < this.minPriceLog)
@@ -157,7 +157,7 @@ namespace com.google.finance
 			return 0;
 		}
 
-		private getMaxRange(param1: number, param2: number, param3: number[]) 
+		private getMaxRange(param1: number, param2: number, param3: number[])
 		{
 			const dataSeries = notnull(this.getDataSeries());
 			const units = dataSeries.units;

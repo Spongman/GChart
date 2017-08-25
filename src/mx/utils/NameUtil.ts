@@ -18,7 +18,7 @@ namespace mx.utils
 					if (o.parent && o.stage && o.parent === o.stage)
 						break;
 
-					let s = o.name;
+					const s = o.name;
 					/*	TODO
 					if (o instanceof mx.core.IRepeaterClient)	// TODO: instanceof interfaces
 					{

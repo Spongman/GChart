@@ -1,5 +1,6 @@
 ﻿
-type Dictionary = { [key: string]: any };
+type Map<T> = { [key: string]: T };
+type Dictionary = Map<any>;
 
 interface Date
 {
@@ -12,7 +13,7 @@ interface Date
 	fullYear: number;
 }
 
-function addGetter<T extends Function>(type: T, name: string, getter: { (): any })
+function addGetter<T extends Function>(type: T, name: string, getter: () => any)
 {
 	Object.defineProperty(type.prototype, name, {
 		get: getter,
@@ -93,7 +94,7 @@ function assert(cond: boolean)
 function getDefinitionByName(name: string): Function
 {
 	let container: any = window;
-	let parts = name.split(".");
+	const parts = name.split(".");
 	for (const part of parts)
 		container = container[part];
 	return container;
@@ -122,12 +123,12 @@ function notnull<T>(value: T | null): T
 
 if (!Function.prototype.bind)
 {
-	Function.prototype.bind = function (oThis)
+	Function.prototype.bind = function(oThis)
 	{
 		const aArgs = Array.prototype.slice.call(arguments, 1);
 		const fToBind = this;
 		const fNOP = () => { };
-		const fBound = function ()
+		const fBound = function()
 		{
 			return fToBind.apply(this instanceof fNOP
 				? this
@@ -140,7 +141,7 @@ if (!Function.prototype.bind)
 			// Function.prototype doesn't have a prototype property
 			fNOP.prototype = this.prototype;
 		}
-		fBound.prototype = new (<any>fNOP)();
+		fBound.prototype = new (fNOP as any)();
 
 		return fBound;
 	};

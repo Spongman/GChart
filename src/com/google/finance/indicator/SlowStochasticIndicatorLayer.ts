@@ -21,7 +21,7 @@ namespace com.google.finance.indicator
 			return Messages.getMsg(Messages.SSTO_INTERVAL, this.kPeriod, this.dPeriod, param1);
 		}
 
-		computeIntervalIndicator(param1: number) 
+		computeIntervalIndicator(param1: number)
 		{
 			if (this.indicator.hasInterval(param1))
 				return;
@@ -37,15 +37,14 @@ namespace com.google.finance.indicator
 			const dataUnits: DataUnit[] = [];
 			const _loc15_: number[] = [];
 			const _loc16_: number[] = [];
-			for (let pointIndex = 0; pointIndex < points.length; pointIndex++)
+			for (const point of points)
 			{
-				const _loc17_ = points[pointIndex];
-				if (!this.shouldSkip(_loc17_, dataSeries0, dataSeries1))
+				if (!this.shouldSkip(point, dataSeries0, dataSeries1))
 				{
-					dataUnits.push(_loc17_);
+					dataUnits.push(point);
 					if (dataUnits.length < this.kPeriod)
 					{
-						const indicatorPoint = new IndicatorPoint(NaN, _loc17_);
+						const indicatorPoint = new IndicatorPoint(NaN, point);
 						dataSeries0.points.push(indicatorPoint);
 						dataSeries1.points.push(indicatorPoint);
 					}
@@ -60,32 +59,32 @@ namespace com.google.finance.indicator
 						}
 						if (_loc3_ === _loc4_)
 						{
-							this.copyLastIndicatorPoint(_loc17_, dataSeries0, dataSeries1);
+							this.copyLastIndicatorPoint(point, dataSeries0, dataSeries1);
 						}
 						else
 						{
-							const _loc9_ = (_loc17_.close - _loc4_) / (_loc3_ - _loc4_) * 100;
+							const _loc9_ = (point.close - _loc4_) / (_loc3_ - _loc4_) * 100;
 							_loc5_ = Number(_loc5_ + _loc9_);
 							_loc15_.push(_loc9_);
 							if (_loc15_.length < SlowStochasticIndicatorLayer.FAST_SLOW_RATIO)
 							{
-								const indicatorPoint = new IndicatorPoint(NaN, _loc17_);
+								const indicatorPoint = new IndicatorPoint(NaN, point);
 								dataSeries0.points.push(indicatorPoint);
 								dataSeries1.points.push(indicatorPoint);
 							}
 							else
 							{
 								const _loc10_ = _loc5_ / SlowStochasticIndicatorLayer.FAST_SLOW_RATIO;
-								dataSeries0.points.push(new IndicatorPoint(_loc10_, _loc17_));
+								dataSeries0.points.push(new IndicatorPoint(_loc10_, point));
 								_loc6_ = Number(_loc6_ + _loc10_);
 								_loc16_.push(_loc10_);
 								if (_loc16_.length < this.dPeriod)
 								{
-									this.copyLastIndicatorPoint(_loc17_, dataSeries1);
+									this.copyLastIndicatorPoint(point, dataSeries1);
 								}
 								else
 								{
-									dataSeries1.points.push(new IndicatorPoint(_loc6_ / this.dPeriod, _loc17_));
+									dataSeries1.points.push(new IndicatorPoint(_loc6_ / this.dPeriod, point));
 									_loc6_ = Number(_loc6_ - _loc16_.shift()!);
 								}
 								_loc5_ = Number(_loc5_ - _loc15_.shift()!);

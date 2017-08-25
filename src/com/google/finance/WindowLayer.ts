@@ -33,7 +33,7 @@ namespace com.google.finance
 		{
 			super(viewPoint, dataSource);
 
-			let sliderBgBitmap = new WindowLayer.ScrollBarBg();
+			const sliderBgBitmap = new WindowLayer.ScrollBarBg();
 			sliderBgBitmap.y = viewPoint.maxy - 1;
 			sliderBgBitmap.x = viewPoint.minx;
 			sliderBgBitmap.width = viewPoint.maxx - viewPoint.minx;
@@ -58,7 +58,7 @@ namespace com.google.finance
 			{
 				viewPoint.myController.mouseDownAction(ControllerComponents.SCROLL_BAR);
 			});
-			let controller = viewPoint.myController;
+			const controller = viewPoint.myController;
 			this.leftHandle.addEventListener(MouseEvents.ROLL_OVER, () =>
 			{
 				MainManager.mouseCursor.setCursor(MouseCursors.H_ARROWS);
@@ -96,7 +96,7 @@ namespace com.google.finance
 			return data.units[data.getRelativeMinuteIndex(minute)];
 		}
 
-		updateFixedElements() 
+		updateFixedElements()
 		{
 			const bitmap = this.sliderBg.getChildAt(0) as flash.display.Bitmap;
 			bitmap.y = this.viewPoint.maxy - 1;
@@ -111,7 +111,7 @@ namespace com.google.finance
 			return this.rightHandle.x + this.rightHandle.width / 2;
 		}
 
-		private checkHandlePosition(displayObject: flash.display.DisplayObject) 
+		private checkHandlePosition(displayObject: flash.display.DisplayObject)
 		{
 			if (displayObject.x < this.viewPoint.minx - displayObject.width / 2)
 				displayObject.x = this.viewPoint.minx - displayObject.width / 2;
@@ -120,7 +120,7 @@ namespace com.google.finance
 				displayObject.x = this.viewPoint.maxx - displayObject.width / 2;
 		}
 
-		renderLayer(context?: Context) 
+		renderLayer(context?: Context)
 		{
 			if (this.stage.stageWidth === 0)
 				return;
@@ -175,10 +175,10 @@ namespace com.google.finance
 			return this.leftHandle.x + this.leftHandle.width / 2;
 		}
 
-		toggleHandles(param1: boolean) 
+		toggleHandles(param1: boolean)
 		{
 			//return false;	// TODO (hitTestPoint)
-			let visibility = param1;
+			const visibility = param1;
 			if (visibility === this.currentHandlesVisibility)
 				return;
 
@@ -211,7 +211,7 @@ namespace com.google.finance
 			return data.units[data.getRelativeMinuteIndex(minute) + 1];
 		}
 
-		handleReleased(draggableHandle: com.google.finance.DraggableHandle) 
+		handleReleased(draggableHandle: com.google.finance.DraggableHandle)
 		{
 			let _loc7_ = NaN;
 			const _loc2_ = this.rightHandle.x + this.rightHandle.width / 2;

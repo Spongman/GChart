@@ -18,9 +18,9 @@ namespace com.google.finance
 
 		animate(lfunctions: { (displayObject: flash.display.DisplayObject, amount: number, clicked: boolean): void }[], displayObjects: flash.display.DisplayObject[], param3 = NaN, param4 = false)
 		{
-			let lobjects = displayObjects;
-			let opt_stepCount = param3;
-			let opt_pinClicked = param4;
+			const lobjects = displayObjects;
+			const opt_stepCount = param3;
+			const opt_pinClicked = param4;
 			this.stepCount = !!isNaN(opt_stepCount) ? AnimationManager.MAX_STEPS : opt_stepCount;
 			this.amount = 1;
 			this.stopAnimation();

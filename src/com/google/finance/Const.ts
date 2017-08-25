@@ -304,7 +304,7 @@ namespace com.google.finance
 		static VOLUME_HIGHLIGHT_COLOR = 0x3366ff;
 		static VOLUME_PLUS_ENABLED = false;
 
-		static readonly INDICATOR_PARAMETERS: { [key: string]: any[] } = {
+		static readonly INDICATOR_PARAMETERS: Map<any[]> = {
 			BIAS: [{ period: 14 }],
 			CCI: [{ period: 20 }],
 			KDJ: [{ period: 14 }],
@@ -397,7 +397,7 @@ namespace com.google.finance
 		static readonly DEFAULT_I = "" + Const.INTRADAY_INTERVAL;
 		static DEFAULT_CHART_STYLE_NAME = Const.LINE_CHART;
 
-		private static _staticConstructor = (function ()
+		private static _staticConstructor = (() =>
 		{
 			Const.INTERVAL_INFO = {};
 			Const.INTERVAL_INFO[Const.INTRADAY_INTERVAL] = Intervals.INTRADAY;

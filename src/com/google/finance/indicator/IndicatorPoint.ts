@@ -8,7 +8,7 @@ namespace com.google.finance.indicator
 	{
 		private logValue: number;
 
-		constructor(public readonly value:number = 0, public readonly point: DataUnit)
+		constructor(public readonly value: number = 0, public readonly point: DataUnit)
 		{
 		}
 

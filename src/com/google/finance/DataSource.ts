@@ -48,13 +48,13 @@ namespace com.google.finance
 		private lastAbsTime: number;
 		private timezoneOffset: number;
 
-		private readonly events: { [key: string]: ChartEventPriorities } = {};
+		private readonly events: Map<ChartEventPriorities> = {};
 
 		visibleExtendedHours = new com.google.finance.IntervalSet();
-		readonly objects: { [key: string]: StockAssociatedObject[] } = {};
+		readonly objects: Map<StockAssociatedObject[]> = {};
 		readonly data = new com.google.finance.DataSeries();
 		tickerName: string;
-		readonly indicators: { [name: string]: Indicator } = {};
+		readonly indicators: Map<Indicator> = {};
 		hiddenExtendedHours = new com.google.finance.IntervalSet();
 		readonly afterHoursData = new com.google.finance.DataSeries();
 		technicalsName: string;
@@ -344,7 +344,7 @@ namespace com.google.finance
 		countEvents(chartEventPriority: ChartEventPriorities): number
 		{
 			let count = 0;
-			for (let eventName in this.events)
+			for (const eventName of Object.keys(this.events))
 			{
 				if (this.events[eventName] === chartEventPriority)
 					count++;
@@ -378,7 +378,7 @@ namespace com.google.finance
 			return !!this.events[eventName];
 		}
 
-		parseStream(param1: string[], param2: { [key: string]: string }, dataSeries: com.google.finance.DataSeries): DataUnit[]
+		parseStream(param1: string[], param2: Map<string>, dataSeries: com.google.finance.DataSeries): DataUnit[]
 		{
 			let _loc20_ = 0;
 			let _loc4_ = 0;
@@ -464,7 +464,7 @@ namespace com.google.finance
 							}
 							else if (!isNaN(dataUnit.close))
 							{
-								let interval = Number(param2[DataSource.INTERVAL_STR]);
+								const interval = Number(param2[DataSource.INTERVAL_STR]);
 								if (dataUnit.volumes[interval] >= 0)
 								{
 									if (this.quoteType === QuoteTypes.COMPANY && dataUnits.length > 0)
@@ -544,7 +544,7 @@ namespace com.google.finance
 
 		hasPendingEvents(): boolean
 		{
-			for (let eventName in this.events)
+			for (const eventName of Object.keys(this.events))
 			{
 				if (this.events[eventName] !== ChartEventPriorities.DONE && this.events[eventName] !== ChartEventPriorities.OHLC_DONE)
 					return true;
@@ -655,38 +655,38 @@ namespace com.google.finance
 					}
 				}
 			}
-			const points = this.afterHoursData.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
-			if (points && points.length > 0 && this.visibleExtendedHours.length())
+			const points2 = this.afterHoursData.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
+			if (points2 && points2.length > 0 && this.visibleExtendedHours.length())
 			{
-				let timeIndex = DataSource.getTimeIndex(param1, points);
-				if (timeIndex !== 0 || points[0].time <= param1)
+				let timeIndex = DataSource.getTimeIndex(param1, points2);
+				if (timeIndex !== 0 || points2[0].time <= param1)
 				{
-					if (points[timeIndex].time < param1)
-						timeIndex = Math.min(timeIndex + 1, points.length - 1);
+					if (points2[timeIndex].time < param1)
+						timeIndex = Math.min(timeIndex + 1, points2.length - 1);
 
 					if (seriesPosition[Const.INTRADAY_INTERVAL])
 					{
 						const units = this.data.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
 						const unit = units[seriesPosition[Const.INTRADAY_INTERVAL].position];
 						const unitTime = unit.time;
-						const pointTime = points[timeIndex].time;
+						const pointTime = points2[timeIndex].time;
 						if (unitTime >= param1 && pointTime >= param1 && pointTime < unitTime || unitTime < param1 && pointTime > unitTime)
 						{
 							seriesPosition[Const.INTRADAY_INTERVAL] = new SeriesPosition(this.afterHoursData, timeIndex);
-							objectPosition.exchangeTimezoneOffset = points[timeIndex].timezoneOffset;
-							objectPosition.closePrice = points[timeIndex].close;
+							objectPosition.exchangeTimezoneOffset = points2[timeIndex].timezoneOffset;
+							objectPosition.closePrice = points2[timeIndex].close;
 						}
 					}
 					else
 					{
 						seriesPosition[Const.INTRADAY_INTERVAL] = new SeriesPosition(this.afterHoursData, timeIndex);
-						objectPosition.exchangeTimezoneOffset = points[timeIndex].timezoneOffset;
-						objectPosition.closePrice = points[timeIndex].close;
+						objectPosition.exchangeTimezoneOffset = points2[timeIndex].timezoneOffset;
+						objectPosition.closePrice = points2[timeIndex].close;
 					}
 				}
 				else
 				{
-					objectPosition.exchangeTimezoneOffset = points[timeIndex].timezoneOffset;
+					objectPosition.exchangeTimezoneOffset = points2[timeIndex].timezoneOffset;
 				}
 			}
 			objectPosition.posInInterval = seriesPosition;
@@ -695,7 +695,7 @@ namespace com.google.finance
 
 		private parseHeader(param1: string[], chartEvent: ChartEvent)
 		{
-			const _loc3_: { [key: string]: string } = {};
+			const _loc3_: Map<string> = {};
 			for (const pair of param1)
 			{
 				const _loc5_ = pair.split("=");
@@ -871,7 +871,7 @@ namespace com.google.finance
 		computeObjectPositions()
 		{
 			let _loc6_ = NaN;
-			for (let objectKey in this.objects)
+			for (const objectKey of Object.keys(this.objects))
 			{
 				const _loc2_ = this.objects[objectKey];
 				for (let objectIndex = _loc2_.length - 1; objectIndex >= 0; objectIndex--)
@@ -885,7 +885,7 @@ namespace com.google.finance
 					}
 					else
 					{
-						let seriesPosition = this.getObjectPositions(_loc2_[objectIndex].time, this.data);
+						const seriesPosition = this.getObjectPositions(_loc2_[objectIndex].time, this.data);
 						if (seriesPosition.pos >= 0 && seriesPosition.pos < notnull(seriesPosition.refDataSeries).units.length)
 						{
 							_loc4_.pos = seriesPosition.pos;
@@ -1045,7 +1045,7 @@ namespace com.google.finance
 			else
 			{
 				const objectPositions = this.getObjectPositions(_loc3_, this.data);
-				let dataSeries = notnull(objectPositions.refDataSeries);
+				const dataSeries = notnull(objectPositions.refDataSeries);
 				if (objectPositions.pos < 0 || objectPositions.pos >= dataSeries.units.length)
 					return;
 
@@ -1226,7 +1226,7 @@ namespace com.google.finance
 		objectsToString(): string
 		{
 			let _loc1_ = "";
-			for (let objectKey in this.objects)
+			for (const objectKey of Object.keys(this.objects))
 				_loc1_ += ", " + this.objects[objectKey].toString();
 			return _loc1_;
 		}
@@ -1314,7 +1314,7 @@ namespace com.google.finance
 			return _loc7_;
 		}
 
-		private checkHeaderSanity(param1: { [key: string]: string }, dataSeries: com.google.finance.DataSeries)
+		private checkHeaderSanity(param1: Map<string>, dataSeries: com.google.finance.DataSeries)
 		{
 			const _loc3_ = param1[DataSource.MARKET_CLOSE_MINUTE_STR];
 			const _loc4_ = param1[DataSource.MARKET_OPEN_MINUTE_STR];
@@ -1391,7 +1391,7 @@ namespace com.google.finance
 
 		clearAllIndicatorsOnAddData(param1: number)
 		{
-			for (let indicatorKey in this.indicators)
+			for (const indicatorKey of Object.keys(this.indicators))
 			{
 				if (this.indicators[indicatorKey].clearAllOnAddData)
 					this.indicators[indicatorKey].clear();
@@ -1407,7 +1407,7 @@ namespace com.google.finance
 
 		clearAllIndicators()
 		{
-			for (let indicatorKey in this.indicators)
+			for (const indicatorKey of Object.keys(this.indicators))
 				this.indicators[indicatorKey].clear();
 		}
 
@@ -1481,7 +1481,7 @@ namespace com.google.finance
 			}
 		}
 
-		private getDataUnitNoValidation(param1: string[], columnTypes: ColumnTypes[], param3: { [key: string]: string }): DataUnit
+		private getDataUnitNoValidation(param1: string[], columnTypes: ColumnTypes[], param3: Map<string>): DataUnit
 		{
 			const dataUnit = new DataUnit(NaN, NaN, NaN, NaN);
 			for (let columnTypeIndex = 0; columnTypeIndex < columnTypes.length; columnTypeIndex++)

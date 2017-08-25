@@ -92,7 +92,7 @@ namespace flash.display
 
 		hitTestPoint(x: number, y: number, shapeFlag = false): boolean
 		{
-			var pt = this.globalToLocal(new flash.display.Point(x, y));
+			const pt = this.globalToLocal(new flash.display.Point(x, y));
 			return pt.x >= 0 && pt.x < this.width &&
 				pt.y >= 0 && pt.y < this.height;
 		}

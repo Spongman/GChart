@@ -14,8 +14,8 @@ namespace flash.display
 			if (this._stage === value)
 				return;
 			this._stage = value;
-			for (var i = 0; i < this.children.length; i++)
-				this.children[i].stage = value;
+			for (const child of this.children)
+				child.stage = value;
 		}
 
 		private prepareChild(child: DisplayObject)
@@ -25,7 +25,7 @@ namespace flash.display
 			if (child.parent)
 				child.parent.removeChild(child);
 
-			let childElement = child.element;
+			const childElement = child.element;
 			if (childElement.parentElement)
 			{
 				assert(childElement.parentElement === document.body);
@@ -53,7 +53,7 @@ namespace flash.display
 
 			this.prepareChild(child);
 
-			let childBefore = this.children[index];
+			const childBefore = this.children[index];
 			this.children.splice(index, 0, child);
 			return this.element.insertBefore(child.element, childBefore && childBefore.element);
 		}
@@ -67,7 +67,7 @@ namespace flash.display
 		{
 			assert(i >= 0 && i < this.children.length);
 
-			let child = this.getChildAt(i);
+			const child = this.getChildAt(i);
 			//this.element.removeChild(child.element);
 			child.element.remove();
 			this.children.splice(i, 1);
@@ -90,8 +90,8 @@ namespace flash.display
 			assert(i1 >= 0 && i1 < this.children.length);
 			assert(i2 >= 0 && i2 < this.children.length);
 
-			let child1 = this.children[i1];
-			let child2 = this.children[i2];
+			const child1 = this.children[i1];
+			const child2 = this.children[i2];
 			this.children[i1] = child2;
 			this.children[i2] = child1;
 			// TODO: swap elements
@@ -113,12 +113,11 @@ namespace flash.display
 				return this._width;
 
 			let w = 0;
-			for (let i = 0; i < this.children.length; i++)
+			for (const child of this.children)
 			{
-				let child = this.children[i];
 				if (child.element.classList.contains("pending"))
 					continue;
-				let x = child.x + child.width;
+				const x = child.x + child.width;
 				if (w < x)
 					w = x;
 			}
@@ -142,12 +141,11 @@ namespace flash.display
 				return this._height;
 
 			let h = 0;
-			for (let i = 0; i < this.children.length; i++)
+			for (const child of this.children)
 			{
-				let child = this.children[i];
 				if (child.element.classList.contains("pending"))
 					continue;
-				let y = child.y + child.height;
+				const y = child.y + child.height;
 				if (h < y)
 					h = y;
 			}

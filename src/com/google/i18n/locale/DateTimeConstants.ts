@@ -29,7 +29,7 @@ namespace com.google.i18n.locale
 
 		private static _staticConstructor = (() =>
 		{
-			let consts: Dictionary = DateTimeConstants.DateTimeConstants_en;
+			const consts: Dictionary = DateTimeConstants.DateTimeConstants_en;
 			consts["STANDALONENARROWMONTHS"] = DateTimeConstants.DateTimeConstants_en.NARROWMONTHS;
 			consts["STANDALONEMONTHS"] = DateTimeConstants.DateTimeConstants_en.MONTHS;
 			consts["STANDALONESHORTMONTHS"] = DateTimeConstants.DateTimeConstants_en.SHORTMONTHS;

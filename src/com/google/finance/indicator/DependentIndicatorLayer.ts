@@ -12,12 +12,12 @@ namespace com.google.finance.indicator
 			return this.localYOffset - (indicatorPoint.getLogValue(context.verticalScaling) - this.localMedianValue) * this.localYScale;
 		}
 
-		getContext(context: Context, param2 = false) 
+		getContext(context: Context, param2 = false)
 		{
 			return context;
 		}
 
-		protected calculateLocalScaleMeters(context: Context) 
+		protected calculateLocalScaleMeters(context: Context)
 		{
 			const viewPoint = this.viewPoint;
 			this.localYOffset = viewPoint.miny + viewPoint.medPriceY + viewPoint.V_OFFSET;

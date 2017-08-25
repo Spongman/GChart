@@ -11,7 +11,6 @@ namespace com.google.finance.indicator
 	{
 		private static readonly PARAMETER_NAMES = ["period"];
 
-
 		private period = 10;
 
 		static getParameterNames()
@@ -40,7 +39,7 @@ namespace com.google.finance.indicator
 			return Messages.getMsg(Messages.WPR_INTERVAL, this.period, param1);
 		}
 
-		computeIntervalIndicator(param1: number) 
+		computeIntervalIndicator(param1: number)
 		{
 			if (this.indicator.hasInterval(param1))
 				return;
@@ -51,15 +50,14 @@ namespace com.google.finance.indicator
 
 			const dataSeries = new DataSeries();
 			const dataUnits: DataUnit[] = [];
-			for (let pointIndex = 0; pointIndex < pointsInIntervalArray.length; pointIndex++)
+			for (const point of pointsInIntervalArray)
 			{
-				const _loc10_ = pointsInIntervalArray[pointIndex];
-				if (!this.shouldSkip(_loc10_, dataSeries))
+				if (!this.shouldSkip(point, dataSeries))
 				{
-					dataUnits.push(_loc10_);
+					dataUnits.push(point);
 					if (dataUnits.length < this.period)
 					{
-						dataSeries.points.push(new IndicatorPoint(NaN, _loc10_));
+						dataSeries.points.push(new IndicatorPoint(NaN, point));
 					}
 					else
 					{
@@ -72,12 +70,12 @@ namespace com.google.finance.indicator
 						}
 						if (_loc3_ !== _loc4_)
 						{
-							const _loc5_ = (_loc3_ - _loc10_.close) / (_loc3_ - _loc4_) * 100;
-							dataSeries.points.push(new IndicatorPoint(_loc5_, _loc10_));
+							const _loc5_ = (_loc3_ - point.close) / (_loc3_ - _loc4_) * 100;
+							dataSeries.points.push(new IndicatorPoint(_loc5_, point));
 						}
 						else
 						{
-							this.copyLastIndicatorPoint(_loc10_, dataSeries);
+							this.copyLastIndicatorPoint(point, dataSeries);
 						}
 						dataUnits.shift();
 					}
@@ -91,13 +89,13 @@ namespace com.google.finance.indicator
 			return true;
 		}
 
-		setIndicatorInstanceArray(param1: any[]) 
+		setIndicatorInstanceArray(indicators: any[])
 		{
-			if (!param1 || param1.length !== 1)
+			if (!indicators || indicators.length !== 1)
 				return;
 
 			this.indicator.clear();
-			this.period = (<WilliamsPercentRIndicatorLayer><any>param1[0]).period;
+			this.period = (<WilliamsPercentRIndicatorLayer><any>indicators[0]).period;
 		}
 	}
 }

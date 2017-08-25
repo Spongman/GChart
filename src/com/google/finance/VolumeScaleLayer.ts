@@ -25,7 +25,7 @@ namespace com.google.finance
 			this.initTextFields(viewPoint);
 		}
 
-		private drawVolumeLines(context: Context) 
+		private drawVolumeLines(context: Context)
 		{
 			let _loc2_ = 1000;
 			const viewPoint = this.viewPoint;
@@ -89,19 +89,19 @@ namespace com.google.finance
 			this.midScaleTextField.text = String(Math.floor(context.maxVolume / 2) / _loc2_);
 		}
 
-		private positionVolumeLabel() 
+		private positionVolumeLabel()
 		{
 			this.volumeLabel.x = this.viewPoint.minx + VolumeScaleLayer.LABEL_PADDING;
 			this.volumeLabel.y = this.viewPoint.miny + VolumeScaleLayer.LABEL_PADDING;
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			this.drawVolumeLines(context);
 			this.positionVolumeLabel();
 		}
 
-		private initTextFields(viewPoint: IViewPoint) 
+		private initTextFields(viewPoint: IViewPoint)
 		{
 			this.topScaleTextField = new flash.text.TextField();
 			this.topScaleTextField.width = ViewPoint.TEXT_FIELD_WIDTH;

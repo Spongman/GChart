@@ -4,7 +4,7 @@ namespace flash.display
 	{
 		constructor(name?: string)
 		{
-			let elt = document.createElement("div");
+			const elt = document.createElement("div");
 			super(elt, name);
 		}
 

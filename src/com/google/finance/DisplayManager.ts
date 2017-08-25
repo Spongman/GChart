@@ -32,8 +32,8 @@ namespace com.google.finance
 		{
 			const points = dataSource.data.getPointsInIntervals();
 			const units = dataSource.data.units;
-			const map: { [key: string]: number } = {};
-			for (let pointIndex in points)
+			const map: Map<number> = {};
+			for (const pointIndex in points)
 			{
 				const pointUnits = points[pointIndex];
 				if (Number(pointIndex) === Intervals.FIVE_MINUTES && pointUnits[pointUnits.length - 1].dayMinute % 2 === 1)
@@ -43,7 +43,7 @@ namespace com.google.finance
 			}
 			for (let unitIndex = units.length - 1; unitIndex >= 0; unitIndex--)
 			{
-				for (let pointIndex in points)
+				for (const pointIndex in points)
 				{
 					const point = points[pointIndex];
 					if (map[pointIndex] >= 0 && point[map[pointIndex]].time === units[unitIndex].time)
@@ -82,9 +82,9 @@ namespace com.google.finance
 		hasOhlcRequiredIndicator(): boolean
 		{
 			const layers = this.layersManager.config[com.google.finance.LayersManager.SINGLE].layers;
-			for (let layerIndex = 0; layerIndex < layers.length; layerIndex++)
+			for (const layer of layers)
 			{
-				if (Const.OHLC_DEPENDENT_INDICATOR_NAMES.indexOf(layers[layerIndex].name) !== -1 && Boolean(layers[layerIndex].enabled))
+				if (Const.OHLC_DEPENDENT_INDICATOR_NAMES.indexOf(layer.name) !== -1 && Boolean(layer.enabled))
 					return true;
 			}
 			return false;
@@ -98,16 +98,16 @@ namespace com.google.finance
 				const _loc2_ = !_loc1_ ? null : _loc1_.data.getPointsInIntervalArray(Const.WEEKLY_INTERVAL);
 				if (_loc2_)
 				{
-					for (let unitIndex = 0; unitIndex < _loc2_.length; unitIndex++)
-						_loc2_[unitIndex].weeklyXPos = NaN;
+					for (const unit of _loc2_)
+						unit.weeklyXPos = NaN;
 				}
 			}
 		}
 
 		showContextualStaticInfo()
 		{
-			for (let viewPointIndex = 0; viewPointIndex < this.viewpoints.length; viewPointIndex++)
-				this.viewpoints[viewPointIndex].clearPointInformation();
+			for (const viewPoint of this.viewpoints)
+				viewPoint.clearPointInformation();
 
 			const contextualStaticInfo = this.layersManager.getContextualStaticInfo();
 			this.spaceText.setContextualStaticInfo(contextualStaticInfo);
@@ -137,9 +137,8 @@ namespace com.google.finance
 				this.viewpoints.push(null!);	// TODO: really?
 			}
 			const viewPoints = Utils.decodeObjects(com.google.finance.MainManager.paramsObj.single_viewpoints) as ViewPoint[];
-			for (let viewPointIndex = 0; viewPointIndex < viewPoints.length; viewPointIndex++)
+			for (const viewPoint of viewPoints)
 			{
-				const viewPoint = viewPoints[viewPointIndex];
 				if (viewPoint.display !== "hidden")
 					this.addViewPoint("ViewPoint", viewPoint.name, this.stage.stageWidth, Number(viewPoint.height), Number(viewPoint.topMargin), width, height);
 			}
@@ -174,10 +173,10 @@ namespace com.google.finance
 		isIndicatorConfigEnabled(param1: string): boolean
 		{
 			const layers = this.layersManager.config[com.google.finance.LayersManager.SINGLE].layers;
-			for (let layerIndex = 0; layerIndex < layers.length; layerIndex++)
+			for (const layer of layers)
 			{
-				if (layers[layerIndex].name === param1)
-					return Boolean(layers[layerIndex].enabled);
+				if (layer.name === param1)
+					return Boolean(layer.enabled);
 			}
 			return false;
 		}
@@ -227,8 +226,8 @@ namespace com.google.finance
 				}
 				else
 				{
-					for (let viewPointIndex = 0; viewPointIndex < this.viewpoints.length; viewPointIndex++)
-						this.viewpoints[viewPointIndex].setNewCount(mainViewPoint);
+					for (const otherViewPoint of this.viewpoints)
+						otherViewPoint.setNewCount(mainViewPoint);
 
 					this.update();
 				}
@@ -245,9 +244,8 @@ namespace com.google.finance
 			const dataUnits: DataUnit[] = [];
 			const marketCloseMinute = dataSeries.marketCloseMinute;
 			const units = dataSeries.units;
-			for (let unitIndex = 0; unitIndex < units.length; unitIndex++)
+			for (const unit of units)
 			{
-				const unit = units[unitIndex];
 				unit.relativeMinutes = NaN;
 				if (unit.dayMinute === marketCloseMinute)
 					dataUnits.push(unit);
@@ -325,10 +323,10 @@ namespace com.google.finance
 		enableIndicatorConfig(layerName: string, param2 = true)
 		{
 			const layers = this.layersManager.config[com.google.finance.LayersManager.SINGLE].layers;
-			for (let layerIndex = 0; layerIndex < layers.length; layerIndex++)
+			for (const layer of layers)
 			{
-				if (layers[layerIndex].name === layerName)
-					layers[layerIndex].enabled = !!param2 ? "true" : "false";
+				if (layer.name === layerName)
+					layer.enabled = !!param2 ? "true" : "false";
 			}
 		}
 
@@ -368,16 +366,13 @@ namespace com.google.finance
 			return this.viewpoints[viewPointPos] as SparklineViewPoint;
 		}
 
-
 		protected getComparedDataSeries(): DataSeries[]
 		{
 			const dataSeriesArray: DataSeries[] = [];
 			dataSeriesArray.push(this.mainManager.dataManager.dataSources[this.mainManager.quote].data);
 			const comparedTickers = this.layersManager.getComparedTickers();
-			for (let tickerIndex = 0; tickerIndex < comparedTickers.length; tickerIndex++)
-			{
-				dataSeriesArray.push(this.mainManager.dataManager.dataSources[comparedTickers[tickerIndex]].data);
-			}
+			for (const ticker of comparedTickers)
+				dataSeriesArray.push(this.mainManager.dataManager.dataSources[ticker].data);
 			return dataSeriesArray;
 		}
 
@@ -450,7 +445,7 @@ namespace com.google.finance
 			if (viewPointPos === -1)
 				return;
 
-			let vp = this.viewpoints[viewPointPos];
+			const vp = this.viewpoints[viewPointPos];
 			if (!vp)
 				return;
 
@@ -503,11 +498,8 @@ namespace com.google.finance
 
 		setLastMinute(param1: number)
 		{
-			for (let viewPointIndex = 0; viewPointIndex < this.viewpoints.length; viewPointIndex++)
-			{
-				const _loc3_ = this.viewpoints[viewPointIndex];
-				_loc3_.lastMinute = param1;
-			}
+			for (const viewPoint of this.viewpoints)
+				viewPoint.lastMinute = param1;
 		}
 
 		isDifferentMarketSessionComparison(): boolean
@@ -564,7 +556,7 @@ namespace com.google.finance
 			}
 			else
 			{
-				let dataSeries = this.layersManager.getFirstDataSource();
+				const dataSeries = this.layersManager.getFirstDataSource();
 				if (!dataSeries)
 					return;
 				_loc3_ = dataSeries;
@@ -699,10 +691,8 @@ namespace com.google.finance
 			const viewPoint = this.getViewPoint(param2);
 			if (viewPoint)
 			{
-				const layers = viewPoint.getLayers();
-				for (let layerIndex = 0; layerIndex < layers.length; layerIndex++)
+				for (const layer of viewPoint.getLayers())
 				{
-					let layer = layers[layerIndex];
 					if (layer instanceof google.finance.indicator.IndicatorLayer)
 					{
 						if (param1 === layer.getIndicatorName())
@@ -765,8 +755,8 @@ namespace com.google.finance
 		{
 			this.mainManager.dataManager.dataSources[this.mainManager.quote].setRelativeMinutesState(DataSource.DMS_RELATIVE_MINUTES_READY);
 			const comparedTickers = this.layersManager.getComparedTickers();
-			for (let tickerIndex = 0; tickerIndex < comparedTickers.length; tickerIndex++)
-				this.mainManager.dataManager.dataSources[comparedTickers[tickerIndex]].setRelativeMinutesState(DataSource.DMS_RELATIVE_MINUTES_READY);
+			for (const layer of comparedTickers)
+				this.mainManager.dataManager.dataSources[layer].setRelativeMinutesState(DataSource.DMS_RELATIVE_MINUTES_READY);
 		}
 
 		setEnabledChartLayer(param1: string)
@@ -774,9 +764,8 @@ namespace com.google.finance
 			const mainViewPoint = this.getMainViewPoint();
 			const layers = mainViewPoint.getLayers();
 			const _loc4_ = !!this.layersManager ? this.layersManager.getFirstDataSource() : null;
-			for (let layerIndex = 0; layerIndex < layers.length; layerIndex++)
+			for (const layer of layers)
 			{
-				let layer = layers[layerIndex];
 				if (layer instanceof IntervalBasedChartManagerLayer)
 				{
 					if (Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
@@ -800,11 +789,10 @@ namespace com.google.finance
 			this.setDiffMarketSessionRelativeMinutesState();
 			const dataUnits: DataUnit[] = [];
 			const comparedDataSeries = this.getComparedDataSeries();
-			for (let seriesIndex = 0; seriesIndex < comparedDataSeries.length; seriesIndex++)
+			for (const dataSeries of comparedDataSeries)
 			{
-				const _loc8_ = this.extractInterdayPoints(comparedDataSeries[seriesIndex]);
-				for (let unitIndex = 0; unitIndex < _loc8_.length; unitIndex++)
-					dataUnits.push(_loc8_[unitIndex]);
+				for (const unit of this.extractInterdayPoints(dataSeries))
+					dataUnits.push(unit);
 			}
 			if (dataUnits.length === 0)
 				return;
@@ -827,9 +815,9 @@ namespace com.google.finance
 				_loc10_.relativeMinutes = _loc4_;
 			}
 
-			for (let seriesIndex = 0; seriesIndex < comparedDataSeries.length; seriesIndex++)
+			for (const dataSeries of comparedDataSeries)
 			{
-				const units = comparedDataSeries[seriesIndex].units;
+				const units = dataSeries.units;
 				if (units.length !== 0)
 				{
 					let _loc14_ = 0;
@@ -852,44 +840,38 @@ namespace com.google.finance
 			}
 		}
 
-		setIndicatorInstanceArray(param1: string, param2: any[])
+		setIndicatorInstanceArray(viewPointName: string, indicators: any[])
 		{
 			const mainViewPoint = this.getMainViewPoint();
-			const layers = mainViewPoint.getLayers();
-			for (let layerIndex = 0; layerIndex < layers.length; layerIndex++)
+			const mainLayers = mainViewPoint.getLayers();
+			for (const layer of mainLayers)
 			{
-				let layer = layers[layerIndex];
 				if (layer instanceof indicator.DependentIndicatorLayer)
 				{
-					if (param1 === layer.getIndicatorName())
-						layer.setIndicatorInstanceArray(param2);
+					if (viewPointName === layer.getIndicatorName())
+						layer.setIndicatorInstanceArray(indicators);
 				}
 			}
 			const bottomViewPoint = this.getViewPoint(Const.BOTTOM_VIEW_POINT_NAME);
 			if (bottomViewPoint)
 			{
-				const layers2 = bottomViewPoint.getLayers();
-
-				for (let layerIndex = 0; layerIndex < layers2.length; layerIndex++)
+				for (const bottomLayer of bottomViewPoint.getLayers())
 				{
-					let layer = layers2[layerIndex];
-					if (layer instanceof indicator.VolumeDependentIndicatorLayer)
+					if (bottomLayer instanceof indicator.VolumeDependentIndicatorLayer)
 					{
-						if (param1 === layer.getIndicatorName())
-							layer.setIndicatorInstanceArray(param2);
+						if (viewPointName === bottomLayer.getIndicatorName())
+							bottomLayer.setIndicatorInstanceArray(indicators);
 					}
 				}
 			}
-			const viewPoint = this.getViewPoint(param1);
-			const _loc8_ = !viewPoint ? [] : viewPoint.getLayers();
-
-			for (let layerIndex = 0; layerIndex < _loc8_.length; layerIndex++)
+			const viewPoint = this.getViewPoint(viewPointName);
+			const layers = !viewPoint ? [] : viewPoint.getLayers();
+			for (const layer of layers)
 			{
-				let layer = _loc8_[layerIndex];
 				if (layer instanceof indicator.IndependentIndicatorLayer)
 				{
-					if (param1 === layer.getIndicatorName())
-						layer.setIndicatorInstanceArray(param2);
+					if (viewPointName === layer.getIndicatorName())
+						layer.setIndicatorInstanceArray(indicators);
 				}
 			}
 			this.update();
@@ -918,10 +900,10 @@ namespace com.google.finance
 		{
 			const mainViewPoint = this.getMainViewPoint();
 			const layers = mainViewPoint.getLayers();
-			for (let layerIndex = 0; layerIndex < layers.length; layerIndex++)
+			for (const layer of layers)
 			{
-				if (layers[layerIndex] instanceof IntervalBasedChartManagerLayer)
-					return (<IntervalBasedChartManagerLayer>layers[layerIndex]).getEnabledLayerName();
+				if (layer instanceof IntervalBasedChartManagerLayer)
+					return (<IntervalBasedChartManagerLayer>layer).getEnabledLayerName();
 			}
 			const enabledChartLayerName = IntervalBasedChartManagerLayer.getEnabledChartLayerName();
 			return enabledChartLayerName ? enabledChartLayerName : Const.DEFAULT_CHART_STYLE_NAME;

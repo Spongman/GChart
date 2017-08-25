@@ -35,7 +35,7 @@ namespace com.google.finance
 
 		private getDataUnit(stockAssociatedObject: StockAssociatedObject, param2: number): DataUnit
 		{
-			let posInInterval = notnull(stockAssociatedObject.posInInterval);
+			const posInInterval = notnull(stockAssociatedObject.posInInterval);
 			const _loc3_ = notnull(posInInterval[param2].refDataSeries);
 			const points = _loc3_.getPointsInIntervalArray(param2);
 			return points[posInInterval[param2].position];

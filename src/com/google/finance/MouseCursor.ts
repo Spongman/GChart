@@ -22,7 +22,7 @@ namespace com.google.finance
 	export class MouseCursor extends flash.display.Sprite
 	{
 		static readonly DRAGGABLE_CURSOR = MouseCursors.OPENED_HAND;
-		
+
 		/*
 		private static readonly CursorHorizontalArrows = MouseCursor_CursorHorizontalArrows;
 		private static readonly CursorOpenedHand = MouseCursor_CursorOpenedHand;
@@ -30,7 +30,7 @@ namespace com.google.finance
 		*/
 
 		private displayObjectLockedOn: flash.display.DisplayObject | null;
-		
+
 		currentType: number;
 		cursor: flash.display.Bitmap;
 
@@ -43,12 +43,12 @@ namespace com.google.finance
 			this.setCursor(MouseCursors.OPENED_HAND);
 		}
 
-		onMouseLeave(event: Event) 
+		onMouseLeave(event: Event)
 		{
 			this.setCursor(MouseCursors.CLASSIC);
 		}
 
-		initListeners() 
+		initListeners()
 		{
 			return;
 			/*TODO
@@ -60,12 +60,12 @@ namespace com.google.finance
 			*/
 		}
 
-		lockOnDisplayObject(displayObject: flash.display.DisplayObject) 
+		lockOnDisplayObject(displayObject: flash.display.DisplayObject)
 		{
 			this.displayObjectLockedOn = displayObject;
 		}
 
-		setCursor(param1: number) 
+		setCursor(param1: number)
 		{
 			switch (param1)
 			{
@@ -129,12 +129,12 @@ namespace com.google.finance
 			*/
 		}
 
-		unlock() 
+		unlock()
 		{
 			this.displayObjectLockedOn = null;
 		}
 
-		onMouseMove(mouseEvent: MouseEvent) 
+		onMouseMove(mouseEvent: MouseEvent)
 		{
 			this.cursor.x = this.mouseX - this.cursor.width / 2;
 			this.cursor.y = this.mouseY - this.cursor.height / 2;

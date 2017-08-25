@@ -70,7 +70,7 @@ namespace com.google.finance.indicator
 			return Messages.getMsg(Messages.MACD_INTERVAL, this.shortPeriod, this.longPeriod, this.emaPeriod, param1);
 		}
 
-		computeIntervalIndicator(param1: number) 
+		computeIntervalIndicator(param1: number)
 		{
 			if (this.indicator.hasInterval(param1))
 				return;
@@ -110,18 +110,18 @@ namespace com.google.finance.indicator
 			this.indicator.setDataSeries(param1, dataSeries2, 2);
 		}
 
-		setIndicatorInstanceArray(layers: com.google.finance.indicator.MACDIndicatorLayer[]) 
+		setIndicatorInstanceArray(indicators: com.google.finance.indicator.MACDIndicatorLayer[])
 		{
-			if (!layers || layers.length !== 1)
+			if (!indicators || indicators.length !== 1)
 				return;
 
 			this.indicator.clear();
-			this.shortPeriod = layers[0].shortPeriod;
-			this.longPeriod = layers[0].longPeriod;
-			this.emaPeriod = layers[0].emaPeriod;
+			this.shortPeriod = indicators[0].shortPeriod;
+			this.longPeriod = indicators[0].longPeriod;
+			this.emaPeriod = indicators[0].emaPeriod;
 		}
 
-		getContext(context: Context, param2 = false) 
+		getContext(context: Context, param2 = false)
 		{
 			context = super.getContext(context, param2);
 			context.maxValue = Utils.extendedMax(0, context.maxValue);

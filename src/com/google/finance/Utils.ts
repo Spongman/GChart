@@ -30,14 +30,14 @@ namespace com.google.finance
 			return Utils.newDateInTimezone(date, minutes).getUTCDate();
 		}
 
-		static adjustExchangeNameOfArray(param1: { [key: string]: string }[], param2: string) 
+		static adjustExchangeNameOfArray(maps: Map<string>[], key: string)
 		{
-			for (let index = 0; index < param1.length; index++)
+			for (const map of maps)
 			{
-				if (param1[index] && param1[index][param2])
+				if (map && map[key])
 				{
-					if (param1[index][param2].indexOf("NASD:") === 0)
-						param1[index][param2] = Utils.adjustNasdToNasdaq(param1[index][param2]);
+					if (map[key].indexOf("NASD:") === 0)
+						map[key] = Utils.adjustNasdToNasdaq(map[key]);
 				}
 			}
 		}
@@ -48,15 +48,16 @@ namespace com.google.finance
 				return [];
 
 			param1 = decodeURIComponent(param1);
-			const _loc2_: { [key: string]: string }[] = [];
-			const _loc3_ = param1.split(MainManager.paramsObj.objectSeparator);
-			for (let partIndex = 0; partIndex < _loc3_.length; partIndex++)
+			const _loc2_: Map<string>[] = [];
+			const objects = param1.split(MainManager.paramsObj.objectSeparator);
+			for (const obj of objects)
 			{
-				const _loc5_: { [key: string]: string } = {};
-				const _loc6_ = _loc3_[partIndex].split(MainManager.paramsObj.fieldSeparator);
-				for (let _loc7_ = 0; _loc7_ < _loc6_.length; _loc7_++)
+				const fields = obj.split(MainManager.paramsObj.fieldSeparator);
+
+				const _loc5_: Map<string> = {};
+				for (const field of fields)
 				{
-					const _loc8_ = _loc6_[_loc7_].split(":");
+					const _loc8_ = field.split(":");
 					let value: any = _loc8_[1];
 					if (!isNaN(value))
 						value = Number(value);
@@ -73,7 +74,7 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		static getTickerParts(param1: string) 
+		static getTickerParts(param1: string)
 		{
 			const _loc2_ = param1.split(":");
 			let _loc3_ = _loc2_.shift()!;	// TODO: check undefined
@@ -119,7 +120,7 @@ namespace com.google.finance
 		static assocArrayLength(map: Dictionary): number
 		{
 			let _loc2_ = 0;
-			for (let _ in map)
+			for (const _ of Object.keys(map))
 				_loc2_++;
 			return _loc2_;
 		}
@@ -279,7 +280,7 @@ namespace com.google.finance
 			return value;
 		}
 
-		static removeAllChildren(displayObjectContainer: flash.display.DisplayObjectContainer) 
+		static removeAllChildren(displayObjectContainer: flash.display.DisplayObjectContainer)
 		{
 			while (displayObjectContainer.numChildren > 0)
 				displayObjectContainer.removeChildAt(displayObjectContainer.numChildren-1);
@@ -325,7 +326,7 @@ namespace com.google.finance
 
 		static isSubset(param1: Dictionary, param2: Dictionary): boolean
 		{
-			for (let key in param1)
+			for (const key of Object.keys(param1))
 			{
 				if (param1[key] !== param2[key])
 					return false;
@@ -333,10 +334,10 @@ namespace com.google.finance
 			return true;
 		}
 
-		static printObjectMembers(param1: string, param2: any) 
+		static printObjectMembers(param1: string, param2: any)
 		{
 			console.log(param1);
-			for (let key in param2)
+			for (const key of Object.keys(param2))
 			{
 				console.log("  obj." + key + " = " + param2[key]);
 			}
@@ -379,16 +380,16 @@ namespace com.google.finance
 		static appendObjectMembersAsStrings(param1: string, param2: any): string
 		{
 			let _loc3_ = param1 + ":";
-			for (let key in param2)
+			for (const key of Object.keys(param2))
 				_loc3_ += "  obj." + key + "=" + param2[key];
 			return _loc3_;
 		}
 
-		static displayObjectToTop(displayObject: flash.display.DisplayObject, displayObjectContainer: flash.display.DisplayObjectContainer) 
+		static displayObjectToTop(displayObject: flash.display.DisplayObject, displayObjectContainer: flash.display.DisplayObjectContainer)
 		{
 			let index = 0;
-			let child = displayObject;
-			let container = displayObjectContainer;
+			const child = displayObject;
+			const container = displayObjectContainer;
 			try
 			{
 				index = container.getChildIndex(child);
@@ -414,7 +415,7 @@ namespace com.google.finance
 		static cloneObject<T>(obj: T): T
 		{
 			const clone = <T>{};
-			for (let key in obj)
+			for (const key of Object.keys(obj))
 				(<any>clone)[key] = (<any>obj)[key]; // TODO
 			return clone;
 		}
@@ -427,17 +428,16 @@ namespace com.google.finance
 			return false;
 		}
 
-		static hasDifferentDividendCurrency(param1: string, param2: any[]): boolean
+		static hasDifferentDividendCurrency(currency: string, pinArray: any[]): boolean
 		{
-			for (let _loc3_ = 0; _loc3_ < param2.length; _loc3_++)
+			for (const pin of pinArray)
 			{
-				const _loc4_ = param2[_loc3_];
-				if (_loc4_._type === "dividend" && _loc4_._amount_currency)
+				if (pin._type === "dividend" && pin._amount_currency)
 				{
-					if (param1 && param1 !== _loc4_._amount_currency)
+					if (currency && currency !== pin._amount_currency)
 						return true;
 
-					param1 = _loc4_._amount_currency;
+					currency = pin._amount_currency;
 				}
 			}
 			return false;

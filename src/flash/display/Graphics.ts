@@ -16,7 +16,6 @@ namespace flash.display
 			//this._context = context;
 		}
 
-
 		static initialize()
 		{
 			Graphics._blitCanvas = document.createElement('canvas');
@@ -25,10 +24,9 @@ namespace flash.display
 
 		static cleanupPending()
 		{
-			let pending = Graphics._pending;
-			for (let i = 0; i < pending.length; i++)
+			const pending = Graphics._pending;
+			for (const graphics of pending)
 			{
-				let graphics = pending[i];
 				if (graphics._pending)
 				{
 					graphics._pending = false;
@@ -47,7 +45,7 @@ namespace flash.display
 		{
 			if (!this._context)
 			{
-				let canvas = document.createElement("canvas");
+				const canvas = document.createElement("canvas");
 				canvas.width = canvas.height = 0;
 				this.element.appendChild(canvas);
 				this._context = canvas.getContext("2d")!;
@@ -70,14 +68,14 @@ namespace flash.display
 
 			this.ensureCanvas();
 
-			let context = this._context;
-			let canvas = context.canvas;
+			const context = this._context;
+			const canvas = context.canvas;
 
-			let to2 = this._thickness / 2 || 0;
-			let minx = Math.floor(x - to2);
-			let maxx = Math.ceil(x + to2);
-			let miny = Math.floor(y - to2);
-			let maxy = Math.ceil(y - to2);
+			const to2 = this._thickness / 2 || 0;
+			const minx = Math.floor(x - to2);
+			const maxx = Math.ceil(x + to2);
+			const miny = Math.floor(y - to2);
+			const maxy = Math.ceil(y - to2);
 
 			if (!this._sized)
 			{
@@ -107,8 +105,8 @@ namespace flash.display
 			//if (this._fill || this._path)
 			//	console.log("ensure during path");
 
-			let oldminx = this._minx;
-			let oldminy = this._miny;
+			const oldminx = this._minx;
+			const oldminy = this._miny;
 			//let oldmaxx = this._maxx;
 			//let oldmaxy = this._maxy;
 
@@ -128,23 +126,23 @@ namespace flash.display
 			if (this._maxy < maxy)
 				this._maxy = Math.ceil(maxy);
 
-			let w = this._maxx - this._minx;
-			let h = this._maxy - this._miny;
+			const w = this._maxx - this._minx;
+			const h = this._maxy - this._miny;
 
 			/*
 			if (w <= 0 || h <= 0)
 				return;
 			*/
 
-			let oldWidth = canvas.width;
-			let oldHeight = canvas.height;
+			const oldWidth = canvas.width;
+			const oldHeight = canvas.height;
 
 			if (Graphics._blitCanvas.width < oldWidth)
 				Graphics._blitCanvas.width = oldWidth;
 			if (Graphics._blitCanvas.height < oldHeight)
 				Graphics._blitCanvas.height = oldHeight;
 
-			let globalCompositeOperation = context.globalCompositeOperation;
+			const globalCompositeOperation = context.globalCompositeOperation;
 			context.globalCompositeOperation = "copy";
 			Graphics._blitContext.globalCompositeOperation = "copy";
 			Graphics._blitContext.drawImage(canvas, 0, 0);
@@ -262,8 +260,8 @@ namespace flash.display
 		private _ops: Function[] = [];
 		private flushOps()
 		{
-			for (var i = 0; i < this._ops.length; i++)
-				this._ops[i]();
+			for (const op of this._ops)
+				op();
 			this._ops.length = 0;
 		}
 
@@ -273,8 +271,8 @@ namespace flash.display
 			{
 				this._path = true;
 				this.ensureCanvas();
-				var x = this._x;
-				var y = this._y;
+				const x = this._x;
+				const y = this._y;
 				this._ops.push(() =>
 				{
 					this._context.beginPath();

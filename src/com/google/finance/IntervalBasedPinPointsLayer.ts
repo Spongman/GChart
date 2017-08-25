@@ -11,7 +11,6 @@ namespace com.google.finance
 		private static readonly MAX_FLAGS_DEPTH = 1000;
 		*/
 
-
 		private localYOffset = 0;
 		private lastAbsoluteHeightMax: number;
 		private pinPointContentMovie: com.google.finance.PinPointContentMovie;
@@ -20,7 +19,6 @@ namespace com.google.finance
 		private activeMovies: number = 0;
 		private pinMovies: PinPointMovie[] = [];
 		private lastAbsoluteHeightMin: number;
-
 
 		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
@@ -31,7 +29,7 @@ namespace com.google.finance
 
 		private getDataUnit(stockAssociatedObject: StockAssociatedObject, param2: number): DataUnit
 		{
-			let posInInterval = notnull(stockAssociatedObject.posInInterval);
+			const posInInterval = notnull(stockAssociatedObject.posInInterval);
 			const refDataSeries = posInInterval[param2].refDataSeries;
 			const points = notnull(refDataSeries).getPointsInIntervalArray(param2);
 			return points[posInInterval[param2].position];
@@ -116,7 +114,7 @@ namespace com.google.finance
 			if (isNaN(context.lastMinute) || isNaN(context.count) || context.count === 0)
 				return;
 
-			let vp = this.viewPoint;
+			const vp = this.viewPoint;
 			const _loc2_ = <PinPoint[]>this.dataSource.objects["newspin"];
 			this.activeMovies = 0;
 			this.pinPointContentMovie.clearMovie();
@@ -153,7 +151,7 @@ namespace com.google.finance
 			const _loc7_: number[] = [];
 			const _loc8_: number[] = [];
 			const _loc9_: number[] = [];
-			const _loc10_: number[] = []
+			const _loc10_: number[] = [];
 			for (let _loc6_ = param3; _loc6_ <= param4; _loc6_ += _loc11_)
 			{
 				_loc7_.push(_loc6_);

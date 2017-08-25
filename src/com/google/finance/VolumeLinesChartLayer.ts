@@ -9,7 +9,7 @@ namespace com.google.finance
 		protected indicator: com.google.finance.Indicator;
 		protected computer: Function;
 		protected highlightCanvas: flash.display.Sprite = new flash.display.Sprite();
-		protected maxVolume: { [key: string]: number } = {};
+		protected maxVolume: Map<number> = {};
 		protected originalDataSeries: com.google.finance.DataSeries;
 		protected verticalScale = 0;
 
@@ -30,7 +30,7 @@ namespace com.google.finance
 			if (_loc14_ > param8)
 				_loc14_ = param8;
 
-			let point = <indicator.VolumeIndicatorPoint>dataSeries.points[_loc14_];
+			const point = <indicator.VolumeIndicatorPoint>dataSeries.points[_loc14_];
 			let xPos = viewPoint.getXPos(points[_loc14_].point);
 			const intervalLength = viewPoint.getIntervalLength(param6 / 60);
 			const _loc15_ = Utils.extendedMax(param7, days[param2 - 1]);
@@ -51,7 +51,7 @@ namespace com.google.finance
 			return param2;
 		}
 
-		setIndicator(indicatorName: string, computer: Function, dataSeries: com.google.finance.DataSeries) 
+		setIndicator(indicatorName: string, computer: Function, dataSeries: com.google.finance.DataSeries)
 		{
 			this.dataSource.indicators[indicatorName] = new com.google.finance.Indicator();
 			this.indicator = this.dataSource.indicators[indicatorName];
@@ -74,7 +74,7 @@ namespace com.google.finance
 			return viewPoint.maxy - indicatorPoint.volume * this.verticalScale;
 		}
 
-		getPoint(dataSeries: com.google.finance.DataSeries, param2: number) 
+		getPoint(dataSeries: com.google.finance.DataSeries, param2: number)
 		{
 			let pointIndex = this.getPointIndex(dataSeries, param2);
 			while (pointIndex > 0 && (<indicator.VolumeIndicatorPoint>dataSeries.points[pointIndex]).volume === 0)
@@ -84,7 +84,7 @@ namespace com.google.finance
 			return dataSeries.points[pointIndex];
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			const skipInterval = this.viewPoint.getSkipInterval(context.count, context.lastMinute);
 			const dataSeries = this.indicator.getDataSeries(skipInterval.interval);
@@ -101,7 +101,7 @@ namespace com.google.finance
 			this.drawLines(this, dataSeries, firstReferencePointIndex, lastReferencePointIndex, this.viewPoint, context);
 		}
 
-		protected drawOneLine(param1: number, param2: number, sprite: flash.display.Sprite, viewPoint: IViewPoint) 
+		protected drawOneLine(param1: number, param2: number, sprite: flash.display.Sprite, viewPoint: IViewPoint)
 		{
 			if (viewPoint.maxy - param2 < 1 && viewPoint.maxy - param2 > 0)
 				param2 = viewPoint.maxy - 1;
@@ -131,7 +131,7 @@ namespace com.google.finance
 			return referencePointIndex;
 		}
 
-		clearHighlight() 
+		clearHighlight()
 		{
 			this.highlightCanvas.graphics.clear();
 		}
@@ -142,7 +142,7 @@ namespace com.google.finance
 			return originalDataSeries.getFirstRelativeMinute();
 		}
 
-		protected drawLines(sprite: flash.display.Sprite, dataSeries: com.google.finance.DataSeries, param3: number, param4: number, viewPoint: ViewPoint, context: Context) 
+		protected drawLines(sprite: flash.display.Sprite, dataSeries: com.google.finance.DataSeries, param3: number, param4: number, viewPoint: ViewPoint, context: Context)
 		{
 			const _loc7_ = <indicator.VolumeIndicatorPoint[]>dataSeries.points;
 			//const _loc8_ = param2.days;
@@ -215,10 +215,10 @@ namespace com.google.finance
 				return this.maxVolume[_loc10_];
 
 			let _loc11_ = 0;
-			for (let pointIndex = 0; pointIndex < dataSeries.points.length; pointIndex++)
+			for (const point of dataSeries.points)
 			{
-				if ((<indicator.VolumeIndicatorPoint>dataSeries.points[pointIndex]).volume > _loc11_)
-					_loc11_ = Number((<indicator.VolumeIndicatorPoint>dataSeries.points[pointIndex]).volume);
+				if ((<indicator.VolumeIndicatorPoint>point).volume > _loc11_)
+					_loc11_ = Number((<indicator.VolumeIndicatorPoint>point).volume);
 			}
 			this.maxVolume[_loc10_] = _loc11_;
 			for (let scaleIndex = 1; scaleIndex < Const.VOLUME_SCALES.length; scaleIndex++)
@@ -234,7 +234,7 @@ namespace com.google.finance
 
 		getDataSeries(context: Context): com.google.finance.DataSeries
 		{
-			let vp = this.viewPoint;
+			const vp = this.viewPoint;
 			if (!context)
 				context = vp.layersContext;
 
@@ -243,7 +243,7 @@ namespace com.google.finance
 			return notnull(this.indicator.getDataSeries(skipInterval.interval));
 		}
 
-		getContext(context: Context, param2 = false) 
+		getContext(context: Context, param2 = false)
 		{
 			const dataSeries = this.getDataSeries(context);
 			if (dataSeries.points.length === 0)
@@ -258,7 +258,7 @@ namespace com.google.finance
 			return context;
 		}
 
-		highlightPoint(context: Context, param2: number, state: Dictionary) 
+		highlightPoint(context: Context, param2: number, state: Dictionary)
 		{
 			this.clearHighlight();
 			const skipInterval = this.viewPoint.getSkipInterval(context.count, context.lastMinute);

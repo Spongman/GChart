@@ -11,12 +11,12 @@ namespace com.google.finance.indicator
 			return this.viewPoint.maxy - indicatorPoint.getValue() * this.localYScale;
 		}
 
-		getContext(context: Context, param2 = false) 
+		getContext(context: Context, param2 = false)
 		{
 			return context;
 		}
 
-		protected calculateLocalScaleMeters(context: Context) 
+		protected calculateLocalScaleMeters(context: Context)
 		{
 			this.localYScale = (this.viewPoint.maxy - this.viewPoint.miny - Const.BOTTOM_VIEWPOINT_HEADER_HEIGHT) / context.maxVolume;
 		}

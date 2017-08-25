@@ -15,7 +15,7 @@ namespace com.google.finance.indicator
 			return SMAIndicatorLayer.getParameterNames();
 		}
 
-		computeIntervalIndicator(param1: number) 
+		computeIntervalIndicator(param1: number)
 		{
 			if (this.indicator.hasInterval(param1))
 				return;
@@ -28,27 +28,26 @@ namespace com.google.finance.indicator
 				const _loc4_ = 2 / (Number(this.periods[periodIndex]) + 1);
 				let _loc6_ = 0;
 				let _loc5_ = 0;
-				for (let pointIndex = 0; pointIndex < points.length; pointIndex++)
+				for (const point of points)
 				{
-					const _loc11_ = points[pointIndex];
-					if (!this.shouldSkip(_loc11_, dataSeries))
+					if (!this.shouldSkip(point, dataSeries))
 					{
 						_loc5_++;
-						_loc6_ = Number(_loc6_ + _loc11_.close);
+						_loc6_ = Number(_loc6_ + point.close);
 						let _loc9_: IndicatorPoint;
 						if (_loc5_ < this.periods[periodIndex])
 						{
-							_loc9_ = new IndicatorPoint(NaN, _loc11_);
+							_loc9_ = new IndicatorPoint(NaN, point);
 						}
 						else if (_loc5_ === this.periods[periodIndex])
 						{
 							_loc3_ = _loc6_ / _loc5_;
-							_loc9_ = new IndicatorPoint(_loc3_, _loc11_);
+							_loc9_ = new IndicatorPoint(_loc3_, point);
 						}
 						else
 						{
-							_loc3_ = (_loc11_.close - _loc3_) * _loc4_ + _loc3_;
-							_loc9_ = new IndicatorPoint(_loc3_, _loc11_);
+							_loc3_ = (point.close - _loc3_) * _loc4_ + _loc3_;
+							_loc9_ = new IndicatorPoint(_loc3_, point);
 						}
 						dataSeries.points.push(_loc9_);
 					}

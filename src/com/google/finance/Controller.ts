@@ -64,7 +64,7 @@ namespace com.google.finance
 		private chartSizeChangeToolTip: com.google.finance.ToolTipMovie;
 		private buttonTextFormat: flash.text.TextFormat;
 		private intId: number;
-		private chartTypeNameMapping: { [key: string]: string };
+		private chartTypeNameMapping: Map<string>;
 		private scrollMouseMaxX: number;
 		private isMarketOpen: boolean;
 		private initialXMouse: number;
@@ -150,11 +150,7 @@ namespace com.google.finance
 				this.removeChild(this.chartSizeChangeButton);
 
 			this.chartSizeChangeButton = new flash.display.SimpleButton("chartSizeChangeButton");
-			let buttonBitmap: flash.display.Bitmap;
-			if (showExpand)
-				buttonBitmap = new Controller_ExpandIcon();
-			else
-				buttonBitmap = new Controller_ShrinkIcon();
+			const buttonBitmap: flash.display.Bitmap = showExpand ? new Controller_ExpandIcon() : new Controller_ShrinkIcon();
 
 			this.chartSizeChangeButton.overState = buttonBitmap;
 			this.chartSizeChangeButton.downState = buttonBitmap;
@@ -382,11 +378,11 @@ namespace com.google.finance
 			for (let listenerIndex = 0; listenerIndex < this.listeners.length; listenerIndex++)
 			{
 				this.listeners[listenerIndex].zoomingAnimation_init(context);
-				let listener = this.listeners[listenerIndex];
+				const listener = this.listeners[listenerIndex];
 				_loc5_[listenerIndex] = listener.zoomingAnimation_ticker.bind(listener);
 				_loc6_[listenerIndex] = listener;
 			}
-			let topBorderLayer = this.displayManager.topBorderLayer;
+			const topBorderLayer = this.displayManager.topBorderLayer;
 			_loc5_[this.listeners.length] = topBorderLayer.update.bind(topBorderLayer);
 			_loc6_[this.listeners.length] = topBorderLayer;
 			this.aniManager.animate(_loc5_, _loc6_, param3, param4);
@@ -1271,7 +1267,7 @@ namespace com.google.finance
 			if (!this.stage)
 				return;
 
-			let stage = this.stage;
+			const stage = this.stage;
 			//var stage = document.body;
 
 			stage.addEventListener(KeyboardEvents.KEY_DOWN, flash.display.Stage.bind(this.onKeyDown, this));

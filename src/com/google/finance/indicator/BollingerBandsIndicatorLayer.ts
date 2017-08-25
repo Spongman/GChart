@@ -48,7 +48,7 @@ namespace com.google.finance.indicator
 			return IndicatorLineStyle.NONE;
 		}
 
-		computeIntervalIndicator(param1: number) 
+		computeIntervalIndicator(param1: number)
 		{
 			if (this.indicator.hasInterval(param1))
 				return;
@@ -62,16 +62,15 @@ namespace com.google.finance.indicator
 			const dataSeries1 = new DataSeries();
 			const dataSeries2 = new DataSeries();
 			const _loc14_: number[] = [];
-			for (let pointIndex = 0; pointIndex < points.length; pointIndex++)
+			for (const point of points)
 			{
-				const _loc15_ = points[pointIndex];
-				if (!this.shouldSkip(_loc15_, dataSeries0, dataSeries1, dataSeries2))
+				if (!this.shouldSkip(point, dataSeries0, dataSeries1, dataSeries2))
 				{
-					_loc9_ = Number(_loc9_ + _loc15_.close);
-					_loc14_.push(_loc15_.close);
+					_loc9_ = Number(_loc9_ + point.close);
+					_loc14_.push(point.close);
 					if (_loc14_.length < this.period)
 					{
-						const indicatorPoint = new IndicatorPoint(NaN, _loc15_);
+						const indicatorPoint = new IndicatorPoint(NaN, point);
 						dataSeries0.points.push(indicatorPoint);
 						dataSeries1.points.push(indicatorPoint);
 						dataSeries2.points.push(indicatorPoint);
@@ -86,9 +85,9 @@ namespace com.google.finance.indicator
 						_loc6_ = Number(Math.sqrt(_loc6_ / this.period));
 						const _loc7_ = _loc5_ + this.multiplier * _loc6_;
 						const _loc8_ = _loc5_ - this.multiplier * _loc6_;
-						dataSeries0.points.push(new IndicatorPoint(_loc5_, _loc15_));
-						dataSeries1.points.push(new IndicatorPoint(_loc7_, _loc15_));
-						dataSeries2.points.push(new IndicatorPoint(_loc8_, _loc15_));
+						dataSeries0.points.push(new IndicatorPoint(_loc5_, point));
+						dataSeries1.points.push(new IndicatorPoint(_loc7_, point));
+						dataSeries2.points.push(new IndicatorPoint(_loc8_, point));
 						_loc9_ = Number(_loc9_ - _loc14_.shift()!);
 					}
 				}
@@ -98,13 +97,13 @@ namespace com.google.finance.indicator
 			this.indicator.setDataSeries(param1, dataSeries1, 2);
 		}
 
-		setIndicatorInstanceArray(param1: any[]) 
+		setIndicatorInstanceArray(indicators: any[])
 		{
-			if (!param1 || param1.length !== 1)
+			if (!indicators || indicators.length !== 1)
 				return;
 
 			this.indicator.clear();
-			this.period = (<BollingerBandsIndicatorLayer>param1[0]).period;
+			this.period = (<BollingerBandsIndicatorLayer>indicators[0]).period;
 		}
 	}
 }

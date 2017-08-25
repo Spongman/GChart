@@ -19,7 +19,7 @@ namespace com.google.finance
 		private activeMovies = 0;
 		private pinMovies: PinPointMovie[] = [];
 		private lastAbsoluteHeightMin: number;
-		
+
 		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
 			super(viewPoint, dataSource);
@@ -97,7 +97,7 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		private removePinMovies(param1: number) 
+		private removePinMovies(param1: number)
 		{
 			for (let movieIndex = param1; movieIndex < this.pinMovies.length; movieIndex++)
 			{
@@ -113,7 +113,7 @@ namespace com.google.finance
 			return this.localYOffset - (dataUnit.getCloseLogValue(context.verticalScaling) - context.medPrice) * this.localYScale;
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			if (isNaN(context.lastMinute) || isNaN(context.count) || context.count === 0)
 				return;
@@ -132,7 +132,7 @@ namespace com.google.finance
 				this.removePinMovies(0);
 				return;
 			}
-			let vp = this.viewPoint;
+			const vp = this.viewPoint;
 			this.localYOffset = vp.miny + vp.medPriceY + vp.V_OFFSET;
 			this.localYScale = vp.maxPriceRangeViewSize / context.maxPriceRange;
 			const bottomBarLayer = vp.getLayer("BottomBarLayer") as BottomBarLayer;
@@ -148,7 +148,7 @@ namespace com.google.finance
 				this.pinPointContentMovie.renderMovie();
 		}
 
-		private renderFlagGroups(context: Context, pinPoints: PinPoint[], param3: number, param4: number, param5: number) 
+		private renderFlagGroups(context: Context, pinPoints: PinPoint[], param3: number, param4: number, param5: number)
 		{
 			const _loc7_: number[] = [];
 			const _loc8_: number[] = [];
@@ -184,7 +184,7 @@ namespace com.google.finance
 			}
 		}
 
-		private renderFlag(param1: number, pinOrientation: PinOrientations, param3: number, pinPoint: PinPoint, _?: PinPoint, param6 = 1) 
+		private renderFlag(param1: number, pinOrientation: PinOrientations, param3: number, pinPoint: PinPoint, _?: PinPoint, param6 = 1)
 		{
 			const pinPointMovieClip = this.getPinPointMovieClip(pinPoint);
 			this.addChild(pinPointMovieClip);
@@ -215,7 +215,7 @@ namespace com.google.finance
 			return _loc5_.units[_loc4_];
 		}
 
-		private renderFlagsGroup(context: Context, param2: number, param3: number, param4: number, param5: number, param6: number, pinPoints: PinPoint[], param8: number, pinOrientation: PinOrientations) 
+		private renderFlagsGroup(context: Context, param2: number, param3: number, param4: number, param5: number, param6: number, pinPoints: PinPoint[], param8: number, pinOrientation: PinOrientations)
 		{
 			this.lastAbsoluteHeightMin = param4 - param8 + PinPointsLayer.FLAG_HEIGHT;
 			let _loc10_ = false;

@@ -4,7 +4,7 @@ namespace com.google.finance
 	{
 		//private intId: number;
 
-		readonly dataSources: { [key: string]: DataSource } = {};
+		readonly dataSources: Map<DataSource> = {};
 
 		constructor(public readonly mainManager: com.google.finance.MainManager, private startTime = NaN, private endTime = NaN)
 		{
@@ -27,7 +27,7 @@ namespace com.google.finance
 		syncDataSources(dataSource: DataSource, displayManager: DisplayManager)
 		{
 			const otherDataSources: DataSource[] = [];
-			for (let dataSourceName in this.dataSources)
+			for (const dataSourceName of Object.keys(this.dataSources))
 			{
 				const hasPendingEvents = this.dataSources[dataSourceName].hasPendingEvents();
 				if (dataSourceName !== dataSource.quoteName && !hasPendingEvents)
@@ -56,9 +56,9 @@ namespace com.google.finance
 				}
 				else if (_loc16_ > 0)
 				{
-					for (let dataSourceIndex = 0; dataSourceIndex < otherDataSources.length; dataSourceIndex++)
+					for (const otherDataSource of otherDataSources)
 					{
-						const data2 = otherDataSources[dataSourceIndex].data;
+						const data2 = otherDataSource.data;
 						if (data2.days.length > otherData.days.length - numOtherDays)
 						{
 							const _loc18_ = data2.days.length - (otherData.days.length - numOtherDays);
@@ -83,11 +83,10 @@ namespace com.google.finance
 			}
 			if (_loc11_)
 			{
-				for (let dataSourceIndex = 0; dataSourceIndex < otherDataSources.length; dataSourceIndex++)
+				for (const otherDataSource of otherDataSources)
 				{
-					const _loc20_ = otherDataSources[dataSourceIndex];
-					_loc20_.preCalculate(_loc20_.data);
-					displayManager.computeRelativeTimes(_loc20_);
+					otherDataSource.preCalculate(otherDataSource.data);
+					displayManager.computeRelativeTimes(otherDataSource);
 				}
 			}
 		}

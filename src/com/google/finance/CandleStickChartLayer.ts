@@ -17,7 +17,7 @@ namespace com.google.finance
 			const candleStickColor = this.getCandleStickColor(unit);
 			gr.lineStyle(1, candleStickColor);
 
-			let _loc9_ = unit.close >= unit.open;
+			const _loc9_ = unit.close >= unit.open;
 			if (Math.abs(ohlcYPos.closeY - ohlcYPos.openY) <= 1)
 			{
 				const top = (ohlcYPos.closeY + ohlcYPos.openY) / 2;

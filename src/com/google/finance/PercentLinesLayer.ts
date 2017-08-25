@@ -7,14 +7,14 @@ namespace com.google.finance
 		private localYOffset: number;
 		private localYScale: number;
 
-		private computeLocalVars(context: Context) 
+		private computeLocalVars(context: Context)
 		{
 			this.localYOffset = this.viewPoint.miny + ViewPoint.MIN_EDGE_DISTANCE / 2;
 			this.localYScale = (this.viewPoint.maxPriceRangeViewSize - 20) / context.scaleVariation;
 			this.distanceBetweenLines = this.getDistanceBetweenLines(context);
 		}
 
-		protected drawZeroLine(context: Context) 
+		protected drawZeroLine(context: Context)
 		{
 			const gr = this.graphics;
 			gr.lineStyle(0, Const.ZERO_PERCENT_LINE_COLOR, 1);
@@ -85,7 +85,7 @@ namespace com.google.finance
 			return this.localYOffset + (context.localYAdjustment - _loc3_) * this.localYScale;
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			this.valueSuffix = "%";
 			this.graphics.clear();

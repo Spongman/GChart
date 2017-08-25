@@ -40,7 +40,7 @@ namespace com.google.finance.indicator
 			return Messages.getMsg(Messages.CCI_INTERVAL, this.period, param1);
 		}
 
-		computeIntervalIndicator(param1: number) 
+		computeIntervalIndicator(param1: number)
 		{
 			if (this.indicator.hasInterval(param1))
 				return;
@@ -52,17 +52,16 @@ namespace com.google.finance.indicator
 			const dataSeries = new DataSeries();
 			let _loc4_ = 0;
 			const _loc5_: number[] = [];
-			for (let pointIndex = 0; pointIndex < points.length; pointIndex++)
+			for (const point of points)
 			{
-				const _loc7_ = points[pointIndex];
-				if (!this.shouldSkip(_loc7_, dataSeries))
+				if (!this.shouldSkip(point, dataSeries))
 				{
-					const _loc8_ = (_loc7_.close + _loc7_.high + _loc7_.low) / 3;
+					const _loc8_ = (point.close + point.high + point.low) / 3;
 					_loc5_.push(_loc8_);
 					_loc4_ = Number(_loc4_ + _loc8_);
 					if (_loc5_.length < this.period)
 					{
-						dataSeries.points.push(new IndicatorPoint(NaN, _loc7_));
+						dataSeries.points.push(new IndicatorPoint(NaN, point));
 					}
 					else
 					{
@@ -73,9 +72,9 @@ namespace com.google.finance.indicator
 
 						_loc10_ = Number(_loc10_ / this.period);
 						if (_loc10_ !== 0)
-							dataSeries.points.push(new IndicatorPoint((_loc8_ - _loc9_) / (0.015 * _loc10_), _loc7_));
+							dataSeries.points.push(new IndicatorPoint((_loc8_ - _loc9_) / (0.015 * _loc10_), point));
 						else
-							dataSeries.points.push(new IndicatorPoint(0, _loc7_));
+							dataSeries.points.push(new IndicatorPoint(0, point));
 
 						_loc4_ = Number(_loc4_ - _loc5_.shift()!);
 					}
@@ -89,13 +88,13 @@ namespace com.google.finance.indicator
 			return true;
 		}
 
-		setIndicatorInstanceArray(param1: any[]) 
+		setIndicatorInstanceArray(indicators: any[])
 		{
-			if (!param1 || param1.length !== 1)
+			if (!indicators || indicators.length !== 1)
 				return;
 
 			this.indicator.clear();
-			this.period = (<CCIIndicatorLayer><any>param1[0]).period;
+			this.period = (<CCIIndicatorLayer><any>indicators[0]).period;
 		}
 	}
 }

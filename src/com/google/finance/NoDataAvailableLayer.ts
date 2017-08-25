@@ -3,12 +3,12 @@ namespace com.google.finance
 	// import flash.text.TextFormat;
 	// import flash.text.TextField;
 	// import flash.text.TextFieldAutoSize;
-	
+
 	export class NoDataAvailableLayer extends AbstractLayer<ViewPoint>
 	{
 		private text: flash.text.TextField;
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			if (!this.text)
 			{

@@ -36,7 +36,7 @@ namespace com.google.finance
 		renderLayer(context: Context)
 		{
 			this.graphics.clear();
-			let vp = this.viewPoint;
+			const vp = this.viewPoint;
 			if (vp.getDetailLevelForTechnicalStyle() !== Intervals.INTRADAY)
 				return;
 

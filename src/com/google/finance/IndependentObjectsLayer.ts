@@ -9,7 +9,6 @@ namespace com.google.finance
 		orientation: number;
 	}
 
-
 	export class IndependentObjectsLayer extends AbstractLayer<ViewPoint>
 	{
 		static readonly POSITION_BOTTOM = "bottom";
@@ -35,8 +34,8 @@ namespace com.google.finance
 
 		private resetCanvas()
 		{
-			for (let movieIndex = 0; movieIndex < this.movies.length; movieIndex++)
-				this.removeChild(this.movies[movieIndex]);
+			for (const movie of this.movies)
+				this.removeChild(movie);
 
 			this.movies.splice(0);
 		}
@@ -111,7 +110,7 @@ namespace com.google.finance
 		private getPosition(seriesPosition: SeriesPosition, dataUnits: DataUnit[], param3: number, context: Context): Position
 		{
 			const position = new Position();
-			let dataSeries = notnull(seriesPosition.refDataSeries);
+			const dataSeries = notnull(seriesPosition.refDataSeries);
 			const xPos = this.viewPoint.getXPos(dataSeries.units[seriesPosition.pos]);
 			const yPos = this.getYPos(context, dataSeries.units[seriesPosition.pos]);
 			//const _loc8_ = (this.viewPoint.maxy + this.viewPoint.miny) / 2;

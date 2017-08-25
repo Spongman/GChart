@@ -14,7 +14,6 @@ namespace com.google.finance.indicator
 	{
 		private static readonly PARAMETER_NAMES = ["period"];
 
-
 		protected periods = [20];
 
 		static getParameterNames()
@@ -47,7 +46,7 @@ namespace com.google.finance.indicator
 			return IndicatorLineStyle.NONE;
 		}
 
-		computeIntervalIndicator(param1: number) 
+		computeIntervalIndicator(param1: number)
 		{
 			if (this.indicator.hasInterval(param1))
 				return;
@@ -58,15 +57,14 @@ namespace com.google.finance.indicator
 				const dataSeries = new DataSeries();
 				let _loc3_ = 0;
 				const _loc8_: number[] = [];
-				for (let pointIndex = 0; pointIndex < pointsInIntervalArray.length; pointIndex++)
+				for (const point of pointsInIntervalArray)
 				{
-					const _loc10_ = pointsInIntervalArray[pointIndex];
-					if (!this.shouldSkip(_loc10_, dataSeries))
+					if (!this.shouldSkip(point, dataSeries))
 					{
-						const _loc11_ = _loc10_.volumes[param1];
+						const _loc11_ = point.volumes[param1];
 						if (_loc11_ === 0)
 						{
-							this.copyLastIndicatorPoint(_loc10_, dataSeries);
+							this.copyLastIndicatorPoint(point, dataSeries);
 						}
 						else
 						{
@@ -75,11 +73,11 @@ namespace com.google.finance.indicator
 							let _loc7_: IndicatorPoint;
 							if (_loc8_.length < this.periods[_loc4_])
 							{
-								_loc7_ = new IndicatorPoint(NaN, _loc10_);
+								_loc7_ = new IndicatorPoint(NaN, point);
 							}
 							else
 							{
-								_loc7_ = new IndicatorPoint(_loc3_ / this.periods[_loc4_], _loc10_);
+								_loc7_ = new IndicatorPoint(_loc3_ / this.periods[_loc4_], point);
 								_loc3_ = Number(_loc3_ - _loc8_.shift()!);
 							}
 							dataSeries.points.push(_loc7_);
@@ -112,15 +110,15 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		setIndicatorInstanceArray(param1: any[]) 
+		setIndicatorInstanceArray(indicators: any[])
 		{
-			if (!param1 || param1.length === 0)
+			if (!indicators || indicators.length === 0)
 				return;
 
 			this.indicator.clear();
 			this.periods = [];
-			for (let index = 0; index < param1.length; index++)
-				this.periods.push(param1[index].period);
+			for (const indicator of indicators)
+				this.periods.push(indicator.period);
 		}
 	}
 }

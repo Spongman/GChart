@@ -16,14 +16,14 @@ namespace com.google.finance
 		private readonly middle = new ScrollSlider.ScrollBarGrip();
 		private readonly bg = new ScrollSlider.ScrollBarBg();
 
-		constructor(name?:string)
+		constructor(name?: string)
 		{
 			super(name);
 			this.addChild(this.bg);
 			this.addChild(this.middle);
 		}
 
-		setWidth(width: number) 
+		setWidth(width: number)
 		{
 			if (width < ScrollSlider.MIN_WIDTH)
 				width = ScrollSlider.MIN_WIDTH;

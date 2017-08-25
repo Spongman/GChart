@@ -16,7 +16,7 @@ namespace com.google.i18n.locale
 
 	export class DateTimeFormat
 	{
-		private tokensHash: { [key: string]: boolean } = {};
+		private tokensHash: Map<boolean> = {};
 		private symbols: Dictionary = DateTimeLocale.getResource(DateTimeLocale.getLocale());
 		private TOKENS = "GyMkSEahKHcLQdmsvzZ";
 		private patternParts: PatternPart[] = [];
@@ -279,13 +279,12 @@ namespace com.google.i18n.locale
 		format(date: Date): string
 		{
 			const parts: string[] = [];
-			for (let partIndex = 0; partIndex < this.patternParts.length; partIndex++)
+			for (const part of this.patternParts)
 			{
-				const patternPart = this.patternParts[partIndex].text;
-				if (PatternPartTypes.FIELD === this.patternParts[partIndex].type)
-					parts.push(this.formatField(patternPart, date));
+				if (PatternPartTypes.FIELD === part.type)
+					parts.push(this.formatField(part.text, date));
 				else
-					parts.push(patternPart);
+					parts.push(part.text);
 			}
 			return parts.join("");
 		}

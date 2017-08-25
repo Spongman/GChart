@@ -7,10 +7,63 @@
    */
   "extends": "tslint:latest",
   "rules": {
+	  "indent": [
+		  false
+	  ],
+	  "no-namespace": [
+		  false
+	  ],
+	  "no-internal-module": false,
+	  "one-line": [
+		  false
+	  ],
+	  "comment-format": [
+		  false
+	  ],
+	  "member-access": [
+		  false
+	  ],
+	  "max-line-length": [
+		  false
+	  ],
+	  "no-reference": false,
+	  "max-classes-per-file": [
+		  false
+	  ],
+	  "variable-name": [
+		  false
+	  ],
+	  "trailing-comma": [
+		  false
+	  ],
+	  "whitespace": [
+		  false
+	  ],
+	  "object-literal-sort-keys": [
+		  false
+	  ],
+	  "no-string-literal": false,
+	  "member-ordering": [
+		  false
+	  ],
+	  "interface-name": [
+		  false
+	  ],
+	  "no-console": [
+		  false
+	  ],
+	  "no-debugger": false,
+	  "no-empty": false,
+	  "class-name": false,
+	  "switch-default": false,
+	  "array-type": [
+		  false
+	  ],
+	  "no-angle-bracket-type-assertion": false,
     /*
      * Any rules specified here will override those from the base config we are extending.
      */
-    "curly": true
+    "curly": false
   },
   "jsRules": {
     /*

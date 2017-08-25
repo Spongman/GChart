@@ -28,7 +28,7 @@ namespace com.google.finance
 		static readonly CLOSE_TEXT = " " + Messages.getMsg(Messages.CLOSE) + ": ";
 		static readonly POINTS_STR = "points";
 		static readonly EXTRA_TEXT_STR = "extraText";
-		
+
 		private static readonly DISPLAY_DATES = 0;
 		private static readonly INFO_DOT_PADDING = 7;
 		private static readonly TEXT_HEIGHT = 15;
@@ -51,7 +51,6 @@ namespace com.google.finance
 
 		endDate: com.google.finance.DateTextField;
 		startDate: com.google.finance.DateTextField;
-
 
 		constructor(private readonly displayManager: com.google.finance.DisplayManager)
 		{
@@ -81,7 +80,7 @@ namespace com.google.finance
 			this.setDateEntryState(SpaceText.DISPLAY_DATES);
 		}
 
-		setReturnInfo(viewPoint: ViewPoint) 
+		setReturnInfo(viewPoint: ViewPoint)
 		{
 			const lastNotVisibleDataUnit = viewPoint.getLastNotVisibleDataUnit();
 			const lastDataUnit = viewPoint.getLastDataUnit();
@@ -91,7 +90,7 @@ namespace com.google.finance
 			this.updateInfoText();
 		}
 
-		setSize(param1: number, param2: number) 
+		setSize(param1: number, param2: number)
 		{
 			this.updateAlignAndPadding();
 			this.positionInfoText();
@@ -140,7 +139,7 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		private setDateEntryState(param1: number) 
+		private setDateEntryState(param1: number)
 		{
 			this.dateEntryState = param1;
 			const _loc2_ = this.dateEntryState === SpaceText.EDIT_DATES;
@@ -148,13 +147,11 @@ namespace com.google.finance
 			this.endDate.setHighlighted(_loc2_);
 		}
 
-		private clearComparisonInfo() 
+		private clearComparisonInfo()
 		{
-			for (let index = 0; index < this.infoDots.length; index++)
-			{
-				const infoDot = this.infoDots[index];
+			for (const infoDot of this.infoDots)
 				this.removeChild(infoDot);
-			}
+
 			this.infoDots.splice(0);
 		}
 
@@ -169,7 +166,7 @@ namespace com.google.finance
 			return textField;
 		}
 
-		private appendOhlcText(param1: string, param2: number, param3: number) 
+		private appendOhlcText(param1: string, param2: number, param3: number)
 		{
 			this.datesText += param1;
 			const _loc4_ = this.normalizePrice(param2);
@@ -195,7 +192,7 @@ namespace com.google.finance
 			this.datesText += _loc4_;
 		}
 
-		setPointInfo(pointInfo: Dictionary) 
+		setPointInfo(pointInfo: Dictionary)
 		{
 			if (pointInfo[SpaceText.POINT_STR] !== undefined)
 				this.setSinglePointInfo(pointInfo);
@@ -203,7 +200,7 @@ namespace com.google.finance
 				this.setComparisonInfo(pointInfo);
 		}
 
-		private updateAlignAndPadding() 
+		private updateAlignAndPadding()
 		{
 			const buttonsWidth = this.displayManager.mainController.getButtonsWidth();
 			let _loc2_ = 0;
@@ -226,7 +223,7 @@ namespace com.google.finance
 			}
 		}
 
-		private processChangedDateFields() 
+		private processChangedDateFields()
 		{
 			this.setDateEntryState(SpaceText.DISPLAY_DATES);
 			if (this.startDate.parseUtcDate() && this.endDate.parseUtcDate() &&
@@ -239,7 +236,7 @@ namespace com.google.finance
 			this.updateInfoText();
 		}
 
-		private setSinglePointInfo(param1: Dictionary) 
+		private setSinglePointInfo(param1: Dictionary)
 		{
 			const _loc2_ = param1[SpaceText.POINT_STR];
 			switch (param1["extraText"])
@@ -282,7 +279,7 @@ namespace com.google.finance
 			this.updateInfoText();
 		}
 
-		private onMouseRollOverInfoText(mouseEvent: MouseEvent) 
+		private onMouseRollOverInfoText(mouseEvent: MouseEvent)
 		{
 			this.startDate.setHighlighted(true);
 			this.endDate.setHighlighted(true);
@@ -296,7 +293,7 @@ namespace com.google.finance
 			return param1.toFixed(3);
 		}
 
-		private onKeyDown(keyboardEvent: KeyboardEvent) 
+		private onKeyDown(keyboardEvent: KeyboardEvent)
 		{
 			switch (keyboardEvent.charCode)
 			{
@@ -309,7 +306,7 @@ namespace com.google.finance
 			}
 		}
 
-		private registerDateTextFieldListeners(dateTextField: com.google.finance.DateTextField) 
+		private registerDateTextFieldListeners(dateTextField: com.google.finance.DateTextField)
 		{
 			if (Const.ENABLE_CUSTOM_DATE_ENTRY !== "true")
 				return;
@@ -320,7 +317,7 @@ namespace com.google.finance
 			dateTextField.addEventListener(KeyboardEvents.KEY_DOWN, flash.display.Stage.bind(this.onKeyDown, this));
 		}
 
-		private positionInfoText(param1 = true) 
+		private positionInfoText(param1 = true)
 		{
 			const _loc2_ = !!this.startDate.visible ? Number(this.startDate.width + 3) : 0;
 			const _loc3_ = !!this.endDate.visible ? Number(this.endDate.width + 3) : 0;
@@ -350,7 +347,7 @@ namespace com.google.finance
 			}
 		}
 
-		private onMouseRollOutInfoText(mouseEvent: MouseEvent) 
+		private onMouseRollOutInfoText(mouseEvent: MouseEvent)
 		{
 			if (this.dateEntryState === SpaceText.EDIT_DATES)
 				return;
@@ -359,7 +356,7 @@ namespace com.google.finance
 			this.endDate.setHighlighted(false);
 		}
 
-		private positionComparisonInfoDots() 
+		private positionComparisonInfoDots()
 		{
 			let _loc1_ = NaN;
 			if (Const.INFO_TEXT_ALIGN === "right")
@@ -367,19 +364,18 @@ namespace com.google.finance
 			else if (Const.INFO_TEXT_ALIGN === "left")
 				_loc1_ = SpaceText.LEFT_PADDING + SpaceText.INFO_DOT_PADDING;
 
-			for (let infoDotIndex = 0; infoDotIndex < this.infoDots.length; infoDotIndex++)
+			for (const infoDot of this.infoDots)
 			{
-				const _loc3_ = this.infoDots[infoDotIndex];
-				_loc3_.y = Const.SPACE_HEIGHT - SpaceText.TEXT_HEIGHT / 2 + 3 + Const.INFO_TEXT_TOP_PADDING;
+				infoDot.y = Const.SPACE_HEIGHT - SpaceText.TEXT_HEIGHT / 2 + 3 + Const.INFO_TEXT_TOP_PADDING;
 				if (Const.INFO_TEXT_ALIGN === "right")
 				{
-					_loc3_.x = _loc1_ - _loc3_.width;
-					_loc1_ -= _loc3_.width - 3;
+					infoDot.x = _loc1_ - infoDot.width;
+					_loc1_ -= infoDot.width - 3;
 				}
 				else if (Const.INFO_TEXT_ALIGN === "left")
 				{
-					_loc3_.x = _loc1_;
-					_loc1_ += _loc3_.width + 3;
+					infoDot.x = _loc1_;
+					_loc1_ += infoDot.width + 3;
 				}
 			}
 		}
@@ -396,7 +392,7 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		private updateInfoText() 
+		private updateInfoText()
 		{
 			if (this.dateEntryState === SpaceText.EDIT_DATES)
 				return;
@@ -425,11 +421,9 @@ namespace com.google.finance
 			else
 			{
 				this.infoText.text = this.datesText;
-				for (let formatIndex = 0; formatIndex < this.datesTextFormats.length; formatIndex++)
-				{
-					const _loc3_ = this.datesTextFormats[formatIndex];
-					this.infoText.setTextFormat(_loc3_.format, _loc3_.start, _loc3_.end);
-				}
+				for (const textFormat of this.datesTextFormats)
+					this.infoText.setTextFormat(textFormat.format, textFormat.start, textFormat.end);
+
 				this.changeText.text = "";
 				this.startDate.visible = false;
 				this.endDate.visible = false;
@@ -442,7 +436,7 @@ namespace com.google.finance
 			return mouseEvent.target === this.startDate.element || mouseEvent.target === this.endDate.element;
 		}
 
-		private setComparisonInfo(param1: Dictionary) 
+		private setComparisonInfo(param1: Dictionary)
 		{
 			const _loc2_ = param1[SpaceText.POINTS_STR];
 			this.returnText = "";
@@ -458,7 +452,7 @@ namespace com.google.finance
 			this.positionComparisonInfoDots();
 		}
 
-		private onMouseClickDateField(mouseEvent: MouseEvent) 
+		private onMouseClickDateField(mouseEvent: MouseEvent)
 		{
 			if (this.dateEntryState === SpaceText.EDIT_DATES)
 				return;
@@ -472,7 +466,7 @@ namespace com.google.finance
 			this.positionInfoText();
 		}
 
-		setContextualStaticInfo(param1: Dictionary) 
+		setContextualStaticInfo(param1: Dictionary)
 		{
 			if (!param1[SpaceText.SETTER_STR])
 				return;
@@ -498,7 +492,7 @@ namespace com.google.finance
 			return (Utils.compareUtcDates(this.endDate.date, this.endDate.parsedDate) !== 0 || Utils.compareUtcDates(this.startDate.date, notnull(this.startDate.parsedDate)) !== 0) && Utils.compareUtcDates(notnull(this.startDate.parsedDate), this.endDate.parsedDate) <= 0;
 		}
 
-		resetInfoText() 
+		resetInfoText()
 		{
 			if (this.dateEntryState === SpaceText.DISPLAY_DATES)
 				return;
@@ -527,7 +521,7 @@ namespace com.google.finance
 			return text;
 		}
 
-		setTimePeriod(dataUnitContainer: IDataUnitContainer) 
+		setTimePeriod(dataUnitContainer: IDataUnitContainer)
 		{
 			let firstDataUnit = dataUnitContainer.getFirstDataUnit();
 			let lastDataUnit = dataUnitContainer.getLastDataUnit();

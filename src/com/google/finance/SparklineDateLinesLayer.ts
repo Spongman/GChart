@@ -9,8 +9,8 @@ namespace com.google.finance
 		private static readonly SHORT_YEAR_LINE_HEIGHT = 5;
 
 		tickPosition = TickPositions.TOP;
-		
-		private drawQuarterStarts(sprite: flash.display.Sprite) 
+
+		private drawQuarterStarts(sprite: flash.display.Sprite)
 		{
 			const data = this.dataSource.data;
 			if (!data.units || data.firsts.length === 0)
@@ -36,7 +36,7 @@ namespace com.google.finance
 			}
 		}
 
-		private drawYearStarts(sprite: flash.display.Sprite) 
+		private drawYearStarts(sprite: flash.display.Sprite)
 		{
 			const data = this.dataSource.data;
 			if (!data.units || data.years.length === 0)
@@ -112,7 +112,7 @@ namespace com.google.finance
 				sprite.removeChildAt(numTextFields);
 		}
 
-		private drawVerticalLines() 
+		private drawVerticalLines()
 		{
 			this.textCanvas.graphics.clear();
 			//Utils.removeAllChildren(this.textCanvas);
@@ -134,7 +134,7 @@ namespace com.google.finance
 			return 250 * data.marketDayLength;
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			this.drawVerticalLines();
 		}

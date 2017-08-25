@@ -67,7 +67,7 @@
 		set htmlText(value: string) { this.element.innerHTML = value; }
 
 		private _textColor: number;
-		get textColor(): number { return this._textColor }
+		get textColor(): number { return this._textColor; }
 		set textColor(value: number)
 		{
 			this._textColor = value;

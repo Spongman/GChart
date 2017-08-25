@@ -9,10 +9,10 @@ namespace com.google.finance.ui
 	{
 		private currentButton: number = -1;
 
-		buttonPress(event: Event) 
+		buttonPress(event: Event)
 		{
 			super.buttonPress(event);
-			let button = (<any>event.currentTarget).displayObject as flash.display.SimpleButton;
+			const button = (<any>event.currentTarget).displayObject as flash.display.SimpleButton;
 			const textField = (<flash.display.DisplayObjectContainer>button.upState).getChildAt(0) as flash.text.TextField;
 			this.selectButton(textField.text);
 		}
@@ -24,7 +24,7 @@ namespace com.google.finance.ui
 			return buttonIndex;
 		}
 
-		selectButtonByIndex(param1: number) 
+		selectButtonByIndex(param1: number)
 		{
 			this.deselectButton(this.currentButton);
 			if (param1 >= 0 && param1 < this.buttons.length)
@@ -36,13 +36,13 @@ namespace com.google.finance.ui
 			}
 		}
 
-		clearSelection() 
+		clearSelection()
 		{
 			this.deselectButton(this.currentButton);
 			this.currentButton = -1;
 		}
 
-		private deselectButton(param1: number) 
+		private deselectButton(param1: number)
 		{
 			if (param1 !== -1)
 			{

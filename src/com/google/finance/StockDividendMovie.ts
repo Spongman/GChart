@@ -17,13 +17,12 @@ namespace com.google.finance
 
 		private associatedStockDividend: com.google.finance.StockDividend;
 
-
 		protected getTextColor(): number
 		{
 			return 0x66dd;
 		}
 
-		protected initArrows() 
+		protected initArrows()
 		{
 			this.arrow = new StockDividendMovie.DividendArrowClass();
 			this.arrowOnOver = new StockDividendMovie.DividendArrowOnOverClass();
@@ -33,7 +32,7 @@ namespace com.google.finance
 
 		getDetailedText(): string
 		{
-			let _loc1_:string;
+			let _loc1_: string;
 			if (this.associatedStockDividend.ticker)
 				_loc1_ = Messages.getMsg(Messages.STOCK_DIVIDEND_TEXT_WITH_TICKER, this.associatedStockDividend.ticker);
 			else
@@ -43,13 +42,13 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		setObject(stockDividend: StockDividend) 
+		setObject(stockDividend: StockDividend)
 		{
 			this.associatedStockDividend = stockDividend;
 			this.showText();
 		}
 
-		protected positionSidewaysArrow() 
+		protected positionSidewaysArrow()
 		{
 			this.currentVisibleButton.x = -1;
 			this.text.autoSize = flash.text.TextFieldAutoSize.RIGHT;

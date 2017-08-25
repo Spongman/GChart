@@ -16,7 +16,6 @@ namespace com.google.finance
 		LEFT_ORIENTATION = 1,
 	}
 
-
 	export class PinPointMovie extends flash.display.Sprite
 	{
 		static readonly MAX_SHOWN_GROUP_COUNT = 7;
@@ -87,7 +86,7 @@ namespace com.google.finance
 			return "newspin";
 		}
 
-		setCount(param1: number) 
+		setCount(param1: number)
 		{
 			let i = 0;
 			let count = param1;
@@ -113,7 +112,7 @@ namespace com.google.finance
 				i = this.borders.length;
 				while (i < count - 1)
 				{
-					let newBorder: flash.display.Bitmap = new this.ExtraFlagBorder();
+					const newBorder: flash.display.Bitmap = new this.ExtraFlagBorder();
 					newBorder.x = 0;
 					this.borders.push(newBorder);
 					this.addChild(newBorder);
@@ -122,7 +121,7 @@ namespace com.google.finance
 			}
 		}
 
-		private initFlagComponents() 
+		private initFlagComponents()
 		{
 			this.pinButton = new flash.display.SimpleButton("pinButton");
 			const flagImg = new this.FlagImg();
@@ -146,12 +145,12 @@ namespace com.google.finance
 			this.borders = [];
 		}
 
-		setPinPointContentMovie(pinPointContentMovie: com.google.finance.PinPointContentMovie) 
+		setPinPointContentMovie(pinPointContentMovie: com.google.finance.PinPointContentMovie)
 		{
 			this.pinPointContentMovie = pinPointContentMovie;
 		}
 
-		setOrientation(pinOrientation: PinOrientations) 
+		setOrientation(pinOrientation: PinOrientations)
 		{
 			if (pinOrientation === PinOrientations.LEFT_ORIENTATION)
 			{
@@ -161,8 +160,8 @@ namespace com.google.finance
 				this.pinButton.x = 1;
 				this.flagline.x = -2;
 				this.letter.x = -14;
-				for (let borderIndex = 0; borderIndex < this.borders.length; borderIndex++)
-					this.borders[borderIndex].scaleX = -1;
+				for (const border of this.borders)
+					border.scaleX = -1;
 			}
 			else
 			{
@@ -172,12 +171,12 @@ namespace com.google.finance
 				this.pinButton.x = -1;
 				this.flagline.x = -1;
 				this.letter.x = 3;
-				for (let borderIndex = 0; borderIndex < this.borders.length; borderIndex++)
-					this.borders[borderIndex].scaleX = 1;
+				for (const border of this.borders)
+					border.scaleX = 1;
 			}
 		}
 
-		setHeight(param1: number) 
+		setHeight(param1: number)
 		{
 			this.flagline.height = param1 - 2;
 			this.flagline.y = -param1 + 2;
@@ -196,7 +195,7 @@ namespace com.google.finance
 			return -this.pinButton.y;
 		}
 
-		setObj(pinPoint: com.google.finance.PinPoint) 
+		setObj(pinPoint: com.google.finance.PinPoint)
 		{
 			this.object = pinPoint;
 			if (this.letter.text !== pinPoint.letter)
@@ -221,7 +220,7 @@ namespace com.google.finance
 			}
 		}
 
-		initImageClasses() 
+		initImageClasses()
 		{
 			this.FlagImg = PinPointMovie_LocalFlagImg;
 			this.FlagOverImg = PinPointMovie_LocalFlagOverImg;
@@ -230,7 +229,7 @@ namespace com.google.finance
 			this.ExtraFlagBorder = PinPointMovie_LocalExtraFlagBorder;
 		}
 
-		clearReferences() 
+		clearReferences()
 		{
 			this.object = null;
 		}

@@ -27,16 +27,15 @@ namespace com.google.finance
 				return null;	// throw?
 
 			let _loc2_: StartEndPair | null = null;
-			for (let pairIndex = 0; pairIndex < this.intervals.length; pairIndex++)
+			for (const interval of this.intervals)
 			{
-				const _loc4_ = this.intervals[pairIndex];
-				if (_loc4_.start <= param1 && param1 <= _loc4_.end)
-					return _loc4_;
+				if (interval.start <= param1 && param1 <= interval.end)
+					return interval;
 
-				if (_loc4_.end < param1)
+				if (interval.end < param1)
 				{
-					if (!_loc2_ || _loc2_.end < _loc4_.end)
-						_loc2_ = _loc4_;
+					if (!_loc2_ || _loc2_.end < interval.end)
+						_loc2_ = interval;
 				}
 			}
 			if (_loc2_)
@@ -72,11 +71,8 @@ namespace com.google.finance
 		allIntervalsLength(): number
 		{
 			let _loc1_ = 0;
-			for (let pairIndex = 0; pairIndex < this.intervals.length; pairIndex++)
-			{
-				const _loc3_ = this.intervals[pairIndex];
-				_loc1_ = Number(_loc1_ + (_loc3_.end - _loc3_.start));
-			}
+			for (const interval of this.intervals)
+				_loc1_ = Number(_loc1_ + (interval.end - interval.start));
 			return _loc1_;
 		}
 

@@ -13,7 +13,7 @@ namespace com.google.finance
 		private static readonly LOADING_TEXT_FORMAT = new flash.text.TextFormat("Helvetica", 12, 0xffffff);
 
 		private static readonly states = ["...", ".", ".."];
-		
+
 		private intervalId: number;
 		private loadingText = new flash.text.TextField();
 		private currentState = -1;
@@ -35,13 +35,13 @@ namespace com.google.finance
 			this.intervalId = setInterval(flash.display.Stage.bind(this.rollMessage, this), 500);
 		}
 
-		private rollMessage() 
+		private rollMessage()
 		{
 			this.currentState = (this.currentState + 1) % LoadingMessage.states.length;
 			this.loadingText.text = Messages.getMsg(Messages.LOADING_MESSAGE) + LoadingMessage.states[this.currentState];
 		}
 
-		private drawBackground() 
+		private drawBackground()
 		{
 			const gr = this.graphics;
 			gr.beginFill(0x339933, 1);

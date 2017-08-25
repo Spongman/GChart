@@ -2,7 +2,7 @@ namespace com.google.finance
 {
 	export class Indicator
 	{
-		private hash: { [key: string]: DataSeries[] } = {};
+		private hash: Map<DataSeries[]> = {};
 
 		intervals: number[] = [];
 		clearAllOnAddData = false;
@@ -29,21 +29,21 @@ namespace com.google.finance
 		getAllDataSeriesArray()
 		{
 			const dataSeriesArray: DataSeries[] = [];
-			for (let intervalIndex = 0; intervalIndex < this.intervals.length; intervalIndex++)
+			for (const interval of this.intervals)
 			{
-				let ds = this.getDataSeries(this.intervals[intervalIndex]);
+				const ds = this.getDataSeries(interval);
 				if (ds)
 					dataSeriesArray.push(ds);
 			}
 			return dataSeriesArray;
 		}
 
-		clear(param1:number = 0)
+		clear(param1: number = 0)
 		{
 			if (param1 === 0)
 			{
-				for (let intervalIndex = 0; intervalIndex < this.intervals.length; intervalIndex++)
-					delete this.hash["series" + this.intervals[intervalIndex]];
+				for (const interval of this.intervals)
+					delete this.hash["series" + interval];
 
 				this.intervals = [];
 			}

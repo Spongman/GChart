@@ -14,7 +14,7 @@ namespace com.google.finance
 				return;
 
 			this.graphics.clear();
-			let vp = this.viewPoint;
+			const vp = this.viewPoint;
 			const dataSeries = notnull(this.getDataSeries());
 			const points = this.getPointsForCurrentDetailLevel();
 			if (!points || points.length === 0)

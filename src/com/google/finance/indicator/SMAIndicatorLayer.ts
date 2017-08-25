@@ -38,7 +38,7 @@ namespace com.google.finance.indicator
 			return IndicatorLineStyle.NONE;
 		}
 
-		computeIntervalIndicator(param1: number) 
+		computeIntervalIndicator(param1: number)
 		{
 			if (this.indicator.hasInterval(param1))
 				return;
@@ -49,21 +49,20 @@ namespace com.google.finance.indicator
 				const dataSeries = new DataSeries();
 				let _loc3_ = 0;
 				const _loc8_: number[] = [];
-				for (let pointIndex2 = 0; pointIndex2 < pointsInIntervalArray.length; pointIndex2++)
+				for (const point of pointsInIntervalArray)
 				{
-					const _loc10_ = pointsInIntervalArray[pointIndex2];
-					if (!this.shouldSkip(_loc10_, dataSeries))
+					if (!this.shouldSkip(point, dataSeries))
 					{
-						_loc3_ = Number(_loc3_ + _loc10_.close);
-						_loc8_.push(_loc10_.close);
+						_loc3_ = Number(_loc3_ + point.close);
+						_loc8_.push(point.close);
 						let _loc7_: IndicatorPoint;
 						if (_loc8_.length < this.periods[pointIndex])
 						{
-							_loc7_ = new IndicatorPoint(NaN, _loc10_);
+							_loc7_ = new IndicatorPoint(NaN, point);
 						}
 						else
 						{
-							_loc7_ = new IndicatorPoint(_loc3_ / this.periods[pointIndex], _loc10_);
+							_loc7_ = new IndicatorPoint(_loc3_ / this.periods[pointIndex], point);
 							_loc3_ = Number(_loc3_ - _loc8_.shift()!);
 						}
 						dataSeries.points.push(_loc7_);
@@ -78,17 +77,15 @@ namespace com.google.finance.indicator
 			return super.getColor(param1 + 1);
 		}
 
-		setIndicatorInstanceArray(param1: any[]) 
+		setIndicatorInstanceArray(indicators: any[])
 		{
-			if (!param1 || param1.length === 0)
+			if (!indicators || indicators.length === 0)
 				return;
 
 			this.indicator.clear();
 			this.periods = [];
-			for (let indicatorIndex = 0; indicatorIndex < param1.length; indicatorIndex++)
-			{
-				this.periods.push(param1[indicatorIndex].period);
-			}
+			for (const indicator of indicators)
+				this.periods.push(indicator.period);
 		}
 	}
 }

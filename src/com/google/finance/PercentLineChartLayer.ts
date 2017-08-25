@@ -34,7 +34,7 @@ namespace com.google.finance
 			}
 		}
 
-		protected getRange(param1: number, param2: number) 
+		protected getRange(param1: number, param2: number)
 		{
 			const dataSeries = this.getDataSeries();
 			if (!dataSeries)
@@ -67,7 +67,7 @@ namespace com.google.finance
 			};
 		}
 
-		getContext(context: Context, param2 = false) 
+		getContext(context: Context, param2 = false)
 		{
 			const viewPoint = this.viewPoint;
 			const range = this.getRange(context.lastMinute, context.count);
@@ -84,7 +84,7 @@ namespace com.google.finance
 			return context;
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			const viewPoint = this.viewPoint;
 			const dataSeries = this.getDataSeries();
@@ -107,7 +107,7 @@ namespace com.google.finance
 			gr.lineTo(point.x, point.y);
 		}
 
-		highlightPoint(context: Context, param2: number, state: Dictionary) 
+		highlightPoint(context: Context, param2: number, state: Dictionary)
 		{
 			this.clearHighlight();
 			const dataSeries = this.getDataSeries();
@@ -115,7 +115,6 @@ namespace com.google.finance
 			//const _loc7_ = this.viewPoint.getXPos(_loc4_.units[_loc4_.units.length - 1]);
 			if (param2 < _loc6_)
 				return;
-
 
 			let _loc5_: DataUnit;
 			if (param2 > this.viewPoint.maxx)

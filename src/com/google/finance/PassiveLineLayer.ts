@@ -6,10 +6,10 @@ namespace com.google.finance
 	{
 		private localYOffset = 0;
 		private localYScale = 0;
-		
+
 		indicator: com.google.finance.Indicator;
 		originalDataSeries: com.google.finance.DataSeries;
-		indicatorParams:any;	// any?
+		indicatorParams: any;	// any?
 		computer: Function;
 
 		constructor(viewPoint: ViewPoint, dataSource: DataSource)
@@ -18,7 +18,7 @@ namespace com.google.finance
 			this.lineColor = Const.LINE_CHART_LINE_COLOR;
 		}
 
-		highlightPoint(context: Context, param2: number, state: Dictionary) 
+		highlightPoint(context: Context, param2: number, state: Dictionary)
 		{
 			this.clearHighlight();
 			const originalDataSeries = this.originalDataSeries;
@@ -72,7 +72,7 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		private drawLine_(sprite: flash.display.Sprite, param2: number, param3: number, viewPoint: ViewPoint, context: Context, dataSeries: com.google.finance.DataSeries) 
+		private drawLine_(sprite: flash.display.Sprite, param2: number, param3: number, viewPoint: ViewPoint, context: Context, dataSeries: com.google.finance.DataSeries)
 		{
 			const units = dataSeries.units;
 			const days = dataSeries.days;
@@ -89,7 +89,7 @@ namespace com.google.finance
 			gr.lineStyle(0, 0, 0);
 			gr.lineTo(xPos, yPos);
 			gr.lineStyle(Const.LINE_CHART_LINE_THICKNESS, this.lineColor, Const.LINE_CHART_LINE_VISIBILITY);
-			let vp = this.viewPoint;
+			const vp = this.viewPoint;
 			switch (vp.getDetailLevel())
 			{
 				case Intervals.INTRADAY:
@@ -136,7 +136,7 @@ namespace com.google.finance
 			return dataSeries.units[this.getPointIndex(dataSeries, param2)];
 		}
 
-		private drawDayLine_(sprite: flash.display.Sprite, param2: number, viewPoint: ViewPoint, param4: number, param5: number, context: Context, dataSeries: com.google.finance.DataSeries) 
+		private drawDayLine_(sprite: flash.display.Sprite, param2: number, viewPoint: ViewPoint, param4: number, param5: number, context: Context, dataSeries: com.google.finance.DataSeries)
 		{
 			const units = dataSeries.units;
 			const days = dataSeries.days;
@@ -181,7 +181,7 @@ namespace com.google.finance
 			return param1;
 		}
 
-		setIndicator(indicatorName: string, fn: Function, dataSeries: com.google.finance.DataSeries, param4:any) 
+		setIndicator(indicatorName: string, fn: Function, dataSeries: com.google.finance.DataSeries, param4: any)
 		{
 			this.dataSource.indicators[indicatorName] = new com.google.finance.Indicator();
 			this.indicator = this.dataSource.indicators[indicatorName];
@@ -208,7 +208,7 @@ namespace com.google.finance
 			return this.indicator.getDataSeries(skipInterval.interval);
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			const viewPoint = this.viewPoint;
 			const dataSeries = this.getDataSeries(context);

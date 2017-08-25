@@ -48,8 +48,8 @@ namespace com.google.finance
 			filter.color = 0x666666;
 			this.filters = [filter];
 			*/
-			let BubbleCloseButton: { new (): any } = PinPointContentMovie_BubbleCloseButton;
-			let closeButtonBitmap = new BubbleCloseButton();
+			const BubbleCloseButton: { new (): any } = PinPointContentMovie_BubbleCloseButton;
+			const closeButtonBitmap = new BubbleCloseButton();
 			this.closeButton.overState = closeButtonBitmap;
 			this.closeButton.downState = closeButtonBitmap;
 			this.closeButton.hitTestState = closeButtonBitmap;
@@ -66,7 +66,7 @@ namespace com.google.finance
 			});
 			this.closeButton.addEventListener(MouseEvents.CLICK, (event: Event) =>
 			{
-				let activePinPoint = notnull(this.activePinPoint);
+				const activePinPoint = notnull(this.activePinPoint);
 				activePinPoint.active = false;
 				activePinPoint.forceExpandInGroup = true;
 				this.clearMovie();
@@ -75,14 +75,14 @@ namespace com.google.finance
 			});
 		}
 
-		setActivePinPoint(pinPoint: com.google.finance.PinPoint, param2: number, param3: number) 
+		setActivePinPoint(pinPoint: com.google.finance.PinPoint, param2: number, param3: number)
 		{
 			this.activePinPoint = pinPoint;
 			this.movieLeftX = param2;
 			this.movieBottomY = param3;
 		}
 
-		private renderBackground() 
+		private renderBackground()
 		{
 			const gr = this.graphics;
 			gr.lineStyle(2, 0x666666, 1);
@@ -91,7 +91,7 @@ namespace com.google.finance
 			gr.endFill();
 		}
 
-		private renderContent() 
+		private renderContent()
 		{
 			this.content.wordWrap = false;
 			this.content.autoSize = flash.text.TextFieldAutoSize.LEFT;
@@ -160,7 +160,7 @@ namespace com.google.finance
 			return "<font color=\'#0B6CDE\'>" + com.google.i18n.locale.DateTimeLocale.formatDateTime(_loc2_, date, true) + "</font>";
 		}
 
-		renderMovie() 
+		renderMovie()
 		{
 			if (!this.activePinPoint)
 				return;
@@ -169,7 +169,7 @@ namespace com.google.finance
 			this.renderBackground();
 		}
 
-		clearMovie() 
+		clearMovie()
 		{
 			this.activePinPoint = null;
 			if (this.contains(this.content))
@@ -183,7 +183,7 @@ namespace com.google.finance
 
 		private getContentHtmlText(): string
 		{
-			let activePinPoint = notnull(this.activePinPoint);
+			const activePinPoint = notnull(this.activePinPoint);
 			const originalObject = activePinPoint.originalObject;
 			let letterHtml = this.getLetterHtml(activePinPoint.letter);
 			if (activePinPoint.exchangeDateInUTC)

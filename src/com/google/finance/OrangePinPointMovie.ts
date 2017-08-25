@@ -9,7 +9,7 @@ namespace com.google.finance
 			return "feedpin";
 		}
 
-		initImageClasses() 
+		initImageClasses()
 		{
 			this.FlagImg = OrangePinPointMovie_LocalFlagImg;
 			this.FlagOverImg = OrangePinPointMovie_LocalFlagOverImg;

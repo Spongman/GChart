@@ -5,7 +5,7 @@
 		static available = true;
 
 		/*
-		private static readonly callbacks: { [key: string]: Function } = {};
+		private static readonly callbacks: Map<Function> = {};
 		static addCallback(name: string, callback: Function)
 		{
 			console.log("ExternalInterface.addCallback", name);
@@ -13,7 +13,7 @@
 		}
 		*/
 
-		static call(name:string, ...rest:any[])
+		static call(name: string, ...rest: any[])
 		{
 			console.log.apply(null, arguments);
 		}

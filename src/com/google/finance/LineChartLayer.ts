@@ -58,7 +58,7 @@ namespace com.google.finance
 
 			this.realLIndex = dataSeries.getRelativeMinuteIndex(_loc8_) + 1;
 			this.realRIndex = dataSeries.getRelativeMinuteIndex(param1);
-			let vp = this.viewPoint;
+			const vp = this.viewPoint;
 			const xPosMax = vp.getXPos(dataSeries.units[this.realLIndex]);
 			if (xPosMax > this.viewPoint.maxx)
 				this.realLIndex--;
@@ -116,7 +116,7 @@ namespace com.google.finance
 			return _loc5_ / _loc6_;
 		}
 
-		private getDayAvg(param1: number, param2: number, param3: number, param4: number, param5: number, dataSeries: DataSeries, param7: string) 
+		private getDayAvg(param1: number, param2: number, param3: number, param4: number, param5: number, dataSeries: DataSeries, param7: string)
 		{
 			const viewPoint = this.viewPoint;
 			const units = dataSeries.units;
@@ -166,7 +166,7 @@ namespace com.google.finance
 			return _loc10_;
 		}
 
-		private computeMaxRange2(param1: number, param2: number, param3: string, param4 = false) 
+		private computeMaxRange2(param1: number, param2: number, param3: string, param4 = false)
 		{
 			return this.computeMaximizedMaxRange(param1, param2);
 		}
@@ -232,8 +232,7 @@ namespace com.google.finance
 				while (units[_loc17_].fake)
 					_loc17_--;
 
-				const xPos = viewPoint.getXPos(units[_loc17_]);
-				const point = new flash.display.Point(xPos, this.viewPoint.maxy);
+				const point = new flash.display.Point(viewPoint.getXPos(units[_loc17_]), this.viewPoint.maxy);
 				//this.globalToLocal(_loc23_);	// TODO: ?
 				gr.lineStyle(0, 0, 0);
 				gr.moveTo(point.x, point.y);
@@ -270,7 +269,7 @@ namespace com.google.finance
 			return xPos2;
 		}
 
-		highlightPoint(context: Context, param2: number, state: Dictionary) 
+		highlightPoint(context: Context, param2: number, state: Dictionary)
 		{
 			if (state[SpaceText.SETTER_STR])
 				state[SpaceText.SETTER_STR].clearHighlight();
@@ -362,7 +361,7 @@ namespace com.google.finance
 			return this.localYOffset - (dataUnit.getCloseLogValue(context.verticalScaling) - context.medPrice) * this.localYScale;
 		}
 
-		private checkMinMax(param1: number) 
+		private checkMinMax(param1: number)
 		{
 			if (param1 < this.minPrice)
 				this.minPrice = param1;
@@ -370,7 +369,7 @@ namespace com.google.finance
 				this.maxPrice = param1;
 		}
 
-		renderLayer(context: Context) 
+		renderLayer(context: Context)
 		{
 			const viewPoint = this.viewPoint;
 			const dataSeries = this.getDataSeries();
@@ -427,7 +426,7 @@ namespace com.google.finance
 			return this.getPrevOrNextClosestToX(dataSeries.units, dataSeries.fridays, _loc9_, param2, skip);
 		}
 
-		protected drawLineToDataUnit(viewPoint: ViewPoint, sprite: flash.display.Sprite, context: Context, dataUnit: DataUnit) 
+		protected drawLineToDataUnit(viewPoint: ViewPoint, sprite: flash.display.Sprite, context: Context, dataUnit: DataUnit)
 		{
 			const xPos = viewPoint.getXPos(dataUnit);
 			const yPos = this.getYPos(context, dataUnit);
@@ -444,7 +443,7 @@ namespace com.google.finance
 			return this.dataSource.data;
 		}
 
-		getContext(context: Context, param2 = false) 
+		getContext(context: Context, param2 = false)
 		{
 			//const _loc3_ = this.viewPoint;
 			const data = this.dataSource.data;
@@ -472,43 +471,43 @@ namespace com.google.finance
 			return context;
 		}
 
-		private computeMaximizedMaxRange(param1: number, param2: number) 
+		private computeMaximizedMaxRange(param1: number, param2: number)
 		{
 			const data = this.dataSource.data;
 			const units = data.units;
 			//const _loc5_ = _loc3_.days;
 			//const _loc6_ = _loc3_.fridays;
 			const _loc9_ = this.viewPoint.getDetailLevel(param2, param1);
-			let _loc10_ = data.getRelativeMinuteIndex(param1);
-			let _loc11_ = units[_loc10_];
-			let _loc12_ = _loc11_.close;
-			let _loc13_ = _loc11_.close;
+			let unitIndex = data.getRelativeMinuteIndex(param1);
+			let unit = units[unitIndex];
+			let _loc12_ = unit.close;
+			let _loc13_ = unit.close;
 			const _loc14_ = param1 - param2;
 			if (_loc9_ <= Intervals.INTRADAY)
 			{
-				if (_loc11_.relativeMinutes <= _loc14_)
+				if (unit.relativeMinutes <= _loc14_)
 					return null;
 
-				while (_loc10_ >= 0)
+				while (unitIndex >= 0)
 				{
-					let _loc11_ = units[_loc10_];
-					if (_loc11_.relativeMinutes < _loc14_)
+					unit = units[unitIndex];
+					if (unit.relativeMinutes < _loc14_)
 						break;
 
-					const _loc7_ = !!_loc11_.low ? _loc11_.low : _loc11_.close;
+					const _loc7_ = !!unit.low ? unit.low : unit.close;
 					if (_loc7_ < _loc12_)
 						_loc12_ = _loc7_;
 
-					const _loc8_ = !!_loc11_.high ? _loc11_.high : _loc11_.close;
+					const _loc8_ = !!unit.high ? unit.high : unit.close;
 					if (_loc8_ > _loc13_)
 						_loc13_ = _loc8_;
 
-					_loc10_--;
+					unitIndex--;
 				}
-				if (_loc10_ >= 0)
+				if (unitIndex >= 0)
 				{
-					_loc12_ = Utils.extendedMin(_loc12_, !!_loc11_.low ? _loc11_.low : _loc11_.close);
-					_loc13_ = Utils.extendedMax(_loc13_, !!_loc11_.high ? _loc11_.high : _loc11_.close);
+					_loc12_ = Utils.extendedMin(_loc12_, !!unit.low ? unit.low : unit.close);
+					_loc13_ = Utils.extendedMax(_loc13_, !!unit.high ? unit.high : unit.close);
 				}
 			}
 			else
@@ -517,26 +516,26 @@ namespace com.google.finance
 				let _loc16_: number[];
 				if (_loc9_ <= Intervals.DAILY)
 				{
-					_loc15_ = data.getNextDayStart(_loc10_);
+					_loc15_ = data.getNextDayStart(unitIndex);
 					_loc16_ = data.days;
 				}
 				else
 				{
-					_loc15_ = data.getNextWeekEnd(_loc10_);
+					_loc15_ = data.getNextWeekEnd(unitIndex);
 					_loc16_ = data.fridays;
 				}
 				_loc15_ = Math.min(_loc15_ + 1, _loc16_.length - 1);
 				while (_loc15_ >= 0)
 				{
-					_loc11_ = units[_loc16_[_loc15_]];
-					if (_loc11_.relativeMinutes < _loc14_)
+					unit = units[_loc16_[_loc15_]];
+					if (unit.relativeMinutes < _loc14_)
 						break;
 
-					const _loc7_ = !!_loc11_.low ? Number(_loc11_.low) : _loc11_.close;
+					const _loc7_ = !!unit.low ? Number(unit.low) : unit.close;
 					if (_loc7_ < _loc12_)
 						_loc12_ = _loc7_;
 
-					const _loc8_ = !!_loc11_.high ? Number(_loc11_.high) : _loc11_.close;
+					const _loc8_ = !!unit.high ? Number(unit.high) : unit.close;
 					if (_loc8_ > _loc13_)
 						_loc13_ = _loc8_;
 
@@ -544,8 +543,8 @@ namespace com.google.finance
 				}
 				if (_loc15_ >= 0)
 				{
-					_loc12_ = Utils.extendedMin(_loc12_, !!_loc11_.low ? _loc11_.low : _loc11_.close);
-					_loc13_ = Utils.extendedMax(_loc13_, !!_loc11_.high ? _loc11_.high : _loc11_.close);
+					_loc12_ = Utils.extendedMin(_loc12_, !!unit.low ? unit.low : unit.close);
+					_loc13_ = Utils.extendedMax(_loc13_, !!unit.high ? unit.high : unit.close);
 				}
 			}
 			if (_loc13_ === _loc12_)
@@ -564,7 +563,7 @@ namespace com.google.finance
 			};
 		}
 
-		clearHighlight() 
+		clearHighlight()
 		{
 			this.highlightCanvas.graphics.clear();
 		}

@@ -74,23 +74,16 @@ namespace com.google.finance
 
 		private parseSettingString(param1: string, param2: number): (string | null)[] | null
 		{
-			let _loc3_: (string | null)[] | null = !!param1 ? param1.split(";") : null;
-			if (_loc3_)
+			const parts: (string | null)[] | null = param1 ? param1.split(";") : null;
+			if (!parts || parts.length !== param2)
+				return null;
+
+			for (let partIndex = 0; partIndex < parts.length; partIndex++)
 			{
-				if (_loc3_.length !== param2)
-				{
-					_loc3_ = null;
-				}
-				else
-				{
-					for (let _loc4_ = 0; _loc4_ < _loc3_.length; _loc4_++)
-					{
-						if (_loc3_[_loc4_] === "")
-							_loc3_[_loc4_] = null;
-					}
-				}
+				if (parts[partIndex] === "")
+					parts[partIndex] = null;
 			}
-			return _loc3_;
+			return parts;
 		}
 
 		private needAfterHoursData(param1: string): ChartEvent | null
@@ -229,12 +222,12 @@ namespace com.google.finance
 				Const.ECN_LINE_CHART_FILL_COLOR = MainManager.paramsObj.ecnfc;
 		}
 
-		removeCompareTo(param1: string) 
+		removeCompareTo(param1: string)
 		{
 			this.layersManager.removeCompareTo(param1);
 		}
 
-		addCompareTo(param1: string, param2?: string, param3: boolean = false) 
+		addCompareTo(param1: string, param2?: string, param3: boolean = false)
 		{
 			this.dataManager.checkDataSourceExistance(param1, param2);
 			this.layersManager.addCompareTo(param1, param3);
@@ -254,25 +247,24 @@ namespace com.google.finance
 			}
 		}
 
-		clearAllPins(param1: string) 
+		clearAllPins(param1: string)
 		{
 			this.dataManager.clearAllObjects(param1, "newspin");
 			const mainViewPoint = this.displayManager.getMainViewPoint();
 			mainViewPoint.updateObjectLayers();
 		}
 
-		removeObjectArray(param1: any[]) 
+		removeObjectArray(objects: any[])
 		{
-			for (let _loc2_ = 0; _loc2_ < param1.length; _loc2_++)
+			for (const obj of objects)
 			{
-				const _loc4_ = param1[_loc2_];
-				this.dataManager.removeObject(_loc4_._quote, _loc4_._type, _loc4_._id.toString());
+				this.dataManager.removeObject(obj._quote, obj._type, obj._id.toString());
 			}
 			const _loc3_ = this.displayManager.getMainViewPoint();
 			_loc3_.updateObjectLayers();
 		}
 
-		addObject(param1: any) 
+		addObject(param1: any)
 		{
 			this.dataManager.addObject(param1);
 			const _loc2_ = this.displayManager.getMainViewPoint();
@@ -295,7 +287,7 @@ namespace com.google.finance
 			}
 		}
 
-		getQuote(param1: string, param2?: string, param3 = NaN, param4: boolean = false) 
+		getQuote(param1: string, param2?: string, param3 = NaN, param4: boolean = false)
 		{
 			let _loc5_: number;
 			const mainViewPoint = notnull(this.displayManager.getMainViewPoint());
@@ -374,7 +366,7 @@ namespace com.google.finance
 			return false;
 		}
 
-		changePrimaryTicker(param1: string, param2: string, param3: boolean = false) 
+		changePrimaryTicker(param1: string, param2: string, param3: boolean = false)
 		{
 			const _loc4_ = String(Utils.checkUndefined(param1, this.quote));
 			if (_loc4_ === this.quote)
@@ -398,7 +390,7 @@ namespace com.google.finance
 			}
 		}
 
-		removeObject(param1: string, param2: string, param3: string) 
+		removeObject(param1: string, param2: string, param3: string)
 		{
 			this.dataManager.removeObject(param1, param2, param3);
 			const _loc4_ = this.displayManager.getMainViewPoint();
@@ -478,10 +470,10 @@ namespace com.google.finance
 			}
 		}
 
-		addObjectArray(param1: any[]) 
+		addObjectArray(param1: any[])
 		{
 			let i = 0;
-			let objectsArray = param1;
+			const objectsArray = param1;
 			if (objectsArray.length === 0)
 				return;
 
@@ -503,7 +495,7 @@ namespace com.google.finance
 			catch (er /*: TypeError*/)
 			{
 			}
-			let mvp = this.displayManager.getMainViewPoint();
+			const mvp = this.displayManager.getMainViewPoint();
 			mvp.updateObjectLayers();
 		}
 
@@ -516,4 +508,3 @@ namespace com.google.finance
 		}
 	}
 }
-

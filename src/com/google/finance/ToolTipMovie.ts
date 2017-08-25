@@ -30,7 +30,7 @@ namespace com.google.finance
 			});
 		}
 
-		private renderBackground() 
+		private renderBackground()
 		{
 			this.graphics.lineStyle(1, 0x666666, 1);
 			this.graphics.beginFill(0xffffff, 1);
@@ -38,7 +38,7 @@ namespace com.google.finance
 			this.graphics.endFill();
 		}
 
-		private renderContent(param1: number, param2: number, param3: string) 
+		private renderContent(param1: number, param2: number, param3: string)
 		{
 			this.content.wordWrap = false;
 			this.content.autoSize = flash.text.TextFieldAutoSize.LEFT;
@@ -48,13 +48,13 @@ namespace com.google.finance
 			this.content.y = param2;
 		}
 
-		renderMovie(param1: number, param2: number, param3: string) 
+		renderMovie(param1: number, param2: number, param3: string)
 		{
 			this.renderContent(param1, param2, param3);
 			this.renderBackground();
 		}
 
-		clearMovie() 
+		clearMovie()
 		{
 			if (this.contains(this.content))
 				this.removeChild(this.content);

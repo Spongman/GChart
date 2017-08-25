@@ -7,7 +7,7 @@ namespace com.google.finance
 	export class AHVolumeLayer extends VolumeLinesChartLayer
 	{
 		protected regionsXLimits: com.google.finance.IntervalSet;
-		protected readonly maxVolumeCache: { [key: string]: number } = {};
+		protected readonly maxVolumeCache: Map<number> = {};
 
 		private drawAfterHoursSession(layer: AHVolumeLayer, dataSeries: DataSeries, startTime: number, endTime: number, context: Context, param6: number)
 		{
@@ -67,7 +67,7 @@ namespace com.google.finance
 		highlightPoint(context: Context, param2: number, state: Dictionary)
 		{
 			this.clearHighlight();
-			let vp = this.viewPoint;
+			const vp = this.viewPoint;
 			const skipInterval = vp.getSkipInterval(context.count, context.lastMinute);
 			const dataSeries = this.indicator.getDataSeries(skipInterval.interval);
 

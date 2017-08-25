@@ -44,14 +44,14 @@ namespace com.google.finance.indicator
 			return IndicatorLineStyle.NONE;
 		}
 
-		setIndicatorInstanceArray(param1: any[]) 
+		setIndicatorInstanceArray(indicators: any[])
 		{
-			if (!param1 || param1.length !== 1)
+			if (!indicators || indicators.length !== 1)
 				return;
 
 			this.indicator.clear();
-			this.kPeriod = param1[0].kPeriod;
-			this.dPeriod = param1[0].dPeriod;
+			this.kPeriod = indicators[0].kPeriod;
+			this.dPeriod = indicators[0].dPeriod;
 		}
 	}
 }

@@ -59,7 +59,7 @@ namespace com.google.finance
 		renderLayer(context: Context)
 		{
 			this.graphics.clear();
-			let vp = <ViewPoint>this.viewPoint;
+			const vp = <ViewPoint>this.viewPoint;
 			const detailLevel = vp.getDetailLevelForTechnicalStyle();
 			const displayManager = vp.getDisplayManager().getEnabledChartLayer();
 			if (detailLevel >= Intervals.DAILY || detailLevel !== Intervals.INTRADAY && displayManager !== Const.LINE_CHART)

@@ -28,7 +28,7 @@ namespace com.google.finance
 
 		private associatedSplit: com.google.finance.Split;
 		private persistentHide: boolean;
-		
+
 		protected textFormat = new flash.text.TextFormat("Verdana", 9, this.getTextColor(), true, false, false);
 		protected arrowOrientation = Orientations.DOWN;
 		protected arrow: flash.display.Bitmap;
@@ -66,7 +66,7 @@ namespace com.google.finance
 			return 2210891;
 		}
 
-		showDetails() 
+		showDetails()
 		{
 			this.hideText();
 			this.highlightCanvas.addChild(this.detailsTextField);
@@ -114,7 +114,7 @@ namespace com.google.finance
 			return this.associatedSplit.newShares + ":" + this.associatedSplit.oldShares;
 		}
 
-		setOrientation(orientation: Orientations) 
+		setOrientation(orientation: Orientations)
 		{
 			this.checkArrowChange(orientation);
 			if (this.currentVisibleButton)
@@ -146,7 +146,7 @@ namespace com.google.finance
 			return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.MEDIUM_DATE_FORMAT, exchangeDateInUTC, true);
 		}
 
-		hideDetails() 
+		hideDetails()
 		{
 			this.showText();
 			try
@@ -159,7 +159,7 @@ namespace com.google.finance
 			this.highlightCanvas.graphics.clear();
 		}
 
-		setSupportingLayer(abstractLayer: AbstractLayer<ViewPoint>) 
+		setSupportingLayer(abstractLayer: AbstractLayer<ViewPoint>)
 		{
 			this.supportingLayer = abstractLayer;
 		}
@@ -175,13 +175,13 @@ namespace com.google.finance
 			return textField;
 		}
 
-		private positionRegularArrow() 
+		private positionRegularArrow()
 		{
 			this.currentVisibleButton.x = -this.currentVisibleButton.width / 2;
 			this.text.x = -this.text.width / 2;
 		}
 
-		hideText() 
+		hideText()
 		{
 			try
 			{
@@ -203,7 +203,7 @@ namespace com.google.finance
 			return this.regularButton;
 		}
 
-		protected initArrows() 
+		protected initArrows()
 		{
 			this.arrow = new SplitMovie.SplitArrowClass();
 			this.arrowOnOver = new SplitMovie.SplitArrowOnOverClass();
@@ -211,7 +211,7 @@ namespace com.google.finance
 			this.arrowSidewaysOver = new SplitMovie.SplitArrowSidewaysOverClass();
 		}
 
-		setObject(stockAssociatedObject: StockAssociatedObject) 
+		setObject(stockAssociatedObject: StockAssociatedObject)
 		{
 			this.associatedSplit = stockAssociatedObject as com.google.finance.Split;
 			this.showText();
@@ -225,7 +225,7 @@ namespace com.google.finance
 			return this.sidewaysButton;
 		}
 
-		showText(param1?: string) 
+		showText(param1?: string)
 		{
 			if (this.persistentHide)
 				return;
@@ -236,7 +236,7 @@ namespace com.google.finance
 				this.text.text = _loc2_;
 		}
 
-		private attachArrowListeners() 
+		private attachArrowListeners()
 		{
 			this.currentVisibleButton.addEventListener(MouseEvents.MOUSE_OVER, (event: Event) =>
 			{
@@ -251,7 +251,7 @@ namespace com.google.finance
 			});
 		}
 
-		private createButtons() 
+		private createButtons()
 		{
 			this.regularButton = new flash.display.SimpleButton("regularButton");
 			this.regularButton.overState = this.arrowOnOver;
@@ -269,12 +269,12 @@ namespace com.google.finance
 			this.arrowSidewaysOver.x = this.arrowSideways.x;
 		}
 
-		setHighlightCanvas(sprite: flash.display.Sprite) 
+		setHighlightCanvas(sprite: flash.display.Sprite)
 		{
 			this.highlightCanvas = sprite;
 		}
 
-		private checkArrowChange(param1: number) 
+		private checkArrowChange(param1: number)
 		{
 			if ((this.arrowOrientation === Orientations.UP || this.arrowOrientation === Orientations.DOWN) && (param1 === Orientations.SIDEWAYS_UP || param1 === Orientations.SIDEWAYS_DOWN))
 			{
@@ -289,7 +289,7 @@ namespace com.google.finance
 			this.attachArrowListeners();
 		}
 
-		protected positionSidewaysArrow() 
+		protected positionSidewaysArrow()
 		{
 			this.currentVisibleButton.x = -this.currentVisibleButton.width + 1;
 			this.text.autoSize = flash.text.TextFieldAutoSize.LEFT;
@@ -301,7 +301,7 @@ namespace com.google.finance
 			return Messages.getMsg(Messages.SPLIT_TEXT, this.getShortText());
 		}
 
-		setPersistentHide(param1: boolean) 
+		setPersistentHide(param1: boolean)
 		{
 			this.persistentHide = param1;
 		}

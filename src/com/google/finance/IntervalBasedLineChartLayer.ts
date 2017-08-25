@@ -13,11 +13,10 @@ namespace com.google.finance
 					if (isNaN(param7))
 					{
 						const _loc8_ = this.viewPoint.getXPos(dataUnit[param5]);
-						const closeYPos = this.getCloseYPos(context, dataUnit[param5]);
-						param5--;
 						gr.moveTo(_loc8_, this.viewPoint.maxy);
 						gr.lineStyle(0, 0, 0);
-						gr.lineTo(_loc8_, closeYPos);
+						gr.lineTo(_loc8_, this.getCloseYPos(context, dataUnit[param5]));
+						param5--;
 					}
 					else
 					{
@@ -35,8 +34,7 @@ namespace com.google.finance
 					for (let _loc13_ = param5; _loc13_ >= param4; _loc13_--)
 					{
 						_loc8_ = this.viewPoint.getXPos(dataUnit[_loc13_]);
-						const closeYPos = this.getCloseYPos(context, dataUnit[_loc13_]);
-						gr.lineTo(_loc8_, closeYPos);
+						gr.lineTo(_loc8_, this.getCloseYPos(context, dataUnit[_loc13_]));
 					}
 					return _loc8_;
 				case Intervals.INTRADAY:
@@ -66,8 +64,7 @@ namespace com.google.finance
 						{
 							_loc10_--;
 							_loc8_ = this.viewPoint.getXPos(dataUnit[_loc10_]);
-							const closeYPos = this.getCloseYPos(context, dataUnit[_loc10_]);
-							gr.lineTo(_loc8_, closeYPos);
+							gr.lineTo(_loc8_, this.getCloseYPos(context, dataUnit[_loc10_]));
 						}
 						gr.lineStyle(0, 0, 0);
 						gr.lineTo(_loc8_, this.viewPoint.maxy);
@@ -101,7 +98,7 @@ namespace com.google.finance
 			if (!this.isEnabled())
 				return;
 
-			let vp = this.viewPoint;
+			const vp = this.viewPoint;
 			const dataSeries = notnull(this.getDataSeries());
 			this.localYOffset = vp.miny + vp.medPriceY + vp.V_OFFSET;
 			this.localYScale = vp.maxPriceRangeViewSize / context.maxPriceRange;

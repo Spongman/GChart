@@ -82,22 +82,22 @@ namespace com.google.finance
 		{
 			try
 			{
-				let indicatorClass = getDefinitionByName("com.google.finance.indicator." + indicatorName + "IndicatorLayer") as typeof indicator.IndicatorLayer;
+				const indicatorClass = getDefinitionByName("com.google.finance.indicator." + indicatorName + "IndicatorLayer") as typeof indicator.IndicatorLayer;
 				//let parameterNames = (<any>indicatorClass.getParameterNames())["getParameterNames"]() as string[];
-				let parameterNames = indicatorClass.getParameterNames();
+				const parameterNames = indicatorClass.getParameterNames();
 
 				let instances: any[] = [];
 				let index = 1;
 				while (index < params.length)
 				{
-					let instance = <any>{};	// TODO
+					const instance = <any>{};	// TODO
 					let finished = true;
-					for (let i = 0; i < parameterNames.length; i++)
+					for (const parameterName of parameterNames)
 					{
 						if (index === params.length)
 							finished = false;
 
-						(<any>instance)[parameterNames[i]] = params[index++];
+						(<any>instance)[parameterName] = params[index++];
 					}
 
 					if (finished)
@@ -144,7 +144,7 @@ namespace com.google.finance
 
 		private playerMouseWheelHandler(mouseWheelEvent: MouseWheelEvent)
 		{
-			let delta = mouseWheelEvent.wheelDelta < 0 ? -3 : 3;
+			const delta = mouseWheelEvent.wheelDelta < 0 ? -3 : 3;
 			this.handleMouseWheel(delta);
 
 			mouseWheelEvent.preventDefault();
@@ -428,7 +428,7 @@ namespace com.google.finance
 			this.mainManager.clearAllPins(ticker);
 		}
 
-		removeObjectArray(param1: { [key: string]: string }[])
+		removeObjectArray(param1: Map<string>[])
 		{
 			Utils.adjustExchangeNameOfArray(param1, "_quote");
 			this.mainManager.removeObjectArray(param1);
@@ -445,7 +445,7 @@ namespace com.google.finance
 
 		addObjectArray(param1: any[])
 		{
-			let pinArray = param1;
+			const pinArray = param1;
 			if (!pinArray)
 				return;
 

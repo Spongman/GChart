@@ -32,7 +32,7 @@ namespace com.google.finance
 		protected getPointsForCurrentDetailLevel(param1 = NaN, param2 = NaN): DataUnit[]
 		{
 			let _loc3_;
-			let vp = this.viewPoint;
+			const vp = this.viewPoint;
 			if (!isNaN(param1) && !isNaN(param2))
 				_loc3_ = vp.getDetailLevelForTechnicalStyle(param1, param2);
 			else
@@ -101,7 +101,7 @@ namespace com.google.finance
 			if (!this.isEnabled())
 				return context;
 
-			let vp = this.viewPoint;
+			const vp = this.viewPoint;
 			const displayManager = vp.getDisplayManager().getEnabledChartLayer();
 			const _loc4_ = displayManager === Const.LINE_CHART;
 			let detailLevel = vp.getDetailLevelForTechnicalStyle(context.lastMinute, context.count);
@@ -220,7 +220,7 @@ namespace com.google.finance
 
 			const gr = this.highlightCanvas.graphics;
 			gr.clear();
-			let dataSeries = this.getDataSeries() === this.dataSource.afterHoursData ? Number(Const.AH_DOT_COLOR) : Const.DOT_COLOR;
+			const dataSeries = this.getDataSeries() === this.dataSource.afterHoursData ? Number(Const.AH_DOT_COLOR) : Const.DOT_COLOR;
 			gr.lineStyle(5, dataSeries, 1);
 			gr.moveTo(_loc7_, closeYPos - 0.2);
 			gr.lineTo(_loc7_, closeYPos + 0.2);

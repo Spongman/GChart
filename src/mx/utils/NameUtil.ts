@@ -24,10 +24,10 @@ namespace mx.utils
 					{
 						let indices = (<mx.core.IRepeaterClient><any>o).instanceIndices;
 						if (indices)
-							s = s + ("[" + indices.join("][") + "]");
+							s = s + ('[' + indices.join("][") + ']');
 					}
 					*/
-					result = !result ? s : s + "." + result;
+					result = !result ? s : s + '.' + result;
 					o = o.parent;
 				}
 			}
@@ -55,7 +55,7 @@ namespace mx.utils
 			const _loc4_ = _loc2_.charCodeAt(_loc2_.length - 1);
 			if (_loc4_ >= 48 && _loc4_ <= 57)
 			{
-				_loc2_ = _loc2_ + "_";
+				_loc2_ = _loc2_ + '_';
 			}
 			return _loc2_ + NameUtil.counter++;
 		}

@@ -13,7 +13,7 @@ namespace com.google.finance
 		exchangeTimezoneOffset: number;
 		closePrice: number;
 		posInInterval: SeriesPosition[];
-	};
+	}
 
 	enum ColumnTypes
 	{
@@ -39,7 +39,7 @@ namespace com.google.finance
 		/*
 		private static readonly SESSIONS_STR = "SESSIONS";
 		private static readonly DATE_FORMAT_STR = "DATE_FORMAT";
-		private static readonly ABSOLUTE_DATE_CHAR = "a";
+		private static readonly ABSOLUTE_DATE_CHAR = 'a';
 		*/
 
 		static readonly RELATIVE_MINUTES_NOT_READY = 0;
@@ -72,9 +72,9 @@ namespace com.google.finance
 		constructor(public readonly quoteName: string, private readonly weekdayBitmap = 62, public displayName?: string)
 		{
 			this.quoteType = Const.getQuoteType(quoteName);
-			if (quoteName.indexOf("@") !== -1)
+			if (quoteName.indexOf('@') !== -1)
 			{
-				const _loc4_ = quoteName.split("@");
+				const _loc4_ = quoteName.split('@');
 				this.tickerName = _loc4_[0];
 				this.technicalsName = _loc4_[1];
 			}
@@ -106,6 +106,7 @@ namespace com.google.finance
 
 			let _loc4_ = 0;
 			let _loc5_ = param2.length - 1;
+			// tslint:disable-next-line
 			while (true)
 			{
 				const _loc6_ = Math.round((_loc4_ + _loc5_) / 2);
@@ -137,6 +138,7 @@ namespace com.google.finance
 
 			let _loc3_ = 0;
 			let _loc4_ = dataUnits.length - 1;
+			// tslint:disable-next-line
 			while (true)
 			{
 				_loc5_ = Math.round((_loc3_ + _loc4_) / 2);
@@ -227,7 +229,7 @@ namespace com.google.finance
 			this.baseInterval = Number(_loc6_[DataSource.INTERVAL_STR]);
 			if (chartEvent.detailType !== ChartEventStyles.GET_RT_DATA && chartEvent.detailType !== ChartEventStyles.GET_RT_AH_DATA)
 			{
-				const _loc15_ = _loc6_[DataSource.COLUMNS_STR].split(",");
+				const _loc15_ = _loc6_[DataSource.COLUMNS_STR].split(',');
 				if (_loc15_.indexOf(this.columnNames[ColumnTypes.COL_OPEN_TYPE]) !== -1 && _loc15_.indexOf(this.columnNames[ColumnTypes.COL_HIGH_TYPE]) !== -1 && _loc15_.indexOf(this.columnNames[ColumnTypes.COL_LOW_TYPE]) !== -1)
 					this.eventOhlcDone(chartEvent.getEventName());
 				else
@@ -362,7 +364,7 @@ namespace com.google.finance
 		private getColumnTypes(param1: string): ColumnTypes[]
 		{
 			const columnTypes: ColumnTypes[] = [];
-			const columnNames = param1.split(",");
+			const columnNames = param1.split(',');
 			for (let columnNameIndex1 = 0; columnNameIndex1 < columnNames.length; columnNameIndex1++)
 			{
 				for (let columnNameIndex2 = 0; columnNameIndex2 < this.columnNames.length; columnNameIndex2++)
@@ -409,13 +411,13 @@ namespace com.google.finance
 				const _loc14_ = param1[_loc7_++];
 				if (_loc14_.charCodeAt(0) === _loc8_)
 				{
-					const _loc17_ = _loc14_.split("=");
+					const _loc17_ = _loc14_.split('=');
 					this.timezoneOffset = Number(_loc17_[1]);
 				}
 				else
 				{
 					const _loc15_ = _loc14_.split(Const.DATA_DELIMITER);
-					if (!(_loc15_.length !== columnTypes.length || _loc15_[0].charAt(0) === "&"))
+					if (!(_loc15_.length !== columnTypes.length || _loc15_[0].charAt(0) === '&'))
 					{
 						const dataUnit = this.getDataUnitNoValidation(_loc15_, columnTypes, param2);
 						dataUnit.duplicate = dataSeries.minuteIsStartOfDataSession(dataUnit.dayMinute);
@@ -701,7 +703,7 @@ namespace com.google.finance
 			const _loc3_: Map<string> = {};
 			for (const pair of param1)
 			{
-				const _loc5_ = pair.split("=");
+				const _loc5_ = pair.split('=');
 				if (_loc5_.length <= 1)
 					return null;
 
@@ -970,7 +972,7 @@ namespace com.google.finance
 			const sessionParts = param1.split("],[");
 			for (const sessionPart of sessionParts)
 			{
-				const _loc5_ = sessionPart.split(",");
+				const _loc5_ = sessionPart.split(',');
 				const _loc6_ = Number(_loc5_[1]);
 				const _loc7_ = Number(_loc5_[2]);
 				dataSeries.addDataSession(_loc6_, _loc7_, _loc5_[0]);
@@ -1125,8 +1127,7 @@ namespace com.google.finance
 				return notnull(this.getClosestDataUnitLessThen(param1));
 
 			const relativeMinuteIndex = this.data.getRelativeMinuteIndex(param1);
-			const _loc3_ = this.data.units[relativeMinuteIndex];
-			return _loc3_;
+			return this.data.units[relativeMinuteIndex];
 		}
 
 		private getObjectPositions(param1: number, dataSeries: com.google.finance.DataSeries): SeriesPosition

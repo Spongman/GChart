@@ -124,22 +124,22 @@ namespace com.google.finance
 
 		private getQuoteData(param1: string, param2: string, chartEvent: ChartEvent, param4: boolean)
 		{
-			const symbol = Utils.getSymbolFromTicker(chartEvent.quote);
-			if (com.google.finance.MainManager.paramsObj[symbol + "_data_" + chartEvent.period] === "javascript")
+			const quoteSymbol = Utils.getSymbolFromTicker(chartEvent.quote);
+			if (com.google.finance.MainManager.paramsObj[quoteSymbol + "_data_" + chartEvent.period] === "javascript")
 			{
 				com.google.finance.MainManager.jsProxy.getData(chartEvent.quote, chartEvent.period);
 				return;
 			}
 			if (!(Const.INDICATOR_ENABLED && param4))
 			{
-				if (com.google.finance.MainManager.paramsObj[symbol + "_data_" + chartEvent.period] !== undefined && chartEvent.type !== ChartEventTypes.GET_AH_DATA)
+				if (com.google.finance.MainManager.paramsObj[quoteSymbol + "_data_" + chartEvent.period] !== undefined && chartEvent.type !== ChartEventTypes.GET_AH_DATA)
 				{
-					this.addData(chartEvent, decodeURIComponent(com.google.finance.MainManager.paramsObj[symbol + "_data_" + chartEvent.period]));
+					this.addData(chartEvent, decodeURIComponent(com.google.finance.MainManager.paramsObj[quoteSymbol + "_data_" + chartEvent.period]));
 					return;
 				}
-				if (com.google.finance.MainManager.paramsObj[symbol + "_data_ah"] !== undefined && chartEvent.type === ChartEventTypes.GET_AH_DATA)
+				if (com.google.finance.MainManager.paramsObj[quoteSymbol + "_data_ah"] !== undefined && chartEvent.type === ChartEventTypes.GET_AH_DATA)
 				{
-					this.addData(chartEvent, decodeURIComponent(com.google.finance.MainManager.paramsObj[symbol + "_data_ah"]));
+					this.addData(chartEvent, decodeURIComponent(com.google.finance.MainManager.paramsObj[quoteSymbol + "_data_ah"]));
 					return;
 				}
 			}
@@ -182,9 +182,9 @@ namespace com.google.finance
 			let symbolFromTicker = Utils.getSymbolFromTicker(chartEvent.quote);
 			let exchangeFromTicker = Utils.getExchangeFromTicker(chartEvent.quote);
 			let _loc6_ = "";
-			if (symbolFromTicker.indexOf("@") !== -1)
+			if (symbolFromTicker.indexOf('@') !== -1)
 			{
-				const _loc8_ = symbolFromTicker.split("@");
+				const _loc8_ = symbolFromTicker.split('@');
 				symbolFromTicker = _loc8_[0];
 				_loc6_ = _loc8_[1];
 			}
@@ -192,7 +192,7 @@ namespace com.google.finance
 			let urlString = "";
 			if (_loc6_ === "")
 			{
-				urlString = param1 + "?" + "q=" + symbolFromTicker;
+				urlString = param1 + '?' + "q=" + symbolFromTicker;
 				if (exchangeFromTicker !== "")
 					urlString += "&x=" + exchangeFromTicker;
 

@@ -22,7 +22,7 @@ namespace com.google.finance.ui
 		listenerObjects: flash.display.DisplayObject[];
 		buttons: flash.display.SimpleButton[];
 		spacing = ButtonsGroup.DEFAULT_SPACING;
-		listenerFunctions: { (p1: any, text: string): void }[];
+		listenerFunctions: ((p1: any, text: string) => void)[];
 		separatorTextFormat: flash.text.TextFormat;
 		leftPadding = ButtonsGroup.DEFAULT_LEFT_PADDING;
 		buttonTextFormat: flash.text.TextFormat;
@@ -150,7 +150,7 @@ namespace com.google.finance.ui
 			this.separatorTextFormat = separatorTextFormat;
 		}
 
-		addListener(param1: { (p1: any, text: string): void }, displayObject: flash.display.DisplayObject)
+		addListener(param1: (p1: any, text: string) => void, displayObject: flash.display.DisplayObject)
 		{
 			this.listenerFunctions.push(param1);
 			this.listenerObjects.push(displayObject);

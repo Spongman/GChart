@@ -29,7 +29,7 @@ namespace com.google.finance
 			if (!param1)
 				return 1;
 
-			return Number(param1.replace("/", "").replace("-", "").replace(".", ""));
+			return Number(param1.replace('/', "").replace('-', "").replace('.', ""));
 		}
 
 		setHighlighted(param1: boolean)

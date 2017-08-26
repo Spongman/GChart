@@ -46,7 +46,7 @@ namespace com.google.finance
 
 		toString(): string
 		{
-			return this.intervals.join(",");
+			return this.intervals.join(',');
 		}
 
 		length(): number

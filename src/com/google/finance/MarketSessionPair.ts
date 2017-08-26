@@ -11,7 +11,7 @@ namespace com.google.finance
 
 		toString(): string
 		{
-			return "[" + this.start + ", " + this.end + ", " + this.name + "]";
+			return '[' + this.start + ", " + this.end + ", " + this.name + ']';
 		}
 
 		equals(pair: StartEndPair): boolean

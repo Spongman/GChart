@@ -44,19 +44,19 @@ namespace com.google.finance
 			switch (_loc4_)
 			{
 				case Intervals.INTRADAY:
-					this.volumeLabel.appendText(_loc5_ * (Const.INTRADAY_INTERVAL / 60) + Messages.getMsg(Messages.MINUTES_SHORT) + ")");
+					this.volumeLabel.appendText(_loc5_ * (Const.INTRADAY_INTERVAL / 60) + Messages.getMsg(Messages.MINUTES_SHORT) + ')');
 					break;
 				case Intervals.FIVE_MINUTES:
-					this.volumeLabel.appendText(_loc5_ * (Const.FIVE_MINUTE_INTERVAL / 60) + Messages.getMsg(Messages.MINUTES_SHORT) + ")");
+					this.volumeLabel.appendText(_loc5_ * (Const.FIVE_MINUTE_INTERVAL / 60) + Messages.getMsg(Messages.MINUTES_SHORT) + ')');
 					break;
 				case Intervals.HALF_HOUR:
-					this.volumeLabel.appendText(_loc5_ * (Const.HALF_HOUR_INTERVAL / 60) + Messages.getMsg(Messages.MINUTES_SHORT) + ")");
+					this.volumeLabel.appendText(_loc5_ * (Const.HALF_HOUR_INTERVAL / 60) + Messages.getMsg(Messages.MINUTES_SHORT) + ')');
 					break;
 				case Intervals.DAILY:
-					this.volumeLabel.appendText(_loc5_ + Messages.getMsg(Messages.DAY_SHORT) + ")");
+					this.volumeLabel.appendText(_loc5_ + Messages.getMsg(Messages.DAY_SHORT) + ')');
 					break;
 				case Intervals.WEEKLY:
-					this.volumeLabel.appendText(_loc5_ + Messages.getMsg(Messages.WEEK_SHORT) + ")");
+					this.volumeLabel.appendText(_loc5_ + Messages.getMsg(Messages.WEEK_SHORT) + ')');
 					break;
 			}
 			const gr = this.graphics;

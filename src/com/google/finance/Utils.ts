@@ -57,7 +57,7 @@ namespace com.google.finance
 				const _loc5_: Map<string> = {};
 				for (const field of fields)
 				{
-					const _loc8_ = field.split(":");
+					const _loc8_ = field.split(':');
 					let value: any = _loc8_[1];
 					if (!isNaN(value))
 						value = Number(value);
@@ -76,9 +76,9 @@ namespace com.google.finance
 
 		static getTickerParts(param1: string)
 		{
-			const _loc2_ = param1.split(":");
+			const _loc2_ = param1.split(':');
 			let _loc3_ = _loc2_.shift()!;	// TODO: check undefined
-			let _loc4_ = _loc2_.join(":");
+			let _loc4_ = _loc2_.join(':');
 			if (_loc4_ === "")
 			{
 				_loc4_ = _loc3_;
@@ -90,7 +90,7 @@ namespace com.google.finance
 			};
 		}
 
-		static binarySearch<T, T2, T3>(items: T[], value: T2, param3: { (p1: T, p2: T2): number }, thisObj: T3): number
+		static binarySearch<T, T2, T3>(items: T[], value: T2, param3: (p1: T, p2: T2) => number, thisObj: T3): number
 		{
 			if (!items || items.length === 0)
 				return -1;
@@ -156,9 +156,9 @@ namespace com.google.finance
 			return date.getTime();
 		}
 
-		static getSymbolFromTicker(param1: string): string
+		static getSymbolFromTicker(quote: string): string
 		{
-			return Utils.getTickerParts(param1).symbol;
+			return Utils.getTickerParts(quote).symbol;
 		}
 
 		static getLastRealPointIndex(dataUnits: DataUnit[]): number
@@ -183,7 +183,7 @@ namespace com.google.finance
 			let _loc4_ = Math.pow(10, decimals);
 			value = Math.round(value * _loc4_);
 			let _loc5_ = value % _loc4_;
-			let _loc6_ = Math.floor(value / _loc4_) + ".";
+			let _loc6_ = Math.floor(value / _loc4_) + '.';
 			while (_loc4_ > 1)
 			{
 				_loc4_ /= 10;
@@ -191,13 +191,13 @@ namespace com.google.finance
 				_loc5_ = _loc5_ % _loc4_;
 			}
 			for (let _loc7_ = 0; _loc7_ < digits - _loc6_.length; _loc7_++)
-				_loc6_ = "0" + _loc6_;
+				_loc6_ = '0' + _loc6_;
 			return _loc6_;
 		}
 
 		static utcDateToString(date: Date): string
 		{
-			return date.getUTCFullYear() + "." + (date.getUTCMonth() + 1) + "." + date.getUTCDate() + "/" + date.getUTCHours() + ":" + date.getUTCMinutes();
+			return date.getUTCFullYear() + '.' + (date.getUTCMonth() + 1) + '.' + date.getUTCDate() + '/' + date.getUTCHours() + ':' + date.getUTCMinutes();
 		}
 
 		static createLabel(sprite: flash.display.Sprite, text: string, textFormat: flash.text.TextFormat): flash.text.TextField
@@ -267,7 +267,7 @@ namespace com.google.finance
 		static numberToMinTwoChars(value: number): string
 		{
 			if (value < 10)
-				return "0" + value;
+				return '0' + value;
 
 			return value.toString();
 		}
@@ -283,7 +283,7 @@ namespace com.google.finance
 		static removeAllChildren(displayObjectContainer: flash.display.DisplayObjectContainer)
 		{
 			while (displayObjectContainer.numChildren > 0)
-				displayObjectContainer.removeChildAt(displayObjectContainer.numChildren-1);
+				displayObjectContainer.removeChildAt(displayObjectContainer.numChildren - 1);
 		}
 
 		static compareNumbers(param1: number, param2: number): number
@@ -367,21 +367,21 @@ namespace com.google.finance
 				let _loc4_ = "" + hour;
 				let _loc5_ = "" + minute;
 				if (hour < 10)
-					_loc4_ = "0" + hour;
+					_loc4_ = '0' + hour;
 
 				if (minute < 10)
-					_loc5_ = "0" + minute;
+					_loc5_ = '0' + minute;
 
-				text = _loc4_ + ":" + _loc5_;
+				text = _loc4_ + ':' + _loc5_;
 			}
 			return text;
 		}
 
 		static appendObjectMembersAsStrings(param1: string, param2: any): string
 		{
-			let _loc3_ = param1 + ":";
+			let _loc3_ = param1 + ':';
 			for (const key of Object.keys(param2))
-				_loc3_ += "  obj." + key + "=" + param2[key];
+				_loc3_ += "  obj." + key + '=' + param2[key];
 			return _loc3_;
 		}
 
@@ -414,10 +414,10 @@ namespace com.google.finance
 
 		static cloneObject<T>(obj: T): T
 		{
-			const clone:T = <T>{};
+			const clone: any = {};
 			for (const key of Object.keys(obj))
-				(<any>clone)[key] = (<any>obj)[key]; // TODO
-			return clone;
+				clone[key] = (<any>obj)[key]; // TODO
+			return <T>clone;
 		}
 
 		static IsWeekday(param1: number, param2: number): boolean

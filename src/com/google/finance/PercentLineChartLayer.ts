@@ -132,7 +132,7 @@ namespace com.google.finance
 				state["points"] = [];
 
 			const _loc10_ = Math.round((_loc5_.close / this.localStartPrice - 1) * 10000) / 100;
-			const _loc11_ = " " + this.getPercentText(_loc10_) + "%";
+			const _loc11_ = ' ' + this.getPercentText(_loc10_) + '%';
 			let _loc12_ = Const.POSITIVE_DIFFERENCE_COLOR;
 			if (_loc10_ < 0)
 				_loc12_ = Const.NEGATIVE_DIFFERENCE_COLOR;
@@ -154,14 +154,14 @@ namespace com.google.finance
 		{
 			let percentText = "";
 			if (param1 > 0)
-				percentText += "+";
+				percentText += '+';
 			else
-				percentText += "-";
+				percentText += '-';
 
 			param1 = Math.abs(param1);
 			const _loc3_ = Math.floor(param1);
 			percentText += _loc3_;
-			percentText += ".";
+			percentText += '.';
 			percentText += Utils.numberToMinTwoChars(Math.floor((param1 - _loc3_) * 100));
 			return percentText;
 		}

@@ -38,19 +38,19 @@ namespace com.google.finance
 			this.graphics.endFill();
 		}
 
-		private renderContent(param1: number, param2: number, param3: string)
+		private renderContent(xPos: number, yPos: number, htmlText: string)
 		{
 			this.content.wordWrap = false;
 			this.content.autoSize = flash.text.TextFieldAutoSize.LEFT;
-			this.content.htmlText = param3;
+			this.content.htmlText = htmlText;
 			this.addChild(this.content);
-			this.content.x = param1 - this.content.width;
-			this.content.y = param2;
+			this.content.x = xPos - this.content.width;
+			this.content.y = yPos;
 		}
 
-		renderMovie(param1: number, param2: number, param3: string)
+		renderMovie(xPos: number, yPos: number, htmlText: string)
 		{
-			this.renderContent(param1, param2, param3);
+			this.renderContent(xPos, yPos, htmlText);
 			this.renderBackground();
 		}
 

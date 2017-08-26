@@ -61,19 +61,17 @@ namespace flash.display
 		{
 			const aArgs = Array.prototype.slice.call(arguments, 2);
 			const fNOP = () => { };
-			const fBound = function()
-				{
-					const value = fToBind.apply(this instanceof fNOP
-						? this
-						: oThis,
-						aArgs.concat(Array.prototype.slice.call(arguments)));
+			function fBound()
+			{
+				const value = fToBind.apply(
+					this instanceof fNOP ? this : oThis,
+					aArgs.concat(Array.prototype.slice.call(arguments)));
 
-					flash.display.Graphics.cleanupPending();
+				flash.display.Graphics.cleanupPending();
 
-					return value;
-				};
+				return value;
+			}
 
-			// Function.prototype doesn't have a prototype property
 			if (this.prototype)
 				fNOP.prototype = this.prototype;
 

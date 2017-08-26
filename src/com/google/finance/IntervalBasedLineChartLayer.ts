@@ -12,10 +12,10 @@ namespace com.google.finance
 				case Intervals.WEEKLY:
 					if (isNaN(param7))
 					{
-						const _loc8_ = this.viewPoint.getXPos(dataUnit[param5]);
-						gr.moveTo(_loc8_, this.viewPoint.maxy);
+						const xPos = this.viewPoint.getXPos(dataUnit[param5]);
+						gr.moveTo(xPos, this.viewPoint.maxy);
 						gr.lineStyle(0, 0, 0);
-						gr.lineTo(_loc8_, this.getCloseYPos(context, dataUnit[param5]));
+						gr.lineTo(xPos, this.getCloseYPos(context, dataUnit[param5]));
 						param5--;
 					}
 					else
@@ -55,9 +55,8 @@ namespace com.google.finance
 					{
 						gr.lineStyle(0, 0, 0);
 						_loc8_ = this.viewPoint.getXPos(dataUnit[_loc10_]);
-						const closeYPos = this.getCloseYPos(context, dataUnit[_loc10_]);
 						gr.lineTo(_loc8_, this.viewPoint.maxy);
-						gr.lineTo(_loc8_, closeYPos);
+						gr.lineTo(_loc8_, this.getCloseYPos(context, dataUnit[_loc10_]));
 						const _loc14_ = notnull(this.getDataSeries());
 						gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
 						while (_loc10_ > param4 && dataUnit[_loc10_].dayMinute !== _loc14_.marketOpenMinute)
@@ -106,7 +105,7 @@ namespace com.google.finance
 			this.lineColor = Const.LINE_CHART_LINE_COLOR;
 			this.lineVisibility = Const.LINE_CHART_LINE_VISIBILITY;
 			let detailLevel = vp.getDetailLevelForTechnicalStyle();
-			let _loc4_= 0;
+			let _loc4_ = 0;
 			let _loc6_ = Number.MAX_VALUE;
 			let _loc7_ = NaN;
 			let _loc8_ = true;

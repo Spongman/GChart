@@ -72,7 +72,6 @@ namespace com.google.finance
 		{
 			const data = this.dataSource.data;
 			const viewPoint = this.viewPoint;
-			const _loc4_ = this;
 			if (!data || this.dataSource.isEmpty())
 				return;
 
@@ -83,19 +82,19 @@ namespace com.google.finance
 			if (!viewPoint.getDisplayManager().isDifferentMarketSessionComparison() && dayPixel > Const.MIN_DAY_WIDTH_FOR_INTRADAY && _loc7_ <= Intervals.DAILY)
 			{
 				const visibleDays = this.getVisibleDaysArray(context);
-				this.drawDayStarts(_loc4_, this.textCanvas, visibleDays, _loc7_);
+				this.drawDayStarts(this, this.textCanvas, visibleDays, _loc7_);
 			}
 			else if (dayPixel > 15)
 			{
-				this.drawWeekStarts(_loc4_, this.textCanvas, 1, relativeMinuteIndex);
+				this.drawWeekStarts(this, this.textCanvas, 1, relativeMinuteIndex);
 			}
 			else if (dayPixel > 2)
 			{
-				this.drawMonthStarts(_loc4_, this.textCanvas, 1, relativeMinuteIndex);
+				this.drawMonthStarts(this, this.textCanvas, 1, relativeMinuteIndex);
 			}
 			else
 			{
-				this.drawYearStarts(_loc4_, this.textCanvas, 1, relativeMinuteIndex);
+				this.drawYearStarts(this, this.textCanvas, 1, relativeMinuteIndex);
 			}
 		}
 
@@ -416,7 +415,7 @@ namespace com.google.finance
 		private getDayText(dayVisibilities: DayVisibility[], param2: number, param3: number): string
 		{
 			const exchangeDateInUTC = dayVisibilities[param2].dataUnit.exchangeDateInUTC;
-			let _loc5_ = "d";
+			let _loc5_ = 'd';
 			if (param3 > 50 || param2 === 2 || param2 === dayVisibilities.length - 2)
 			{
 				_loc5_ = "MMM " + _loc5_;

@@ -16,7 +16,7 @@ namespace com.google.finance
 		//private listeners: any[];
 		private amount = 0;
 
-		animate(lfunctions: { (displayObject: flash.display.DisplayObject, amount: number, clicked: boolean): void }[], displayObjects: flash.display.DisplayObject[], param3 = NaN, param4 = false)
+		animate(lfunctions: ((displayObject: flash.display.DisplayObject, amount: number, clicked: boolean) => void)[], displayObjects: flash.display.DisplayObject[], param3 = NaN, param4 = false)
 		{
 			const lobjects = displayObjects;
 			const opt_stepCount = param3;
@@ -32,21 +32,23 @@ namespace com.google.finance
 				return;
 			}
 			this.intervalId = setInterval(() =>
-			{
-				this.stepCount--;
-
-				for (let functionIndex = 0; functionIndex < lfunctions.length; functionIndex++)
-					lfunctions[functionIndex](lobjects[functionIndex], this.amount, opt_pinClicked);
-
-				if (this.stepCount <= 0)
 				{
-					for (let functionIndex = 0; functionIndex < lfunctions.length; functionIndex++)
-						lfunctions[functionIndex](lobjects[functionIndex], 0, opt_pinClicked);
+					this.stepCount--;
 
-					this.stopAnimation();
-				}
-				this.amount = this.amount / 3;
-			}, AnimationManager.ANIMATION_FRAME_LENGTH_MS);
+					for (let functionIndex = 0; functionIndex < lfunctions.length; functionIndex++)
+						lfunctions[functionIndex](lobjects[functionIndex], this.amount, opt_pinClicked);
+
+					if (this.stepCount <= 0)
+					{
+						for (let functionIndex = 0; functionIndex < lfunctions.length; functionIndex++)
+							lfunctions[functionIndex](lobjects[functionIndex], 0, opt_pinClicked);
+
+						this.stopAnimation();
+					}
+					this.amount = this.amount / 3;
+				},
+				AnimationManager.ANIMATION_FRAME_LENGTH_MS
+			);
 		}
 
 		stopAnimation()

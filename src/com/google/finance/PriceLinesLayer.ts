@@ -6,7 +6,7 @@ namespace com.google.finance
 	{
 		yPos: number;
 		label: number;
-	};
+	}
 
 	export class PriceLinesLayer extends AbstractLayer<ViewPoint>
 	{
@@ -87,7 +87,7 @@ namespace com.google.finance
 			let prefix = "";
 			if (value < 0)
 			{
-				prefix = "-";
+				prefix = '-';
 				value = Math.abs(value);
 			}
 			let _loc4_ = 1;
@@ -102,7 +102,7 @@ namespace com.google.finance
 				_loc4_ = Number(Math.floor(_loc4_ / 10));
 			}
 			if (text !== "")
-				text = prefix + String(Math.floor(value)) + "." + text;
+				text = prefix + String(Math.floor(value)) + '.' + text;
 			else
 				text = prefix + String(Math.floor(value));
 
@@ -166,10 +166,13 @@ namespace com.google.finance
 				_loc7_ = this.getYPos(_loc3_, context);
 				if (_loc7_ > this.viewPoint.miny && _loc7_ < this.viewPoint.maxy - bottomTextHeight)
 				{
-					this.drawSingleHorizontalLine({
-						yPos: _loc7_,
-						label: _loc3_
-					}, _loc2_);
+					this.drawSingleHorizontalLine(
+						{
+							yPos: _loc7_,
+							label: _loc3_
+						},
+						_loc2_
+					);
 					if (_loc3_ >= 0)
 						_loc6_[_loc6_.length] = _loc7_;
 				}

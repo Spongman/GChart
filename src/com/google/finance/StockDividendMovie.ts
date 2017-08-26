@@ -38,8 +38,7 @@ namespace com.google.finance
 			else
 				_loc1_ = Messages.getMsg(Messages.STOCK_DIVIDEND_TEXT);
 
-			const _loc2_ = _loc1_.concat("\n", Messages.getMsg(Messages.ADJUSTMENT_FACTOR_TEXT, this.associatedStockDividend.adjustmentFactor));
-			return _loc2_;
+			return _loc1_.concat("\n", Messages.getMsg(Messages.ADJUSTMENT_FACTOR_TEXT, this.associatedStockDividend.adjustmentFactor));
 		}
 
 		setObject(stockDividend: StockDividend)

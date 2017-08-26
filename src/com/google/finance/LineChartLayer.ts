@@ -214,10 +214,10 @@ namespace com.google.finance
 			const gr = sprite.graphics;
 			if (units[param2 - 1].dayMinute === dataSeries.marketCloseMinute)
 			{
-				const xPos = viewPoint.getXPos(units[param2 - 1]);
-				const yPos = this.getYPos(context, units[param2 - 1]);
-				gr.lineTo(xPos, yPos);
-				return xPos;
+				const xPos3 = viewPoint.getXPos(units[param2 - 1]);
+				const yPos3 = this.getYPos(context, units[param2 - 1]);
+				gr.lineTo(xPos3, yPos3);
+				return xPos3;
 			}
 			let _loc13_ = 1;
 			while (viewPoint.minutePix * _loc9_ * _loc13_ < viewPoint.POINTS_DISTANCE)

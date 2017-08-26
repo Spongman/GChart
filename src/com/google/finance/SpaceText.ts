@@ -17,15 +17,15 @@ namespace com.google.finance
 	{
 		static readonly OHLC_INFO_FLAG_STR = "ohlcInfo";
 		static readonly POINT_STR = "point";
-		static readonly PRICE_TEXT = " " + Messages.getMsg(Messages.PRICE) + ": ";
-		static readonly OPEN_TEXT = " " + Messages.getMsg(Messages.OPEN) + ": ";
+		static readonly PRICE_TEXT = ' ' + Messages.getMsg(Messages.PRICE) + ": ";
+		static readonly OPEN_TEXT = ' ' + Messages.getMsg(Messages.OPEN) + ": ";
 		static readonly SETTER_STR = "setter";
-		static readonly LOW_TEXT = " " + Messages.getMsg(Messages.LOW) + ": ";
-		static readonly VOL_TEXT = " " + Messages.getMsg(Messages.VOLUME_SHORT) + ": ";
+		static readonly LOW_TEXT = ' ' + Messages.getMsg(Messages.LOW) + ": ";
+		static readonly VOL_TEXT = ' ' + Messages.getMsg(Messages.VOLUME_SHORT) + ": ";
 		static readonly OHLC_BASE_PRICE_STR = "basePrice";
 		static readonly VOLUME_STR = "volume";
-		static readonly HIGH_TEXT = " " + Messages.getMsg(Messages.HIGH) + ": ";
-		static readonly CLOSE_TEXT = " " + Messages.getMsg(Messages.CLOSE) + ": ";
+		static readonly HIGH_TEXT = ' ' + Messages.getMsg(Messages.HIGH) + ": ";
+		static readonly CLOSE_TEXT = ' ' + Messages.getMsg(Messages.CLOSE) + ": ";
 		static readonly POINTS_STR = "points";
 		static readonly EXTRA_TEXT_STR = "extraText";
 
@@ -272,7 +272,7 @@ namespace com.google.finance
 			}
 			if (!isNaN(param1[SpaceText.VOLUME_STR]))
 			{
-				this.datesText += " " + Messages.getMsg(Messages.VOLUME_SHORT) + ": ";
+				this.datesText += ' ' + Messages.getMsg(Messages.VOLUME_SHORT) + ": ";
 				this.datesText += this.getHumanReadableVolume(param1["volume"]);
 			}
 			this.returnText = "";
@@ -402,7 +402,7 @@ namespace com.google.finance
 				if (!this.startDate.date || !this.endDate.date)
 					return;
 
-				this.infoText.text = "-";
+				this.infoText.text = '-';
 				this.startDate.visible = true;
 				this.endDate.visible = true;
 				this.startDate.displayDateInLocalizedFormat();
@@ -410,7 +410,7 @@ namespace com.google.finance
 				if (this.returnText.length > 0)
 				{
 					let _loc1_ = this.negativeTextFormat;
-					if (this.returnText.indexOf("+") !== -1)
+					if (this.returnText.indexOf('+') !== -1)
 						_loc1_ = this.positiveTextFormat;
 
 					if (this.changeText.getTextFormat() !== _loc1_)
@@ -510,7 +510,7 @@ namespace com.google.finance
 			let rise = unit2.close - unit1.close;
 			const _loc6_ = Math.round(rise / unit1.close * 10000) / 100;
 			if (rise > 0)
-				text += "+";
+				text += '+';
 
 			if (unit3 && unit3.tickerName && unit3.tickerName.indexOf("CURRENCY:") === 0)
 				rise = Math.round(rise * 100000) / 100000;

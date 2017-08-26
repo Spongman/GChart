@@ -28,9 +28,9 @@ namespace com.google.finance
 			const exchangeDateInUTC = this.exchangeDateInUTC;
 			let dateString = Utils.utcDateToString(exchangeDateInUTC);
 			if (!isNaN(this.relativeMinutes))
-				dateString += "[relMin:" + this.relativeMinutes + "]";
+				dateString += "[relMin:" + this.relativeMinutes + ']';
 
-			return this.time + " " + this.dayMinute + " " + dateString + " " + close;
+			return this.time + ' ' + this.dayMinute + ' ' + dateString + ' ' + close;
 		}
 
 		getHighLogValue(param1: string): number

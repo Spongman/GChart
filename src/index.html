@@ -30,6 +30,29 @@
 
 	<div id="stage"></div>
 
+	<script>
+		if (!Function.prototype.bind)
+		{
+			Function.prototype.bind = function (oThis)
+			{
+				var aArgs = Array.prototype.slice.call(arguments, 1);
+				var fToBind = this;
+				var fNOP = function () { };
+				function fBound ()
+				{
+					return fToBind.apply(
+						this instanceof fNOP ? this : oThis,
+						aArgs.concat(Array.prototype.slice.call(arguments)));
+				};
+
+				if (this.prototype)
+					fNOP.prototype = this.prototype;
+				fBound.prototype = new fNOP ();
+
+				return fBound;
+			};
+		}		
+	</script>
 	<script src="js/GoogleChart.js"></script>
 	<script>
 		var loaderInfo = new flash.display.LoaderInfo();

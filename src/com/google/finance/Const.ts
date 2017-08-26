@@ -181,7 +181,7 @@ namespace com.google.finance
 		static readonly CURRENCY_PREFIX = "CURRENCY:";
 		static readonly DAILY_DAYS = 270;
 		static readonly DAILY_INTERVAL = 24 * 60 * 60;
-		static readonly DATA_DELIMITER = ",";
+		static readonly DATA_DELIMITER = ',';
 		static readonly DATE_DEFAULT_BORDER_COLOR = 0xe8e8e8;
 		static readonly DATE_HIGHLIGHTED_BACKGROUND_COLOR = 0xffffa0;
 		static readonly DATE_HIGHLIGHTED_BORDER_COLOR = 0;

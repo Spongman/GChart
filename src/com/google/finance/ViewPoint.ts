@@ -9,11 +9,11 @@ namespace com.google.finance
 	// import flash.utils.getDefinitionByName;
 	// import flash.text.TextFormatAlign;
 
-	interface ViewPointState
+	export interface ViewPointState
 	{
 		count: number;
 		lastMinute: number;
-	};
+	}
 
 	export class SkipInterval
 	{
@@ -22,7 +22,7 @@ namespace com.google.finance
 
 	export class EventCallback
 	{
-		constructor(public readonly func: { (p1: any): void }, public readonly param: any) { }
+		constructor(public readonly func: (p1: any) => void, public readonly param: any) { }
 	}
 
 	export interface IDataUnitContainer

@@ -61,13 +61,13 @@ namespace com.google.finance
 			{
 				const _loc3_ = Math.floor(param1 * 100) % 100;
 				if (_loc3_ % 10 === 0)
-					value += " " + param1 + "0";
+					value += ' ' + param1 + '0';
 				else
-					value += " " + param1;
+					value += ' ' + param1;
 			}
 			else
 			{
-				value += " " + param1 + ".00";
+				value += ' ' + param1 + ".00";
 			}
 			return value;
 		}
@@ -174,7 +174,7 @@ namespace com.google.finance
 
 		private getTechnicalsNameElseQuote(param1: string): string
 		{
-			const _loc2_ = param1.split("@");
+			const _loc2_ = param1.split('@');
 			if (_loc2_.length > 1)
 				return _loc2_[1];
 

@@ -16,7 +16,7 @@ namespace flash.display
 				document.body.appendChild(element);
 			}
 
-			this.name = (name ? name + ":" : "") + getClassName(this);
+			this.name = (name ? name + ':' : "") + getClassName(this);
 			element.setAttribute("name", this.name);
 
 			/*
@@ -85,9 +85,9 @@ namespace flash.display
 			this.element.addEventListener(e, f);
 		}
 
-		removeEventListener(type: string, listener?: EventListenerOrEventListenerObject, useCapture?: boolean): void
+		removeEventListener(eventType: string, listener?: EventListenerOrEventListenerObject, useCapture?: boolean): void
 		{
-			this.element.removeEventListener(type, listener);
+			this.element.removeEventListener(eventType, listener);
 		}
 
 		hitTestPoint(x: number, y: number, shapeFlag = false): boolean

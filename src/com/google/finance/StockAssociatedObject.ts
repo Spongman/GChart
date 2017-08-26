@@ -39,7 +39,7 @@ namespace com.google.finance
 
 		toString(): string
 		{
-			return this.id + " " + this.pos;
+			return this.id + ' ' + this.pos;
 		}
 
 		getRelativeMinutes(param1: number = -1): number

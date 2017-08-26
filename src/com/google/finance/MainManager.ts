@@ -74,7 +74,7 @@ namespace com.google.finance
 
 		private parseSettingString(param1: string, param2: number): (string | null)[] | null
 		{
-			const parts: (string | null)[] | null = param1 ? param1.split(";") : null;
+			const parts: (string | null)[] | null = param1 ? param1.split(';') : null;
 			if (!parts || parts.length !== param2)
 				return null;
 
@@ -130,7 +130,7 @@ namespace com.google.finance
 			this.dataManager = new com.google.finance.DataManager(this, this.startTime, this.endTime);
 			this.displayManager.init(this.stage.stageWidth, this.stage.stageHeight);
 			this.layersManager = new com.google.finance.LayersManager(this.displayManager, this);
-			const _loc4_ = MainManager.paramsObj.compareTo && MainManager.paramsObj.compareToDiffMarketSessions && MainManager.paramsObj.compareToDiffMarketSessions.indexOf("1") !== -1;
+			const _loc4_ = MainManager.paramsObj.compareTo && MainManager.paramsObj.compareToDiffMarketSessions && MainManager.paramsObj.compareToDiffMarketSessions.indexOf('1') !== -1;
 			this.getQuote(this.quote, MainManager.paramsObj.displayName, Const.getDefaultDisplayDays(_loc4_), true);
 			this.addDefaultCompareToTickers();
 			MainManager.mouseCursor = new com.google.finance.MouseCursor();
@@ -275,14 +275,14 @@ namespace com.google.finance
 		{
 			if (this.quote !== "" && MainManager.paramsObj.compareTo)
 			{
-				const _loc1_ = MainManager.paramsObj.compareTo.split(";");
+				const _loc1_ = MainManager.paramsObj.compareTo.split(';');
 				const _loc2_ = this.parseSettingString(MainManager.paramsObj.compareToDisplayName, _loc1_.length);
 				const _loc3_ = this.parseSettingString(MainManager.paramsObj.compareToDiffMarketSessions, _loc1_.length);
 				for (let partIndex = 0; partIndex < _loc1_.length; partIndex++)
 				{
 					const _loc5_ = Utils.adjustNasdToNasdaq(_loc1_[partIndex]);
 					if (_loc5_ !== "" && _loc5_ !== this.quote)
-						this.addCompareTo(_loc5_, _loc2_ && _loc2_[partIndex] || undefined, _loc3_ && _loc3_[partIndex] === "1" || undefined);	// TODO
+						this.addCompareTo(_loc5_, _loc2_ && _loc2_[partIndex] || undefined, _loc3_ && _loc3_[partIndex] === '1' || undefined);	// TODO
 				}
 			}
 		}

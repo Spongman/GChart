@@ -111,7 +111,7 @@ namespace com.google.finance
 
 		getShortText(param1 = false): string
 		{
-			return this.associatedSplit.newShares + ":" + this.associatedSplit.oldShares;
+			return this.associatedSplit.newShares + ':' + this.associatedSplit.oldShares;
 		}
 
 		setOrientation(orientation: Orientations)

@@ -5,11 +5,7 @@ namespace com.google.finance
 		private static buildEvent(param1: number, param2: string, param3: string, param4: number, param5: string, param6: number = -1): ChartEvent
 		{
 			const chartEvent = new ChartEvent(param1);
-			if (param6 !== -1)
-				chartEvent.detailType = param6;
-			else
-				chartEvent.detailType = null;
-
+			chartEvent.detailType = (param6 !== -1) ? param6 : null;
 			chartEvent.quote = param2;
 			chartEvent.period = param3;
 			chartEvent.interval = "" + param4;
@@ -54,10 +50,10 @@ namespace com.google.finance
 						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, param2, "30d", Const.HALF_HOUR_INTERVAL, "d,c,v,o,h,l", param1);
 						break;
 					case ChartEventStyles.GET_RT_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_RT_DATA, param2, "" + (_loc5_ + 10) + "m", Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", param1);
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_RT_DATA, param2, "" + (_loc5_ + 10) + 'm', Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", param1);
 						break;
 					case ChartEventStyles.GET_RT_AH_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_RT_AH_DATA, param2, "" + (_loc5_ + 10) + "m", Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", param1);
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_RT_AH_DATA, param2, "" + (_loc5_ + 10) + 'm', Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", param1);
 						break;
 				}
 			}

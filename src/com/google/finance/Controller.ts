@@ -150,11 +150,7 @@ namespace com.google.finance
 				this.removeChild(this.chartSizeChangeButton);
 
 			this.chartSizeChangeButton = new flash.display.SimpleButton("chartSizeChangeButton");
-			let buttonBitmap: flash.display.Bitmap;
-			if (showExpand)
-				buttonBitmap = new Controller_ExpandIcon();
-			else
-				buttonBitmap = new Controller_ShrinkIcon();
+			const buttonBitmap: flash.display.Bitmap = showExpand ? new Controller_ExpandIcon() : new Controller_ShrinkIcon();
 
 			this.chartSizeChangeButton.overState = buttonBitmap;
 			this.chartSizeChangeButton.downState = buttonBitmap;
@@ -374,7 +370,7 @@ namespace com.google.finance
 
 		animateTo(param1: number, param2: number, param3: number = NaN, param4 = false)
 		{
-			const _loc5_: { (displayObjects: flash.display.DisplayObject, param2: number, param3: boolean): void }[] = [];
+			const _loc5_: ((displayObjects: flash.display.DisplayObject, param2: number, param3: boolean) => void)[] = [];
 			const _loc6_: flash.display.DisplayObject[] = [];
 			const context = new Context();
 			context.lastMinute = param1;
@@ -422,7 +418,7 @@ namespace com.google.finance
 			this.chartTypeText.y = 5;
 			this.chartTypeText.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			this.chartTypeText.defaultTextFormat = this.windowTitleTextFormat;
-			this.chartTypeText.text = Messages.getMsg(Messages.TYPE) + ":";
+			this.chartTypeText.text = Messages.getMsg(Messages.TYPE) + ':';
 			this.chartTypeText.selectable = false;
 			this.chartTypeButtons = new com.google.finance.ui.TextButtonsGroup();
 			this.chartTypeButtons.setSpacing("", !!this.isZh ? 1 : 3);
@@ -583,7 +579,7 @@ namespace com.google.finance
 			this.intervalText.y = 5;
 			this.intervalText.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			this.intervalText.defaultTextFormat = this.windowTitleTextFormat;
-			this.intervalText.text = Messages.getMsg(Messages.INTERVAL) + ":";
+			this.intervalText.text = Messages.getMsg(Messages.INTERVAL) + ':';
 			this.intervalText.selectable = false;
 			this.intervalButtons = new com.google.finance.ui.TextButtonsGroup();
 			this.intervalButtons.setSpacing("", !!this.isZh ? 1 : 3);
@@ -894,7 +890,7 @@ namespace com.google.finance
 			this.displayManager.showContextualStaticInfo();
 			this.displayManager.topBorderLayer.update();
 			clearInterval(this.notifyHtmlIntervalId);
-			this.notifyHtmlIntervalId = setInterval(flash.display.Stage.bind(this.listenersNotifyHtml,this), Controller.NOTIFY_TIMEOUT);
+			this.notifyHtmlIntervalId = setInterval(flash.display.Stage.bind(this.listenersNotifyHtml, this), Controller.NOTIFY_TIMEOUT);
 		}
 
 		private stopContinuousPaging()
@@ -1014,7 +1010,7 @@ namespace com.google.finance
 			this.zoomText.y = 5;
 			this.zoomText.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			this.zoomText.defaultTextFormat = this.windowTitleTextFormat;
-			this.zoomText.text = Messages.getMsg(Messages.ZOOM) + ":";
+			this.zoomText.text = Messages.getMsg(Messages.ZOOM) + ':';
 			this.zoomText.selectable = false;
 			this.zoomButtons = new com.google.finance.ui.TextButtonsGroup();
 			this.zoomButtons.setSpacing("", !!this.isZh ? 1 : 3);

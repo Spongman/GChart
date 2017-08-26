@@ -11,10 +11,10 @@ namespace com.google.finance
 
 	export class DividendMovie extends SplitMovie
 	{
-		private static DividendArrowClass = DividendMovie_DividendArrowClass;
-		private static DividendArrowOnOverClass = DividendMovie_DividendArrowOnOverClass;
-		private static DividendArrowSidewaysClass = DividendMovie_DividendArrowSidewaysClass;
-		private static DividendArrowSidewaysOverClass = DividendMovie_DividendArrowSidewaysOverClass;
+		private static dividendArrowClass = DividendMovie_DividendArrowClass;
+		private static dividendArrowOnOverClass = DividendMovie_DividendArrowOnOverClass;
+		private static dividendArrowSidewaysClass = DividendMovie_DividendArrowSidewaysClass;
+		private static dividendArrowSidewaysOverClass = DividendMovie_DividendArrowSidewaysOverClass;
 
 		private associatedDividend: com.google.finance.Dividend;
 
@@ -25,10 +25,10 @@ namespace com.google.finance
 
 		protected initArrows()
 		{
-			this.arrow = new DividendMovie.DividendArrowClass();
-			this.arrowOnOver = new DividendMovie.DividendArrowOnOverClass();
-			this.arrowSideways = new DividendMovie.DividendArrowSidewaysClass();
-			this.arrowSidewaysOver = new DividendMovie.DividendArrowSidewaysOverClass();
+			this.arrow = new DividendMovie.dividendArrowClass();
+			this.arrowOnOver = new DividendMovie.dividendArrowOnOverClass();
+			this.arrowSideways = new DividendMovie.dividendArrowSidewaysClass();
+			this.arrowSidewaysOver = new DividendMovie.dividendArrowSidewaysOverClass();
 		}
 
 		getDetailedText(): string
@@ -37,7 +37,7 @@ namespace com.google.finance
 				return Messages.getMsg(Messages.DIVIDEND_TEXT_NO_PERCENT, this.getShortText(true));
 
 			const _loc1_ = Math.floor(this.associatedDividend.yield * 10000) / 100;
-			const _loc2_ = _loc1_ + "%";
+			const _loc2_ = _loc1_ + '%';
 			return Messages.getMsg(Messages.DIVIDEND_TEXT, this.getShortText(true), _loc2_);
 		}
 
@@ -80,7 +80,7 @@ namespace com.google.finance
 							return _loc4_ + _loc6_;
 
 					}
-					return _loc4_ + "0";
+					return _loc4_ + '0';
 				}
 				return _loc4_ + amount.toString();
 			}
@@ -100,7 +100,7 @@ namespace com.google.finance
 			if (!param1)
 				_loc8_ = Math.round(_loc8_ * 100) / 100;
 
-			return "$" + _loc8_;
+			return '$' + _loc8_;
 		}
 	}
 }

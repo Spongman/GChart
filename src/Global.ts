@@ -13,9 +13,9 @@ interface Date
 	fullYear: number;
 }
 
-function addGetter<T extends Function>(type: T, name: string, getter: () => any)
+function addGetter<T extends { prototype: any }>(theType: T, name: string, getter: () => any)
 {
-	Object.defineProperty(type.prototype, name, {
+	Object.defineProperty(theType.prototype, name, {
 		get: getter,
 		enumerable: true,
 		configurable: true,
@@ -79,10 +79,10 @@ function cssColor(n: number, alpha = 1): string
 {
 	const s = Math.floor(n).toString(16);
 	if (alpha >= 1)
-		return "#" + "000000".substr(s.length) + s;
+		return '#' + "000000".substr(s.length) + s;
 
 	const a = Math.floor(alpha * 255).toString(16);
-	return "#" + "00".substr(a.length) + "000000".substr(s.length) + s;
+	return '#' + "00".substr(a.length) + "000000".substr(s.length) + s;
 }
 
 function assert(cond: boolean)
@@ -94,7 +94,7 @@ function assert(cond: boolean)
 function getDefinitionByName(name: string): Function
 {
 	let container: any = window;
-	const parts = name.split(".");
+	const parts = name.split('.');
 	for (const part of parts)
 		container = container[part];
 	return container;
@@ -121,39 +121,13 @@ function notnull<T>(value: T | null): T
 	return value;
 }
 
-if (!Function.prototype.bind)
-{
-	Function.prototype.bind = function(oThis)
-	{
-		const aArgs = Array.prototype.slice.call(arguments, 1);
-		const fToBind = this;
-		const fNOP = () => { };
-		const fBound = function()
-		{
-			return fToBind.apply(this instanceof fNOP
-				? this
-				: oThis,
-				aArgs.concat(Array.prototype.slice.call(arguments)));
-		};
-
-		if (this.prototype)
-		{
-			// Function.prototype doesn't have a prototype property
-			fNOP.prototype = this.prototype;
-		}
-		fBound.prototype = new (fNOP as any)();
-
-		return fBound;
-	};
-}
-
 function parseQueryString(str: string)
 {
 	const result: { [_: string]: string } = {};
-	const pairs = str.split("&");
+	const pairs = str.split('&');
 	for (const pair of pairs)
 	{
-		const p = pair.split("=");
+		const p = pair.split('=');
 		const key = decodeURIComponent(p[0]);
 		const value = decodeURIComponent(p[1]);
 		result[key] = value;

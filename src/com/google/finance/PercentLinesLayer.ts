@@ -87,7 +87,7 @@ namespace com.google.finance
 
 		renderLayer(context: Context)
 		{
-			this.valueSuffix = "%";
+			this.valueSuffix = '%';
 			this.graphics.clear();
 			this.computeLocalVars(context);
 			this.drawHorizontalLines(context);

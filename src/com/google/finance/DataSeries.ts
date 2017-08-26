@@ -64,7 +64,7 @@ namespace com.google.finance
 				if (this.units[friday])
 					console.log(this.units[friday]);
 				else
-					console.log(this.points[friday].point + " " + (<indicator.VolumeIndicatorPoint>this.points[friday]).volume);
+					console.log(this.points[friday].point + ' ' + (<indicator.VolumeIndicatorPoint>this.points[friday]).volume);
 			}
 		}
 
@@ -157,7 +157,7 @@ namespace com.google.finance
 
 			for (const intradayRegion of this.intradayRegions)
 			{
-				param1 += "[" + intradayRegion.start + ", " + intradayRegion.end + "] ";
+				param1 += '[' + intradayRegion.start + ", " + intradayRegion.end + "] ";
 				param1 += this.units[intradayRegion.end].dayMinute + "\n";
 			}
 			return param1;
@@ -483,7 +483,7 @@ namespace com.google.finance
 				if (param1)
 				{
 					const o: any = unit;
-					console.log(unit.relativeMinutes + " " + o[param1]);
+					console.log(unit.relativeMinutes + ' ' + o[param1]);
 				}
 				else if (unit instanceof DataUnit)
 				{

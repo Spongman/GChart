@@ -4,11 +4,11 @@ namespace com.google.finance
 
 	export class GVizFormatConverter
 	{
-		private static readonly VALUE_PROPERTY_NAME = "v";
+		private static readonly VALUE_PROPERTY_NAME = 'v';
 		private static readonly COLS_PROPERTY_NAME = "cols";
 		private static readonly ROWS_PROPERTY_NAME = "rows";
 		private static readonly TYPE_PROPERTY_NAME = "type";
-		private static readonly COL_PROPERTY_NAME = "c";
+		private static readonly COL_PROPERTY_NAME = 'c';
 		private static readonly NUMBER_TYPE = "number";
 		private static readonly DATETIME_TYPE = "datetime";
 
@@ -21,7 +21,7 @@ namespace com.google.finance
 			if (_loc2_[0][GVizFormatConverter.TYPE_PROPERTY_NAME] !== GVizFormatConverter.DATETIME_TYPE)
 				return false;
 
-			for (let _loc3_= 1; _loc3_ < _loc2_.length; _loc3_++)
+			for (let _loc3_ = 1; _loc3_ < _loc2_.length; _loc3_++)
 			{
 				if (_loc2_[_loc3_][GVizFormatConverter.TYPE_PROPERTY_NAME] !== GVizFormatConverter.NUMBER_TYPE)
 					return false;
@@ -40,7 +40,7 @@ namespace com.google.finance
 
 			const rows = properties[GVizFormatConverter.ROWS_PROPERTY_NAME];
 			const dataSeriesArray: DataSeries[] = [];
-			for (let _loc8_= 1; _loc8_ < properties[GVizFormatConverter.COLS_PROPERTY_NAME].length; _loc8_++)
+			for (let _loc8_ = 1; _loc8_ < properties[GVizFormatConverter.COLS_PROPERTY_NAME].length; _loc8_++)
 				dataSeriesArray.push(new DataSeries());
 
 			for (const row of rows)

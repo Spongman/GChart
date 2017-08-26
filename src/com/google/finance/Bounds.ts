@@ -6,7 +6,7 @@ namespace com.google.finance
 
 		toString(): string
 		{
-			return "[" + this.minx + "," + this.miny + "][" + this.maxx + "," + this.maxy + "]";
+			return '[' + this.minx + ',' + this.miny + "][" + this.maxx + ',' + this.maxy + ']';
 		}
 
 		containsPoint(x: number, y: number): boolean

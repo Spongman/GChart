@@ -24,7 +24,7 @@ namespace com.google.finance.indicator
 			super(viewPoint, dataSource);
 			const textFormat = new flash.text.TextFormat("Verdana", 9);
 			textFormat.align = "right";
-			for (let levelIndex= 0; levelIndex < IndependentIndicatorLayer.LEVEL_CNT; levelIndex++)
+			for (let levelIndex = 0; levelIndex < IndependentIndicatorLayer.LEVEL_CNT; levelIndex++)
 			{
 				const layerTextFormat = new flash.text.TextField();
 				layerTextFormat.width = IndependentIndicatorLayer.LEVEL_TEXT_WIDTH;
@@ -77,7 +77,7 @@ namespace com.google.finance.indicator
 			if (_loc12_ < 0)
 				_loc12_ = 0;
 
-			for (let dataSeriesIndex= 0; dataSeriesIndex < dataSeries.length; dataSeriesIndex++)
+			for (let dataSeriesIndex = 0; dataSeriesIndex < dataSeries.length; dataSeriesIndex++)
 			{
 				if (this.getLineStyle(dataSeriesIndex) === IndicatorLineStyle.NONE)
 					continue;
@@ -105,7 +105,7 @@ namespace com.google.finance.indicator
 
 		private updateLevelTexts(param1: number, param2: number)
 		{
-			for (let levelTextIndex= 0; levelTextIndex < this.levelTextArray.length; levelTextIndex++)
+			for (let levelTextIndex = 0; levelTextIndex < this.levelTextArray.length; levelTextIndex++)
 			{
 				let _loc4_ = param2 + (param1 - param2) * levelTextIndex / (this.levelTextArray.length - 1);
 				_loc4_ = Math.round(_loc4_ * 100) / 100;

@@ -210,7 +210,7 @@ namespace com.google.finance
 			//const _loc7_ = _loc5_.skip;
 			const dataSeries = notnull(this.indicator.getDataSeries(interval));
 			const detailLevel = viewPoint.getDetailLevel(param2, param1);
-			const _loc10_ = "c" + param2 + "-" + detailLevel + "-" + dataSeries.units.length;
+			const _loc10_ = 'c' + param2 + '-' + detailLevel + '-' + dataSeries.units.length;
 			if (this.maxVolume[_loc10_] !== undefined)
 				return this.maxVolume[_loc10_];
 

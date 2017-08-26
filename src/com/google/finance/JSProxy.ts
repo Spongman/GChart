@@ -191,7 +191,7 @@ namespace com.google.finance
 		{
 			const layersManager = this.mainManager.layersManager;
 			const displayManager = this.mainManager.displayManager;
-			const _loc5_ = param2.split("*");
+			const _loc5_ = param2.split('*');
 			if (Const.DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1 || Const.VOLUME_DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1)
 			{
 				const _loc6_ = Const.DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1 ? Const.MAIN_VIEW_POINT_NAME : Const.BOTTOM_VIEW_POINT_NAME;

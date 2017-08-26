@@ -2,16 +2,16 @@
 {
 	export abstract class EventDispatcher
 	{
-		abstract addEventListener(type: string, listener: Function, useCapture?: boolean, priority?: number, useWeakReference?: boolean): void;
+		abstract addEventListener(eventType: string, listener: Function, useCapture?: boolean, priority?: number, useWeakReference?: boolean): void;
 	}
 
 	export class EventDispatcherImpl
 	{
 		private _events: Map<Function[]> = {};
 
-		addEventListener(type: string, listener: Function, useCapture?: boolean, priority?: number, useWeakReference?: boolean): void
+		addEventListener(eventType: string, listener: Function, useCapture?: boolean, priority?: number, useWeakReference?: boolean): void
 		{
-			const listeners = this._events[type] || (this._events[type] = []);
+			const listeners = this._events[eventType] || (this._events[eventType] = []);
 			listeners.push(listener);
 		}
 

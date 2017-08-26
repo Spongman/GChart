@@ -132,7 +132,7 @@ namespace com.google.finance
 			{
 				const _loc5_ = "_GF_click(\'\', \'n-cn-\', \'" + encodeURIComponent(param1) + "\', \'\');";
 				const _loc6_ = "self.location=\'" + encodeURIComponent(param3) + "\';";
-				titleHtml += "<a href=\"javascript:" + _loc5_ + _loc6_ + "\">";
+				titleHtml += "<a href=\"javascript:" + _loc5_ + _loc6_ + "\'>";
 				titleHtml += "<u><font color=\'#0000CC\' size=\'12\'>";
 			}
 			else
@@ -187,7 +187,7 @@ namespace com.google.finance
 			const originalObject = activePinPoint.originalObject;
 			let letterHtml = this.getLetterHtml(activePinPoint.letter);
 			if (activePinPoint.exchangeDateInUTC)
-				letterHtml += " " + this.getDateHtml(activePinPoint.exchangeDateInUTC);
+				letterHtml += ' ' + this.getDateHtml(activePinPoint.exchangeDateInUTC);
 
 			if (originalObject._title && originalObject._title !== "")
 				letterHtml += "\n" + this.getTitleHtml(activePinPoint.letter, originalObject._title, originalObject._url);

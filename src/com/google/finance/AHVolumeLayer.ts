@@ -36,7 +36,7 @@ namespace com.google.finance
 
 		private getMaxVolumeHashKey(param1: number, param2: number): string
 		{
-			return param1 + "-" + param2;
+			return param1 + '-' + param2;
 		}
 
 		protected drawLines(sprite: flash.display.Sprite, dataSeries: DataSeries, param3: number, param4: number, viewPoint: IViewPoint, context: Context)

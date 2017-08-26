@@ -12,7 +12,7 @@ namespace com.google.finance
 	{
 		private static readonly LOADING_TEXT_FORMAT = new flash.text.TextFormat("Helvetica", 12, 0xffffff);
 
-		private static readonly states = ["...", ".", ".."];
+		private static readonly states = ["...", '.', ".."];
 
 		private intervalId: number;
 		private loadingText = new flash.text.TextField();

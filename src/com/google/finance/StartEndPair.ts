@@ -8,7 +8,7 @@ namespace com.google.finance
 
 		toString(): string
 		{
-			return "[" + this.start + ", " + this.end + "]";
+			return '[' + this.start + ", " + this.end + ']';
 		}
 
 		equals(pair: StartEndPair): boolean

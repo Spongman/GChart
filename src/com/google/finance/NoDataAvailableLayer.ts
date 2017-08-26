@@ -13,7 +13,7 @@ namespace com.google.finance
 			if (!this.text)
 			{
 				this.text = new flash.text.TextField();
-				const textFormat = new flash.text.TextFormat("Arial",12,0,false,false,false);
+				const textFormat = new flash.text.TextFormat("Arial", 12, 0, false, false, false);
 				this.text.defaultTextFormat = textFormat;
 				this.text.autoSize = flash.text.TextFieldAutoSize.CENTER;
 				this.text.selectable = false;

@@ -33,6 +33,7 @@ namespace com.google.finance
 			const points = dataSource.data.getPointsInIntervals();
 			const units = dataSource.data.units;
 			const map: Map<number> = {};
+			//for (const pointIndex in points)
 			for (const pointIndex in points)
 			{
 				const pointUnits = points[pointIndex];

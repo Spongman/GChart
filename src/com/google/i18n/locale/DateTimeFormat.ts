@@ -60,43 +60,43 @@ namespace com.google.i18n.locale
 			const fieldLength = field.length;
 			switch (field.charAt(0))
 			{
-				case "G":
+				case 'G':
 					return this.formatEra(fieldLength, date);
-				case "y":
+				case 'y':
 					return this.formatYear(fieldLength, date);
-				case "M":
+				case 'M':
 					return this.formatMonth(fieldLength, date);
-				case "k":
+				case 'k':
 					return this.format24Hours(fieldLength, date);
-				case "S":
+				case 'S':
 					return this.formatFractionalSeconds(fieldLength, date);
-				case "E":
+				case 'E':
 					return this.formatDayOfWeek(fieldLength, date);
-				case "a":
+				case 'a':
 					return this.formatAmPm(fieldLength, date);
-				case "h":
+				case 'h':
 					return this.format1To12Hours(fieldLength, date);
-				case "K":
+				case 'K':
 					return this.format0To11Hours(fieldLength, date);
-				case "H":
+				case 'H':
 					return this.format0To23Hours(fieldLength, date);
-				case "c":
+				case 'c':
 					return this.formatStandaloneDay(fieldLength, date);
-				case "L":
+				case 'L':
 					return this.formatStandaloneMonth(fieldLength, date);
-				case "Q":
+				case 'Q':
 					return this.formatQuarter(fieldLength, date);
-				case "d":
+				case 'd':
 					return this.formatDate(fieldLength, date);
-				case "m":
+				case 'm':
 					return this.formatMinutes(fieldLength, date);
-				case "s":
+				case 's':
 					return this.formatSeconds(fieldLength, date);
-				case "v":
+				case 'v':
 					return this.formatGMT(fieldLength, date);
-				case "z":
+				case 'z':
 					return this.formatGMT(fieldLength, date);
-				case "Z":
+				case 'Z':
 					return this.formatTimeZoneRFC(fieldLength, date);
 				default:
 					return "";
@@ -127,7 +127,7 @@ namespace com.google.i18n.locale
 			else if (dateTimeFormat < 8)
 				pattern = (<any>this.symbols).TIMEFORMATS[dateTimeFormat - 4];
 			else if (dateTimeFormat < 12)
-				pattern = (<any>this.symbols).DATEFORMATS[dateTimeFormat - 8] + " " + (<any>this.symbols).TIMEFORMATS[dateTimeFormat - 8];
+				pattern = (<any>this.symbols).DATEFORMATS[dateTimeFormat - 8] + ' ' + (<any>this.symbols).TIMEFORMATS[dateTimeFormat - 8];
 			else
 			{
 				this.applyStandardPattern(DateTimeFormats.MEDIUM_DATETIME_FORMAT);
@@ -189,7 +189,7 @@ namespace com.google.i18n.locale
 				parts.push("GMT+");
 			}
 			parts.push(this.padNumber(timezoneOffset / 60, 2));
-			parts.push(":");
+			parts.push(':');
 			parts.push(this.padNumber(timezoneOffset % 60, 2));
 			return parts.join("");
 		}
@@ -211,11 +211,11 @@ namespace com.google.i18n.locale
 			if (fieldLength < 4)
 			{
 				let timezoneOffset = date.getTimezoneOffset();
-				let sign = "-";
+				let sign = '-';
 				if (timezoneOffset < 0)
 				{
 					timezoneOffset = -timezoneOffset;
-					sign = "+";
+					sign = '+';
 				}
 				timezoneOffset = timezoneOffset / 3 * 5 + timezoneOffset % 60;
 				return sign + this.padNumber(timezoneOffset, 4);
@@ -297,7 +297,7 @@ namespace com.google.i18n.locale
 			let padding = "";
 
 			for (let _loc6_ = 0; _loc6_ < Math.max(0, param2 - _loc4_.length); _loc6_++)
-				padding += "0";
+				padding += '0';
 
 			return padding + _loc3_;
 		}

@@ -327,7 +327,7 @@ namespace com.google.finance
 			switch (layer.name)
 			{
 				case "SimpleMovingAverage":
-					return layer.name + "-" + (<any>layer).length;	// TODO
+					return layer.name + '-' + (<any>layer).length;	// TODO
 				case "IndependentObjectsLayer":
 					return "Objects" + (<IndependentObjectsLayer>layer).renderObj;
 				case "IntervalBasedIndependentObjectsLayer":
@@ -749,9 +749,9 @@ namespace com.google.finance
 
 		private haveDataSource(dataSource: DataSource): boolean
 		{
-			for (const dataSource of this.dataSources)
+			for (const dataSource2 of this.dataSources)
 			{
-				if (dataSource === dataSource)
+				if (dataSource2 === dataSource)
 					return true;
 			}
 			return false;

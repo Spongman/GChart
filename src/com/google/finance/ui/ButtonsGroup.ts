@@ -43,10 +43,10 @@ namespace com.google.finance.ui
 			};
 		}
 
-		setSpacing(param1: string, param2: number)
+		setSpacing(spectator: string, spacing: number)
 		{
-			this.separator = param1;
-			this.spacing = param2;
+			this.separator = spectator;
+			this.spacing = spacing;
 		}
 
 		addButton(param1: string, param2?: flash.text.TextFormat, param3 = NaN, param4 = NaN)
@@ -71,20 +71,20 @@ namespace com.google.finance.ui
 			return _loc2_;
 		}
 
-		private putSeparator(param1: number, param2: number, param3: string): flash.text.TextField
+		private putSeparator(x: number, y: number, text: string): flash.text.TextField
 		{
 			const textField = new flash.text.TextField();
-			textField.x = param1 - this.spacing / 2;
-			textField.y = param2;
+			textField.x = x - this.spacing / 2;
+			textField.y = y;
 			textField.defaultTextFormat = this.separatorTextFormat;
 			textField.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			textField.selectable = false;
-			textField.text = param3;
+			textField.text = text;
 			this.addChild(textField);
 			return textField;
 		}
 
-		protected attachButton(param1: string, param2?: flash.text.TextFormat, param3 = NaN, param4 = NaN): flash.display.SimpleButton
+		protected attachButton(text: string, param2?: flash.text.TextFormat, param3 = NaN, param4 = NaN): flash.display.SimpleButton
 		{
 			const simpleButton = new flash.display.SimpleButton();
 			const nextButtonPosition = this.getNextButtonPosition();
@@ -96,21 +96,21 @@ namespace com.google.finance.ui
 			sprite.addChild(textField);
 			//const _loc7_ = _loc8_;
 			textField.defaultTextFormat = !!param2 ? param2 : this.buttonTextFormat;
-			textField.text = param1;
+			textField.text = text;
 			textField.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			simpleButton.upState = sprite;
 			simpleButton.downState = sprite;
 			simpleButton.overState = sprite;
 			simpleButton.hitTestState = sprite;
-			simpleButton.name = param1;
+			simpleButton.name = text;
 			this.addChild(simpleButton);
 			return simpleButton;
 		}
 
-		setLeftPadding(param1: number)
+		setLeftPadding(leftPadding: number)
 		{
-			this.leftPadding = param1;
-			this.currentX = param1;
+			this.leftPadding = leftPadding;
+			this.currentX = leftPadding;
 		}
 
 		resetButtonsGroup()

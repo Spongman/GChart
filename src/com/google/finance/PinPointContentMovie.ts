@@ -75,11 +75,11 @@ namespace com.google.finance
 			});
 		}
 
-		setActivePinPoint(pinPoint: com.google.finance.PinPoint, param2: number, param3: number)
+		setActivePinPoint(pinPoint: com.google.finance.PinPoint, x: number, y: number)
 		{
 			this.activePinPoint = pinPoint;
-			this.movieLeftX = param2;
-			this.movieBottomY = param3;
+			this.movieLeftX = x;
+			this.movieBottomY = y;
 		}
 
 		private renderBackground()

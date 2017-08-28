@@ -51,42 +51,42 @@ namespace com.google.finance.indicator
 			let _loc5_ = 0;
 			let _loc6_ = 0;
 			const _loc9_: number[] = [];
-			let _loc10_ = points[0].close;
+			let close = points[0].close;
 			const indicatorPoint = new IndicatorPoint(NaN, points[0]);
 			dataSeries.points.push(indicatorPoint);
 			for (let pointIndex = 1; pointIndex < points.length; pointIndex++)
 			{
-				const _loc12_ = points[pointIndex];
-				if (!this.shouldSkip(_loc12_, dataSeries))
+				const unit = points[pointIndex];
+				if (!this.shouldSkip(unit, dataSeries))
 				{
-					let _loc7_ = _loc12_.close - _loc10_;
-					_loc10_ = _loc12_.close;
-					_loc9_.push(_loc7_);
-					if (_loc7_ > 0)
-						_loc5_ = Number(_loc5_ + _loc7_);
+					let diff = unit.close - close;
+					close = unit.close;
+					_loc9_.push(diff);
+					if (diff > 0)
+						_loc5_ = Number(_loc5_ + diff);
 					else
-						_loc6_ = Number(_loc6_ - _loc7_);
+						_loc6_ = Number(_loc6_ - diff);
 
 					if (_loc9_.length < this.period)
 					{
-						dataSeries.points.push(new IndicatorPoint(NaN, _loc12_));
+						dataSeries.points.push(new IndicatorPoint(NaN, unit));
 					}
 					else
 					{
 						if (_loc5_ + _loc6_ !== 0)
 						{
 							const _loc4_ = _loc5_ / (_loc5_ + _loc6_) * 100;
-							dataSeries.points.push(new IndicatorPoint(_loc4_, _loc12_));
+							dataSeries.points.push(new IndicatorPoint(_loc4_, unit));
 						}
 						else
 						{
-							this.copyLastIndicatorPoint(_loc12_, dataSeries);
+							this.copyLastIndicatorPoint(unit, dataSeries);
 						}
-						_loc7_ = Number(_loc9_.shift());
-						if (_loc7_ > 0)
-							_loc5_ -= _loc7_;
+						diff = Number(_loc9_.shift());
+						if (diff > 0)
+							_loc5_ -= diff;
 						else
-							_loc6_ += _loc7_;
+							_loc6_ += diff;
 					}
 				}
 			}

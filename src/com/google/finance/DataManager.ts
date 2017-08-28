@@ -152,10 +152,10 @@ namespace com.google.finance
 			this.dataSources[ticker].clearAllObjects(param2);
 		}
 
-		removeObject(ticker: string, param2: string, param3: string)
+		removeObject(ticker: string, type: string, id: string)
 		{
 			// TODO: is param2 always a number?
-			this.dataSources[ticker].removeObject(param3, Number(param2));
+			this.dataSources[ticker].removeObject(type, Number(id));
 		}
 
 		private hasDataSource(ticker: string): boolean
@@ -171,10 +171,10 @@ namespace com.google.finance
 
 		dataUnavailableOnServer(ticker: string): boolean
 		{
-			const _loc2_ = this.dataSources[ticker];
-			if (!_loc2_)
+			const dataSource = this.dataSources[ticker];
+			if (!dataSource)
 				return false;
-			return _loc2_.dataUnavailableOnServer;
+			return dataSource.dataUnavailableOnServer;
 		}
 
 		private getUrlString(param1: string, param2: string, chartEvent: ChartEvent): string
@@ -222,27 +222,27 @@ namespace com.google.finance
 			return urlString;
 		}
 
-		cloneDataUnitForTargetExchange(dataUnit1: DataUnit, dataUnit2: DataUnit, param3: number): DataUnit
+		cloneDataUnitForTargetExchange(dataUnit1: DataUnit, dataUnit2: DataUnit, interval: number): DataUnit
 		{
 			const dataUnit = new DataUnit(dataUnit2.close, NaN, NaN, NaN);	// TODO
 			const time = Date.UTC(dataUnit1.exchangeDateInUTC.fullYearUTC, dataUnit1.exchangeDateInUTC.monthUTC, dataUnit1.exchangeDateInUTC.dateUTC, dataUnit2.dayMinute / 60, dataUnit2.dayMinute % 60);
 			dataUnit.setExchangeDateInUTC(time, dataUnit2.timezoneOffset);
 			dataUnit.coveredDays = dataUnit1.coveredDays;
-			dataUnit.volumes[param3] = 0;
-			dataUnit.intervals[0] = param3;
+			dataUnit.volumes[interval] = 0;
+			dataUnit.intervals[0] = interval;
 			return dataUnit;
 		}
 
-		checkDataSourceExistance(ticker: string, param2?: string)
+		checkDataSourceExistance(ticker: string, displayName?: string)
 		{
 			if (!this.hasDataSource(ticker))
 			{
 				const _loc3_ = this.mainManager ? this.mainManager.weekdayBitmap : Const.DEFAULT_WEEKDAY_BITMAP;
-				this.dataSources[ticker] = new DataSource(ticker, _loc3_, param2);
+				this.dataSources[ticker] = new DataSource(ticker, _loc3_, displayName);
 			}
-			else if (!this.dataSources[ticker].displayName && param2)
+			else if (!this.dataSources[ticker].displayName && displayName)
 			{
-				this.dataSources[ticker].displayName = param2;
+				this.dataSources[ticker].displayName = displayName;
 			}
 		}
 

@@ -24,11 +24,11 @@ namespace com.google.finance
 			const gr = sprite.graphics;
 			for (let index = data.firsts.length - 1; _loc7_ > minx && index >= 0; index--)
 			{
-				const _loc9_ = data.units[data.firsts[index]];
-				const month = _loc9_.exchangeDateInUTC.getUTCMonth();
+				const unit = data.units[data.firsts[index]];
+				const month = unit.exchangeDateInUTC.getUTCMonth();
 				if (month % 3 === 0)
 				{
-					_loc7_ = viewPoint.getXPos(maxx, minx, _loc9_);
+					_loc7_ = viewPoint.getXPos(maxx, minx, unit);
 					gr.lineStyle(0, SparklineDateLinesLayer.DATE_LINES_COLOR, 1);
 					gr.moveTo(_loc7_, maxy);
 					gr.lineTo(_loc7_, maxy - 4);

@@ -151,7 +151,7 @@ namespace com.google.finance
 			this.dataManager.eventHandler(event);
 		}
 
-		addLayer(layerTypeName: string, dataSource: com.google.finance.DataSource, param3: string): AbstractLayer<IViewPoint> | null
+		addLayer(layerTypeName: string, dataSource: com.google.finance.DataSource, layerId: string): AbstractLayer<IViewPoint> | null
 		{
 			if (layerTypeName === "")
 				return null;
@@ -159,8 +159,8 @@ namespace com.google.finance
 			this.addDataSource(dataSource);
 			const layerType = getDefinitionByName("com.google.finance." + layerTypeName) as typeof AbstractLayer;
 			const layer = new layerType(this, dataSource);
-			layer.name = param3;
-			layer.layerId = param3;
+			layer.name = layerId;
+			layer.layerId = layerId;
 			if (layer instanceof com.google.finance.WindowLayer)
 			{
 				if (this.windowLayer && this.contains(this.windowLayer))
@@ -489,11 +489,11 @@ namespace com.google.finance
 			}
 		}
 
-		sparklinePagingPossible(param1: number): boolean
+		sparklinePagingPossible(minute: number): boolean
 		{
 			const sparkLastMinute = this.getSparkLastMinute() < 0;
 			const sparkFirstMinute = this.getSparkFirstMinute() > this.getOldestMinute();
-			return param1 < 0 && sparkFirstMinute || param1 > 0 && sparkLastMinute;
+			return minute < 0 && sparkFirstMinute || minute > 0 && sparkLastMinute;
 		}
 
 		private checkResizeSparkline(param1 = NaN)
@@ -706,11 +706,11 @@ namespace com.google.finance
 		{
 		}
 
-		getNewContext(param1: number, param2: number): Context
+		getNewContext(lastMinute: number, count: number): Context
 		{
 			const context = new Context();
-			context.lastMinute = param1;
-			context.count = param2;
+			context.lastMinute = lastMinute;
+			context.count = count;
 			return context;
 		}
 	}

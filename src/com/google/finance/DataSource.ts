@@ -99,30 +99,30 @@ namespace com.google.finance
 			return false;
 		}
 
-		static getMinuteMetaIndex(param1: number, param2: number[], dataUnits: DataUnit[]): number
+		static getMinuteMetaIndex(minute: number, days: number[], dataUnits: DataUnit[]): number
 		{
-			if (isNaN(param1) || !dataUnits || dataUnits.length === 0 || param2.length === 0)
+			if (isNaN(minute) || !dataUnits || dataUnits.length === 0 || days.length === 0)
 				return -1;
 
 			let _loc4_ = 0;
-			let _loc5_ = param2.length - 1;
+			let _loc5_ = days.length - 1;
 			// tslint:disable-next-line
 			while (true)
 			{
 				const _loc6_ = Math.round((_loc4_ + _loc5_) / 2);
-				if (_loc6_ === 0 && dataUnits[param2[0]].relativeMinutes > param1)
+				if (_loc6_ === 0 && dataUnits[days[0]].relativeMinutes > minute)
 					break;
 
-				if (_loc6_ === param2.length - 1 && dataUnits[param2[_loc6_]].relativeMinutes < param1)
-					return param2.length - 1;
+				if (_loc6_ === days.length - 1 && dataUnits[days[_loc6_]].relativeMinutes < minute)
+					return days.length - 1;
 
-				if (dataUnits[param2[_loc6_]].relativeMinutes === param1)
+				if (dataUnits[days[_loc6_]].relativeMinutes === minute)
 					return _loc6_;
 
 				if (_loc4_ >= _loc5_ - 1)
 					return _loc4_;
 
-				if (dataUnits[param2[_loc6_]].relativeMinutes < param1)
+				if (dataUnits[days[_loc6_]].relativeMinutes < minute)
 					_loc4_ = _loc6_;
 				else
 					_loc5_ = _loc6_;
@@ -174,30 +174,30 @@ namespace com.google.finance
 			const lastDayOfWeek = Utils.getLastDayOfWeek(this.weekdayBitmap);
 			for (let unitIndex = 0; unitIndex < units.length; unitIndex++)
 			{
-				const _loc8_ = units[unitIndex];
-				const _loc9_ = unitIndex === units.length - 1 ? null : units[unitIndex + 1];
-				if (_loc8_.dayMinute === session.end)
+				const unit = units[unitIndex];
+				const nextUnit = unitIndex === units.length - 1 ? null : units[unitIndex + 1];
+				if (unit.dayMinute === session.end)
 				{
-					if (DataSource.unitsInDifferentDays(_loc8_, _loc9_))
+					if (DataSource.unitsInDifferentDays(unit, nextUnit))
 					{
 						dataSeries.days.push(unitIndex);
-						if (_loc8_.exchangeDateInUTC.getUTCMonth() !== _loc3_)
+						if (unit.exchangeDateInUTC.getUTCMonth() !== _loc3_)
 						{
 							dataSeries.firsts.push(unitIndex);
-							_loc3_ = _loc8_.exchangeDateInUTC.getUTCMonth();
+							_loc3_ = unit.exchangeDateInUTC.getUTCMonth();
 							if (_loc3_ === 0)
 								dataSeries.years.push(unitIndex);
 						}
-						const day = _loc8_.exchangeDateInUTC.getUTCDay();
+						const day = unit.exchangeDateInUTC.getUTCDay();
 						let _loc11_ = Number.POSITIVE_INFINITY;
-						if (_loc9_)
-							_loc11_ = _loc9_.exchangeDateInUTC.getUTCDay();
+						if (nextUnit)
+							_loc11_ = nextUnit.exchangeDateInUTC.getUTCDay();
 
-						if (day === lastDayOfWeek || _loc8_.coveredDays > 1 || unitIndex < units.length - 1 && day > _loc11_)
+						if (day === lastDayOfWeek || unit.coveredDays > 1 || unitIndex < units.length - 1 && day > _loc11_)
 							dataSeries.fridays.push(unitIndex);
 					}
-					if (_loc9_)
-						session = notnull(dataSeries.getSessionForMinute(_loc9_.dayMinute));
+					if (nextUnit)
+						session = notnull(dataSeries.getSessionForMinute(nextUnit.dayMinute));
 				}
 			}
 		}
@@ -277,9 +277,9 @@ namespace com.google.finance
 						break;
 				}
 			}
-			const _loc12_ = this.mergePoints(_loc9_, units, _loc11_, lastRealPointIndex);
-			data.units = _loc12_;
-			data.points = <any>_loc12_;
+			const mergedPoints = this.mergePoints(_loc9_, units, _loc11_, lastRealPointIndex);
+			data.units = mergedPoints;
+			data.points = <any>mergedPoints;
 			const time = _loc9_[0].time;
 			const _loc14_ = _loc9_[_loc9_.length - 1].time;
 			data.addIntervalBounds(this.baseInterval, time, _loc14_);
@@ -427,9 +427,9 @@ namespace com.google.finance
 								dataUnit.open = dataUnit.close;
 
 							dataUnit.high = Math.max(dataUnit.high, Math.max(dataUnit.open, dataUnit.close));
-							const _loc18_ = Math.min(dataUnit.open, dataUnit.close);
-							if (dataUnit.low === 0 || dataUnit.low > _loc18_)
-								dataUnit.low = _loc18_;
+							const min = Math.min(dataUnit.open, dataUnit.close);
+							if (dataUnit.low === 0 || dataUnit.low > min)
+								dataUnit.low = min;
 						}
 						if (dataUnits.length === 0)
 						{
@@ -723,9 +723,9 @@ namespace com.google.finance
 			let _loc4_ = 0;
 			for (let unitIndex = 1; unitIndex < dataSeries.units.length; unitIndex++)
 			{
-				const _loc6_ = dataSeries.units[unitIndex];
-				const _loc7_ = dataSeries.units[unitIndex - 1];
-				if ((_loc6_.time - _loc7_.time) / 1000 !== _loc2_)
+				const nextUnit = dataSeries.units[unitIndex];
+				const unit = dataSeries.units[unitIndex - 1];
+				if ((nextUnit.time - unit.time) / 1000 !== _loc2_)
 				{
 					if (_loc4_ > 0)
 						dataSeries.intradayRegions.push(new StartEndPair(_loc3_, unitIndex - 1));
@@ -801,7 +801,7 @@ namespace com.google.finance
 
 		private objectInTheFuture(stockAssociatedObject: StockAssociatedObject, dataSeries: com.google.finance.DataSeries): boolean
 		{
-			let _loc3_: DataUnit;
+			let unit: DataUnit;
 			if (Const.INDICATOR_ENABLED)
 			{
 				const points = dataSeries.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
@@ -809,7 +809,7 @@ namespace com.google.finance
 				if (!points || points.length === 0 || !_loc7_ || _loc7_.position !== points.length - 1)
 					return false;
 
-				_loc3_ = points[points.length - 1];
+				unit = points[points.length - 1];
 			}
 			else
 			{
@@ -817,10 +817,10 @@ namespace com.google.finance
 				if (stockAssociatedObject.pos !== numUnits - 1)
 					return false;
 
-				_loc3_ = dataSeries.units[numUnits - 1];
+				unit = dataSeries.units[numUnits - 1];
 			}
-			const exchangeDateInUTC = _loc3_.exchangeDateInUTC;
-			const date = new Date(stockAssociatedObject.time + _loc3_.timezoneOffset);
+			const exchangeDateInUTC = unit.exchangeDateInUTC;
+			const date = new Date(stockAssociatedObject.time + unit.timezoneOffset);
 			if (date.getUTCFullYear() < exchangeDateInUTC.getUTCFullYear())
 				return false;
 
@@ -847,25 +847,25 @@ namespace com.google.finance
 			if (this.afterHoursData.units.length === 0)
 				return;
 
-			let _loc2_ = this.afterHoursData.units[0];
-			let session = notnull(this.afterHoursData.getSessionForMinute(_loc2_.dayMinute));
+			const firstUnit = this.afterHoursData.units[0];
+			let session = notnull(this.afterHoursData.getSessionForMinute(firstUnit.dayMinute));
 			let _loc4_ = 0;
 			let _loc5_ = 0;
 			for (let unitIndex = 0; unitIndex < this.afterHoursData.units.length; unitIndex++)
 			{
-				_loc2_ = this.afterHoursData.units[unitIndex];
-				if (_loc2_.dayMinute === session.start)
+				const unit = this.afterHoursData.units[unitIndex];
+				if (unit.dayMinute === session.start)
 				{
 					_loc4_ = unitIndex;
 				}
-				else if (_loc2_.dayMinute === session.end)
+				else if (unit.dayMinute === session.end)
 				{
 					_loc5_ = unitIndex;
 					intervalSet.addInterval(_loc4_, _loc5_);
 					if (unitIndex < this.afterHoursData.units.length - 1)
 					{
-						_loc2_ = this.afterHoursData.units[unitIndex + 1];
-						session = notnull(this.afterHoursData.getSessionForMinute(_loc2_.dayMinute));
+						const nextUnit = this.afterHoursData.units[unitIndex + 1];
+						session = notnull(this.afterHoursData.getSessionForMinute(nextUnit.dayMinute));
 					}
 				}
 			}
@@ -876,34 +876,34 @@ namespace com.google.finance
 			let _loc6_ = NaN;
 			for (const objectKey of Object.keys(this.objects))
 			{
-				const _loc2_ = this.objects[objectKey];
-				for (let objectIndex = _loc2_.length - 1; objectIndex >= 0; objectIndex--)
+				const objects = this.objects[objectKey];
+				for (let objectIndex = objects.length - 1; objectIndex >= 0; objectIndex--)
 				{
-					const _loc4_ = _loc2_[objectIndex];
+					const obj = objects[objectIndex];
 					if (Const.INDICATOR_ENABLED)
 					{
-						const objectPositions = this.getObjectPositionsInInterval(_loc2_[objectIndex].time);
-						_loc4_.posInInterval = objectPositions.posInInterval;
+						const objectPositions = this.getObjectPositionsInInterval(objects[objectIndex].time);
+						obj.posInInterval = objectPositions.posInInterval;
 						_loc6_ = objectPositions.closePrice;
 					}
 					else
 					{
-						const seriesPosition = this.getObjectPositions(_loc2_[objectIndex].time, this.data);
+						const seriesPosition = this.getObjectPositions(objects[objectIndex].time, this.data);
 						if (seriesPosition.pos >= 0 && seriesPosition.pos < notnull(seriesPosition.refDataSeries).units.length)
 						{
-							_loc4_.pos = seriesPosition.pos;
-							_loc4_.dayPos = seriesPosition.dayPos;
-							_loc4_.refDataSeries = seriesPosition.refDataSeries;
+							obj.pos = seriesPosition.pos;
+							obj.dayPos = seriesPosition.dayPos;
+							obj.refDataSeries = seriesPosition.refDataSeries;
 							_loc6_ = notnull(seriesPosition.refDataSeries).units[seriesPosition.pos].close;
 						}
 					}
 					if (objectKey === "dividend")
 					{
-						const _loc7_ = <Dividend>_loc4_;
+						const _loc7_ = <Dividend>obj;
 						_loc7_.yield = _loc7_.amount / _loc6_;
 					}
 				}
-				_loc2_.sort(StockAssociatedObject.compare);
+				objects.sort(StockAssociatedObject.compare);
 			}
 		}
 
@@ -919,7 +919,7 @@ namespace com.google.finance
 
 		mergePoints(dataUnits1: DataUnit[], dataUnits2: DataUnit[], param3: boolean, param4: number): DataUnit[]
 		{
-			let _loc8_: DataUnit;
+			let unit: DataUnit;
 			const dataUnits: DataUnit[] = [];
 			let _loc6_ = 0;
 			let _loc7_ = 0;
@@ -948,13 +948,13 @@ namespace com.google.finance
 				else if (dataUnits1[_loc6_].time === dataUnits2[_loc7_].time)
 				{
 					if (param3 && dataUnits1[_loc6_].fake || dataUnits2[_loc7_].realtime && param4 <= _loc6_ || dataUnits2[_loc7_].coveredDays < dataUnits1[_loc6_].coveredDays)
-						_loc8_ = dataUnits2[_loc7_];
+						unit = dataUnits2[_loc7_];
 					else
-						_loc8_ = dataUnits1[_loc6_];
+						unit = dataUnits1[_loc6_];
 
-					dataUnits.push(_loc8_);
-					_loc8_.addVolumeInfo(dataUnits1[_loc6_]);
-					_loc8_.addVolumeInfo(dataUnits2[_loc7_]);
+					dataUnits.push(unit);
+					unit.addVolumeInfo(dataUnits1[_loc6_]);
+					unit.addVolumeInfo(dataUnits2[_loc7_]);
 					_loc6_++;
 					_loc7_++;
 				}
@@ -982,54 +982,54 @@ namespace com.google.finance
 		getClosestDataUnitAfterMinute(param1: number): DataUnit | null
 		{
 			const _loc2_ = this.afterHoursData.getRelativeMinuteIndex(param1);
-			const _loc3_ = this.afterHoursData.units[_loc2_ + 1];
+			const afterHoursUnit = this.afterHoursData.units[_loc2_ + 1];
 			const _loc4_ = this.data.getRelativeMinuteIndex(param1);
-			const _loc5_ = this.data.units[_loc4_ + 1];
-			if (!_loc3_ && !_loc5_)
+			const unit = this.data.units[_loc4_ + 1];
+			if (!afterHoursUnit && !unit)
 				return null;
 
-			if (!_loc3_)
-				return _loc5_;
+			if (!afterHoursUnit)
+				return unit;
 
-			if (!_loc5_)
-				return _loc3_;
+			if (!unit)
+				return afterHoursUnit;
 
-			if (param1 > _loc5_.relativeMinutes && param1 > _loc3_.relativeMinutes)
+			if (param1 > unit.relativeMinutes && param1 > afterHoursUnit.relativeMinutes)
 				return null;
 
-			if (this.visibleExtendedHours.length() === 0 || isNaN(_loc3_.relativeMinutes) || _loc3_.relativeMinutes < param1)
-				return _loc5_;
+			if (this.visibleExtendedHours.length() === 0 || isNaN(afterHoursUnit.relativeMinutes) || afterHoursUnit.relativeMinutes < param1)
+				return unit;
 
-			if (_loc5_.relativeMinutes < param1)
-				return _loc3_;
+			if (unit.relativeMinutes < param1)
+				return afterHoursUnit;
 
-			if (_loc5_.relativeMinutes - param1 < _loc3_.relativeMinutes - param1)
-				return _loc5_;
+			if (unit.relativeMinutes - param1 < afterHoursUnit.relativeMinutes - param1)
+				return unit;
 
-			return _loc3_;
+			return afterHoursUnit;
 		}
 
-		addObject(param1: any)
+		addObject(obj: any)
 		{
-			if (!param1)
+			if (!obj)
 				return;
 
-			const _loc2_ = param1._type ? param1._type : "newspin";
+			const _loc2_ = obj._type ? obj._type : "newspin";
 			if (!this.objects[_loc2_])
 				this.objects[_loc2_] = [];
 
 			let _loc3_;
-			if (param1._date instanceof Date)
-				_loc3_ = param1._date.getTime();
-			else if (!isNaN(param1._date))
-				_loc3_ = Number(param1._date) * 1000;
+			if (obj._date instanceof Date)
+				_loc3_ = obj._date.getTime();
+			else if (!isNaN(obj._date))
+				_loc3_ = Number(obj._date) * 1000;
 			else
 				return;
 
 			let _loc6_ = NaN;
 			let _loc7_ = NaN;
 
-			let _loc8_: DataSeries | null;
+			let refDataSeries: DataSeries | null;
 			let _loc9_: SeriesPosition[] | null;
 			let _loc10_: number;
 			let _loc11_: number;
@@ -1043,7 +1043,7 @@ namespace com.google.finance
 				_loc11_ = objectPositions.exchangeTimezoneOffset;
 				_loc10_ = objectPositions.closePrice;
 				_loc9_ = objectPositions.posInInterval;
-				_loc8_ = null;
+				refDataSeries = null;
 			}
 			else
 			{
@@ -1056,38 +1056,38 @@ namespace com.google.finance
 				_loc10_ = dataSeries.units[objectPositions.pos].close;
 				_loc6_ = objectPositions.pos;
 				_loc7_ = notnull(objectPositions.dayPos);
-				_loc8_ = objectPositions.refDataSeries;
+				refDataSeries = objectPositions.refDataSeries;
 				_loc9_ = null;
 			}
 			const _loc12_ = Utils.newDateInTimezone(new Date(_loc3_), _loc11_);
-			let obj: StockAssociatedObject;
+			let newObject: StockAssociatedObject;
 			switch (_loc2_)
 			{
 				case "newspin":
-					obj = new PinPoint(_loc6_, _loc7_, _loc9_, _loc3_, _loc12_, param1._id, this.quoteName, param1._letter);
+					newObject = new PinPoint(_loc6_, _loc7_, _loc9_, _loc3_, _loc12_, obj._id, this.quoteName, obj._letter);
 					break;
 				case "split":
-					obj = new Split(_loc6_, _loc7_, _loc9_, _loc3_, _loc12_, param1._id, this.quoteName, param1._old_shares, param1._new_shares);
-					if (this.objectInTheFuture(obj, this.data))
+					newObject = new Split(_loc6_, _loc7_, _loc9_, _loc3_, _loc12_, obj._id, this.quoteName, obj._old_shares, obj._new_shares);
+					if (this.objectInTheFuture(newObject, this.data))
 						return;
 					break;
 				case "dividend":
-					obj = new Dividend(_loc6_, _loc7_, _loc9_, _loc3_, _loc12_, param1._id, this.quoteName, param1._amount, param1._amount_currency, _loc10_);
-					if (this.objectInTheFuture(obj, this.data))
+					newObject = new Dividend(_loc6_, _loc7_, _loc9_, _loc3_, _loc12_, obj._id, this.quoteName, obj._amount, obj._amount_currency, _loc10_);
+					if (this.objectInTheFuture(newObject, this.data))
 						return;
 					break;
 				case "stock_dividend":
-					obj = new StockDividend(_loc6_, _loc7_, _loc9_, _loc3_, _loc12_, param1._id, this.quoteName, param1._ticker, param1._adjustment_factor);
-					if (this.objectInTheFuture(obj, this.data))
+					newObject = new StockDividend(_loc6_, _loc7_, _loc9_, _loc3_, _loc12_, obj._id, this.quoteName, obj._ticker, obj._adjustment_factor);
+					if (this.objectInTheFuture(newObject, this.data))
 						return;
 					break;
 				default:
-					obj = new StockAssociatedObject(_loc6_, _loc7_, _loc9_, _loc3_, _loc12_, param1._id, this.quoteName);
+					newObject = new StockAssociatedObject(_loc6_, _loc7_, _loc9_, _loc3_, _loc12_, obj._id, this.quoteName);
 					break;
 			}
-			obj.originalObject = param1;
-			obj.refDataSeries = _loc8_;
-			this.objects[_loc2_].push(obj);
+			newObject.originalObject = obj;
+			newObject.refDataSeries = refDataSeries;
+			this.objects[_loc2_].push(newObject);
 		}
 
 		eventDone(param1: string)
@@ -1100,20 +1100,20 @@ namespace com.google.finance
 			this.afterHoursData.setPointsInIntervalArray(Const.INTRADAY_INTERVAL, dataUnits);
 		}
 
-		dayIndexHasVisibleExtendedHours(param1: number): boolean
+		dayIndexHasVisibleExtendedHours(index: number): boolean
 		{
 			if (this.visibleExtendedHours.length() === 0)
 				return false;
 
-			const _loc2_ = this.data.units[this.data.days[param1]];
-			if (param1 === this.data.days.length - 1)
-				return _loc2_.relativeMinutes !== 0;
+			const unit = this.data.units[this.data.days[index]];
+			if (index === this.data.days.length - 1)
+				return unit.relativeMinutes !== 0;
 
-			const _loc3_ = this.data.units[this.data.days[param1] + 1];
-			if (this.data.minuteIsEndOfDataSession(_loc2_.dayMinute) && this.data.minuteIsEndOfDataSession(_loc3_.dayMinute))
+			const nextUnit = this.data.units[this.data.days[index] + 1];
+			if (this.data.minuteIsEndOfDataSession(unit.dayMinute) && this.data.minuteIsEndOfDataSession(nextUnit.dayMinute))
 				return false;
 
-			return _loc3_.relativeMinutes - _loc2_.relativeMinutes !== 1;
+			return nextUnit.relativeMinutes - unit.relativeMinutes !== 1;
 		}
 
 		isEmpty(): boolean
@@ -1132,7 +1132,7 @@ namespace com.google.finance
 
 		private getObjectPositions(param1: number, dataSeries: com.google.finance.DataSeries): SeriesPosition
 		{
-			let _loc3_: number;
+			let day: number;
 			const units = dataSeries.units;
 			const days = dataSeries.days;
 			let timeIndex = DataSource.getTimeIndex(param1, units);
@@ -1162,12 +1162,12 @@ namespace com.google.finance
 					}
 
 					if (_loc14_ === dateInTimezone2)
-						_loc3_ = days[dataSeries.getNextDayStart(timeIndex + 1)];
+						day = days[dataSeries.getNextDayStart(timeIndex + 1)];
 					else
-						_loc3_ = timeIndex;
+						day = timeIndex;
 
 					if (timeIndex < units.length - 1 && units[timeIndex + 1].dayMinute === dataSeries.marketCloseMinute)
-						timeIndex = _loc3_;
+						timeIndex = day;
 				}
 				else if (dateInTimezone1 > dateInTimezone2)
 				{
@@ -1186,43 +1186,43 @@ namespace com.google.finance
 					}
 
 					if (_loc15_ === dateInTimezone2)
-						_loc3_ = days[dataSeries.getPrevDayStart(timeIndex)];
+						day = days[dataSeries.getPrevDayStart(timeIndex)];
 					else
-						_loc3_ = timeIndex;
+						day = timeIndex;
 
 					if (timeIndex === 0 || units[timeIndex - 1].dayMinute === dataSeries.marketCloseMinute)
-						timeIndex = _loc3_;
+						timeIndex = day;
 				}
 				else
 				{
-					_loc3_ = timeIndex;
+					day = timeIndex;
 				}
 			}
 			else
 			{
-				_loc3_ = days[dataSeries.getNextDayStart(timeIndex)];
+				day = days[dataSeries.getNextDayStart(timeIndex)];
 			}
-			const _loc8_ = units[timeIndex];
-			let _loc9_: DataUnit | null = null;
+			const unit = units[timeIndex];
+			let nextUnit: DataUnit | null = null;
 			if (timeIndex < units.length - 1)
-				_loc9_ = units[timeIndex + 1];
+				nextUnit = units[timeIndex + 1];
 
 			let _loc10_ = dataSeries;
-			if (!_loc9_ && _loc8_.relativeMinutes !== 0 || _loc9_ && _loc8_.dayMinute === dataSeries.marketCloseMinute && _loc9_.dayMinute === dataSeries.marketOpenMinute && _loc9_.relativeMinutes - _loc8_.relativeMinutes > 1)
+			if (!nextUnit && unit.relativeMinutes !== 0 || nextUnit && unit.dayMinute === dataSeries.marketCloseMinute && nextUnit.dayMinute === dataSeries.marketOpenMinute && nextUnit.relativeMinutes - unit.relativeMinutes > 1)
 			{
 				if (this.afterHoursData.units.length !== 0)
 				{
-					if (!_loc9_)
+					if (!nextUnit)
 					{
 						timeIndex = this.afterHoursData.units.length - 1;
-						_loc9_ = this.afterHoursData.units[timeIndex];
+						nextUnit = this.afterHoursData.units[timeIndex];
 					}
 					timeIndex = DataSource.getTimeIndex(param1, this.afterHoursData.units);
-					_loc3_ = DataSource.getTimeIndex(_loc9_.time, this.afterHoursData.units);
+					day = DataSource.getTimeIndex(nextUnit.time, this.afterHoursData.units);
 					_loc10_ = this.afterHoursData;
 				}
 			}
-			return new SeriesPosition(_loc10_, timeIndex, _loc3_);
+			return new SeriesPosition(_loc10_, timeIndex, day);
 		}
 
 		objectsToString(): string
@@ -1260,60 +1260,60 @@ namespace com.google.finance
 			this.objects[param1] = [];
 		}
 
-		getEndOfDayDataUnitFor(param1: number): DataUnit
+		getEndOfDayDataUnitFor(minute: number): DataUnit
 		{
-			let minuteMetaIndex = DataSource.getMinuteMetaIndex(param1, this.data.days, this.data.units);
+			let minuteMetaIndex = DataSource.getMinuteMetaIndex(minute, this.data.days, this.data.units);
 			if (minuteMetaIndex === -1)
 				return this.data.units[this.data.days[0]];
 
-			let _loc3_ = this.data.days[minuteMetaIndex];
-			if (_loc3_ + 1 < this.data.units.length && this.data.minuteIsEndOfDataSession(this.data.units[_loc3_ + 1].dayMinute))
+			let day = this.data.days[minuteMetaIndex];
+			if (day + 1 < this.data.units.length && this.data.minuteIsEndOfDataSession(this.data.units[day + 1].dayMinute))
 			{
-				if (param1 === this.data.units[_loc3_].relativeMinutes)
-					return this.data.units[_loc3_];
+				if (minute === this.data.units[day].relativeMinutes)
+					return this.data.units[day];
 
-				return this.data.units[_loc3_ + 1];
+				return this.data.units[day + 1];
 			}
-			if (_loc3_ + 1 < this.data.units.length && param1 >= this.data.units[_loc3_ + 1].relativeMinutes)
+			if (day + 1 < this.data.units.length && minute >= this.data.units[day + 1].relativeMinutes)
 			{
 				minuteMetaIndex++;
-				_loc3_ = this.data.days[minuteMetaIndex];
+				day = this.data.days[minuteMetaIndex];
 			}
 			if (!this.dayIndexHasVisibleExtendedHours(minuteMetaIndex))
 			{
-				_loc3_ = this.data.days[minuteMetaIndex];
-				return this.data.units[_loc3_];
+				day = this.data.days[minuteMetaIndex];
+				return this.data.units[day];
 			}
-			const _loc4_ = DataSource.getMinuteMetaIndex(param1, this.afterHoursData.days, this.afterHoursData.units);
-			let _loc5_ = this.afterHoursData.days[_loc4_];
-			if (param1 > this.afterHoursData.units[_loc5_].relativeMinutes && _loc4_ + 1 < this.afterHoursData.days.length)
-				_loc5_ = this.afterHoursData.days[_loc4_ + 1];
+			const minuteIndex = DataSource.getMinuteMetaIndex(minute, this.afterHoursData.days, this.afterHoursData.units);
+			let afterHoursDay = this.afterHoursData.days[minuteIndex];
+			if (minute > this.afterHoursData.units[afterHoursDay].relativeMinutes && minuteIndex + 1 < this.afterHoursData.days.length)
+				afterHoursDay = this.afterHoursData.days[minuteIndex + 1];
 
-			const _loc6_ = this.afterHoursData.units[_loc5_];
-			let _loc7_ = this.data.units[_loc3_];
-			if (param1 > _loc7_.relativeMinutes && minuteMetaIndex + 1 < this.data.days.length)
+			const afterHoursUnit = this.afterHoursData.units[afterHoursDay];
+			let unit = this.data.units[day];
+			if (minute > unit.relativeMinutes && minuteMetaIndex + 1 < this.data.days.length)
 			{
-				_loc3_ = this.data.days[minuteMetaIndex + 1];
-				_loc7_ = this.data.units[_loc3_];
+				day = this.data.days[minuteMetaIndex + 1];
+				unit = this.data.units[day];
 			}
-			const closestDataUnit = this.getClosestDataUnitLessThen(param1);
+			const closestDataUnit = this.getClosestDataUnitLessThen(minute);
 			if (!closestDataUnit)
-				return _loc7_;
+				return unit;
 
-			if (Utils.compareUtcDates(closestDataUnit.exchangeDateInUTC, _loc7_.exchangeDateInUTC) === 0 && Utils.compareUtcDates(closestDataUnit.exchangeDateInUTC, _loc6_.exchangeDateInUTC) === 0)
+			if (Utils.compareUtcDates(closestDataUnit.exchangeDateInUTC, unit.exchangeDateInUTC) === 0 && Utils.compareUtcDates(closestDataUnit.exchangeDateInUTC, afterHoursUnit.exchangeDateInUTC) === 0)
 			{
-				if (_loc6_.time > _loc7_.time)
-					return _loc6_;
+				if (afterHoursUnit.time > unit.time)
+					return afterHoursUnit;
 
-				return _loc7_;
+				return unit;
 			}
-			if (Utils.compareUtcDates(closestDataUnit.exchangeDateInUTC, _loc6_.exchangeDateInUTC) === 0)
-				return _loc6_;
+			if (Utils.compareUtcDates(closestDataUnit.exchangeDateInUTC, afterHoursUnit.exchangeDateInUTC) === 0)
+				return afterHoursUnit;
 
-			if (Utils.compareUtcDates(closestDataUnit.exchangeDateInUTC, _loc7_.exchangeDateInUTC) === 0)
-				return _loc7_;
+			if (Utils.compareUtcDates(closestDataUnit.exchangeDateInUTC, unit.exchangeDateInUTC) === 0)
+				return unit;
 
-			return _loc7_;
+			return unit;
 		}
 
 		private checkHeaderSanity(param1: Map<string>, dataSeries: com.google.finance.DataSeries)
@@ -1346,19 +1346,21 @@ namespace com.google.finance
 			dataSeries.marketDayLength = dataSeries.allSessionsLength();
 		}
 
-		setRelativeMinutesState(param1: number)
+		setRelativeMinutesState(state: number)
 		{
-			this.relativeMinutesState = param1;
+			this.relativeMinutesState = state;
 		}
 
-		private getObjPos(param1: string, param2: number): number
+		private getObjPos(type: string, id: number): number
 		{
-			if (this.objects[param1] === undefined)
+			const objects = this.objects[type];
+
+			if (objects === undefined)
 				return -1;
 
-			for (let objectIndex = this.objects[param1].length - 1; objectIndex >= 0; objectIndex--)
+			for (let objectIndex = objects.length - 1; objectIndex >= 0; objectIndex--)
 			{
-				if (this.objects[param1][objectIndex].id === param2)
+				if (objects[objectIndex].id === id)
 					return objectIndex;
 			}
 			return -1;
@@ -1424,11 +1426,11 @@ namespace com.google.finance
 			return dataUnit2.close === dataUnit1.close && (isNaN(dataUnit1.open) || dataUnit1.open === dataUnit1.close) && (isNaN(dataUnit1.high) || dataUnit1.high === dataUnit1.close) && (isNaN(dataUnit1.low) || dataUnit1.low === dataUnit1.close);
 		}
 
-		removeObject(param1: string, param2: number)
+		removeObject(type: string, id: number)
 		{
-			const objPos = this.getObjPos(param1, param2);
+			const objPos = this.getObjPos(type, id);
 			if (objPos !== -1)
-				this.objects[param1].splice(objPos, 1);
+				this.objects[type].splice(objPos, 1);
 		}
 
 		private addAfterHoursUnitToLastMinute(dataUnit: DataUnit, dataUnits: DataUnit[], startEndPair: StartEndPair | undefined, dataSeries: com.google.finance.DataSeries)
@@ -1444,21 +1446,21 @@ namespace com.google.finance
 				this.makeDataUnitEndOfDay(dataUnit, dataUnits, startEndPair, dataSeries);
 				return;
 			}
-			let _loc7_ = dataUnits[dataUnits.length - 1];
-			const _loc8_ = notnull(dataSeries.getSessionForMinute(_loc7_.dayMinute));
-			const _loc9_ = dataSeries.getSessionIndex(_loc7_.dayMinute);
-			if (_loc7_ && _loc7_.dayMinute < _loc8_.end)
+			let lastUnit = dataUnits[dataUnits.length - 1];
+			const _loc8_ = notnull(dataSeries.getSessionForMinute(lastUnit.dayMinute));
+			const _loc9_ = dataSeries.getSessionIndex(lastUnit.dayMinute);
+			if (lastUnit && lastUnit.dayMinute < _loc8_.end)
 			{
-				_loc5_ = (_loc8_.end - _loc7_.dayMinute) / this.baseMinutesInterval;
-				this.addFakeDataUnits(dataUnits, _loc7_, dataSeries, _loc5_, Directions.FORWARD);
-				_loc7_ = dataUnits[dataUnits.length - 1];
+				_loc5_ = (_loc8_.end - lastUnit.dayMinute) / this.baseMinutesInterval;
+				this.addFakeDataUnits(dataUnits, lastUnit, dataSeries, _loc5_, Directions.FORWARD);
+				lastUnit = dataUnits[dataUnits.length - 1];
 			}
-			const _loc10_ = (dataUnit.time - _loc7_.time) / Const.MS_PER_MINUTE;
+			const _loc10_ = (dataUnit.time - lastUnit.time) / Const.MS_PER_MINUTE;
 			const _loc11_ = startEndPair.end - startEndPair.start;
 			const _loc12_ = dataUnit.dayMinute - startEndPair.end;
 			if (_loc10_ > _loc12_ + _loc11_)
 			{
-				if (!DataSource.unitsInDifferentDays(_loc7_, dataUnit))
+				if (!DataSource.unitsInDifferentDays(lastUnit, dataUnit))
 				{
 					this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], dataSeries, _loc9_ + 1, sessionIndex, Directions.FORWARD);
 				}
@@ -1471,15 +1473,15 @@ namespace com.google.finance
 			}
 			else
 			{
-				_loc7_.close = dataUnit.close;
-				if (!isNaN(_loc7_.high) && _loc7_.high < _loc7_.close)
-					_loc7_.high = _loc7_.close;
+				lastUnit.close = dataUnit.close;
+				if (!isNaN(lastUnit.high) && lastUnit.high < lastUnit.close)
+					lastUnit.high = lastUnit.close;
 
-				if (!isNaN(_loc7_.low) && _loc7_.low > _loc7_.close)
-					_loc7_.low = _loc7_.close;
+				if (!isNaN(lastUnit.low) && lastUnit.low > lastUnit.close)
+					lastUnit.low = lastUnit.close;
 
-				const _loc13_ = dataUnit.intervals[0];
-				_loc7_.volumes[_loc13_] += dataUnit.volumes[_loc13_];
+				const volumeIndex = dataUnit.intervals[0];
+				lastUnit.volumes[volumeIndex] += dataUnit.volumes[volumeIndex];
 			}
 		}
 

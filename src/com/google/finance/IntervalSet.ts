@@ -16,9 +16,9 @@ namespace com.google.finance
 			return this.intervals[_loc2_];
 		}
 
-		addInterval(param1: number, param2: number)
+		addInterval(start: number, end: number)
 		{
-			this.addPair(new StartEndPair(param1, param2));
+			this.addPair(new StartEndPair(start, end));
 		}
 
 		getClosestEarlierIntervalForValue(param1: number): StartEndPair | null

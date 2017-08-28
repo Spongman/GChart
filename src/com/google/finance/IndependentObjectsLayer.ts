@@ -51,8 +51,8 @@ namespace com.google.finance
 			if (isNaN(context.lastMinute) || isNaN(context.count) || context.count === 0)
 				return;
 
-			const _loc2_ = this.dataSource.objects[this.renderObj];
-			if (!_loc2_ || _loc2_.length === 0)
+			const objects = this.dataSource.objects[this.renderObj];
+			if (!objects || objects.length === 0)
 			{
 				this.resetCanvas();
 				return;
@@ -60,21 +60,21 @@ namespace com.google.finance
 			const units = this.dataSource.data.units;
 			const detailLevel = this.viewPoint.getDetailLevel();
 			this.activeMovies = 0;
-			const firstVisibleObject = this.getFirstVisibleObject(_loc2_, units, context);
+			const firstVisibleObject = this.getFirstVisibleObject(objects, units, context);
 			if (firstVisibleObject === -1)
 			{
 				this.resetCanvas();
 				return;
 			}
 
-			const lastVisibleObject = this.getLastVisibleObject(_loc2_, units, context);
+			const lastVisibleObject = this.getLastVisibleObject(objects, units, context);
 			const _loc7_ = this.viewPoint.count / this.dataSource.data.marketDayLength;
 			context[this.renderObj] = [];
 			let _loc8_ = 0;
 			for (let visibleObjectIndex = firstVisibleObject; visibleObjectIndex <= lastVisibleObject; visibleObjectIndex++)
 			{
-				const position = this.getPosition(_loc2_[visibleObjectIndex], units, detailLevel, context);
-				const _loc11_ = this.putObject(_loc2_[visibleObjectIndex], position);
+				const position = this.getPosition(objects[visibleObjectIndex], units, detailLevel, context);
+				const _loc11_ = this.putObject(objects[visibleObjectIndex], position);
 				if (_loc7_ > IndependentObjectsLayer.HIDE_TEXT_THRESHOLD)
 				{
 					_loc11_.hideText();
@@ -111,19 +111,19 @@ namespace com.google.finance
 		{
 			const position = new Position();
 			const dataSeries = notnull(seriesPosition.refDataSeries);
-			const xPos = this.viewPoint.getXPos(dataSeries.units[seriesPosition.pos]);
-			const yPos = this.getYPos(context, dataSeries.units[seriesPosition.pos]);
+			const x = this.viewPoint.getXPos(dataSeries.units[seriesPosition.pos]);
+			const y = this.getYPos(context, dataSeries.units[seriesPosition.pos]);
 			//const _loc8_ = (this.viewPoint.maxy + this.viewPoint.miny) / 2;
 			if (this.positioning === IndependentObjectsLayer.POSITION_CHART)
 			{
-				if (yPos > this.viewPoint.miny + 40)
+				if (y > this.viewPoint.miny + 40)
 				{
-					position.y = yPos - IndependentObjectsLayer.OBJECT_DISTANCE;
+					position.y = y - IndependentObjectsLayer.OBJECT_DISTANCE;
 					position.orientation = Orientations.DOWN;
 				}
 				else
 				{
-					position.y = yPos + IndependentObjectsLayer.OBJECT_DISTANCE;
+					position.y = y + IndependentObjectsLayer.OBJECT_DISTANCE;
 					position.orientation = Orientations.UP;
 				}
 			}
@@ -137,7 +137,7 @@ namespace com.google.finance
 				position.y = this.viewPoint.maxy - _loc10_;
 				position.orientation = Orientations.DOWN;
 			}
-			position.x = xPos;
+			position.x = x;
 			return position;
 		}
 
@@ -146,8 +146,8 @@ namespace com.google.finance
 			const lastMinute = context.lastMinute;
 			for (let seriesPositionIndex = seriesPositions.length - 1; seriesPositionIndex >= 0; seriesPositionIndex--)
 			{
-				const _loc6_ = seriesPositions[seriesPositionIndex];
-				const relativeMinutes = notnull(_loc6_.refDataSeries).units[_loc6_.pos].relativeMinutes;
+				const position = seriesPositions[seriesPositionIndex];
+				const relativeMinutes = notnull(position.refDataSeries).units[position.pos].relativeMinutes;
 				if (relativeMinutes < lastMinute)
 					return seriesPositionIndex;
 			}
@@ -210,9 +210,9 @@ namespace com.google.finance
 			const _loc4_ = context.lastMinute - context.count;
 			for (let seriesPositionIndex = 0; seriesPositionIndex < seriesPositions.length; seriesPositionIndex++)
 			{
-				const _loc6_ = seriesPositions[seriesPositionIndex];
-				const relativeMinutes = notnull(_loc6_.refDataSeries).units[_loc6_.pos].relativeMinutes;
-				if (relativeMinutes > _loc4_ && _loc6_.pos > 0)
+				const position = seriesPositions[seriesPositionIndex];
+				const relativeMinutes = notnull(position.refDataSeries).units[position.pos].relativeMinutes;
+				if (relativeMinutes > _loc4_ && position.pos > 0)
 					return seriesPositionIndex;
 			}
 			return -1;

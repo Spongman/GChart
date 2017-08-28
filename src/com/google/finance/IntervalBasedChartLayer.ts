@@ -136,10 +136,10 @@ namespace com.google.finance
 					}
 					for (let minuteIndex = lastMinuteIndex; minuteIndex >= _loc7_; minuteIndex--)
 					{
-						const _loc20_ = points[minuteIndex];
-						const _loc21_ = !_loc4_ && _loc20_.low ? _loc20_.low : _loc20_.close;
+						const unit = points[minuteIndex];
+						const _loc21_ = !_loc4_ && unit.low ? unit.low : unit.close;
 						_loc10_ = Utils.extendedMin(_loc10_, _loc21_);
-						const _loc22_ = !_loc4_ && _loc20_.high ? _loc20_.high : _loc20_.close;
+						const _loc22_ = !_loc4_ && unit.high ? unit.high : unit.close;
 						_loc9_ = Utils.extendedMax(_loc9_, _loc22_);
 					}
 					if (points[0].relativeMinutes - 1 <= _loc11_)
@@ -172,19 +172,19 @@ namespace com.google.finance
 			return context;
 		}
 
-		setLayerName(param1: string)
+		setLayerName(layerName: string)
 		{
-			this.layerName = param1;
+			this.layerName = layerName;
 		}
 
-		protected findPointIndex(param1: number): number
+		protected findPointIndex(x: number): number
 		{
 			const dataSeries = notnull(this.getDataSeries());
 			const points = this.getPointsForCurrentDetailLevel();
 			if (!points)
 				return -1;
 
-			const minute = this.viewPoint.getMinuteOfX(param1);
+			const minute = this.viewPoint.getMinuteOfX(x);
 			let relativeMinuteIndex = dataSeries.getRelativeMinuteIndex(minute, points);
 			if (relativeMinuteIndex === points.length - 2)
 			{
@@ -193,7 +193,7 @@ namespace com.google.finance
 			}
 			if (this.viewPoint.getDetailLevelForTechnicalStyle() === Intervals.WEEKLY)
 			{
-				while (relativeMinuteIndex + 1 < points.length && points[relativeMinuteIndex + 1].weeklyXPos <= param1)
+				while (relativeMinuteIndex + 1 < points.length && points[relativeMinuteIndex + 1].weeklyXPos <= x)
 					relativeMinuteIndex++;
 			}
 			while (relativeMinuteIndex > 0 && (points[relativeMinuteIndex].fake || points[relativeMinuteIndex].duplicate))
@@ -202,19 +202,19 @@ namespace com.google.finance
 			return relativeMinuteIndex;
 		}
 
-		highlightPoint(context: Context, param2: number, state: Dictionary)
+		highlightPoint(context: Context, x: number, state: Dictionary)
 		{
 			if (!this.isEnabled())
 				return;
 
-			const pointIndex = this.findPointIndex(param2);
+			const pointIndex = this.findPointIndex(x);
 			const points = this.getPointsForCurrentDetailLevel();
 			if (!points || pointIndex === -1)
 				return;
 
-			const _loc6_ = points[pointIndex];
-			const _loc7_ = !isNaN(_loc6_.weeklyXPos) ? Number(_loc6_.weeklyXPos) : this.viewPoint.getXPos(_loc6_);
-			const closeYPos = this.getCloseYPos(context, _loc6_);
+			const unit = points[pointIndex];
+			const xPos = !isNaN(unit.weeklyXPos) ? Number(unit.weeklyXPos) : this.viewPoint.getXPos(unit);
+			const closeYPos = this.getCloseYPos(context, unit);
 			if (state[SpaceText.SETTER_STR])
 				state[SpaceText.SETTER_STR].clearHighlight();
 
@@ -222,13 +222,13 @@ namespace com.google.finance
 			gr.clear();
 			const dataSeries = this.getDataSeries() === this.dataSource.afterHoursData ? Number(Const.AH_DOT_COLOR) : Const.DOT_COLOR;
 			gr.lineStyle(5, dataSeries, 1);
-			gr.moveTo(_loc7_, closeYPos - 0.2);
-			gr.lineTo(_loc7_, closeYPos + 0.2);
-			state[SpaceText.POINT_STR] = _loc6_;
+			gr.moveTo(xPos, closeYPos - 0.2);
+			gr.lineTo(xPos, closeYPos + 0.2);
+			state[SpaceText.POINT_STR] = unit;
 			state[SpaceText.EXTRA_TEXT_STR] = "";
 			state[SpaceText.SETTER_STR] = this;
-			state[SpaceText.OHLC_INFO_FLAG_STR] = this.shouldDisplayOhlcText(_loc6_);
-			state[SpaceText.OHLC_BASE_PRICE_STR] = this.getOhlcBasePrice(_loc6_, pointIndex === 0 ? null : points[pointIndex - 1]);
+			state[SpaceText.OHLC_INFO_FLAG_STR] = this.shouldDisplayOhlcText(unit);
+			state[SpaceText.OHLC_BASE_PRICE_STR] = this.getOhlcBasePrice(unit, pointIndex === 0 ? null : points[pointIndex - 1]);
 		}
 
 		getOhlcColor(dataUnit1: DataUnit, dataUnit2: DataUnit): number
@@ -239,11 +239,11 @@ namespace com.google.finance
 			return dataUnit1.close >= dataUnit2.close ? Number(Const.POSITIVE_DIFFERENCE_COLOR) : Const.NEGATIVE_DIFFERENCE_COLOR;
 		}
 
-		setEnabled(param1 = true)
+		setEnabled(enabled = true)
 		{
-			this.enabled = param1;
-			this.visible = param1;
-			this.highlightCanvas.visible = param1;
+			this.enabled = enabled;
+			this.visible = enabled;
+			this.highlightCanvas.visible = enabled;
 		}
 	}
 }

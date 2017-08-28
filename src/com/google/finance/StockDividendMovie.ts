@@ -32,13 +32,13 @@ namespace com.google.finance
 
 		getDetailedText(): string
 		{
-			let _loc1_: string;
+			let msg: string;
 			if (this.associatedStockDividend.ticker)
-				_loc1_ = Messages.getMsg(Messages.STOCK_DIVIDEND_TEXT_WITH_TICKER, this.associatedStockDividend.ticker);
+				msg = Messages.getMsg(Messages.STOCK_DIVIDEND_TEXT_WITH_TICKER, this.associatedStockDividend.ticker);
 			else
-				_loc1_ = Messages.getMsg(Messages.STOCK_DIVIDEND_TEXT);
+				msg = Messages.getMsg(Messages.STOCK_DIVIDEND_TEXT);
 
-			return _loc1_.concat("\n", Messages.getMsg(Messages.ADJUSTMENT_FACTOR_TEXT, this.associatedStockDividend.adjustmentFactor));
+			return msg.concat("\n", Messages.getMsg(Messages.ADJUSTMENT_FACTOR_TEXT, this.associatedStockDividend.adjustmentFactor));
 		}
 
 		setObject(stockDividend: StockDividend)

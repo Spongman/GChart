@@ -90,13 +90,13 @@ namespace com.google.finance
 			this.updateInfoText();
 		}
 
-		setSize(param1: number, param2: number)
+		setSize(width: number, height: number)
 		{
 			this.updateAlignAndPadding();
 			this.positionInfoText();
 			this.positionComparisonInfoDots();
-			this.bg.width = param1;
-			this.bg.height = param2 + Const.INFO_TEXT_TOP_PADDING;
+			this.bg.width = width;
+			this.bg.height = height + Const.INFO_TEXT_TOP_PADDING;
 		}
 
 		private getHumanReadableVolume(value: number): string
@@ -139,9 +139,9 @@ namespace com.google.finance
 			return text;
 		}
 
-		private setDateEntryState(param1: number)
+		private setDateEntryState(state: number)
 		{
-			this.dateEntryState = param1;
+			this.dateEntryState = state;
 			const _loc2_ = this.dateEntryState === SpaceText.EDIT_DATES;
 			this.startDate.setHighlighted(_loc2_);
 			this.endDate.setHighlighted(_loc2_);
@@ -155,14 +155,14 @@ namespace com.google.finance
 			this.infoDots.splice(0);
 		}
 
-		private newTextField(param1: number, param2: number): flash.text.TextField
+		private newTextField(x: number, y: number): flash.text.TextField
 		{
 			const textField = new flash.text.TextField();
 			textField.defaultTextFormat = this.blackText;
 			textField.selectable = false;
 			textField.autoSize = flash.text.TextFieldAutoSize.LEFT;
-			textField.x = param1;
-			textField.y = param2;
+			textField.x = x;
+			textField.y = y;
 			return textField;
 		}
 
@@ -339,11 +339,11 @@ namespace com.google.finance
 			}
 			if (param1)
 			{
-				const _loc5_ = Const.SPACE_HEIGHT / 2 - SpaceText.TEXT_HEIGHT / 2 + Const.INFO_TEXT_TOP_PADDING;
-				this.infoText.y = _loc5_;
-				this.changeText.y = _loc5_;
-				this.startDate.y = _loc5_;
-				this.endDate.y = _loc5_;
+				const y = Const.SPACE_HEIGHT / 2 - SpaceText.TEXT_HEIGHT / 2 + Const.INFO_TEXT_TOP_PADDING;
+				this.infoText.y = y;
+				this.changeText.y = y;
+				this.startDate.y = y;
+				this.endDate.y = y;
 			}
 		}
 
@@ -358,24 +358,24 @@ namespace com.google.finance
 
 		private positionComparisonInfoDots()
 		{
-			let _loc1_ = NaN;
+			let x = NaN;
 			if (Const.INFO_TEXT_ALIGN === "right")
-				_loc1_ = this.stage.stageWidth;
+				x = this.stage.stageWidth;
 			else if (Const.INFO_TEXT_ALIGN === "left")
-				_loc1_ = SpaceText.LEFT_PADDING + SpaceText.INFO_DOT_PADDING;
+				x = SpaceText.LEFT_PADDING + SpaceText.INFO_DOT_PADDING;
 
 			for (const infoDot of this.infoDots)
 			{
 				infoDot.y = Const.SPACE_HEIGHT - SpaceText.TEXT_HEIGHT / 2 + 3 + Const.INFO_TEXT_TOP_PADDING;
 				if (Const.INFO_TEXT_ALIGN === "right")
 				{
-					infoDot.x = _loc1_ - infoDot.width;
-					_loc1_ -= infoDot.width - 3;
+					infoDot.x = x - infoDot.width;
+					x -= infoDot.width - 3;
 				}
 				else if (Const.INFO_TEXT_ALIGN === "left")
 				{
-					infoDot.x = _loc1_;
-					_loc1_ += infoDot.width + 3;
+					infoDot.x = x;
+					x += infoDot.width + 3;
 				}
 			}
 		}
@@ -409,12 +409,12 @@ namespace com.google.finance
 				this.endDate.displayDateInLocalizedFormat();
 				if (this.returnText.length > 0)
 				{
-					let _loc1_ = this.negativeTextFormat;
+					let textFormat = this.negativeTextFormat;
 					if (this.returnText.indexOf('+') !== -1)
-						_loc1_ = this.positiveTextFormat;
+						textFormat = this.positiveTextFormat;
 
-					if (this.changeText.getTextFormat() !== _loc1_)
-						this.changeText.defaultTextFormat = _loc1_;
+					if (this.changeText.getTextFormat() !== textFormat)
+						this.changeText.defaultTextFormat = textFormat;
 				}
 				this.changeText.text = this.returnText;
 			}
@@ -541,7 +541,7 @@ namespace com.google.finance
 			this.updateInfoText();
 		}
 
-		private newDateTextField(param1: number, param2: number, param3: number): com.google.finance.DateTextField
+		private newDateTextField(x: number, y: number, tabIndex: number): com.google.finance.DateTextField
 		{
 			const dateTextField = new com.google.finance.DateTextField();
 			dateTextField.autoSize = flash.text.TextFieldAutoSize.LEFT;
@@ -552,9 +552,9 @@ namespace com.google.finance
 			dateTextField.mouseEnabled = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
 			dateTextField.selectable = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
 			dateTextField.tabEnabled = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
-			dateTextField.tabIndex = param3;
-			dateTextField.x = param1;
-			dateTextField.y = param2;
+			dateTextField.tabIndex = tabIndex;
+			dateTextField.x = x;
+			dateTextField.y = y;
 			return dateTextField;
 		}
 	}

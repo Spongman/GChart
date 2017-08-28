@@ -12,10 +12,10 @@ namespace com.google.finance
 				case Intervals.WEEKLY:
 					if (isNaN(param7))
 					{
-						const xPos = this.viewPoint.getXPos(dataUnit[param5]);
-						gr.moveTo(xPos, this.viewPoint.maxy);
+						const x = this.viewPoint.getXPos(dataUnit[param5]);
+						gr.moveTo(x, this.viewPoint.maxy);
 						gr.lineStyle(0, 0, 0);
-						gr.lineTo(xPos, this.getCloseYPos(context, dataUnit[param5]));
+						gr.lineTo(x, this.getCloseYPos(context, dataUnit[param5]));
 						param5--;
 					}
 					else
@@ -70,16 +70,16 @@ namespace com.google.finance
 						_loc10_--;
 						if (_loc11_ && _loc10_ > param4)
 						{
-							const _loc15_ = dataUnit[_loc10_].relativeMinutes;
-							const _loc16_ = dataUnit[_loc10_ + 1].relativeMinutes;
-							if (_loc16_ > _loc15_ + marketDayLength)
+							const minute = dataUnit[_loc10_].relativeMinutes;
+							const nextMinute = dataUnit[_loc10_ + 1].relativeMinutes;
+							if (nextMinute > minute + marketDayLength)
 							{
 								const closeYPos = this.getCloseYPos(context, dataUnit[_loc10_]);
-								_loc8_ = this.viewPoint.getMinuteXPos(_loc16_ - 1);
+								_loc8_ = this.viewPoint.getMinuteXPos(nextMinute - 1);
 								gr.lineTo(_loc8_, this.viewPoint.maxy);
 								gr.lineTo(_loc8_, closeYPos);
 								gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
-								_loc8_ = this.viewPoint.getMinuteXPos(_loc15_ + 1);
+								_loc8_ = this.viewPoint.getMinuteXPos(minute + 1);
 								gr.lineTo(_loc8_, closeYPos);
 								gr.lineStyle(0, 0, 0);
 								gr.lineTo(_loc8_, this.viewPoint.maxy);
@@ -123,8 +123,8 @@ namespace com.google.finance
 				{
 					_loc4_ = Math.max(dataSeries.getRelativeMinuteIndex(vp.getFirstMinute(), points) - 1, 0);
 					const lastMinuteIndex = Math.min(dataSeries.getRelativeMinuteIndex(vp.getLastMinute(), points) + 1, this.getLastRealPointIndex(points));
-					const _loc11_ = points[points.length - 1];
-					if (_loc8_ && detailLevel >= Intervals.DAILY && lastMinuteIndex === points.length - 1 && _loc11_.relativeMinutes < vp.getLastMinute())
+					const unit = points[points.length - 1];
+					if (_loc8_ && detailLevel >= Intervals.DAILY && lastMinuteIndex === points.length - 1 && unit.relativeMinutes < vp.getLastMinute())
 					{
 						const _loc12_ = dataSeries.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
 						if (_loc12_ && _loc12_.length > 0)
@@ -136,8 +136,8 @@ namespace com.google.finance
 							gr.moveTo(xPos, vp.maxy);
 							gr.lineStyle(0, 0, 0);
 							gr.lineTo(xPos, closeYPos);
-							xPos = vp.getXPos(_loc11_);
-							closeYPos = this.getCloseYPos(context, _loc11_);
+							xPos = vp.getXPos(unit);
+							closeYPos = this.getCloseYPos(context, unit);
 							gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
 							gr.lineTo(xPos, closeYPos);
 							gr.lineStyle(0, 0, 0);

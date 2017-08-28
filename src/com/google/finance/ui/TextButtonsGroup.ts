@@ -24,15 +24,15 @@ namespace com.google.finance.ui
 			return buttonIndex;
 		}
 
-		selectButtonByIndex(param1: number)
+		selectButtonByIndex(buttonIndex: number)
 		{
 			this.deselectButton(this.currentButton);
-			if (param1 >= 0 && param1 < this.buttons.length)
+			if (buttonIndex >= 0 && buttonIndex < this.buttons.length)
 			{
-				const button = this.buttons[param1];
+				const button = this.buttons[buttonIndex];
 				const textField = (<flash.display.DisplayObjectContainer>button.upState).getChildAt(0) as flash.text.TextField;
 				textField.setTextFormat(this.selectedTextFormat);
-				this.currentButton = param1;
+				this.currentButton = buttonIndex;
 			}
 		}
 

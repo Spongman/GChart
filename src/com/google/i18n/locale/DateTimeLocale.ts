@@ -18,7 +18,6 @@ namespace com.google.i18n.locale
 
 	export class DateTimeLocale
 	{
-
 		static readonly DATE_TIME_CONSTANTS = "DateTimeConstants";
 
 		static readonly constantsRepository: Map<Dictionary> = {};
@@ -66,16 +65,16 @@ namespace com.google.i18n.locale
 			return format.format(date);
 		}
 
-		static registerResource(param1: Dictionary, param2: string)
+		static registerResource(param1: Dictionary, locale: string)
 		{
-			DateTimeLocale.constantsRepository[param2] = param1;
+			DateTimeLocale.constantsRepository[locale] = param1;
 			if (!DateTimeLocale.activeLocale)
-				DateTimeLocale.activeLocale = param2;
+				DateTimeLocale.activeLocale = locale;
 		}
 
-		static setLocale(param1: string)
+		static setLocale(locale: string)
 		{
-			DateTimeLocale.activeLocale = param1;
+			DateTimeLocale.activeLocale = locale;
 		}
 
 		//private static readonly registerLocale = DateTimeConstants.register(DateTimeLocale.registerResource);

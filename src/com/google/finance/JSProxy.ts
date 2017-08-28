@@ -280,10 +280,10 @@ namespace com.google.finance
 			}
 		}
 
-		removeObject(ticker: string, param2: string, param3: string)
+		removeObject(ticker: string, type: string, id: string)
 		{
 			ticker = Utils.adjustNasdToNasdaq(ticker);
-			this.mainManager.removeObject(ticker, param2, param3);
+			this.mainManager.removeObject(ticker, type, id);
 		}
 
 		expandChart()
@@ -301,26 +301,26 @@ namespace com.google.finance
 			layersManager.addLayerToStyle(layerInfo, param2);
 		}
 
-		setParameter(param1: string, param2: string)
+		setParameter(key: string, value: string)
 		{
 			const layersManager = this.mainManager.layersManager;
 			const displayManager = this.mainManager.displayManager;
-			com.google.finance.MainManager.paramsObj[param1] = param2;
-			if (param1 === "displayNewsPins")
-				Const.DISPLAY_NEWS_PINS = "true" === param2;
+			com.google.finance.MainManager.paramsObj[key] = value;
+			if (key === "displayNewsPins")
+				Const.DISPLAY_NEWS_PINS = "true" === value;
 
-			if (param1 === "displayVolume")
+			if (key === "displayVolume")
 			{
-				if (!Boolean(param2))
+				if (!Boolean(value))
 					layersManager.hideViewPoint("BottomViewPoint", "single");
 				else
 					layersManager.unhideViewPoint("BottomViewPoint", "single");
 
 				displayManager.windowResized(Const.MOVIE_WIDTH, Const.MOVIE_HEIGHT);
 			}
-			if (param1 === "displayExtendedHours" && com.google.finance.MainManager.paramsObj.hasExtendedHours !== "false")
+			if (key === "displayExtendedHours" && com.google.finance.MainManager.paramsObj.hasExtendedHours !== "false")
 			{
-				if (Boolean(param2))
+				if (Boolean(value))
 					displayManager.setAfterHoursDisplay(true);
 				else
 					displayManager.setAfterHoursDisplay(false);
@@ -333,8 +333,8 @@ namespace com.google.finance
 				if (firstDataSource)
 					this.setForceDisplayExtendedHours(firstDataSource);
 			}
-			if (param1 === "minZoomDays")
-				displayManager.mainController.setMinDisplayDays(Number(param2));
+			if (key === "minZoomDays")
+				displayManager.mainController.setMinDisplayDays(Number(value));
 
 			displayManager.update();
 		}
@@ -406,17 +406,17 @@ namespace com.google.finance
 			}
 		}
 
-		updateLastPriceInDataSeries(dataSeries: DataSeries, param2: number): boolean
+		updateLastPriceInDataSeries(dataSeries: DataSeries, close: number): boolean
 		{
 			const pointsInIntervalArray = dataSeries.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
 			const lastRealPointIndex = Utils.getLastRealPointIndex(pointsInIntervalArray);
 			if (lastRealPointIndex >= 0)
 			{
-				const _loc5_ = pointsInIntervalArray[lastRealPointIndex];
-				_loc5_.close = param2;
-				_loc5_.low = Utils.extendedMin(_loc5_.low, param2);
-				_loc5_.high = Utils.extendedMax(_loc5_.high, param2);
-				_loc5_.realtime = true;
+				const unit = pointsInIntervalArray[lastRealPointIndex];
+				unit.close = close;
+				unit.low = Utils.extendedMin(unit.low, close);
+				unit.high = Utils.extendedMax(unit.high, close);
+				unit.realtime = true;
 				return true;
 			}
 			return false;

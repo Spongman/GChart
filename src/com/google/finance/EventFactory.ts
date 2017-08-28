@@ -2,14 +2,14 @@ namespace com.google.finance
 {
 	export class EventFactory
 	{
-		private static buildEvent(param1: number, param2: string, param3: string, param4: number, param5: string, param6: number = -1): ChartEvent
+		private static buildEvent(param1: number, quote: string, period: string, param4: number, columns: string, param6: number = -1): ChartEvent
 		{
 			const chartEvent = new ChartEvent(param1);
 			chartEvent.detailType = (param6 !== -1) ? param6 : null;
-			chartEvent.quote = param2;
-			chartEvent.period = param3;
+			chartEvent.quote = quote;
+			chartEvent.period = period;
 			chartEvent.interval = "" + param4;
-			chartEvent.columns = param5;
+			chartEvent.columns = columns;
 			return chartEvent;
 		}
 

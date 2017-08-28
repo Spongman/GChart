@@ -123,7 +123,7 @@ namespace com.google.finance.indicator
 		private renderHistogramLine(dataSeriesArray: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, param7: number, param8: string)
 		{
 			let xPos = Number.MAX_VALUE;
-			const yPos = this.getYPos(context, new IndicatorPoint(0, <DataUnit><any>null));	// TODO
+			const y = this.getYPos(context, new IndicatorPoint(0, <DataUnit><any>null));	// TODO
 			const gr = this.graphics;
 			for (let _loc12_ = param4; _loc12_ >= param3; _loc12_--)
 			{
@@ -136,7 +136,7 @@ namespace com.google.finance.indicator
 					const _loc13_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
 					const _loc14_ = this.getYPos(context, dataSeriesArray[param2].points[_loc12_]);
 					gr.lineStyle(1, this.getColor(param2, dataSeriesArray[param2].points[_loc12_].getValue()));
-					gr.moveTo(_loc13_, yPos);
+					gr.moveTo(_loc13_, y);
 					gr.lineTo(_loc13_, _loc14_);
 				}
 			}
@@ -320,9 +320,9 @@ namespace com.google.finance.indicator
 			const indicatorPoint = new IndicatorPoint(NaN, dataUnit);
 			for (let dataSeriesIndex = 0; dataSeriesIndex < dataSeriesArray.length; dataSeriesIndex++)
 			{
-				const _loc5_ = dataSeriesArray[dataSeriesIndex].points.length;
-				if (_loc5_ > 0)
-					dataSeriesArray[dataSeriesIndex].points.push(new IndicatorPoint(dataSeriesArray[dataSeriesIndex].points[_loc5_ - 1].getValue(), dataUnit));
+				const unitCount = dataSeriesArray[dataSeriesIndex].points.length;
+				if (unitCount > 0)
+					dataSeriesArray[dataSeriesIndex].points.push(new IndicatorPoint(dataSeriesArray[dataSeriesIndex].points[unitCount - 1].getValue(), dataUnit));
 				else
 					dataSeriesArray[dataSeriesIndex].points.push(indicatorPoint);
 
@@ -566,13 +566,13 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		setEnabled(param1 = true)
+		setEnabled(enabled = true)
 		{
-			this._enabled = param1;
-			this.visible = param1;
-			this.highlightCanvas.visible = param1;
-			this.textOutCanvas.visible = param1;
-			this.medianLineCanvas.visible = param1;
+			this._enabled = enabled;
+			this.visible = enabled;
+			this.highlightCanvas.visible = enabled;
+			this.textOutCanvas.visible = enabled;
+			this.medianLineCanvas.visible = enabled;
 		}
 	}
 }

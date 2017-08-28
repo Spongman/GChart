@@ -257,18 +257,15 @@ namespace com.google.finance
 		removeObjectArray(objects: any[])
 		{
 			for (const obj of objects)
-			{
 				this.dataManager.removeObject(obj._quote, obj._type, obj._id.toString());
-			}
-			const _loc3_ = this.displayManager.getMainViewPoint();
-			_loc3_.updateObjectLayers();
+
+			this.displayManager.getMainViewPoint().updateObjectLayers();
 		}
 
 		addObject(param1: any)
 		{
 			this.dataManager.addObject(param1);
-			const _loc2_ = this.displayManager.getMainViewPoint();
-			_loc2_.updateObjectLayers();
+			this.displayManager.getMainViewPoint().updateObjectLayers();
 		}
 
 		private addDefaultCompareToTickers()
@@ -390,11 +387,10 @@ namespace com.google.finance
 			}
 		}
 
-		removeObject(param1: string, param2: string, param3: string)
+		removeObject(quote: string, type: string, id: string)
 		{
-			this.dataManager.removeObject(param1, param2, param3);
-			const _loc4_ = this.displayManager.getMainViewPoint();
-			_loc4_.updateObjectLayers();
+			this.dataManager.removeObject(quote, type, id);
+			this.displayManager.getMainViewPoint().updateObjectLayers();
 		}
 
 		private getQuoteForLineChart(param1: string, param2: number, param3: boolean)
@@ -502,8 +498,7 @@ namespace com.google.finance
 		htmlClicked(ticker: string, param2: number, param3?: string)
 		{
 			const _loc4_ = <PinPoint>this.dataManager.selectObject(ticker, "newspin", param2, param3);
-			const _loc5_ = this.displayManager.getMainViewPoint();
-			_loc5_.updateObjectLayers();
+			this.displayManager.getMainViewPoint().updateObjectLayers();
 			this.displayManager.animateToSelectedPin(_loc4_);
 		}
 	}

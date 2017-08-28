@@ -56,7 +56,7 @@ namespace com.google.finance
 			if (handleRightX === right + 1)
 				handleRightX = right;
 
-			const yPos = height - Const.SPARKLINE_HEIGHT - Const.SPARK_PADDING;
+			const y = height - Const.SPARKLINE_HEIGHT - Const.SPARK_PADDING;
 			gr.lineStyle(0, Const.BORDER_LINE_COLOR, Const.BORDER_LINE_OPACITY);
 			gr.moveTo(left, height - 1);
 			gr.lineTo(right, height - 1);
@@ -67,12 +67,12 @@ namespace com.google.finance
 				gr.lineTo(handleRightX, rightHandle.y + rightHandle.height - 1);
 				gr.moveTo(handleRightX, rightHandle.y + 1);
 			}
-			gr.lineTo(handleRightX, yPos);
-			gr.lineTo(Const.MOVIE_WIDTH - 1 - 1, yPos);
+			gr.lineTo(handleRightX, y);
+			gr.lineTo(Const.MOVIE_WIDTH - 1 - 1, y);
 			gr.lineTo(Const.MOVIE_WIDTH - 1 - 1, 1);
 			gr.lineTo(1, 1);
-			gr.lineTo(1, yPos);
-			gr.lineTo(handleLeftX, yPos);
+			gr.lineTo(1, y);
+			gr.lineTo(handleLeftX, y);
 			if (windowLayer.contains(leftHandle))
 			{
 				gr.lineTo(handleLeftX, leftHandle.y + 1);
@@ -88,12 +88,12 @@ namespace com.google.finance
 				gr.lineTo(handleRightX + 1, rightHandle.y + rightHandle.height - 1);
 				gr.moveTo(handleRightX + 1, rightHandle.y + 1);
 			}
-			gr.lineTo(handleRightX + 1, yPos + 1);
-			gr.lineTo(Const.MOVIE_WIDTH - 1, yPos + 1);
+			gr.lineTo(handleRightX + 1, y + 1);
+			gr.lineTo(Const.MOVIE_WIDTH - 1, y + 1);
 			gr.lineTo(Const.MOVIE_WIDTH - 1, 0);
 			gr.lineTo(0, 0);
-			gr.lineTo(0, yPos + 1);
-			gr.lineTo(handleLeftX - 1, yPos + 1);
+			gr.lineTo(0, y + 1);
+			gr.lineTo(handleLeftX - 1, y + 1);
 			if (windowLayer.contains(leftHandle))
 			{
 				gr.lineTo(handleLeftX - 1, leftHandle.y + 1);
@@ -110,7 +110,7 @@ namespace com.google.finance
 				{
 					if (Const.INDEPENDENT_INDICATOR_NAMES.indexOf(viewPoint.name) !== -1 || viewPoint.name === Const.BOTTOM_VIEW_POINT_NAME)
 					{
-						const yPos2 = yPos - Const.TECHNICAL_INDICATOR_HEIGHT * renderedViewPointIndex;
+						const yPos2 = y - Const.TECHNICAL_INDICATOR_HEIGHT * renderedViewPointIndex;
 						gr.moveTo(1, yPos2);
 						gr.lineTo(Const.MOVIE_WIDTH - 1 - 1, yPos2);
 						renderedViewPointIndex++;

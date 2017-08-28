@@ -39,10 +39,10 @@ namespace com.google.finance
 		{
 			for (let objectIndex = stockAssociatedObjects.length - 1; objectIndex >= 0; objectIndex--)
 			{
-				const _loc5_ = stockAssociatedObjects[objectIndex];
-				if (notnull(_loc5_.posInInterval)[param3])
+				const object = stockAssociatedObjects[objectIndex];
+				if (notnull(object.posInInterval)[param3])
 				{
-					const dataUnit = this.getDataUnit(_loc5_, param3);
+					const dataUnit = this.getDataUnit(object, param3);
 					if (dataUnit.relativeMinutes <= context.lastMinute)
 						return objectIndex;
 				}
@@ -54,10 +54,10 @@ namespace com.google.finance
 		{
 			for (let objectIndex = 0; objectIndex < stockAssociatedObjects.length; objectIndex++)
 			{
-				const _loc5_ = stockAssociatedObjects[objectIndex];
-				if (notnull(_loc5_.posInInterval)[param3])
+				const object = stockAssociatedObjects[objectIndex];
+				if (notnull(object.posInInterval)[param3])
 				{
-					const dataUnit = this.getDataUnit(_loc5_, param3);
+					const dataUnit = this.getDataUnit(object, param3);
 					if (dataUnit.relativeMinutes > context.lastMinute - context.count)
 						return objectIndex;
 				}
@@ -67,30 +67,30 @@ namespace com.google.finance
 
 		private getPinPointMovieClip(pinPoint: PinPoint): PinPointMovie
 		{
-			let _loc2_: PinPointMovie | null;
-			const _loc3_ = !!pinPoint.originalObject._color ? pinPoint.originalObject._color : "gray";
+			let movie: PinPointMovie | null;
+			const color = !!pinPoint.originalObject._color ? pinPoint.originalObject._color : "gray";
 			if (this.activeMovies >= this.pinMovies.length)
 			{
-				_loc2_ = _loc3_ === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
-				this.addChild(_loc2_);
-				this.pinMovies.push(_loc2_);
+				movie = color === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
+				this.addChild(movie);
+				this.pinMovies.push(movie);
 			}
 			else
 			{
-				_loc2_ = this.pinMovies[this.activeMovies];
-				const _loc4_ = _loc2_ instanceof OrangePinPointMovie ? "orange" : "gray";
-				if (_loc4_ !== _loc3_)
+				movie = this.pinMovies[this.activeMovies];
+				const activeColor = movie instanceof OrangePinPointMovie ? "orange" : "gray";
+				if (activeColor !== color)
 				{
-					_loc2_ = _loc3_ === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
+					movie = color === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
 					this.removeChild(this.pinMovies[this.activeMovies]);
 					this.pinMovies[this.activeMovies].clearReferences();
 					delete this.pinMovies[this.activeMovies];
-					this.pinMovies[this.activeMovies] = _loc2_;
+					this.pinMovies[this.activeMovies] = movie;
 				}
 			}
-			_loc2_.setPinPointContentMovie(this.pinPointContentMovie);
+			movie.setPinPointContentMovie(this.pinPointContentMovie);
 			this.activeMovies++;
-			return _loc2_;
+			return movie;
 		}
 
 		private removePinMovies(param1: number)
@@ -178,11 +178,11 @@ namespace com.google.finance
 			}
 		}
 
-		private renderFlag(param1: number, pinOrientation: PinOrientations, param3: number, pinPoint: PinPoint, param5?: PinPoint, param6 = 1)
+		private renderFlag(x: number, pinOrientation: PinOrientations, param3: number, pinPoint: PinPoint, param5?: PinPoint, param6 = 1)
 		{
 			const pinPointMovieClip = this.getPinPointMovieClip(pinPoint);
 			this.addChild(pinPointMovieClip);
-			pinPointMovieClip.x = param1;
+			pinPointMovieClip.x = x;
 			pinPointMovieClip.y = this.pinPointYWhenContentDisplayed;
 			pinPointMovieClip.setCount(param6);
 			pinPointMovieClip.setObj(pinPoint);
@@ -193,8 +193,8 @@ namespace com.google.finance
 		private getFlagGroupCount(context: Context, pinPoints: PinPoint[], param3: number, param4: number): number
 		{
 			let _loc5_ = 1;
-			const _loc6_ = pinPoints[param3];
-			const _loc7_ = notnull(_loc6_.posInInterval)[param4];
+			const pin = pinPoints[param3];
+			const _loc7_ = notnull(pin.posInInterval)[param4];
 			if (!_loc7_)
 				return _loc5_;
 

@@ -78,10 +78,10 @@ namespace com.google.finance
 				state["volumesetter"].clearHighlight();
 
 			const indicatorPoint = <indicator.VolumeIndicatorPoint>this.getPoint(dataSeries, param2);
-			const xPos = vp.getXPos(indicatorPoint.point);
-			const yPos = this.getYPos(this.viewPoint, indicatorPoint);
+			const x = vp.getXPos(indicatorPoint.point);
+			const y = this.getYPos(this.viewPoint, indicatorPoint);
 			this.highlightCanvas.graphics.lineStyle(2, Const.VOLUME_HIGHLIGHT_COLOR, 1);
-			this.drawOneLine(xPos, yPos, this.highlightCanvas, this.viewPoint);
+			this.drawOneLine(x, y, this.highlightCanvas, this.viewPoint);
 			state["volume"] = indicatorPoint.volume;
 			state["ahsetter"] = this;
 		}

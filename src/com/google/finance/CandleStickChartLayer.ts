@@ -10,7 +10,7 @@ namespace com.google.finance
 			if (unit.fake)
 				return;
 
-			const xPos = !isNaN(unit.weeklyXPos) ? unit.weeklyXPos : this.viewPoint.getXPos(unit);
+			const x = !isNaN(unit.weeklyXPos) ? unit.weeklyXPos : this.viewPoint.getXPos(unit);
 			const ohlcYPos = this.getOhlcYPos(context, unit);
 			//const _loc7_ = Math.abs(_loc6_.closeY - _loc6_.openY);
 			const gr = this.graphics;
@@ -23,32 +23,32 @@ namespace com.google.finance
 				const top = (ohlcYPos.closeY + ohlcYPos.openY) / 2;
 				if (this.barWidth === 0)
 				{
-					gr.moveTo(xPos, top - 0.5);
-					gr.lineTo(xPos, top + 0.5);
+					gr.moveTo(x, top - 0.5);
+					gr.lineTo(x, top + 0.5);
 				}
 				else
 				{
-					gr.moveTo(xPos - this.barWidth / 2, top);
-					gr.lineTo(xPos + this.barWidth / 2, top);
+					gr.moveTo(x - this.barWidth / 2, top);
+					gr.lineTo(x + this.barWidth / 2, top);
 				}
 			}
 			else
 			{
-				gr.moveTo(xPos - this.barWidth / 2, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
+				gr.moveTo(x - this.barWidth / 2, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
 				if (!_loc9_)
 					gr.beginFill(candleStickColor);
 
-				gr.lineTo(xPos + this.barWidth / 2, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
-				gr.lineTo(xPos + this.barWidth / 2, !!_loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
-				gr.lineTo(xPos - this.barWidth / 2, !!_loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
-				gr.lineTo(xPos - this.barWidth / 2, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
+				gr.lineTo(x + this.barWidth / 2, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
+				gr.lineTo(x + this.barWidth / 2, !!_loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
+				gr.lineTo(x - this.barWidth / 2, !!_loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
+				gr.lineTo(x - this.barWidth / 2, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
 				if (!_loc9_)
 					gr.endFill();
 			}
-			gr.moveTo(xPos, ohlcYPos.lowY);
-			gr.lineTo(xPos, !!_loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
-			gr.moveTo(xPos, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
-			gr.lineTo(xPos, ohlcYPos.highY);
+			gr.moveTo(x, ohlcYPos.lowY);
+			gr.lineTo(x, !!_loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
+			gr.moveTo(x, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
+			gr.lineTo(x, ohlcYPos.highY);
 		}
 	}
 }

@@ -21,35 +21,35 @@ namespace com.google.finance
 			{
 				if (!(isNaN(dataUnits[_loc6_].high) || isNaN(dataUnits[_loc6_].low) || isNaN(dataUnits[_loc6_].open)))
 				{
-					const _loc7_ = dataUnits[_loc6_];
-					const xPos = this.viewPoint.getXPos(_loc7_);
-					const ohlcYPos = this.getOhlcYPos(context, _loc7_);
-					const ohlcColor = this.getOhlcColor(_loc7_, dataUnits[Math.max(_loc6_ - 1, 0)]);
+					const unit = dataUnits[_loc6_];
+					const x = this.viewPoint.getXPos(unit);
+					const ohlcYPos = this.getOhlcYPos(context, unit);
+					const ohlcColor = this.getOhlcColor(unit, dataUnits[Math.max(_loc6_ - 1, 0)]);
 					gr.lineStyle(1, ohlcColor);
-					if (!_loc7_.fake)
+					if (!unit.fake)
 					{
 						if (Math.abs(ohlcYPos.highY - ohlcYPos.lowY) <= 1)
 						{
 							const _loc11_ = (ohlcYPos.highY + ohlcYPos.lowY) / 2;
 							if (afterHoursBarWidth === 0)
 							{
-								gr.moveTo(xPos, _loc11_ - 0.5);
-								gr.lineTo(xPos, _loc11_ + 0.5);
+								gr.moveTo(x, _loc11_ - 0.5);
+								gr.lineTo(x, _loc11_ + 0.5);
 							}
 							else
 							{
-								gr.moveTo(xPos - afterHoursBarWidth / 2, _loc11_);
-								gr.lineTo(xPos + afterHoursBarWidth / 2, _loc11_);
+								gr.moveTo(x - afterHoursBarWidth / 2, _loc11_);
+								gr.lineTo(x + afterHoursBarWidth / 2, _loc11_);
 							}
 						}
 						else
 						{
-							gr.moveTo(xPos - afterHoursBarWidth / 2, ohlcYPos.openY);
-							gr.lineTo(xPos, ohlcYPos.openY);
-							gr.moveTo(xPos, ohlcYPos.closeY);
-							gr.lineTo(xPos + afterHoursBarWidth / 2, ohlcYPos.closeY);
-							gr.moveTo(xPos, ohlcYPos.highY);
-							gr.lineTo(xPos, ohlcYPos.lowY);
+							gr.moveTo(x - afterHoursBarWidth / 2, ohlcYPos.openY);
+							gr.lineTo(x, ohlcYPos.openY);
+							gr.moveTo(x, ohlcYPos.closeY);
+							gr.lineTo(x + afterHoursBarWidth / 2, ohlcYPos.closeY);
+							gr.moveTo(x, ohlcYPos.highY);
+							gr.lineTo(x, ohlcYPos.lowY);
 						}
 					}
 				}
@@ -98,10 +98,10 @@ namespace com.google.finance
 			for (let _loc5_ = visibleExtendedHours.length() - 1; _loc5_ >= 0; _loc5_--)
 			{
 				const interval = visibleExtendedHours.getIntervalAt(_loc5_);
-				const _loc7_ = dataUnits[interval.start];
-				const _loc8_ = dataUnits[interval.end];
-				if (ViewPoint.sessionVisible(_loc7_, _loc8_, context))
-					intervalSet.addInterval(_loc7_.time, _loc8_.time);
+				const startUnit = dataUnits[interval.start];
+				const endUnit = dataUnits[interval.end];
+				if (ViewPoint.sessionVisible(startUnit, endUnit, context))
+					intervalSet.addInterval(startUnit.time, endUnit.time);
 			}
 			return intervalSet;
 		}
@@ -114,46 +114,46 @@ namespace com.google.finance
 			{
 				if (!(isNaN(dataUnits[_loc6_].high) || isNaN(dataUnits[_loc6_].low) || isNaN(dataUnits[_loc6_].open)))
 				{
-					const _loc7_ = dataUnits[_loc6_];
-					const xPos = this.viewPoint.getXPos(_loc7_);
-					const ohlcYPos = this.getOhlcYPos(context, _loc7_);
+					const unit = dataUnits[_loc6_];
+					const x = this.viewPoint.getXPos(unit);
+					const ohlcYPos = this.getOhlcYPos(context, unit);
 					//const _loc10_ = Math.abs(_loc9_.closeY - _loc9_.openY);
-					const _loc11_ = _loc7_.close >= _loc7_.open;
-					const candleStickColor = this.getCandleStickColor(_loc7_);
+					const _loc11_ = unit.close >= unit.open;
+					const candleStickColor = this.getCandleStickColor(unit);
 					gr.lineStyle(1, candleStickColor);
-					if (!_loc7_.fake)
+					if (!unit.fake)
 					{
 						if (Math.abs(ohlcYPos.closeY - ohlcYPos.openY) <= 1)
 						{
 							const _loc13_ = (ohlcYPos.closeY + ohlcYPos.openY) / 2;
 							if (afterHoursBarWidth === 0)
 							{
-								gr.moveTo(xPos, _loc13_ - 0.5);
-								gr.lineTo(xPos, _loc13_ + 0.5);
+								gr.moveTo(x, _loc13_ - 0.5);
+								gr.lineTo(x, _loc13_ + 0.5);
 							}
 							else
 							{
-								gr.moveTo(xPos - afterHoursBarWidth / 2, _loc13_);
-								gr.lineTo(xPos + afterHoursBarWidth / 2, _loc13_);
+								gr.moveTo(x - afterHoursBarWidth / 2, _loc13_);
+								gr.lineTo(x + afterHoursBarWidth / 2, _loc13_);
 							}
 						}
 						else
 						{
-							gr.moveTo(xPos - afterHoursBarWidth / 2, !!_loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
+							gr.moveTo(x - afterHoursBarWidth / 2, !!_loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
 							if (!_loc11_)
 								gr.beginFill(candleStickColor);
 
-							gr.lineTo(xPos + afterHoursBarWidth / 2, !!_loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
-							gr.lineTo(xPos + afterHoursBarWidth / 2, !!_loc11_ ? Number(ohlcYPos.openY) : ohlcYPos.closeY);
-							gr.lineTo(xPos - afterHoursBarWidth / 2, !!_loc11_ ? Number(ohlcYPos.openY) : ohlcYPos.closeY);
-							gr.lineTo(xPos - afterHoursBarWidth / 2, !!_loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
+							gr.lineTo(x + afterHoursBarWidth / 2, !!_loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
+							gr.lineTo(x + afterHoursBarWidth / 2, !!_loc11_ ? Number(ohlcYPos.openY) : ohlcYPos.closeY);
+							gr.lineTo(x - afterHoursBarWidth / 2, !!_loc11_ ? Number(ohlcYPos.openY) : ohlcYPos.closeY);
+							gr.lineTo(x - afterHoursBarWidth / 2, !!_loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
 							if (!_loc11_)
 								gr.endFill();
 						}
-						gr.moveTo(xPos, ohlcYPos.lowY);
-						gr.lineTo(xPos, !!_loc11_ ? Number(ohlcYPos.openY) : ohlcYPos.closeY);
-						gr.moveTo(xPos, !!_loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
-						gr.lineTo(xPos, ohlcYPos.highY);
+						gr.moveTo(x, ohlcYPos.lowY);
+						gr.lineTo(x, !!_loc11_ ? Number(ohlcYPos.openY) : ohlcYPos.closeY);
+						gr.moveTo(x, !!_loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
+						gr.lineTo(x, ohlcYPos.highY);
 					}
 				}
 			}

@@ -127,9 +127,9 @@ function parseQueryString(str: string)
 	const pairs = str.split('&');
 	for (const pair of pairs)
 	{
-		const p = pair.split('=');
-		const key = decodeURIComponent(p[0]);
-		const value = decodeURIComponent(p[1]);
+		const parts = pair.split('=');
+		const key = decodeURIComponent(parts[0]);
+		const value = decodeURIComponent(parts[1]);
 		result[key] = value;
 		//console.log("  " + key + " = " + value);
 	}

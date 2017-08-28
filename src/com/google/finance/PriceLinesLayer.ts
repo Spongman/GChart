@@ -20,9 +20,9 @@ namespace com.google.finance
 			const value = this.getValueForYPos(param1, context);
 			const increaseInterval = this.getIncreaseInterval(value);
 			const _loc6_ = increaseInterval * Math.ceil(value / increaseInterval);
-			const yPos = this.getYPos(_loc6_, context);
+			const y = this.getYPos(_loc6_, context);
 			return {
-				yPos,
+				yPos: y,
 				label: _loc6_
 			};
 		}
@@ -51,34 +51,34 @@ namespace com.google.finance
 
 		private adjustDistanceBetweenLines(context: Context, param2: number): number
 		{
-			let _loc3_ = Const.YSCALE_INTERVALS[param2 + 1];
+			let scale = Const.YSCALE_INTERVALS[param2 + 1];
 			if (context.verticalScaling === Const.LOG_VSCALE || context.verticalScaling === Const.NEW_LOG_VSCALE)
 			{
 				let _loc6_: number;
 				let _loc7_ = 0;
-				const maxY = this.getMaxY(context, _loc3_);
+				const maxY = this.getMaxY(context, scale);
 				do
 				{
-					_loc6_ = Math.floor(maxY / _loc3_);
+					_loc6_ = Math.floor(maxY / scale);
 					if (_loc6_ > 2)
 					{
-						const _loc9_ = (_loc6_ - 1) * _loc3_;
-						const _loc10_ = (_loc6_ - 2) * _loc3_;
+						const _loc9_ = (_loc6_ - 1) * scale;
+						const _loc10_ = (_loc6_ - 2) * scale;
 						const _loc4_ = Number(this.getYPos(_loc9_, context));
 						const _loc5_ = Number(this.getYPos(_loc10_, context));
 						_loc7_ = Number(Math.abs(_loc4_ - _loc5_));
 						if (_loc7_ < ViewPoint.MIN_DISTANCE_BETWEEN_LOG_H_LINES)
 						{
 							this.additionalDistanceBetweenLines = this.getIncreaseInterval(Const.YSCALE_INTERVALS[param2 + 1]);
-							_loc3_ += this.additionalDistanceBetweenLines;
-							if (param2 < Const.YSCALE_INTERVALS.length - 1 && _loc3_ === Const.YSCALE_INTERVALS[param2 + 2])
+							scale += this.additionalDistanceBetweenLines;
+							if (param2 < Const.YSCALE_INTERVALS.length - 1 && scale === Const.YSCALE_INTERVALS[param2 + 2])
 								param2++;
 						}
 					}
 				}
 				while (_loc6_ > 2 && param2 < Const.YSCALE_INTERVALS.length && _loc7_ < ViewPoint.MIN_DISTANCE_BETWEEN_LOG_H_LINES);
 			}
-			return _loc3_;
+			return scale;
 		}
 
 		private getTextForValue(value: number): string
@@ -124,9 +124,9 @@ namespace com.google.finance
 			return context.maxPriceRange;
 		}
 
-		protected getYPos(param1: number, context: Context): number
+		protected getYPos(value: number, context: Context): number
 		{
-			return this.viewPoint.miny + this.viewPoint.V_OFFSET + this.viewPoint.medPriceY - (Utils.getLogScaledValue(param1, context.verticalScaling) - context.medPrice) * this.viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
+			return this.viewPoint.miny + this.viewPoint.V_OFFSET + this.viewPoint.medPriceY - (Utils.getLogScaledValue(value, context.verticalScaling) - context.medPrice) * this.viewPoint.maxPriceRangeViewSize / context.maxPriceRange;
 		}
 
 		protected getMaxY(context: Context, param2: number): number
@@ -140,16 +140,16 @@ namespace com.google.finance
 			const _loc6_ = Math.floor(param1 / param2);
 			let _loc7_ = Math.ceil(_loc6_ / 2);
 			_loc7_ = _loc7_ === _loc6_ / 2 ? Number(_loc7_ * 1.2) : _loc7_;
-			const _loc8_ = this.getLinePosAndLabelToFillGap(param3 - _loc7_ * param2, context, param4);
-			const _loc9_ = param3 - _loc8_.yPos;
+			const labelPos = this.getLinePosAndLabelToFillGap(param3 - _loc7_ * param2, context, param4);
+			const _loc9_ = param3 - labelPos.yPos;
 			const _loc10_ = param1 - _loc9_;
 			if (param2 < 0.95 * _loc10_ && _loc10_ < 0.95 * _loc9_)
-				this.drawSingleHorizontalLine(_loc8_, param4);
+				this.drawSingleHorizontalLine(labelPos, param4);
 		}
 
-		protected getValueForYPos(param1: number, context: Context): number
+		protected getValueForYPos(y: number, context: Context): number
 		{
-			return this.inverseLogTransform(context.medPrice - (param1 - this.viewPoint.miny - this.viewPoint.V_OFFSET - this.viewPoint.medPriceY) * context.maxPriceRange / this.viewPoint.maxPriceRangeViewSize, context.verticalScaling);
+			return this.inverseLogTransform(context.medPrice - (y - this.viewPoint.miny - this.viewPoint.V_OFFSET - this.viewPoint.medPriceY) * context.maxPriceRange / this.viewPoint.maxPriceRangeViewSize, context.verticalScaling);
 		}
 
 		protected drawHorizontalLines(context: Context)
@@ -160,7 +160,7 @@ namespace com.google.finance
 			let _loc3_ = this.getMinLineValue(context);
 			const bottomBarLayer = this.viewPoint.getLayer("BottomBarLayer") as BottomBarLayer;
 			const bottomTextHeight = bottomBarLayer.bottomTextHeight;
-			const _loc6_ = this.getInitialLinesList_(context);
+			const lines = this.getInitialLinesList_(context);
 			do
 			{
 				_loc7_ = this.getYPos(_loc3_, context);
@@ -174,29 +174,29 @@ namespace com.google.finance
 						_loc2_
 					);
 					if (_loc3_ >= 0)
-						_loc6_[_loc6_.length] = _loc7_;
+						lines[lines.length] = _loc7_;
 				}
 				_loc3_ += this.distanceBetweenLines;
 			}
 			while (_loc7_ > this.viewPoint.miny);
 
-			_loc6_[_loc6_.length] = this.viewPoint.miny;
-			if ((context.verticalScaling === Const.LOG_VSCALE || context.verticalScaling === Const.NEW_LOG_VSCALE) && _loc6_.length > 4)
+			lines[lines.length] = this.viewPoint.miny;
+			if ((context.verticalScaling === Const.LOG_VSCALE || context.verticalScaling === Const.NEW_LOG_VSCALE) && lines.length > 4)
 			{
-				const _loc8_ = _loc6_[0] - _loc6_[_loc6_.length - 1];
-				let _loc9_ = _loc6_[0] - _loc6_[1];
-				const _loc10_ = _loc6_[1] - _loc6_[2];
-				const _loc11_ = _loc6_[2] - _loc6_[3];
+				const _loc8_ = lines[0] - lines[lines.length - 1];
+				let _loc9_ = lines[0] - lines[1];
+				const _loc10_ = lines[1] - lines[2];
+				const _loc11_ = lines[2] - lines[3];
 				if (_loc9_ / _loc8_ > 0.4)
 				{
-					const _loc12_ = this.getLinePosAndLabelToFillGap(_loc6_[0], context, _loc2_);
+					const _loc12_ = this.getLinePosAndLabelToFillGap(lines[0], context, _loc2_);
 					this.drawSingleHorizontalLine(_loc12_, _loc2_);
-					_loc9_ = _loc12_.yPos - _loc6_[1];
+					_loc9_ = _loc12_.yPos - lines[1];
 					this.drawHorizontalMidLine(_loc9_, _loc10_, _loc12_.yPos, _loc2_, context);
 				}
 				else if (_loc10_ / _loc8_ > 0.4)
 				{
-					this.drawHorizontalMidLine(_loc10_, _loc11_, _loc6_[1], _loc2_, context);
+					this.drawHorizontalMidLine(_loc10_, _loc11_, lines[1], _loc2_, context);
 				}
 			}
 		}

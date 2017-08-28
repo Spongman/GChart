@@ -12,18 +12,18 @@ namespace com.google.finance
 			return this.hash["series" + param1];
 		}
 
-		setDataSeries(param1: number, dataSeries: DataSeries, param3 = 0)
+		setDataSeries(interval: number, dataSeries: DataSeries, param3 = 0)
 		{
-			if (!this.hasInterval(param1))
+			if (!this.hasInterval(interval))
 			{
-				this.intervals.push(param1);
+				this.intervals.push(interval);
 				this.intervals.sort();
 			}
-			if (this.hash["series" + param1] === undefined)
-				this.hash["series" + param1] = [];
+			if (this.hash["series" + interval] === undefined)
+				this.hash["series" + interval] = [];
 
-			this.hash["series" + param1][param3] = dataSeries;
-			dataSeries.interval = param1;
+			this.hash["series" + interval][param3] = dataSeries;
+			dataSeries.interval = interval;
 		}
 
 		getAllDataSeriesArray()

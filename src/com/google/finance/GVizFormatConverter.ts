@@ -48,11 +48,11 @@ namespace com.google.finance
 				const _loc9_ = row[GVizFormatConverter.COL_PROPERTY_NAME][0][GVizFormatConverter.VALUE_PROPERTY_NAME];
 				const _loc10_ = Date.parse(_loc9_.toString());
 				const timestampIndex = dataSeries.getTimestampIndex(_loc10_, points);
-				const _loc12_ = points[timestampIndex];
-				for (let _loc13_ = 1; _loc13_ < row[GVizFormatConverter.COL_PROPERTY_NAME].length; _loc13_++)
+				const point = points[timestampIndex];
+				for (let index = 1; index < row[GVizFormatConverter.COL_PROPERTY_NAME].length; index++)
 				{
-					const _loc14_ = row[GVizFormatConverter.COL_PROPERTY_NAME][_loc13_][GVizFormatConverter.VALUE_PROPERTY_NAME];
-					dataSeriesArray[_loc13_ - 1].points.push(new com.google.finance.indicator.IndicatorPoint(_loc14_, _loc12_));
+					const value = row[GVizFormatConverter.COL_PROPERTY_NAME][index][GVizFormatConverter.VALUE_PROPERTY_NAME];
+					dataSeriesArray[index - 1].points.push(new com.google.finance.indicator.IndicatorPoint(value, point));
 				}
 			}
 

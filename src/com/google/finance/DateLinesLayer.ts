@@ -356,7 +356,7 @@ namespace com.google.finance
 			const _loc7_ = this.viewPoint.maxy - ViewPoint.TEXT_VERTICAL_OFFSET - ViewPoint.TEXT_FIELD_HEIGHT;
 			for (let dayVisibilityIndex = 0; dayVisibilityIndex < dayVisibilities.length; dayVisibilityIndex++)
 			{
-				const xPos = this.viewPoint.getXPos(dayVisibilities[dayVisibilityIndex].dataUnit);
+				const x = this.viewPoint.getXPos(dayVisibilities[dayVisibilityIndex].dataUnit);
 				//AbstractLayer.drawVerticalLine(param1, _loc9_, Const.DAY_LINE_COLOR, Const.DAY_LINE_ALPHA, _loc5_, _loc6_, ViewPoint.TICK_SIZE_BIG, this.tickPosition, param4 !== Intervals.DAILY);
 				if (this.viewPoint.bottomTextHeight > 0)
 				{
@@ -372,12 +372,12 @@ namespace com.google.finance
 					let _loc14_: number;
 					if (param4 < Intervals.DAILY)
 					{
-						_loc13_ = xPos - intervalLength + ViewPoint.TEXT_HORIZONTAL_OFFSET;
+						_loc13_ = x - intervalLength + ViewPoint.TEXT_HORIZONTAL_OFFSET;
 						_loc14_ = intervalLength - ViewPoint.TEXT_HORIZONTAL_OFFSET;
 					}
 					else
 					{
-						_loc13_ = xPos - ViewPoint.TEXT_FIELD_WIDTH / 2;
+						_loc13_ = x - ViewPoint.TEXT_FIELD_WIDTH / 2;
 						_loc14_ = ViewPoint.TEXT_FIELD_WIDTH;
 					}
 					ViewPoint.addTextField(sprite, dayText, _loc13_, _loc7_, _loc14_, ViewPoint.TEXT_FIELD_HEIGHT, _loc12_, this.viewPoint.hourTextFormat);
@@ -395,13 +395,13 @@ namespace com.google.finance
 			const minuteMetaIndex = DataSource.getMinuteMetaIndex(context.lastMinute - context.count, data.days, data.units);
 			for (let _loc7_ = minuteMetaIndex; _loc7_ <= _loc5_; _loc7_++)
 			{
-				const _loc8_ = data.units[data.days[_loc7_]];
+				const dataUnit = data.units[data.days[_loc7_]];
 				const marketOpenMinute = data.marketOpenMinute;
 				const marketDayLength = data.marketDayLength;
-				if (_loc8_)
+				if (dataUnit)
 				{
 					const dayVisibility = new DayVisibility();
-					dayVisibility.dataUnit = _loc8_;
+					dayVisibility.dataUnit = dataUnit;
 					dayVisibility.startMinute = marketOpenMinute;
 					dayVisibility.coveredMinutes = marketDayLength;
 

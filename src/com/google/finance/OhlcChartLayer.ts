@@ -4,13 +4,13 @@ namespace com.google.finance
 	{
 		protected drawBarAtDataUnit(context: Context, dataUnits: DataUnit[], param3: number)
 		{
-			const _loc4_ = dataUnits[param3];
-			if (_loc4_.fake)
+			const unit = dataUnits[param3];
+			if (unit.fake)
 				return;
 
-			const _loc5_ = !isNaN(_loc4_.weeklyXPos) ? _loc4_.weeklyXPos : this.viewPoint.getXPos(_loc4_);
-			const ohlcYPos = this.getOhlcYPos(context, _loc4_);
-			const ohlcColor = this.getOhlcColor(_loc4_, dataUnits[Math.max(param3 - 1, 0)]);
+			const _loc5_ = !isNaN(unit.weeklyXPos) ? unit.weeklyXPos : this.viewPoint.getXPos(unit);
+			const ohlcYPos = this.getOhlcYPos(context, unit);
+			const ohlcColor = this.getOhlcColor(unit, dataUnits[Math.max(param3 - 1, 0)]);
 
 			const gr = this.graphics;
 			gr.lineStyle(1, ohlcColor);

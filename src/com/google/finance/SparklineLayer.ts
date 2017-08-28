@@ -82,12 +82,12 @@ namespace com.google.finance
 			const miny = sparklineViewPoint.miny;
 			const maxx = sparklineViewPoint.maxx;
 			const minx = sparklineViewPoint.minx;
-			const xPos = sparklineViewPoint.getXPos(maxx, minx, units[param3]);
-			const yPos = this.getYPos(maxy, miny, units[param3]);
+			const x = sparklineViewPoint.getXPos(maxx, minx, units[param3]);
+			const y = this.getYPos(maxy, miny, units[param3]);
 			const gr = sprite.graphics;
-			gr.moveTo(xPos, sparklineViewPoint.maxy);
+			gr.moveTo(x, sparklineViewPoint.maxy);
 			gr.lineStyle(0, 0, 0);
-			gr.lineTo(xPos, yPos);
+			gr.lineTo(x, y);
 			gr.lineStyle(Const.LINE_CHART_LINE_THICKNESS, this.lineColor, Const.LINE_CHART_LINE_VISIBILITY);
 			while (_loc13_ >= 0 && param5[_loc13_] >= param2)
 			{
@@ -115,9 +115,9 @@ namespace com.google.finance
 			if (dataSeries.units.length === 0)
 				return;
 
-			let _loc4_ = dataSeries.fridays;
+			let fridays = dataSeries.fridays;
 			if (sparklineViewPoint.sparkCount <= 20 * dataSeries.marketDayLength)
-				_loc4_ = dataSeries.days;
+				fridays = dataSeries.days;
 
 			const gr = this.graphics;
 			gr.clear();
@@ -127,8 +127,8 @@ namespace com.google.finance
 			let sparkFirstMinuteIndex = dataSeries.getRelativeMinuteIndex(sparklineViewPoint.getSparkFirstMinute() - sparklineViewPoint.sparkButtonMinutes);
 			sparkLastMinuteIndex = Math.min(sparkLastMinuteIndex, dataSeries.units.length - 1);
 			sparkFirstMinuteIndex = Math.max(sparkFirstMinuteIndex, 0);
-			this.getMaxRange(sparkFirstMinuteIndex, sparkLastMinuteIndex, _loc4_);
-			const _loc7_ = this.drawLine(this, sparkFirstMinuteIndex, sparkLastMinuteIndex, sparklineViewPoint, _loc4_);
+			this.getMaxRange(sparkFirstMinuteIndex, sparkLastMinuteIndex, fridays);
+			const _loc7_ = this.drawLine(this, sparkFirstMinuteIndex, sparkLastMinuteIndex, sparklineViewPoint, fridays);
 			gr.lineStyle(0, 0, 0);
 			const point = new flash.display.Point(_loc7_, sparklineViewPoint.my_maxy);
 			//this.globalToLocal(_loc8_);	// TODO: ?

@@ -49,10 +49,10 @@ namespace com.google.finance
 			return this.low;
 		}
 
-		setExchangeDateInUTC(param1: number, param2: number)
+		setExchangeDateInUTC(param1: number, offset: number)
 		{
-			this.timezoneOffset = param2;
-			this.time = param1 - param2 * Const.MS_PER_MINUTE;
+			this.timezoneOffset = offset;
+			this.time = param1 - offset * Const.MS_PER_MINUTE;
 			this.exchangeDateInUTC = new Date(param1);
 			this.dayMinute = this.exchangeDateInUTC.getUTCHours() * 60 + this.exchangeDateInUTC.getUTCMinutes();
 			assert(!isNaN(this.dayMinute));
@@ -95,11 +95,11 @@ namespace com.google.finance
 			return this.close;
 		}
 
-		setDate(param1: number, param2: number)
+		setDate(time: number, offset: number)
 		{
-			this.timezoneOffset = param2;
-			this.time = param1;
-			this.exchangeDateInUTC = new Date(param1 + param2 * 60000);
+			this.timezoneOffset = offset;
+			this.time = time;
+			this.exchangeDateInUTC = new Date(time + offset * 60000);
 			this.dayMinute = this.exchangeDateInUTC.getUTCHours() * 60 + this.exchangeDateInUTC.getUTCMinutes();
 			assert(!isNaN(this.dayMinute));
 		}

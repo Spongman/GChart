@@ -70,21 +70,21 @@ namespace com.google.finance.indicator
 			return Messages.getMsg(Messages.MACD_INTERVAL, this.shortPeriod, this.longPeriod, this.emaPeriod, param1);
 		}
 
-		computeIntervalIndicator(param1: number)
+		computeIntervalIndicator(interval: number)
 		{
-			if (this.indicator.hasInterval(param1))
+			if (this.indicator.hasInterval(interval))
 				return;
 
-			const points = this.originalDataSeries.getPointsInIntervalArray(param1);
+			const points = this.originalDataSeries.getPointsInIntervalArray(interval);
 			if (!points || points.length === 0)
 				return;
 
 			const dataSeries0 = new DataSeries();
 			const dataSeries1 = new DataSeries();
 			const dataSeries2 = new DataSeries();
-			let _loc3_ = points[0].close;
-			let _loc4_ = _loc3_;
-			let _loc5_ = _loc3_ - _loc4_;
+			let close = points[0].close;
+			let _loc4_ = close;
+			let _loc5_ = close - _loc4_;
 			let _loc6_ = _loc5_;
 			const indicatorPoint = new IndicatorPoint(0, points[0]);
 			dataSeries0.points.push(indicatorPoint);
@@ -92,22 +92,22 @@ namespace com.google.finance.indicator
 			dataSeries2.points.push(indicatorPoint);
 			for (let pointIndex = 1; pointIndex < points.length; pointIndex++)
 			{
-				const _loc14_ = points[pointIndex];
-				if (!this.shouldSkip(_loc14_, dataSeries0, dataSeries1, dataSeries2))
+				const unit = points[pointIndex];
+				if (!this.shouldSkip(unit, dataSeries0, dataSeries1, dataSeries2))
 				{
-					_loc3_ = (_loc3_ * (this.shortPeriod - 1) + _loc14_.close * 2) / (this.shortPeriod + 1);
-					_loc4_ = (_loc4_ * (this.longPeriod - 1) + _loc14_.close * 2) / (this.longPeriod + 1);
-					_loc5_ = _loc3_ - _loc4_;
+					close = (close * (this.shortPeriod - 1) + unit.close * 2) / (this.shortPeriod + 1);
+					_loc4_ = (_loc4_ * (this.longPeriod - 1) + unit.close * 2) / (this.longPeriod + 1);
+					_loc5_ = close - _loc4_;
 					_loc6_ = (_loc6_ * (this.emaPeriod - 1) + _loc5_ * 2) / (this.emaPeriod + 1);
 					const _loc7_ = (!!Const.APPLY_CHINESE_STYLE_MACD ? 2 : 1) * (_loc5_ - _loc6_);
-					dataSeries0.points.push(new IndicatorPoint(_loc5_, _loc14_));
-					dataSeries1.points.push(new IndicatorPoint(_loc6_, _loc14_));
-					dataSeries2.points.push(new IndicatorPoint(_loc7_, _loc14_));
+					dataSeries0.points.push(new IndicatorPoint(_loc5_, unit));
+					dataSeries1.points.push(new IndicatorPoint(_loc6_, unit));
+					dataSeries2.points.push(new IndicatorPoint(_loc7_, unit));
 				}
 			}
-			this.indicator.setDataSeries(param1, dataSeries0, 0);
-			this.indicator.setDataSeries(param1, dataSeries1, 1);
-			this.indicator.setDataSeries(param1, dataSeries2, 2);
+			this.indicator.setDataSeries(interval, dataSeries0, 0);
+			this.indicator.setDataSeries(interval, dataSeries1, 1);
+			this.indicator.setDataSeries(interval, dataSeries2, 2);
 		}
 
 		setIndicatorInstanceArray(indicators: com.google.finance.indicator.MACDIndicatorLayer[])

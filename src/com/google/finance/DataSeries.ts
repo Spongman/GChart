@@ -39,21 +39,20 @@ namespace com.google.finance
 
 		getDayContainingTime(param1: number): DataUnit | null
 		{
-			const _loc2_ = 1 + Utils.binarySearch(this.days, param1, this.compareIndexWithTime, this);
-			if (_loc2_ >= this.days.length)
+			const index = 1 + Utils.binarySearch(this.days, param1, this.compareIndexWithTime, this);
+			if (index >= this.days.length)
 				return null;
 
-			const _loc3_ = this.units[this.days[_loc2_]];
-			if ((_loc3_.time - param1) / Const.MS_PER_MINUTE < _loc3_.dayMinute)
-				return _loc3_;
+			const unit = this.units[this.days[index]];
+			if ((unit.time - param1) / Const.MS_PER_MINUTE < unit.dayMinute)
+				return unit;
 
 			return null;
 		}
 
 		getRelativeMinuteIndex(param1: number, dataUnits?: DataUnit[]): number
 		{
-			const _loc3_ = !dataUnits ? this.units : dataUnits;
-			const _loc4_ = Utils.binarySearch(_loc3_, param1, DataSeries.compareUnitAndRelativeMinute, this);
+			const _loc4_ = Utils.binarySearch(dataUnits || this.units, param1, DataSeries.compareUnitAndRelativeMinute, this);
 			return _loc4_ === -1 ? 0 : _loc4_;
 		}
 
@@ -68,22 +67,22 @@ namespace com.google.finance
 			}
 		}
 
-		getCoalescedDataSeries(param1: number): DataSeries
+		getCoalescedDataSeries(interval: number): DataSeries
 		{
-			let _loc2_ = this.coalescedChildren[param1];
-			if (!_loc2_)
+			let dataSeries = this.coalescedChildren[interval];
+			if (!dataSeries)
 			{
-				if (param1 < Const.DAILY_INTERVAL)
-					_loc2_ = this.createCoalescedIntradayDataSeries(param1);
-				else if (param1 < Const.WEEKLY_INTERVAL)
-					_loc2_ = this.createCoalescedDailyDataSeries(param1);
+				if (interval < Const.DAILY_INTERVAL)
+					dataSeries = this.createCoalescedIntradayDataSeries(interval);
+				else if (interval < Const.WEEKLY_INTERVAL)
+					dataSeries = this.createCoalescedDailyDataSeries(interval);
 				else
-					_loc2_ = this.createCoalescedWeeklyDataSeries(param1);
+					dataSeries = this.createCoalescedWeeklyDataSeries(interval);
 
-				_loc2_.interval = param1;
-				this.coalescedChildren[param1] = _loc2_;
+				dataSeries.interval = interval;
+				this.coalescedChildren[interval] = dataSeries;
 			}
-			return _loc2_;
+			return dataSeries;
 		}
 
 		setNoPointsInIntervalArray(param1: number)
@@ -98,8 +97,8 @@ namespace com.google.finance
 
 		hasPointsInIntervalArray(param1: number): boolean
 		{
-			const _loc2_ = this.pointsInIntervals[param1];
-			return _loc2_ && _loc2_.length > 0;
+			const unit = this.pointsInIntervals[param1];
+			return unit && unit.length > 0;
 		}
 
 		compareRefPointAndRelativeMinute(indicatorPoint: com.google.finance.indicator.IndicatorPoint, param2: number): number
@@ -180,12 +179,12 @@ namespace com.google.finance
 			return null;
 		}
 
-		compareUnitAndTimestamp(dataUnit: DataUnit, param2: number): number
+		compareUnitAndTimestamp(dataUnit: DataUnit, time: number): number
 		{
-			if (dataUnit.time < param2)
+			if (dataUnit.time < time)
 				return -1;
 
-			if (dataUnit.time > param2)
+			if (dataUnit.time > time)
 				return 1;
 
 			return 0;
@@ -220,22 +219,19 @@ namespace com.google.finance
 			return null;
 		}
 
-		intervalDataContainsTime(param1: number, param2: number, param3 = NaN): boolean
+		intervalDataContainsTime(time: number, interval1: number, interval2 = NaN): boolean
 		{
-			let _loc5_ = this.intervalHashKey(param2);
-			if (this.intervalBounds[_loc5_])
+			const set1 = this.intervalBounds[this.intervalHashKey(interval1)];
+			if (set1 && set1.containsValue(time))
+				return true;
+
+			if (!isNaN(interval2))
 			{
-				const _loc4_ = this.intervalBounds[_loc5_];
-				if (_loc4_.containsValue(param1))
+				const set2 = this.intervalBounds[this.intervalHashKey(interval2)];
+				if (set2 && set2.containsValue(time))
 					return true;
 			}
-			_loc5_ = this.intervalHashKey(param3);
-			if (!isNaN(param3) && this.intervalBounds[_loc5_])
-			{
-				const _loc4_ = this.intervalBounds[_loc5_];
-				if (_loc4_.containsValue(param1))
-					return true;
-			}
+
 			return false;
 		}
 
@@ -249,12 +245,12 @@ namespace com.google.finance
 
 		getDaysString(): string
 		{
-			const _loc1_: string[] = [];
+			const daysString: string[] = [];
 
 			for (const day of this.days)
-				_loc1_.push(this.units[day].toString());
+				daysString.push(this.units[day].toString());
 
-			return _loc1_.join("\n");
+			return daysString.join("\n");
 		}
 
 		private createCoalescedIntradayDataSeries(param1: number): DataSeries
@@ -330,18 +326,17 @@ namespace com.google.finance
 
 			for (const friday of this.fridays)
 			{
-				const _loc4_ = friday;
 				const dataUnit = new DataUnit(
-					this.units[_loc4_].close,
-					this.units[_loc4_].high,
-					this.units[_loc4_].low,
-					this.units[_loc4_].open
+					this.units[friday].close,
+					this.units[friday].high,
+					this.units[friday].low,
+					this.units[friday].open
 				);
-				dataUnit.exchangeDateInUTC = this.units[_loc4_].exchangeDateInUTC;
-				dataUnit.dayMinute = this.units[_loc4_].dayMinute;
-				dataUnit.time = this.units[_loc4_].time;
-				dataUnit.relativeMinutes = this.units[_loc4_].relativeMinutes;
-				dataUnit.coveredDays = this.units[_loc4_].coveredDays;
+				dataUnit.exchangeDateInUTC = this.units[friday].exchangeDateInUTC;
+				dataUnit.dayMinute = this.units[friday].dayMinute;
+				dataUnit.time = this.units[friday].time;
+				dataUnit.relativeMinutes = this.units[friday].relativeMinutes;
+				dataUnit.coveredDays = this.units[friday].coveredDays;
 				dataSeries.fridays.push(dataSeries.points.length);
 				dataSeries.units.push(dataUnit);
 			}
@@ -370,12 +365,12 @@ namespace com.google.finance
 
 		getFirstDailyIndex(): number
 		{
-			let _loc1_: number;
-			for (_loc1_ = 0; _loc1_ < this.units.length && this.units[_loc1_].coveredDays > 1; _loc1_++)
+			let index: number;
+			for (index = 0; index < this.units.length && this.units[index].coveredDays > 1; index++)
 			{
 				//const _loc2_ = this.units[_loc1_];
 			}
-			return _loc1_;
+			return index;
 		}
 
 		hasNoPointsInIntervalArray(param1: number): boolean
@@ -383,20 +378,19 @@ namespace com.google.finance
 			return this.noPointsInIntervals[param1];
 		}
 
-		getTimestampIndex(param1: number, dataUnits: DataUnit[]): number
+		getTimestampIndex(time: number, dataUnits: DataUnit[]): number
 		{
-			const _loc3_ = !dataUnits ? this.units : dataUnits;
-			const _loc4_ = Utils.binarySearch(_loc3_, param1, this.compareUnitAndTimestamp, this);
-			return _loc4_ === -1 ? 0 : _loc4_;
+			const index = Utils.binarySearch(dataUnits || this.units, time, this.compareUnitAndTimestamp, this);
+			return index === -1 ? 0 : index;
 		}
 
-		addIntervalBounds(param1: number, param2: number, param3: number)
+		addIntervalBounds(interval: number, start: number, end: number)
 		{
-			const _loc4_ = this.intervalHashKey(param1);
-			if (!this.intervalBounds[_loc4_])
-				this.intervalBounds[_loc4_] = new com.google.finance.IntervalSet();
-			const _loc5_ = this.intervalBounds[_loc4_];
-			_loc5_.addInterval(param2, param3);
+			const key = this.intervalHashKey(interval);
+			let set = this.intervalBounds[key];
+			if (!this.intervalBounds[key])
+				set = this.intervalBounds[key] = new com.google.finance.IntervalSet();
+			set.addInterval(start, end);
 		}
 
 		private getDataSession(param1: string): MarketSessionPair | null
@@ -404,9 +398,9 @@ namespace com.google.finance
 			const numSessions = this.dataSessions.length();
 			for (let sessionIndex = 0; sessionIndex < numSessions; sessionIndex++)
 			{
-				const _loc4_ = <MarketSessionPair>this.dataSessions.getIntervalAt(sessionIndex);
-				if (_loc4_.name === param1)
-					return _loc4_;
+				const interval = <MarketSessionPair>this.dataSessions.getIntervalAt(sessionIndex);
+				if (interval.name === param1)
+					return interval;
 			}
 			return null;
 		}
@@ -439,9 +433,9 @@ namespace com.google.finance
 			return this.dataSessions.allIntervalsLength();
 		}
 
-		getPointsInIntervalArray(param1: number): DataUnit[]
+		getPointsInIntervalArray(interval: number): DataUnit[]
 		{
-			return this.pointsInIntervals[param1];
+			return this.pointsInIntervals[interval];
 		}
 
 		getSessionLength(param1: string): number
@@ -455,20 +449,20 @@ namespace com.google.finance
 
 		intervalDataPreceedsTime(param1: number, param2: number): boolean
 		{
-			const _loc3_ = this.intervalHashKey(param2);
-			if (this.intervalBounds[_loc3_])
+			const key = this.intervalHashKey(param2);
+			if (this.intervalBounds[key])
 			{
-				const _loc4_ = this.intervalBounds[_loc3_];
-				const earliestInterval = _loc4_.getEarliestInterval();
+				const bounds = this.intervalBounds[key];
+				const earliestInterval = bounds.getEarliestInterval();
 				if (earliestInterval && param1 > earliestInterval.start)
 					return true;
 			}
 			return false;
 		}
 
-		private intervalHashKey(param1: number): number
+		private intervalHashKey(value: number): number
 		{
-			return param1;
+			return value;
 		}
 
 		clearCoalescedChildren()
@@ -530,19 +524,19 @@ namespace com.google.finance
 			const firstDailyDayIndex = this.getFirstDailyDayIndex();
 			for (let _loc4_ = firstDailyDayIndex; _loc4_ < this.days.length; _loc4_++)
 			{
-				const _loc5_ = this.days[_loc4_];
+				const day = this.days[_loc4_];
 				const dataUnit = new DataUnit(
-					this.units[_loc5_].close,
-					this.units[_loc5_].high,
-					this.units[_loc5_].low,
-					this.units[_loc5_].open
+					this.units[day].close,
+					this.units[day].high,
+					this.units[day].low,
+					this.units[day].open
 				);
 
-				dataUnit.exchangeDateInUTC = this.units[_loc5_].exchangeDateInUTC;
-				dataUnit.dayMinute = this.units[_loc5_].dayMinute;
-				dataUnit.time = this.units[_loc5_].time;
-				dataUnit.relativeMinutes = this.units[_loc5_].relativeMinutes;
-				dataUnit.coveredDays = this.units[_loc5_].coveredDays;
+				dataUnit.exchangeDateInUTC = this.units[day].exchangeDateInUTC;
+				dataUnit.dayMinute = this.units[day].dayMinute;
+				dataUnit.time = this.units[day].time;
+				dataUnit.relativeMinutes = this.units[day].relativeMinutes;
+				dataUnit.coveredDays = this.units[day].coveredDays;
 				dataSeries.days.push(dataSeries.points.length);
 				dataSeries.units.push(dataUnit);
 			}

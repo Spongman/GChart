@@ -30,15 +30,15 @@ namespace com.google.finance
 		private getFlagGroupCount(context: Context, pinPoints: PinPoint[], param3: number, param4: number): number
 		{
 			let _loc5_ = 1;
-			const _loc6_ = pinPoints[param3];
+			const pin = pinPoints[param3];
 			if (param4 === Intervals.INTRADAY)
 			{
-				while (param3 + _loc5_ < pinPoints.length && pinPoints[param3 + _loc5_].pos === _loc6_.pos && pinPoints[param3 + _loc5_].refDataSeries === _loc6_.refDataSeries)
+				while (param3 + _loc5_ < pinPoints.length && pinPoints[param3 + _loc5_].pos === pin.pos && pinPoints[param3 + _loc5_].refDataSeries === pin.refDataSeries)
 					_loc5_++;
 			}
 			else
 			{
-				while (param3 + _loc5_ < pinPoints.length && pinPoints[param3 + _loc5_].dayPos === _loc6_.dayPos && pinPoints[param3 + _loc5_].refDataSeries === _loc6_.refDataSeries)
+				while (param3 + _loc5_ < pinPoints.length && pinPoints[param3 + _loc5_].dayPos === pin.dayPos && pinPoints[param3 + _loc5_].refDataSeries === pin.refDataSeries)
 					_loc5_++;
 			}
 			return _loc5_;
@@ -48,9 +48,9 @@ namespace com.google.finance
 		{
 			for (let pinIndex = pinPoints.length - 1; pinIndex >= 0; pinIndex--)
 			{
-				const _loc4_ = pinPoints[pinIndex];
-				const _loc5_ = notnull(_loc4_.refDataSeries).units[_loc4_.pos];
-				if (_loc5_.relativeMinutes <= context.lastMinute)
+				const pin = pinPoints[pinIndex];
+				const unit = notnull(pin.refDataSeries).units[pin.pos];
+				if (unit.relativeMinutes <= context.lastMinute)
 					return pinIndex;
 
 			}
@@ -61,9 +61,9 @@ namespace com.google.finance
 		{
 			for (let pinIndex = 0; pinIndex < pinPoints.length; pinIndex++)
 			{
-				const _loc4_ = pinPoints[pinIndex];
-				const _loc5_ = notnull(_loc4_.refDataSeries).units[_loc4_.pos];
-				if (_loc5_.relativeMinutes > context.lastMinute - context.count)
+				const pin = pinPoints[pinIndex];
+				const unit = notnull(pin.refDataSeries).units[pin.pos];
+				if (unit.relativeMinutes > context.lastMinute - context.count)
 					return pinIndex;
 			}
 			return pinPoints.length - 1;
@@ -71,30 +71,30 @@ namespace com.google.finance
 
 		private getPinPointMovieClip(pinPoint: PinPoint): PinPointMovie
 		{
-			let _loc2_: PinPointMovie;
+			let movie: PinPointMovie;
 			const _loc3_ = !!pinPoint.originalObject._color ? pinPoint.originalObject._color : "gray";
 			if (this.activeMovies >= this.pinMovies.length)
 			{
-				_loc2_ = _loc3_ === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
-				this.addChild(_loc2_);
-				this.pinMovies.push(_loc2_);
+				movie = _loc3_ === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
+				this.addChild(movie);
+				this.pinMovies.push(movie);
 			}
 			else
 			{
-				_loc2_ = this.pinMovies[this.activeMovies];
-				const _loc4_ = _loc2_ instanceof OrangePinPointMovie ? "orange" : "gray";
+				movie = this.pinMovies[this.activeMovies];
+				const _loc4_ = movie instanceof OrangePinPointMovie ? "orange" : "gray";
 				if (_loc4_ !== _loc3_)
 				{
-					_loc2_ = _loc3_ === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
+					movie = _loc3_ === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
 					this.removeChild(this.pinMovies[this.activeMovies]);
 					this.pinMovies[this.activeMovies].clearReferences();
 					delete this.pinMovies[this.activeMovies];
-					this.pinMovies[this.activeMovies] = _loc2_;
+					this.pinMovies[this.activeMovies] = movie;
 				}
 			}
-			_loc2_.setPinPointContentMovie(this.pinPointContentMovie);
+			movie.setPinPointContentMovie(this.pinPointContentMovie);
 			this.activeMovies++;
-			return _loc2_;
+			return movie;
 		}
 
 		private removePinMovies(param1: number)
@@ -184,11 +184,11 @@ namespace com.google.finance
 			}
 		}
 
-		private renderFlag(param1: number, pinOrientation: PinOrientations, param3: number, pinPoint: PinPoint, _?: PinPoint, param6 = 1)
+		private renderFlag(x: number, pinOrientation: PinOrientations, param3: number, pinPoint: PinPoint, _?: PinPoint, param6 = 1)
 		{
 			const pinPointMovieClip = this.getPinPointMovieClip(pinPoint);
 			this.addChild(pinPointMovieClip);
-			pinPointMovieClip.x = param1;
+			pinPointMovieClip.x = x;
 			pinPointMovieClip.y = this.pinPointYWhenContentDisplayed;
 			pinPointMovieClip.setCount(param6);
 			pinPointMovieClip.setObj(pinPoint);

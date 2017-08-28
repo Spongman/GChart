@@ -52,8 +52,8 @@ namespace com.google.finance
 			if (isNaN(context.lastMinute) || isNaN(context.count) || context.count === 0)
 				return;
 
-			const _loc2_ = this.dataSource.objects[this.renderObj];
-			if (!_loc2_ || _loc2_.length === 0)
+			const objects = this.dataSource.objects[this.renderObj];
+			if (!objects || objects.length === 0)
 			{
 				this.resetCanvas();
 				return;
@@ -61,23 +61,23 @@ namespace com.google.finance
 			const detailLevel = this.viewPoint.getDetailLevelForTechnicalStyle();
 			const detailLevelInterval = Const.getDetailLevelInterval(detailLevel);
 			this.activeMovies = 0;
-			const firstVisibleObject = this.getFirstVisibleObject(_loc2_, detailLevelInterval, context);
+			const firstVisibleObject = this.getFirstVisibleObject(objects, detailLevelInterval, context);
 			if (firstVisibleObject === -1)
 			{
 				this.resetCanvas();
 				return;
 			}
-			const lastVisibleObject = this.getLastVisibleObject(_loc2_, detailLevelInterval, context);
+			const lastVisibleObject = this.getLastVisibleObject(objects, detailLevelInterval, context);
 			const _loc7_ = this.viewPoint.count / this.dataSource.data.marketDayLength;
 			context[this.renderObj] = [];
 			let _loc8_ = 0;
 			for (let visibleObjectIndex = firstVisibleObject; visibleObjectIndex <= lastVisibleObject; visibleObjectIndex++)
 			{
-				const _loc10_ = _loc2_[visibleObjectIndex];
-				if (notnull(_loc10_.posInInterval)[detailLevelInterval])
+				const obj = objects[visibleObjectIndex];
+				if (notnull(obj.posInInterval)[detailLevelInterval])
 				{
-					const position = this.getPosition(_loc10_, detailLevelInterval, context);
-					const _loc12_ = this.putObject(_loc10_, position);
+					const position = this.getPosition(obj, detailLevelInterval, context);
+					const _loc12_ = this.putObject(obj, position);
 					if (_loc7_ > IntervalBasedIndependentObjectsLayer.HIDE_TEXT_THRESHOLD)
 					{
 						_loc12_.hideText();
@@ -115,19 +115,19 @@ namespace com.google.finance
 		{
 			const position = new Position();
 			const dataUnit = this.getDataUnit(stockAssociatedObject, param2);
-			const _loc6_ = !isNaN(dataUnit.weeklyXPos) ? Number(dataUnit.weeklyXPos) : this.viewPoint.getXPos(dataUnit);
-			const yPos = this.getYPos(context, dataUnit);
+			const x = !isNaN(dataUnit.weeklyXPos) ? Number(dataUnit.weeklyXPos) : this.viewPoint.getXPos(dataUnit);
+			const y = this.getYPos(context, dataUnit);
 			//const _loc8_ = (this.viewPoint.maxy + this.viewPoint.miny) / 2;
 			if (this.positioning === IntervalBasedIndependentObjectsLayer.POSITION_CHART)
 			{
-				if (yPos > this.viewPoint.miny + 40)
+				if (y > this.viewPoint.miny + 40)
 				{
-					position.y = yPos - IntervalBasedIndependentObjectsLayer.OBJECT_DISTANCE;
+					position.y = y - IntervalBasedIndependentObjectsLayer.OBJECT_DISTANCE;
 					position.orientation = Orientations.DOWN;
 				}
 				else
 				{
-					position.y = yPos + IntervalBasedIndependentObjectsLayer.OBJECT_DISTANCE;
+					position.y = y + IntervalBasedIndependentObjectsLayer.OBJECT_DISTANCE;
 					position.orientation = Orientations.UP;
 				}
 			}
@@ -141,7 +141,7 @@ namespace com.google.finance
 				position.y = this.viewPoint.maxy - _loc10_;
 				position.orientation = Orientations.DOWN;
 			}
-			position.x = _loc6_;
+			position.x = x;
 			return position;
 		}
 

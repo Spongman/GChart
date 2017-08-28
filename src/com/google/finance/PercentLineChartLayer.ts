@@ -74,10 +74,10 @@ namespace com.google.finance
 			if (!range)
 				return context;
 
-			const _loc5_ = Utils.getLogScaledValue(range.maxPrice / range.startPrice, context.verticalScaling);
-			context.plusVariation = Utils.extendedMax(_loc5_, context.plusVariation);
-			const _loc6_ = Utils.getLogScaledValue(range.minPrice / range.startPrice, context.verticalScaling);
-			context.minusVariation = Utils.extendedMin(_loc6_, context.minusVariation);
+			const max = Utils.getLogScaledValue(range.maxPrice / range.startPrice, context.verticalScaling);
+			context.plusVariation = Utils.extendedMax(max, context.plusVariation);
+			const min = Utils.getLogScaledValue(range.minPrice / range.startPrice, context.verticalScaling);
+			context.minusVariation = Utils.extendedMin(min, context.minusVariation);
 			context.scaleVariation = context.plusVariation - context.minusVariation;
 			context.localYAdjustment = context.plusVariation - Utils.getLogScaledValue(1, context.verticalScaling);
 			context.plusSize = context.localYAdjustment * (viewPoint.maxPriceRangeViewSize - 20) / context.scaleVariation;
@@ -111,9 +111,9 @@ namespace com.google.finance
 		{
 			this.clearHighlight();
 			const dataSeries = this.getDataSeries();
-			const _loc6_ = this.viewPoint.getXPos(dataSeries.units[0]);
+			const x = this.viewPoint.getXPos(dataSeries.units[0]);
 			//const _loc7_ = this.viewPoint.getXPos(_loc4_.units[_loc4_.units.length - 1]);
-			if (param2 < _loc6_)
+			if (param2 < x)
 				return;
 
 			let _loc5_: DataUnit;
@@ -123,11 +123,11 @@ namespace com.google.finance
 				_loc5_ = notnull(this.getPoint(dataSeries, param2));
 
 			const _loc8_ = this.viewPoint.getMinuteXPos(_loc5_.relativeMinutes);
-			const _loc9_ = this.getYPos(context, _loc5_);
+			const y = this.getYPos(context, _loc5_);
 			const gr = this.highlightCanvas.graphics;
 			gr.lineStyle(5, this.lineColor, 1);
-			gr.moveTo(_loc8_, _loc9_ - 0.2);
-			gr.lineTo(_loc8_, _loc9_ + 0.2);
+			gr.moveTo(_loc8_, y - 0.2);
+			gr.lineTo(_loc8_, y + 0.2);
 			if (state["points"] === undefined)
 				state["points"] = [];
 
@@ -159,10 +159,10 @@ namespace com.google.finance
 				percentText += '-';
 
 			param1 = Math.abs(param1);
-			const _loc3_ = Math.floor(param1);
-			percentText += _loc3_;
+			const integerPart = Math.floor(param1);
+			percentText += integerPart;
 			percentText += '.';
-			percentText += Utils.numberToMinTwoChars(Math.floor((param1 - _loc3_) * 100));
+			percentText += Utils.numberToMinTwoChars(Math.floor((param1 - integerPart) * 100));
 			return percentText;
 		}
 	}

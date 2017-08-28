@@ -26,27 +26,27 @@ namespace com.google.finance
 			if (days[param2 - 1] === days[param2] - 1)
 				return param2;
 
-			let _loc14_ = days[param2];
-			if (_loc14_ > param8)
-				_loc14_ = param8;
+			let day = days[param2];
+			if (day > param8)
+				day = param8;
 
-			const point = <indicator.VolumeIndicatorPoint>dataSeries.points[_loc14_];
-			let xPos = viewPoint.getXPos(points[_loc14_].point);
+			const point = <indicator.VolumeIndicatorPoint>dataSeries.points[day];
+			let x = viewPoint.getXPos(points[day].point);
 			const intervalLength = viewPoint.getIntervalLength(param6 / 60);
 			const _loc15_ = Utils.extendedMax(param7, days[param2 - 1]);
 			const gr = sprite.graphics;
-			while (_loc14_ > _loc15_)
+			while (day > _loc15_)
 			{
-				let _loc13_ = viewPoint.maxy - point.volume * this.verticalScale;
-				if (viewPoint.maxy - _loc13_ < 1 && viewPoint.maxy - _loc13_ > 0)
-					_loc13_ = viewPoint.maxy - 1;
-				else if (_loc13_ < viewPoint.miny)
-					_loc13_ = viewPoint.miny;
+				let y = viewPoint.maxy - point.volume * this.verticalScale;
+				if (viewPoint.maxy - y < 1 && viewPoint.maxy - y > 0)
+					y = viewPoint.maxy - 1;
+				else if (y < viewPoint.miny)
+					y = viewPoint.miny;
 
-				gr.moveTo(xPos, _loc13_);
-				gr.lineTo(xPos, viewPoint.maxy);
-				_loc14_--;
-				xPos -= intervalLength;
+				gr.moveTo(x, y);
+				gr.lineTo(x, viewPoint.maxy);
+				day--;
+				x -= intervalLength;
 			}
 			return param2;
 		}
@@ -78,9 +78,8 @@ namespace com.google.finance
 		{
 			let pointIndex = this.getPointIndex(dataSeries, param2);
 			while (pointIndex > 0 && (<indicator.VolumeIndicatorPoint>dataSeries.points[pointIndex]).volume === 0)
-			{
 				pointIndex--;
-			}
+
 			return dataSeries.points[pointIndex];
 		}
 
@@ -101,31 +100,31 @@ namespace com.google.finance
 			this.drawLines(this, dataSeries, firstReferencePointIndex, lastReferencePointIndex, this.viewPoint, context);
 		}
 
-		protected drawOneLine(param1: number, param2: number, sprite: flash.display.Sprite, viewPoint: IViewPoint)
+		protected drawOneLine(x: number, y: number, sprite: flash.display.Sprite, viewPoint: IViewPoint)
 		{
-			if (viewPoint.maxy - param2 < 1 && viewPoint.maxy - param2 > 0)
-				param2 = viewPoint.maxy - 1;
-			else if (param2 < viewPoint.miny)
-				param2 = viewPoint.miny;
+			if (viewPoint.maxy - y < 1 && viewPoint.maxy - y > 0)
+				y = viewPoint.maxy - 1;
+			else if (y < viewPoint.miny)
+				y = viewPoint.miny;
 
-			sprite.graphics.moveTo(param1, param2);
-			sprite.graphics.lineTo(param1, viewPoint.maxy);
+			sprite.graphics.moveTo(x, y);
+			sprite.graphics.lineTo(x, viewPoint.maxy);
 		}
 
-		private getPointIndex(dataSeries: com.google.finance.DataSeries, param2: number): number
+		private getPointIndex(dataSeries: com.google.finance.DataSeries, x: number): number
 		{
-			const minute = this.viewPoint.getMinuteOfX(param2);
+			const minute = this.viewPoint.getMinuteOfX(x);
 			let referencePointIndex = dataSeries.getReferencePointIndex(minute);
 			while (dataSeries.units[referencePointIndex].fake && referencePointIndex >= 0)
 				referencePointIndex--;
 
 			if (referencePointIndex < dataSeries.points.length - 1)
 			{
-				const _loc5_ = dataSeries.points[referencePointIndex].point;
-				const _loc6_ = dataSeries.points[referencePointIndex + 1].point;
-				const _loc7_ = this.viewPoint.getMinuteXPos(_loc6_.relativeMinutes);
-				const _loc8_ = this.viewPoint.getMinuteXPos(_loc5_.relativeMinutes);
-				if (Math.abs(_loc7_ - param2) < Math.abs(_loc8_ - param2))
+				const unit = dataSeries.points[referencePointIndex].point;
+				const nextUnit = dataSeries.points[referencePointIndex + 1].point;
+				const right = this.viewPoint.getMinuteXPos(nextUnit.relativeMinutes);
+				const left = this.viewPoint.getMinuteXPos(unit.relativeMinutes);
+				if (Math.abs(right - x) < Math.abs(left - x))
 					return referencePointIndex + 1;
 			}
 			return referencePointIndex;
@@ -170,15 +169,15 @@ namespace com.google.finance
 						//_loc17_ = param5.minutePix * (this.dataSource.data.marketDayLength + 1);
 						for (let _loc16_ = param4; _loc16_ > param3 && _loc16_ >= 0; _loc16_--)
 						{
-							let _loc15_ = this.getYPos(viewPoint, _loc7_[_loc16_]);
-							const _loc14_ = viewPoint.getXPos(_loc7_[_loc16_].point);
-							if (viewPoint.maxy - _loc15_ < 1 && viewPoint.maxy - _loc15_ > 0)
-								_loc15_ = viewPoint.maxy - 1;
-							else if (_loc15_ < viewPoint.miny)
-								_loc15_ = viewPoint.miny;
+							let y = this.getYPos(viewPoint, _loc7_[_loc16_]);
+							const x = viewPoint.getXPos(_loc7_[_loc16_].point);
+							if (viewPoint.maxy - y < 1 && viewPoint.maxy - y > 0)
+								y = viewPoint.maxy - 1;
+							else if (y < viewPoint.miny)
+								y = viewPoint.miny;
 
-							gr.moveTo(_loc14_, _loc15_);
-							gr.lineTo(_loc14_, viewPoint.maxy);
+							gr.moveTo(x, y);
+							gr.lineTo(x, viewPoint.maxy);
 						}
 					}
 					break;
@@ -186,15 +185,15 @@ namespace com.google.finance
 					{
 						for (let _loc16_ = param4; _loc16_ > param3 && _loc16_ >= 0; _loc16_--)
 						{
-							const _loc14_ = viewPoint.getXPos(_loc7_[_loc16_].point);
-							let _loc15_ = this.getYPos(viewPoint, _loc7_[_loc16_]);
-							if (viewPoint.maxy - _loc15_ < 1 && viewPoint.maxy - _loc15_ > 0)
-								_loc15_ = viewPoint.maxy - 1;
-							else if (_loc15_ < viewPoint.miny)
-								_loc15_ = viewPoint.miny;
+							const x = viewPoint.getXPos(_loc7_[_loc16_].point);
+							let y = this.getYPos(viewPoint, _loc7_[_loc16_]);
+							if (viewPoint.maxy - y < 1 && viewPoint.maxy - y > 0)
+								y = viewPoint.maxy - 1;
+							else if (y < viewPoint.miny)
+								y = viewPoint.miny;
 
-							gr.moveTo(_loc14_, _loc15_);
-							gr.lineTo(_loc14_, viewPoint.maxy);
+							gr.moveTo(x, y);
+							gr.lineTo(x, viewPoint.maxy);
 						}
 					}
 					break;
@@ -280,10 +279,10 @@ namespace com.google.finance
 				return;
 
 			const point = this.getPoint(dataSeries, param2) as indicator.VolumeIndicatorPoint;
-			const xPos = this.viewPoint.getXPos(point.point);
-			const yPos = this.getYPos(this.viewPoint, point);
+			const x = this.viewPoint.getXPos(point.point);
+			const y = this.getYPos(this.viewPoint, point);
 			this.highlightCanvas.graphics.lineStyle(2, Const.VOLUME_HIGHLIGHT_COLOR, 1);
-			this.drawOneLine(xPos, yPos, this.highlightCanvas, this.viewPoint);
+			this.drawOneLine(x, y, this.highlightCanvas, this.viewPoint);
 			state[SpaceText.VOLUME_STR] = point.volume;
 			state["volumesetter"] = this;
 		}

@@ -154,12 +154,12 @@ namespace com.google.finance
 
 			const point = this.getPoint(dataSeries, param2);
 			const vp = this.viewPoint;
-			const xPos = vp.getXPos(point);
-			const yPos = this.getYPos(context, point);
+			const x = vp.getXPos(point);
+			const y = this.getYPos(context, point);
 			const gr = this.highlightCanvas.graphics;
 			gr.lineStyle(5, Const.AH_DOT_COLOR, 1);
-			gr.moveTo(xPos, yPos - 0.2);
-			gr.lineTo(xPos, yPos + 0.2);
+			gr.moveTo(x, y - 0.2);
+			gr.lineTo(x, y + 0.2);
 			state["point"] = point;
 			state["setter"] = this;
 			state["extraText"] = dataSeries.getSessionDisplayNameForMinute(point.dayMinute) + ": ";
@@ -181,7 +181,7 @@ namespace com.google.finance
 			const timeIndex1 = DataSource.getTimeIndex(param3, units);
 			const timeIndex2 = DataSource.getTimeIndex(param2, units);
 			const vp = this.viewPoint;
-			const xPos = vp.getXPos(units[timeIndex1]);
+			const right = vp.getXPos(units[timeIndex1]);
 			let _loc10_ = 1;
 			while (this.viewPoint.minutePix * intradayInterval * _loc10_ < vp.POINTS_DISTANCE)
 				_loc10_ *= 2;
@@ -193,26 +193,26 @@ namespace com.google.finance
 					_loc11_--;
 			}
 			_loc11_ += (timeIndex1 - _loc11_) % _loc10_;
-			let _loc12_ = vp.getXPos(units[_loc11_]);
-			let _loc13_ = this.getYPos(context, units[_loc11_]);
+			let left = vp.getXPos(units[_loc11_]);
+			let yPos = this.getYPos(context, units[_loc11_]);
 			const gr = layer.graphics;
 			gr.lineStyle(0, 0, 0);
 			gr.beginFill(Const.ECN_LINE_CHART_FILL_COLOR, Const.ECN_LINE_CHART_FILL_VISIBILITY);
-			gr.moveTo(_loc12_, this.viewPoint.maxy - 15);
-			gr.lineTo(_loc12_, _loc13_);
+			gr.moveTo(left, this.viewPoint.maxy - 15);
+			gr.lineTo(left, yPos);
 			gr.lineStyle(Const.ECN_LINE_CHART_LINE_THICKNESS, Const.ECN_LINE_CHART_LINE_COLOR, Const.ECN_LINE_CHART_LINE_VISIBILITY);
 			const intradayWidth = _loc10_ * (this.viewPoint.minutePix * intradayInterval);
 			for (let timeIndex = _loc11_; timeIndex > timeIndex2; timeIndex -= _loc10_)
 			{
-				_loc13_ = this.getYPos(context, units[timeIndex]);
-				gr.lineTo(_loc12_, _loc13_);
-				_loc12_ -= intradayWidth;
+				yPos = this.getYPos(context, units[timeIndex]);
+				gr.lineTo(left, yPos);
+				left -= intradayWidth;
 			}
-			gr.lineTo(_loc12_, _loc13_);
+			gr.lineTo(left, yPos);
 			gr.lineStyle(0, 0, 0);
-			gr.lineTo(_loc12_, this.viewPoint.maxy - 15);
+			gr.lineTo(left, this.viewPoint.maxy - 15);
 			gr.endFill();
-			this.regionsXLimits.addInterval(_loc12_, xPos);
+			this.regionsXLimits.addInterval(left, right);
 		}
 	}
 }

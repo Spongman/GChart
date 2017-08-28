@@ -301,9 +301,9 @@ namespace com.google.finance
 			return Messages.getMsg(Messages.SPLIT_TEXT, this.getShortText());
 		}
 
-		setPersistentHide(param1: boolean)
+		setPersistentHide(persistentHide: boolean)
 		{
-			this.persistentHide = param1;
+			this.persistentHide = persistentHide;
 		}
 	}
 }

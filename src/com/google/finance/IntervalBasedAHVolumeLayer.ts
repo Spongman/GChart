@@ -24,12 +24,12 @@ namespace com.google.finance
 			if (!points || pointIndex === -1)
 				return;
 
-			const _loc10_ = points[pointIndex];
-			const xPos = viewPoint.getXPos(_loc10_);
-			const yPos = this.getYPos(_loc10_.volumes[detailLevelInterval], viewPoint);
+			const unit = points[pointIndex];
+			const x = viewPoint.getXPos(unit);
+			const y = this.getYPos(unit.volumes[detailLevelInterval], viewPoint);
 			this.highlightCanvas.graphics.lineStyle(2, Const.VOLUME_HIGHLIGHT_COLOR, 1);
-			this.drawOneLine(xPos, yPos, viewPoint, this.highlightCanvas);
-			state[SpaceText.VOLUME_STR] = _loc10_.volumes[detailLevelInterval];
+			this.drawOneLine(x, y, viewPoint, this.highlightCanvas);
+			state[SpaceText.VOLUME_STR] = unit.volumes[detailLevelInterval];
 			state["ahsetter"] = this;
 		}
 
@@ -53,12 +53,12 @@ namespace com.google.finance
 			for (let intervalIndex = 0; intervalIndex < visibleExtendedHours.length(); intervalIndex++)
 			{
 				const interval = visibleExtendedHours.getIntervalAt(intervalIndex);
-				const _loc6_ = points[interval.start];
-				const _loc7_ = points[interval.end];
-				if (ViewPoint.sessionVisible(_loc6_, _loc7_, context))
+				const startUnit = points[interval.start];
+				const endUnit = points[interval.end];
+				if (ViewPoint.sessionVisible(startUnit, endUnit, context))
 				{
-					const xPos1 = vp.getXPos(_loc6_);
-					const xPos2 = vp.getXPos(_loc7_);
+					const xPos1 = vp.getXPos(startUnit);
+					const xPos2 = vp.getXPos(endUnit);
 					this.regionsXLimits.addInterval(xPos1, xPos2);
 				}
 			}

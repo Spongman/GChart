@@ -25,6 +25,7 @@
   },
   "scripts": {
     "gulp": "gulp",
+    "build": "gulp default --production true",
     "release": "gulp clean && gulp default --production true",
     "watch": "gulp serve"
   },

@@ -15,12 +15,12 @@ namespace com.google.finance.indicator
 			return SMAIndicatorLayer.getParameterNames();
 		}
 
-		computeIntervalIndicator(param1: number)
+		computeIntervalIndicator(interval: number)
 		{
-			if (this.indicator.hasInterval(param1))
+			if (this.indicator.hasInterval(interval))
 				return;
 
-			const originalPoints = this.originalDataSeries.getPointsInIntervalArray(param1);
+			const originalPoints = this.originalDataSeries.getPointsInIntervalArray(interval);
 			for (let periodIndex = 0; periodIndex < this.periods.length; periodIndex++)
 			{
 				const dataSeries = new DataSeries();
@@ -52,14 +52,14 @@ namespace com.google.finance.indicator
 						dataSeries.points.push(point);
 					}
 				}
-				this.indicator.setDataSeries(param1, dataSeries, periodIndex);
+				this.indicator.setDataSeries(interval, dataSeries, periodIndex);
 			}
 		}
 
-		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string
+		protected getIndicatorValueText(periodIndex: number, param2: number, param3: string, context: Context): string
 		{
-			if (param1 >= 0 && param1 < this.periods.length)
-				return Messages.getMsg(Messages.EMA_INTERVAL, this.periods[param1], param3, param2);
+			if (periodIndex >= 0 && periodIndex < this.periods.length)
+				return Messages.getMsg(Messages.EMA_INTERVAL, this.periods[periodIndex], param3, param2);
 
 			return "";
 		}

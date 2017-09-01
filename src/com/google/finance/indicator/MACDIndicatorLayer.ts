@@ -70,12 +70,12 @@ namespace com.google.finance.indicator
 			return Messages.getMsg(Messages.MACD_INTERVAL, this.shortPeriod, this.longPeriod, this.emaPeriod, param1);
 		}
 
-		computeIntervalIndicator(param1: number)
+		computeIntervalIndicator(interval: number)
 		{
-			if (this.indicator.hasInterval(param1))
+			if (this.indicator.hasInterval(interval))
 				return;
 
-			const points = this.originalDataSeries.getPointsInIntervalArray(param1);
+			const points = this.originalDataSeries.getPointsInIntervalArray(interval);
 			if (!points || points.length === 0)
 				return;
 
@@ -105,9 +105,9 @@ namespace com.google.finance.indicator
 					dataSeries2.points.push(new IndicatorPoint(_loc7_, _loc14_));
 				}
 			}
-			this.indicator.setDataSeries(param1, dataSeries0, 0);
-			this.indicator.setDataSeries(param1, dataSeries1, 1);
-			this.indicator.setDataSeries(param1, dataSeries2, 2);
+			this.indicator.setDataSeries(interval, dataSeries0, 0);
+			this.indicator.setDataSeries(interval, dataSeries1, 1);
+			this.indicator.setDataSeries(interval, dataSeries2, 2);
 		}
 
 		setIndicatorInstanceArray(indicators: com.google.finance.indicator.MACDIndicatorLayer[])

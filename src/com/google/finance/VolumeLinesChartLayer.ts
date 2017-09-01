@@ -19,21 +19,21 @@ namespace com.google.finance
 			this.addChild(this.highlightCanvas);
 		}
 
-		private drawDayLine(sprite: flash.display.Sprite, param2: number, viewPoint: ViewPoint, dataSeries: com.google.finance.DataSeries, param5: number, param6: number, param7: number, param8: number, context: Context): number
+		private drawDayLine(sprite: flash.display.Sprite, dayIndex: number, viewPoint: ViewPoint, dataSeries: com.google.finance.DataSeries, param5: number, param6: number, param7: number, param8: number, context: Context): number
 		{
 			const points = dataSeries.points;
 			const days = dataSeries.days;
-			if (days[param2 - 1] === days[param2] - 1)
-				return param2;
+			if (days[dayIndex - 1] === days[dayIndex] - 1)
+				return dayIndex;
 
-			let _loc14_ = days[param2];
+			let _loc14_ = days[dayIndex];
 			if (_loc14_ > param8)
 				_loc14_ = param8;
 
 			const point = <indicator.VolumeIndicatorPoint>dataSeries.points[_loc14_];
 			let xPos = viewPoint.getXPos(points[_loc14_].point);
 			const intervalLength = viewPoint.getIntervalLength(param6 / 60);
-			const _loc15_ = Utils.extendedMax(param7, days[param2 - 1]);
+			const _loc15_ = Utils.extendedMax(param7, days[dayIndex - 1]);
 			const gr = sprite.graphics;
 			while (_loc14_ > _loc15_)
 			{
@@ -48,7 +48,7 @@ namespace com.google.finance
 				_loc14_--;
 				xPos -= intervalLength;
 			}
-			return param2;
+			return dayIndex;
 		}
 
 		setIndicator(indicatorName: string, computer: Function, dataSeries: com.google.finance.DataSeries)

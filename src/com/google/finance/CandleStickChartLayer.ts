@@ -4,9 +4,9 @@ namespace com.google.finance
 {
 	export class CandleStickChartLayer extends IntervalBasedBarChartLayer
 	{
-		protected drawBarAtDataUnit(context: Context, dataUnits: DataUnit[], param3: number)
+		protected drawBarAtDataUnit(context: Context, dataUnits: DataUnit[], unitIndex: number)
 		{
-			const unit = dataUnits[param3];
+			const unit = dataUnits[unitIndex];
 			if (unit.fake)
 				return;
 

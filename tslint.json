@@ -9,6 +9,7 @@
 		"tslint:latest"
 	],
 	"rules": {
+		"typesafe-enums": true,
 		"indent": [
 			false
 		],
@@ -408,7 +409,8 @@
 		"curly": true
 	},
 	"rulesDirectory": [
-		"node_modules/tslint-microsoft-contrib"
+		"node_modules/tslint-microsoft-contrib",
+		"tslint-rules"
 		/*
      * A list of relative or absolute paths to directories that contain custom rules.
      * See the Custom Rules documentation below for more details.

@@ -152,10 +152,10 @@ namespace com.google.finance
 			this.dataSources[ticker].clearAllObjects(param2);
 		}
 
-		removeObject(ticker: string, param2: string, param3: string)
+		removeObject(ticker: string, id: number, objectType: string)
 		{
 			// TODO: is param2 always a number?
-			this.dataSources[ticker].removeObject(param3, Number(param2));
+			this.dataSources[ticker].removeObject(objectType, id);
 		}
 
 		private hasDataSource(ticker: string): boolean
@@ -233,16 +233,16 @@ namespace com.google.finance
 			return dataUnit;
 		}
 
-		checkDataSourceExistance(ticker: string, param2?: string)
+		checkDataSourceExistance(ticker: string, displayName?: string)
 		{
 			if (!this.hasDataSource(ticker))
 			{
 				const _loc3_ = this.mainManager ? this.mainManager.weekdayBitmap : Const.DEFAULT_WEEKDAY_BITMAP;
-				this.dataSources[ticker] = new DataSource(ticker, _loc3_, param2);
+				this.dataSources[ticker] = new DataSource(ticker, _loc3_, displayName);
 			}
-			else if (!this.dataSources[ticker].displayName && param2)
+			else if (!this.dataSources[ticker].displayName && displayName)
 			{
-				this.dataSources[ticker].displayName = param2;
+				this.dataSources[ticker].displayName = displayName;
 			}
 		}
 

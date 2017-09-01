@@ -6,7 +6,7 @@ namespace com.google.finance
 	{
 		x: number;
 		y: number;
-		orientation: number;
+		orientation: Orientations;
 	}
 
 	export class IndependentObjectsLayer extends AbstractLayer<ViewPoint>
@@ -107,7 +107,7 @@ namespace com.google.finance
 			this.movies.splice(this.activeMovies);
 		}
 
-		private getPosition(seriesPosition: SeriesPosition, dataUnits: DataUnit[], param3: number, context: Context): Position
+		private getPosition(seriesPosition: SeriesPosition, dataUnits: DataUnit[], detailLevel: number, context: Context): Position
 		{
 			const position = new Position();
 			const dataSeries = notnull(seriesPosition.refDataSeries);

@@ -31,14 +31,14 @@ namespace com.google.finance
 
 		protected getPointsForCurrentDetailLevel(param1 = NaN, param2 = NaN): DataUnit[]
 		{
-			let _loc3_;
+			let detailLevel;
 			const vp = this.viewPoint;
 			if (!isNaN(param1) && !isNaN(param2))
-				_loc3_ = vp.getDetailLevelForTechnicalStyle(param1, param2);
+				detailLevel = vp.getDetailLevelForTechnicalStyle(param1, param2);
 			else
-				_loc3_ = vp.getDetailLevelForTechnicalStyle();
+				detailLevel = vp.getDetailLevelForTechnicalStyle();
 
-			const detailLevelInterval = Const.getDetailLevelInterval(_loc3_);
+			const detailLevelInterval = Const.getDetailLevelInterval(detailLevel);
 			return notnull(this.getDataSeries()).getPointsInIntervalArray(detailLevelInterval);
 		}
 
@@ -172,9 +172,9 @@ namespace com.google.finance
 			return context;
 		}
 
-		setLayerName(param1: string)
+		setLayerName(layerName: string)
 		{
-			this.layerName = param1;
+			this.layerName = layerName;
 		}
 
 		protected findPointIndex(param1: number): number
@@ -239,11 +239,11 @@ namespace com.google.finance
 			return dataUnit1.close >= dataUnit2.close ? Number(Const.POSITIVE_DIFFERENCE_COLOR) : Const.NEGATIVE_DIFFERENCE_COLOR;
 		}
 
-		setEnabled(param1 = true)
+		setEnabled(enabled = true)
 		{
-			this.enabled = param1;
-			this.visible = param1;
-			this.highlightCanvas.visible = param1;
+			this.enabled = enabled;
+			this.visible = enabled;
+			this.highlightCanvas.visible = enabled;
 		}
 	}
 }

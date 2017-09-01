@@ -349,7 +349,7 @@ namespace com.google.finance
 			}
 		}
 
-		private drawDayStarts(displayObject: flash.display.DisplayObject, sprite: flash.display.Sprite, dayVisibilities: DayVisibility[], param4: number)
+		private drawDayStarts(displayObject: flash.display.DisplayObject, sprite: flash.display.Sprite, dayVisibilities: DayVisibility[], detailLevel: Intervals)
 		{
 			//const _loc5_ = this.viewPoint.miny + this.topMargin;
 			//const _loc6_ = this.viewPoint.maxy - this.viewPoint.bottomTextHeight;
@@ -363,14 +363,14 @@ namespace com.google.finance
 					const intervalLength = this.viewPoint.getIntervalLength(dayVisibilities[dayVisibilityIndex].coveredMinutes);
 					const dayText = this.getDayText(dayVisibilities, dayVisibilityIndex, intervalLength);
 					let _loc12_ = "center";
-					if (intervalLength >= DateLinesLayer.DISPLAY_HOURS_MIN_DAY_WIDTH && param4 < Intervals.DAILY)
+					if (intervalLength >= DateLinesLayer.DISPLAY_HOURS_MIN_DAY_WIDTH && detailLevel < Intervals.DAILY)
 					{
 						_loc12_ = "left";
 						this.drawHoursForDay(displayObject, sprite, dayVisibilities[dayVisibilityIndex], intervalLength);
 					}
 					let _loc13_: number;
 					let _loc14_: number;
-					if (param4 < Intervals.DAILY)
+					if (detailLevel < Intervals.DAILY)
 					{
 						_loc13_ = xPos - intervalLength + ViewPoint.TEXT_HORIZONTAL_OFFSET;
 						_loc14_ = intervalLength - ViewPoint.TEXT_HORIZONTAL_OFFSET;
@@ -412,11 +412,11 @@ namespace com.google.finance
 			return dayVisibilities;
 		}
 
-		private getDayText(dayVisibilities: DayVisibility[], param2: number, param3: number): string
+		private getDayText(dayVisibilities: DayVisibility[], dayIndex: number, param3: number): string
 		{
-			const exchangeDateInUTC = dayVisibilities[param2].dataUnit.exchangeDateInUTC;
+			const exchangeDateInUTC = dayVisibilities[dayIndex].dataUnit.exchangeDateInUTC;
 			let _loc5_ = 'd';
-			if (param3 > 50 || param2 === 2 || param2 === dayVisibilities.length - 2)
+			if (param3 > 50 || dayIndex === 2 || dayIndex === dayVisibilities.length - 2)
 			{
 				_loc5_ = "MMM " + _loc5_;
 				if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))

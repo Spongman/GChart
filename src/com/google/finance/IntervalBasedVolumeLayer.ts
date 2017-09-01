@@ -57,7 +57,7 @@ namespace com.google.finance
 			gr.lineTo(this.viewPoint.maxx - 1, param1);
 		}
 
-		private drawOneBar(param1: number, param2: number, viewPoint: IViewPoint, sprite: flash.display.Sprite, param5: number, param6: number = -1)
+		private drawOneBar(param1: number, param2: number, viewPoint: IViewPoint, sprite: flash.display.Sprite, param5: number, color: number = -1)
 		{
 			if (viewPoint.maxy - param2 < 1 && viewPoint.maxy - param2 > 0)
 				param2 = viewPoint.maxy - 1;
@@ -65,11 +65,11 @@ namespace com.google.finance
 				param2 = viewPoint.miny;
 
 			const gr = sprite.graphics;
-			if (param6 !== -1)
-				gr.beginFill(param6);
+			if (color !== -1)
+				gr.beginFill(color);
 
 			gr.drawRect(param1 - param5 / 2, param2, param5, viewPoint.maxy - param2);
-			if (param6 !== -1)
+			if (color !== -1)
 				gr.endFill();
 		}
 
@@ -202,16 +202,16 @@ namespace com.google.finance
 			if (state["ahsetter"])
 				return;
 
-			const _loc4_ = notnull(this.getDataSeries());
+			const dataSeries = notnull(this.getDataSeries());
 			const viewPoint = this.viewPoint;
-			const _loc6_ = this.findPointIndex(param2);
+			const pointIndex = this.findPointIndex(param2);
 			const detailLevel = viewPoint.getDetailLevelForTechnicalStyle();
 			const detailLevelInterval = Const.getDetailLevelInterval(detailLevel);
-			const points = _loc4_.getPointsInIntervalArray(detailLevelInterval);
-			if (!points || _loc6_ === -1)
+			const points = dataSeries.getPointsInIntervalArray(detailLevelInterval);
+			if (!points || pointIndex === -1)
 				return;
 
-			const _loc10_ = points[_loc6_];
+			const _loc10_ = points[pointIndex];
 			this.clearHighlight();
 			const _loc11_ = !isNaN(_loc10_.weeklyXPos) ? Number(_loc10_.weeklyXPos) : viewPoint.getXPos(_loc10_);
 			const yPos = this.getYPos(_loc10_.volumes[detailLevelInterval], viewPoint);

@@ -66,7 +66,7 @@ namespace com.google.finance
 			}
 		}
 
-		private drawLine(sprite: flash.display.Sprite, param2: number, param3: number, sparklineViewPoint: SparklineViewPoint, param5: number[]): number
+		private drawLine(sprite: flash.display.Sprite, param2: number, unitIndex: number, sparklineViewPoint: SparklineViewPoint, param5: number[]): number
 		{
 			const dataSeries = notnull(this.getDataSeries());
 			const units = dataSeries.units;
@@ -74,7 +74,7 @@ namespace com.google.finance
 			//const _loc11_ = param3;
 			const skipInterval = this.getSkipInterval(param5, dataSeries.units);
 			let _loc13_ = param5.length - 1;
-			while (_loc13_ >= 0 && param5[_loc13_] > param3)
+			while (_loc13_ >= 0 && param5[_loc13_] > unitIndex)
 				_loc13_ -= skipInterval;
 
 			_loc13_ = Math.min(_loc13_ + skipInterval, param5.length - 1);
@@ -82,8 +82,8 @@ namespace com.google.finance
 			const miny = sparklineViewPoint.miny;
 			const maxx = sparklineViewPoint.maxx;
 			const minx = sparklineViewPoint.minx;
-			const xPos = sparklineViewPoint.getXPos(maxx, minx, units[param3]);
-			const yPos = this.getYPos(maxy, miny, units[param3]);
+			const xPos = sparklineViewPoint.getXPos(maxx, minx, units[unitIndex]);
+			const yPos = this.getYPos(maxy, miny, units[unitIndex]);
 			const gr = sprite.graphics;
 			gr.moveTo(xPos, sparklineViewPoint.maxy);
 			gr.lineStyle(0, 0, 0);

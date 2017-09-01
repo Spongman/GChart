@@ -22,9 +22,9 @@ namespace com.google.finance.indicator
 			return this.point;
 		}
 
-		getLogValue(param1: string): number
+		getLogValue(scaleType: string): number
 		{
-			if (param1 === Const.LOG_VSCALE || param1 === Const.NEW_LOG_VSCALE)
+			if (scaleType === Const.LOG_VSCALE || scaleType === Const.NEW_LOG_VSCALE)
 			{
 				if (isNaN(this.logValue))
 					this.logValue = Utils.logTransform(this.value);

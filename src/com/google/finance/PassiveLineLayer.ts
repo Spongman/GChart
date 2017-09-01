@@ -27,18 +27,18 @@ namespace com.google.finance
 			if (param2 < xPos)
 				return;
 
-			let _loc5_: DataUnit;
+			let unit: DataUnit;
 			if (param2 > this.viewPoint.maxx)
-				_loc5_ = notnull(this.viewPoint.getLastDataUnit(originalDataSeries));
+				unit = notnull(this.viewPoint.getLastDataUnit(originalDataSeries));
 			else
-				_loc5_ = notnull(this.getPoint(originalDataSeries, param2));
+				unit = notnull(this.getPoint(originalDataSeries, param2));
 
 			//const _loc8_ = this.viewPoint.getMinuteXPos(_loc5_.relativeMinutes);
 			//const _loc9_ = this.getYPos(param1, _loc5_);
 			if (state["points"] === undefined)
 				state["points"] = [];
 
-			const formattedClosePrice = this.getFormattedClosePrice(_loc5_.close);
+			const formattedClosePrice = this.getFormattedClosePrice(unit.close);
 			const technicalsNameElseQuote = this.getTechnicalsNameElseQuote(this.dataSource.quoteName);
 			const infoDotInfo = new InfoDotInfo();
 			infoDotInfo.quote = technicalsNameElseQuote;
@@ -136,17 +136,17 @@ namespace com.google.finance
 			return dataSeries.units[this.getPointIndex(dataSeries, param2)];
 		}
 
-		private drawDayLine_(sprite: flash.display.Sprite, param2: number, viewPoint: ViewPoint, param4: number, param5: number, context: Context, dataSeries: com.google.finance.DataSeries)
+		private drawDayLine_(sprite: flash.display.Sprite, unitIndex: number, viewPoint: ViewPoint, param4: number, param5: number, context: Context, dataSeries: com.google.finance.DataSeries)
 		{
 			const units = dataSeries.units;
 			const days = dataSeries.days;
 			let _loc17_;
-			if (param2 > 0)
-				_loc17_ = days[param2 - 1];
+			if (unitIndex > 0)
+				_loc17_ = days[unitIndex - 1];
 			else
 				_loc17_ = 0;
 
-			let _loc12_ = days[param2];
+			let _loc12_ = days[unitIndex];
 			if (units[_loc12_].fake && _loc12_ === units.length - 1)
 			{
 				while (units[_loc12_].fake)
@@ -181,12 +181,12 @@ namespace com.google.finance
 			return param1;
 		}
 
-		setIndicator(indicatorName: string, fn: Function, dataSeries: com.google.finance.DataSeries, param4: any)
+		setIndicator(indicatorName: string, fn: Function, dataSeries: com.google.finance.DataSeries, indicatorParams: any)
 		{
 			this.dataSource.indicators[indicatorName] = new com.google.finance.Indicator();
 			this.indicator = this.dataSource.indicators[indicatorName];
 			fn = fn;
-			this.indicatorParams = param4;
+			this.indicatorParams = indicatorParams;
 			this.originalDataSeries = dataSeries;
 		}
 

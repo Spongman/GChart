@@ -144,14 +144,14 @@ namespace com.google.finance
 			return this.maxx - this.minx;
 		}
 
-		generateEvent(param1: number, dataSource: com.google.finance.DataSource)
+		generateEvent(style: ChartEventStyles, dataSource: com.google.finance.DataSource)
 		{
-			const event = EventFactory.getEvent(param1, dataSource.quoteName, ChartEventPriorities.OPTIONAL);
+			const event = EventFactory.getEvent(style, dataSource.quoteName, ChartEventPriorities.OPTIONAL);
 			this.dataManager.expectEvent(event);
 			this.dataManager.eventHandler(event);
 		}
 
-		addLayer(layerTypeName: string, dataSource: com.google.finance.DataSource, param3: string): AbstractLayer<IViewPoint> | null
+		addLayer(layerTypeName: string, dataSource: com.google.finance.DataSource, name: string): AbstractLayer<IViewPoint> | null
 		{
 			if (layerTypeName === "")
 				return null;
@@ -159,8 +159,8 @@ namespace com.google.finance
 			this.addDataSource(dataSource);
 			const layerType = getDefinitionByName("com.google.finance." + layerTypeName) as typeof AbstractLayer;
 			const layer = new layerType(this, dataSource);
-			layer.name = param3;
-			layer.layerId = param3;
+			layer.name = name;
+			layer.layerId = name;
 			if (layer instanceof com.google.finance.WindowLayer)
 			{
 				if (this.windowLayer && this.contains(this.windowLayer))
@@ -445,7 +445,7 @@ namespace com.google.finance
 			return notnull(mainViewPoint.getLastNotVisibleDataUnit());
 		}
 
-		zoomChart_Handler(param1: number, param2 = NaN)
+		zoomChart_Handler(direction: Directions, param2 = NaN)
 		{
 			this.renderLayers();
 			this.moveMask();
@@ -661,7 +661,7 @@ namespace com.google.finance
 				this.generateEvent(ChartEventStyles.GET_40Y_DATA, this.dataSource);
 			}
 			const firstDataSource = this.displayManager.layersManager.getFirstDataSource();
-			if (this.myController.currentIntervalLevel !== -1 && firstDataSource)
+			if (this.myController.currentIntervalLevel !== <Intervals>-1 && firstDataSource)
 			{
 				_loc3_ = this.sparkLastMinute + _loc2_ - this.sparkCount;
 				if (_loc3_ > this.getOldestMinute() && _loc3_ < firstDataSource.firstOpenRelativeMinutes)
@@ -706,11 +706,11 @@ namespace com.google.finance
 		{
 		}
 
-		getNewContext(param1: number, param2: number): Context
+		getNewContext(lastMinute: number, count: number): Context
 		{
 			const context = new Context();
-			context.lastMinute = param1;
-			context.count = param2;
+			context.lastMinute = lastMinute;
+			context.count = count;
 			return context;
 		}
 	}

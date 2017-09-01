@@ -46,12 +46,12 @@ namespace com.google.finance.indicator
 			return IndicatorLineStyle.NONE;
 		}
 
-		computeIntervalIndicator(param1: number)
+		computeIntervalIndicator(interval: number)
 		{
-			if (this.indicator.hasInterval(param1))
+			if (this.indicator.hasInterval(interval))
 				return;
 
-			const pointsInIntervalArray = this.originalDataSeries.getPointsInIntervalArray(param1);
+			const pointsInIntervalArray = this.originalDataSeries.getPointsInIntervalArray(interval);
 			for (let _loc4_ = 0; _loc4_ < this.periods.length; _loc4_++)
 			{
 				const dataSeries = new DataSeries();
@@ -61,7 +61,7 @@ namespace com.google.finance.indicator
 				{
 					if (!this.shouldSkip(originalPoint, dataSeries))
 					{
-						const _loc11_ = originalPoint.volumes[param1];
+						const _loc11_ = originalPoint.volumes[interval];
 						if (_loc11_ === 0)
 						{
 							this.copyLastIndicatorPoint(originalPoint, dataSeries);
@@ -84,7 +84,7 @@ namespace com.google.finance.indicator
 						}
 					}
 				}
-				this.indicator.setDataSeries(param1, dataSeries, _loc4_);
+				this.indicator.setDataSeries(interval, dataSeries, _loc4_);
 			}
 		}
 

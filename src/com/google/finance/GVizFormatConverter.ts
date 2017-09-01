@@ -29,12 +29,12 @@ namespace com.google.finance
 			return true;
 		}
 
-		static convertGVizData(properties: any, param2: number, dataSeries: DataSeries, indicator: Indicator)
+		static convertGVizData(properties: any, interval: number, dataSeries: DataSeries, indicator: Indicator)
 		{
 			if (!GVizFormatConverter.validateGVizData(properties))
 				return;
 
-			const points = dataSeries.getPointsInIntervalArray(param2);
+			const points = dataSeries.getPointsInIntervalArray(interval);
 			if (!points || points.length === 0)
 				return;
 
@@ -56,9 +56,9 @@ namespace com.google.finance
 				}
 			}
 
-			indicator.clear(param2);
+			indicator.clear(interval);
 			for (let dataSeriesIndex = 0; dataSeriesIndex < dataSeriesArray.length; dataSeriesIndex++)
-				indicator.setDataSeries(param2, dataSeriesArray[dataSeriesIndex], dataSeriesIndex);
+				indicator.setDataSeries(interval, dataSeriesArray[dataSeriesIndex], dataSeriesIndex);
 		}
 	}
 }

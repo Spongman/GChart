@@ -90,13 +90,13 @@ namespace com.google.finance
 			this.updateInfoText();
 		}
 
-		setSize(param1: number, param2: number)
+		setSize(width: number, height: number)
 		{
 			this.updateAlignAndPadding();
 			this.positionInfoText();
 			this.positionComparisonInfoDots();
-			this.bg.width = param1;
-			this.bg.height = param2 + Const.INFO_TEXT_TOP_PADDING;
+			this.bg.width = width;
+			this.bg.height = height + Const.INFO_TEXT_TOP_PADDING;
 		}
 
 		private getHumanReadableVolume(value: number): string
@@ -139,12 +139,12 @@ namespace com.google.finance
 			return text;
 		}
 
-		private setDateEntryState(param1: number)
+		private setDateEntryState(dateEntryState: number)
 		{
-			this.dateEntryState = param1;
-			const _loc2_ = this.dateEntryState === SpaceText.EDIT_DATES;
-			this.startDate.setHighlighted(_loc2_);
-			this.endDate.setHighlighted(_loc2_);
+			this.dateEntryState = dateEntryState;
+			const highlighted = this.dateEntryState === SpaceText.EDIT_DATES;
+			this.startDate.setHighlighted(highlighted);
+			this.endDate.setHighlighted(highlighted);
 		}
 
 		private clearComparisonInfo()
@@ -155,14 +155,14 @@ namespace com.google.finance
 			this.infoDots.splice(0);
 		}
 
-		private newTextField(param1: number, param2: number): flash.text.TextField
+		private newTextField(x: number, y: number): flash.text.TextField
 		{
 			const textField = new flash.text.TextField();
 			textField.defaultTextFormat = this.blackText;
 			textField.selectable = false;
 			textField.autoSize = flash.text.TextFieldAutoSize.LEFT;
-			textField.x = param1;
-			textField.y = param2;
+			textField.x = x;
+			textField.y = y;
 			return textField;
 		}
 
@@ -236,10 +236,10 @@ namespace com.google.finance
 			this.updateInfoText();
 		}
 
-		private setSinglePointInfo(param1: Dictionary)
+		private setSinglePointInfo(state: Dictionary)
 		{
-			const _loc2_ = param1[SpaceText.POINT_STR];
-			switch (param1["extraText"])
+			const unit = state[SpaceText.POINT_STR];
+			switch (state["extraText"])
 			{
 				case Const.PRE_MARKET_DISPLAY_NAME:
 					this.datesText = Messages.getMsg(Messages.PREMARKET) + ": ";
@@ -252,28 +252,28 @@ namespace com.google.finance
 					break;
 			}
 			this.datesTextFormats = [];
-			const singlePointDateFormat = this.getSinglePointDateFormat(_loc2_);
-			const exchangeDateInUTC = _loc2_.exchangeDateInUTC;
+			const singlePointDateFormat = this.getSinglePointDateFormat(unit);
+			const exchangeDateInUTC = unit.exchangeDateInUTC;
 			this.datesText += com.google.i18n.locale.DateTimeLocale.formatDateTime(singlePointDateFormat, exchangeDateInUTC, true);
-			if (param1[SpaceText.OHLC_INFO_FLAG_STR])
+			if (state[SpaceText.OHLC_INFO_FLAG_STR])
 			{
-				this.appendOhlcText(SpaceText.OPEN_TEXT, _loc2_.open, param1[SpaceText.OHLC_BASE_PRICE_STR]);
-				this.appendOhlcText(SpaceText.HIGH_TEXT, _loc2_.high, param1[SpaceText.OHLC_BASE_PRICE_STR]);
-				this.appendOhlcText(SpaceText.LOW_TEXT, _loc2_.low, param1[SpaceText.OHLC_BASE_PRICE_STR]);
-				this.appendOhlcText(SpaceText.CLOSE_TEXT, _loc2_.close, param1[SpaceText.OHLC_BASE_PRICE_STR]);
+				this.appendOhlcText(SpaceText.OPEN_TEXT, unit.open, state[SpaceText.OHLC_BASE_PRICE_STR]);
+				this.appendOhlcText(SpaceText.HIGH_TEXT, unit.high, state[SpaceText.OHLC_BASE_PRICE_STR]);
+				this.appendOhlcText(SpaceText.LOW_TEXT, unit.low, state[SpaceText.OHLC_BASE_PRICE_STR]);
+				this.appendOhlcText(SpaceText.CLOSE_TEXT, unit.close, state[SpaceText.OHLC_BASE_PRICE_STR]);
 			}
 			else
 			{
 				this.datesText += SpaceText.PRICE_TEXT;
-				if (param1[SpaceText.SETTER_STR] && param1[SpaceText.SETTER_STR].dataSource && param1[SpaceText.SETTER_STR].dataSource.tickerName && param1[SpaceText.SETTER_STR].dataSource.tickerName.indexOf("CURRENCY:") === 0)
-					this.datesText += Math.round(_loc2_.close * 10000) / 10000;
+				if (state[SpaceText.SETTER_STR] && state[SpaceText.SETTER_STR].dataSource && state[SpaceText.SETTER_STR].dataSource.tickerName && state[SpaceText.SETTER_STR].dataSource.tickerName.indexOf("CURRENCY:") === 0)
+					this.datesText += Math.round(unit.close * 10000) / 10000;
 				else
-					this.datesText += this.normalizePrice(_loc2_.close);
+					this.datesText += this.normalizePrice(unit.close);
 			}
-			if (!isNaN(param1[SpaceText.VOLUME_STR]))
+			if (!isNaN(state[SpaceText.VOLUME_STR]))
 			{
 				this.datesText += ' ' + Messages.getMsg(Messages.VOLUME_SHORT) + ": ";
-				this.datesText += this.getHumanReadableVolume(param1["volume"]);
+				this.datesText += this.getHumanReadableVolume(state["volume"]);
 			}
 			this.returnText = "";
 			this.updateInfoText();
@@ -436,17 +436,17 @@ namespace com.google.finance
 			return mouseEvent.target === this.startDate.element || mouseEvent.target === this.endDate.element;
 		}
 
-		private setComparisonInfo(param1: Dictionary)
+		private setComparisonInfo(state: Dictionary)
 		{
-			const _loc2_ = param1[SpaceText.POINTS_STR];
+			const infos = state[SpaceText.POINTS_STR];
 			this.returnText = "";
 			this.updateInfoText();
 			this.clearComparisonInfo();
-			for (let _loc3_ = _loc2_.length - 1; _loc3_ >= 0; _loc3_--)
+			for (let infoIndex = infos.length - 1; infoIndex >= 0; infoIndex--)
 			{
 				const infoDot = new InfoDot();
 				this.addChild(infoDot);
-				infoDot.setInfo(_loc2_[_loc3_]);
+				infoDot.setInfo(infos[infoIndex]);
 				this.infoDots.push(infoDot);
 			}
 			this.positionComparisonInfoDots();
@@ -466,21 +466,21 @@ namespace com.google.finance
 			this.positionInfoText();
 		}
 
-		setContextualStaticInfo(param1: Dictionary)
+		setContextualStaticInfo(state: Dictionary)
 		{
-			if (!param1[SpaceText.SETTER_STR])
+			if (!state[SpaceText.SETTER_STR])
 				return;
 
-			if (param1[SpaceText.POINTS_STR])
+			if (state[SpaceText.POINTS_STR])
 			{
 				this.returnText = "";
-				this.setTimePeriod(param1[SpaceText.SETTER_STR].viewPoint);
-				this.setComparisonInfo(param1);
+				this.setTimePeriod(state[SpaceText.SETTER_STR].viewPoint);
+				this.setComparisonInfo(state);
 			}
 			else
 			{
-				this.setTimePeriod(param1[SpaceText.SETTER_STR].viewPoint);
-				this.setReturnInfo(param1[SpaceText.SETTER_STR].viewPoint);
+				this.setTimePeriod(state[SpaceText.SETTER_STR].viewPoint);
+				this.setReturnInfo(state[SpaceText.SETTER_STR].viewPoint);
 			}
 		}
 
@@ -541,7 +541,7 @@ namespace com.google.finance
 			this.updateInfoText();
 		}
 
-		private newDateTextField(param1: number, param2: number, param3: number): com.google.finance.DateTextField
+		private newDateTextField(x: number, y: number, tabIndex: number): com.google.finance.DateTextField
 		{
 			const dateTextField = new com.google.finance.DateTextField();
 			dateTextField.autoSize = flash.text.TextFieldAutoSize.LEFT;
@@ -552,9 +552,9 @@ namespace com.google.finance
 			dateTextField.mouseEnabled = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
 			dateTextField.selectable = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
 			dateTextField.tabEnabled = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);
-			dateTextField.tabIndex = param3;
-			dateTextField.x = param1;
-			dateTextField.y = param2;
+			dateTextField.tabIndex = tabIndex;
+			dateTextField.x = x;
+			dateTextField.y = y;
 			return dateTextField;
 		}
 	}

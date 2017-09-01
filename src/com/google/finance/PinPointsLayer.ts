@@ -27,21 +27,21 @@ namespace com.google.finance
 			viewPoint.addChildToTopCanvas(this.pinPointContentMovie);
 		}
 
-		private getFlagGroupCount(context: Context, pinPoints: PinPoint[], param3: number, param4: number): number
+		private getFlagGroupCount(context: Context, pinPoints: PinPoint[], pinIndex: number, detailLevel: number): number
 		{
-			let _loc5_ = 1;
-			const _loc6_ = pinPoints[param3];
-			if (param4 === Intervals.INTRADAY)
+			let count = 1;
+			const pin = pinPoints[pinIndex];
+			if (detailLevel === Intervals.INTRADAY)
 			{
-				while (param3 + _loc5_ < pinPoints.length && pinPoints[param3 + _loc5_].pos === _loc6_.pos && pinPoints[param3 + _loc5_].refDataSeries === _loc6_.refDataSeries)
-					_loc5_++;
+				while (pinIndex + count < pinPoints.length && pinPoints[pinIndex + count].pos === pin.pos && pinPoints[pinIndex + count].refDataSeries === pin.refDataSeries)
+					count++;
 			}
 			else
 			{
-				while (param3 + _loc5_ < pinPoints.length && pinPoints[param3 + _loc5_].dayPos === _loc6_.dayPos && pinPoints[param3 + _loc5_].refDataSeries === _loc6_.refDataSeries)
-					_loc5_++;
+				while (pinIndex + count < pinPoints.length && pinPoints[pinIndex + count].dayPos === pin.dayPos && pinPoints[pinIndex + count].refDataSeries === pin.refDataSeries)
+					count++;
 			}
-			return _loc5_;
+			return count;
 		}
 
 		private getLastVisibleFlagIndex(context: Context, pinPoints: PinPoint[]): number
@@ -148,7 +148,7 @@ namespace com.google.finance
 				this.pinPointContentMovie.renderMovie();
 		}
 
-		private renderFlagGroups(context: Context, pinPoints: PinPoint[], param3: number, param4: number, param5: number)
+		private renderFlagGroups(context: Context, pinPoints: PinPoint[], param3: number, param4: number, detailLevel: number)
 		{
 			const _loc7_: number[] = [];
 			const _loc8_: number[] = [];
@@ -157,7 +157,7 @@ namespace com.google.finance
 			for (let _loc6_ = param3; _loc6_ <= param4;)
 			{
 				_loc7_.push(_loc6_);
-				const flagGroupCount = this.getFlagGroupCount(context, pinPoints, _loc6_, param5);
+				const flagGroupCount = this.getFlagGroupCount(context, pinPoints, _loc6_, detailLevel);
 				_loc8_.push(flagGroupCount);
 				const visibleDataUnit = this.getVisibleDataUnit(pinPoints[_loc6_]);
 				_loc9_.push(Math.floor(this.viewPoint.getXPos(visibleDataUnit)));
@@ -179,21 +179,21 @@ namespace com.google.finance
 				pinOrientations.reverse();
 				for (let _loc14_ = 0; _loc14_ < _loc7_.length; _loc14_++)
 				{
-					this.renderFlagsGroup(context, param5, _loc9_[_loc14_], _loc10_[_loc14_], _loc7_[_loc14_], _loc8_[_loc14_], pinPoints, PinPointsLayer.FLAG_POLE_HEIGHT + PinPointsLayer.FLAG_HEIGHT, pinOrientations[_loc14_]);
+					this.renderFlagsGroup(context, detailLevel, _loc9_[_loc14_], _loc10_[_loc14_], _loc7_[_loc14_], _loc8_[_loc14_], pinPoints, PinPointsLayer.FLAG_POLE_HEIGHT + PinPointsLayer.FLAG_HEIGHT, pinOrientations[_loc14_]);
 				}
 			}
 		}
 
-		private renderFlag(param1: number, pinOrientation: PinOrientations, param3: number, pinPoint: PinPoint, _?: PinPoint, param6 = 1)
+		private renderFlag(x: number, pinOrientation: PinOrientations, height: number, object: PinPoint, _?: PinPoint, count = 1)
 		{
-			const pinPointMovieClip = this.getPinPointMovieClip(pinPoint);
+			const pinPointMovieClip = this.getPinPointMovieClip(object);
 			this.addChild(pinPointMovieClip);
-			pinPointMovieClip.x = param1;
+			pinPointMovieClip.x = x;
 			pinPointMovieClip.y = this.pinPointYWhenContentDisplayed;
-			pinPointMovieClip.setCount(param6);
-			pinPointMovieClip.setObj(pinPoint);
+			pinPointMovieClip.setCount(count);
+			pinPointMovieClip.setObj(object);
 			pinPointMovieClip.setOrientation(pinOrientation);
-			pinPointMovieClip.setHeight(param3);
+			pinPointMovieClip.setHeight(height);
 		}
 
 		private getVisibleDataUnit(pinPoint: PinPoint): DataUnit
@@ -215,19 +215,19 @@ namespace com.google.finance
 			return _loc5_.units[_loc4_];
 		}
 
-		private renderFlagsGroup(context: Context, param2: number, param3: number, param4: number, param5: number, param6: number, pinPoints: PinPoint[], param8: number, pinOrientation: PinOrientations)
+		private renderFlagsGroup(context: Context, param2: number, param3: number, param4: number, pinIndex: number, param6: number, pinPoints: PinPoint[], param8: number, pinOrientation: PinOrientations)
 		{
 			this.lastAbsoluteHeightMin = param4 - param8 + PinPointsLayer.FLAG_HEIGHT;
 			let _loc10_ = false;
-			for (let _loc11_ = param5; _loc11_ < param5 + param6; _loc11_++)
+			for (let _loc11_ = pinIndex; _loc11_ < pinIndex + param6; _loc11_++)
 				_loc10_ = _loc10_ || pinPoints[_loc11_].active || pinPoints[_loc11_].forceExpandInGroup;
 
 			if (param6 > 1 && _loc10_ || !Boolean(Const.ENABLE_COMPACT_FLAGS))
 			{
 				const _loc12_ = param8 + (param6 - 1) * PinPointsLayer.FLAG_HEIGHT;
-				for (let _loc11_ = param5; _loc11_ < param5 + param6; _loc11_++)
+				for (let _loc11_ = pinIndex; _loc11_ < pinIndex + param6; _loc11_++)
 				{
-					const _loc13_ = param8 + (_loc11_ - param5) * PinPointsLayer.FLAG_HEIGHT;
+					const _loc13_ = param8 + (_loc11_ - pinIndex) * PinPointsLayer.FLAG_HEIGHT;
 					this.renderFlag(param3, pinOrientation, _loc13_, pinPoints[_loc11_]);
 					if (pinPoints[_loc11_].active)
 						this.pinPointContentMovie.setActivePinPoint(pinPoints[_loc11_], param3, this.pinPointYWhenContentDisplayed - _loc12_);
@@ -237,9 +237,9 @@ namespace com.google.finance
 			{
 				const _loc14_ = Math.min(param6, PinPointMovie.MAX_SHOWN_GROUP_COUNT) * 2;
 				const _loc12_ = param8 + _loc14_;
-				this.renderFlag(param3, pinOrientation, param8 + _loc14_, pinPoints[param5 + param6 - 1], pinPoints[param5], param6);
-				if (pinPoints[param5].active)
-					this.pinPointContentMovie.setActivePinPoint(pinPoints[param5], param3, this.pinPointYWhenContentDisplayed - _loc12_);
+				this.renderFlag(param3, pinOrientation, param8 + _loc14_, pinPoints[pinIndex + param6 - 1], pinPoints[pinIndex], param6);
+				if (pinPoints[pinIndex].active)
+					this.pinPointContentMovie.setActivePinPoint(pinPoints[pinIndex], param3, this.pinPointYWhenContentDisplayed - _loc12_);
 			}
 			this.lastAbsoluteHeightMax = param4 - this.pinMovies[this.activeMovies - 1].getHeight();
 		}

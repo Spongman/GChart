@@ -44,7 +44,7 @@ namespace com.google.i18n.locale
 			return format;
 		}
 
-		static standardFormatDateTime(pattern: number, date: Date, isUtc = false): string
+		static standardFormatDateTime(pattern: DateTimeFormats, date: Date, isUtc = false): string
 		{
 			const format = new DateTimeFormat(isUtc);
 			format.applyStandardPattern(pattern);
@@ -66,16 +66,16 @@ namespace com.google.i18n.locale
 			return format.format(date);
 		}
 
-		static registerResource(param1: Dictionary, param2: string)
+		static registerResource(resource: Dictionary, locale: string)
 		{
-			DateTimeLocale.constantsRepository[param2] = param1;
+			DateTimeLocale.constantsRepository[locale] = resource;
 			if (!DateTimeLocale.activeLocale)
-				DateTimeLocale.activeLocale = param2;
+				DateTimeLocale.activeLocale = locale;
 		}
 
-		static setLocale(param1: string)
+		static setLocale(activeLocale: string)
 		{
-			DateTimeLocale.activeLocale = param1;
+			DateTimeLocale.activeLocale = activeLocale;
 		}
 
 		//private static readonly registerLocale = DateTimeConstants.register(DateTimeLocale.registerResource);

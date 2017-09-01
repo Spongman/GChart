@@ -33,27 +33,27 @@ namespace com.google.finance
 			return this.time + ' ' + this.dayMinute + ' ' + dateString + ' ' + close;
 		}
 
-		getHighLogValue(param1: string): number
+		getHighLogValue(scaleType: string): number
 		{
-			if (param1 === Const.LOG_VSCALE || param1 === Const.NEW_LOG_VSCALE)
+			if (scaleType === Const.LOG_VSCALE || scaleType === Const.NEW_LOG_VSCALE)
 				return this.logHigh || (this.logHigh = Utils.logTransform(this.high));
 
 			return this.high;
 		}
 
-		getLowLogValue(param1: string): number
+		getLowLogValue(scaleType: string): number
 		{
-			if (param1 === Const.LOG_VSCALE || param1 === Const.NEW_LOG_VSCALE)
+			if (scaleType === Const.LOG_VSCALE || scaleType === Const.NEW_LOG_VSCALE)
 				return this.logLow || (this.logLow = Utils.logTransform(this.low));
 
 			return this.low;
 		}
 
-		setExchangeDateInUTC(param1: number, param2: number)
+		setExchangeDateInUTC(time: number, timezoneOffset: number)
 		{
-			this.timezoneOffset = param2;
-			this.time = param1 - param2 * Const.MS_PER_MINUTE;
-			this.exchangeDateInUTC = new Date(param1);
+			this.timezoneOffset = timezoneOffset;
+			this.time = time - timezoneOffset * Const.MS_PER_MINUTE;
+			this.exchangeDateInUTC = new Date(time);
 			this.dayMinute = this.exchangeDateInUTC.getUTCHours() * 60 + this.exchangeDateInUTC.getUTCMinutes();
 			assert(!isNaN(this.dayMinute));
 		}
@@ -70,9 +70,9 @@ namespace com.google.finance
 			}
 		}
 
-		getOpenLogValue(param1: string): number
+		getOpenLogValue(scaleType: string): number
 		{
-			if (param1 === Const.LOG_VSCALE || param1 === Const.NEW_LOG_VSCALE)
+			if (scaleType === Const.LOG_VSCALE || scaleType === Const.NEW_LOG_VSCALE)
 				return this.logOpen || (this.logOpen = Utils.logTransform(this.open));
 
 			return this.open;
@@ -87,19 +87,19 @@ namespace com.google.finance
 			return true;
 		}
 
-		getCloseLogValue(param1: string): number
+		getCloseLogValue(scaleType: string): number
 		{
-			if (param1 === Const.LOG_VSCALE || param1 === Const.NEW_LOG_VSCALE)
+			if (scaleType === Const.LOG_VSCALE || scaleType === Const.NEW_LOG_VSCALE)
 				return this.logClose || (this.logClose = Utils.logTransform(this.close));
 
 			return this.close;
 		}
 
-		setDate(param1: number, param2: number)
+		setDate(time: number, timezoneOffset: number)
 		{
-			this.timezoneOffset = param2;
-			this.time = param1;
-			this.exchangeDateInUTC = new Date(param1 + param2 * 60000);
+			this.timezoneOffset = timezoneOffset;
+			this.time = time;
+			this.exchangeDateInUTC = new Date(time + timezoneOffset * 60000);
 			this.dayMinute = this.exchangeDateInUTC.getUTCHours() * 60 + this.exchangeDateInUTC.getUTCMinutes();
 			assert(!isNaN(this.dayMinute));
 		}

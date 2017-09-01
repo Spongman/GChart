@@ -103,7 +103,7 @@ namespace com.google.finance
 
 		abstract zoomIn_Handler(p1: number, p2: number): void;
 		abstract zoomingAnimation_ticker(viewPoint: IViewPoint, param2: number, param3: boolean): void;
-		abstract zoomChart_Handler(p1: number, p2: number): void;
+		abstract zoomChart_Handler(direction: Directions, p2: number): void;
 		abstract moveChartBy_Handler(p1: number): void;
 		abstract commitOffset_Handler(): void;
 		abstract zoomInMinutes_Handler(p1: Context, p2: boolean): void;
@@ -177,25 +177,25 @@ namespace com.google.finance
 			this.lastMinute = 0;
 		}
 
-		static sessionVisible(param1: DataUnit, param2: DataUnit, context: Context): boolean
+		static sessionVisible(unit1: DataUnit, unit2: DataUnit, context: Context): boolean
 		{
 			const lastMinute = context.lastMinute;
 			const _loc5_ = context.lastMinute - context.count;
-			if (param1 && param1.relativeMinutes >= _loc5_ && param1.relativeMinutes <= lastMinute)
+			if (unit1 && unit1.relativeMinutes >= _loc5_ && unit1.relativeMinutes <= lastMinute)
 				return true;
 
-			if (param2 && param2.relativeMinutes >= _loc5_ && param2.relativeMinutes <= lastMinute)
+			if (unit2 && unit2.relativeMinutes >= _loc5_ && unit2.relativeMinutes <= lastMinute)
 				return true;
 
-			if (param1.relativeMinutes <= _loc5_ && param2.relativeMinutes >= lastMinute)
+			if (unit1.relativeMinutes <= _loc5_ && unit2.relativeMinutes >= lastMinute)
 				return true;
 
 			return false;
 		}
 
-		getIntervalLength(param1: number): number
+		getIntervalLength(interval: number): number
 		{
-			return param1 * (this.maxx - this.minx) / this.count;
+			return interval * (this.maxx - this.minx) / this.count;
 		}
 
 		getBaseDataSource(): DataSource | null
@@ -214,12 +214,12 @@ namespace com.google.finance
 			Utils.removeAllChildren(this.textCanvas);
 		}
 
-		adjustBarChartContext(context: Context, param2: number)
+		adjustBarChartContext(context: Context, detailLevel: number)
 		{
 			let _loc3_ = context.count;
 			let _loc4_ = context.lastMinute;
-			let _loc5_ = (this.getMarketDayLength() + 1) * Const.INTERVAL_PERIODS[param2].maxdays;
-			const _loc6_ = (this.getMarketDayLength() + 1) * Const.INTERVAL_PERIODS[param2].mindays;
+			let _loc5_ = (this.getMarketDayLength() + 1) * Const.INTERVAL_PERIODS[detailLevel].maxdays;
+			const _loc6_ = (this.getMarketDayLength() + 1) * Const.INTERVAL_PERIODS[detailLevel].mindays;
 			if (_loc3_ > _loc5_)
 				_loc3_ = _loc5_;
 			else if (_loc3_ < _loc6_)
@@ -228,7 +228,7 @@ namespace com.google.finance
 			const baseDataSource = this.getBaseDataSource();
 			if (baseDataSource)
 			{
-				const detailLevelInterval = Const.getDetailLevelInterval(param2);
+				const detailLevelInterval = Const.getDetailLevelInterval(detailLevel);
 				const points = baseDataSource.data.getPointsInIntervalArray(detailLevelInterval);
 				if (points && points.length > 0)
 				{
@@ -308,28 +308,28 @@ namespace com.google.finance
 			return Snaps.SNAP_YEAR;
 		}
 
-		static addTextField(sprite: flash.display.Sprite, param2: string, param3: number, param4: number, param5: number, param6: number, param7: string, textFormat: flash.text.TextFormat, param9?: string): flash.text.TextField
+		static addTextField(sprite: flash.display.Sprite, text: string, x: number, y: number, width: number, height: number, align: string, textFormat: flash.text.TextFormat, autoSize?: string): flash.text.TextField
 		{
 			//if (!param2)
 			//	return null;
 			const textField = new flash.text.TextField();
-			textField.x = param3;
-			textField.y = param4;
-			textField.width = param5;
-			textField.height = param6;
-			textFormat.align = param7;
+			textField.x = x;
+			textField.y = y;
+			textField.width = width;
+			textField.height = height;
+			textFormat.align = align;
 			textField.defaultTextFormat = textFormat;
 			textField.selectable = false;
-			if (param7 === "center")
+			if (align === "center")
 			{
-				textField.x = param3 + param5 / 2;
+				textField.x = x + width / 2;
 				textField.width = 0;
 				textField.autoSize = flash.text.TextFieldAutoSize.CENTER;
 			}
-			if (param9)
-				textField.autoSize = param9;
+			if (autoSize)
+				textField.autoSize = autoSize;
 
-			textField.text = param2;
+			textField.text = text;
 			sprite.addChild(textField);
 			return textField;
 		}
@@ -355,9 +355,9 @@ namespace com.google.finance
 			return this.getMinuteXPos(dataUnit.relativeMinutes);
 		}
 
-		private generateEvent(param1: number, dataSource: DataSource, param3 = 2, eventCallbacks?: EventCallback[])
+		private generateEvent(chartEventStyle: ChartEventStyles, dataSource: DataSource, priority: ChartEventPriorities = ChartEventPriorities.OPTIONAL, eventCallbacks?: EventCallback[])
 		{
-			const event = EventFactory.getEvent(param1, dataSource.quoteName, param3);
+			const event = EventFactory.getEvent(chartEventStyle, dataSource.quoteName, priority);
 			event.callbacks = eventCallbacks;
 			const dataManager = this.displayManager.mainManager.dataManager;
 			dataManager.expectEvent(event);
@@ -421,7 +421,7 @@ namespace com.google.finance
 			return this.lastMinute + this.minutesOffset;
 		}
 
-		checkEvents(interval: Intervals = -1, eventCallbacks?: EventCallback[])
+		checkEvents(detailLevel = <Intervals>-1, eventCallbacks?: EventCallback[])
 		{
 			let _loc9_ = false;
 			const baseDataSource = this.getBaseDataSource();
@@ -437,8 +437,8 @@ namespace com.google.finance
 			const _loc7_ = _loc4_ - _loc5_;
 			if (Const.INDICATOR_ENABLED && !this.displayManager.isDifferentMarketSessionComparison())
 			{
-				const _loc8_ = interval >= 0 ? interval : this.getDetailLevelForTechnicalStyle();
-				_loc9_ = !this.myController || this.myController.currentIntervalLevel === -1;
+				const _loc8_ = detailLevel >= <Intervals>0 ? detailLevel : this.getDetailLevelForTechnicalStyle();
+				_loc9_ = !this.myController || this.myController.currentIntervalLevel === <Intervals>-1;
 				const _loc10_ = this.displayManager.hasOhlcRequiredIndicator() || !_loc9_ ? ChartEventPriorities.OHLC_REQUIRED : ChartEventPriorities.OPTIONAL;
 				switch (_loc8_)
 				{
@@ -537,25 +537,25 @@ namespace com.google.finance
 					break;
 			}
 			const minuteMetaIndex = DataSource.getMinuteMetaIndex(param1, _loc4_, baseDataSource.units);
-			let _loc6_: DataUnit;
+			let unit: DataUnit;
 			if (_loc4_ === baseDataSource.days)
-				_loc6_ = baseDataSource.units[_loc4_[minuteMetaIndex]];
+				unit = baseDataSource.units[_loc4_[minuteMetaIndex]];
 			else
-				_loc6_ = baseDataSource.units[_loc4_[minuteMetaIndex] - 1];
+				unit = baseDataSource.units[_loc4_[minuteMetaIndex] - 1];
 
-			const intervalLength = this.getIntervalLength(param1 - _loc6_.relativeMinutes);
+			const intervalLength = this.getIntervalLength(param1 - unit.relativeMinutes);
 			if (minuteMetaIndex < _loc4_.length - 1)
 			{
-				let _loc8_: DataUnit;
+				let nextUnit: DataUnit;
 				if (_loc4_ === baseDataSource.days)
-					_loc8_ = baseDataSource.units[_loc4_[minuteMetaIndex + 1]];
+					nextUnit = baseDataSource.units[_loc4_[minuteMetaIndex + 1]];
 				else
-					_loc8_ = baseDataSource.units[_loc4_[minuteMetaIndex + 1] - 1];
+					nextUnit = baseDataSource.units[_loc4_[minuteMetaIndex + 1] - 1];
 
-				const _loc9_ = this.getIntervalLength(_loc8_.relativeMinutes - param1);
-				return (_loc9_ < intervalLength) ? _loc8_ : _loc6_;
+				const _loc9_ = this.getIntervalLength(nextUnit.relativeMinutes - param1);
+				return (_loc9_ < intervalLength) ? nextUnit : unit;
 			}
-			return _loc6_;
+			return unit;
 		}
 
 		getOldestBaseMinute(): number
@@ -575,7 +575,7 @@ namespace com.google.finance
 		zoomInMinutes_Handler(context: Context, param2 = false)
 		{
 			let newContext: Context | null;
-			if (Const.INDICATOR_ENABLED && this.myController && this.myController.currentIntervalLevel >= 0)
+			if (Const.INDICATOR_ENABLED && this.myController && this.myController.currentIntervalLevel >= <Intervals>0)
 				newContext = this.adjustBarChartContext(context, this.myController.currentIntervalLevel);
 			else
 				newContext = this.adjustLineChartContext(context);
@@ -589,10 +589,10 @@ namespace com.google.finance
 			}
 		}
 
-		private generateEventForAllSources(param1: number, param2 = 2, eventCallbacks?: EventCallback[])
+		private generateEventForAllSources(chartEventStyle: ChartEventStyles, param2 = 2, eventCallbacks?: EventCallback[])
 		{
 			for (const layer of this.drawingLayers)
-				this.generateEvent(param1, layer.dataSource, param2, eventCallbacks);
+				this.generateEvent(chartEventStyle, layer.dataSource, param2, eventCallbacks);
 		}
 
 		zoomIn_Handler(param1: number, param2: number)
@@ -660,9 +660,9 @@ namespace com.google.finance
 			{
 				_loc3_ = this.getBaseDataSource();
 				_loc2_ = !!_loc3_ ? _loc3_.data : null;
+				if (!_loc2_)
+					return null;
 			}
-			if (!_loc2_)
-				return null;
 
 			if (this.getLastMinute() === this.getNewestMinute())
 			{
@@ -699,7 +699,7 @@ namespace com.google.finance
 				_loc7_ = param1;
 			}
 			if (isNaN(_loc4_) || !baseDataSource)
-				return -1;
+				return <Intervals>-1;
 
 			if (!isNaN(param2))
 				lastMinute = param2;
@@ -709,7 +709,7 @@ namespace com.google.finance
 
 			const data = baseDataSource.data;
 			if (!data)
-				return -1;
+				return <Intervals>-1;
 
 			const _loc9_ = baseDataSource.data.allSessionsLength() + 1;
 			let _loc10_ = _loc9_;
@@ -757,7 +757,7 @@ namespace com.google.finance
 			if (this.displayManager.isDifferentMarketSessionComparison())
 				return this.getDetailLevelForDifferentMarketSessionComparison(param1, param2);
 
-			if (this.myController && this.myController.currentIntervalLevel >= 0)
+			if (this.myController && this.myController.currentIntervalLevel >= <Intervals>0)
 				return this.myController.currentIntervalLevel;
 
 			const _loc3_ = !isNaN(param2) ? param2 : this.getLastMinute();
@@ -911,7 +911,7 @@ namespace com.google.finance
 			this.update();
 		}
 
-		zoomChart_Handler(param1: number, param2 = NaN)
+		zoomChart_Handler(direction: Directions, param2 = NaN)
 		{
 			let _loc3_ = Math.floor(this.count / 40);
 			if (!isNaN(param2))
@@ -919,7 +919,7 @@ namespace com.google.finance
 
 			_loc3_ = Math.max(_loc3_, ViewPoint.MIN_ZOOM_CHART_AMOUNT);
 			const _loc4_ = this.POINTS_DISTANCE * _loc3_ / this.unitsPerUnit;
-			switch (param1)
+			switch (direction)
 			{
 				case Directions.BACKWARD:
 					this.zoomIn_Handler(this.minx - _loc4_, this.maxx);
@@ -1015,15 +1015,15 @@ namespace com.google.finance
 			this.addChild(this.myLabel);
 		}
 
-		setNewCount(param1: number, param2 = false)
+		setNewCount(count: number, checkAfterHoursVisibility = false)
 		{
-			if (isNaN(param1))
+			if (isNaN(count))
 				return;
 
-			if (param2 !== true)
-				this.checkAfterHoursVisibility(this.count, param1);
+			if (checkAfterHoursVisibility !== true)
+				this.checkAfterHoursVisibility(this.count, count);
 
-			this.count = param1;
+			this.count = count;
 			this.unitsPerUnit = this.POINTS_DISTANCE * this.count / (this.maxx - this.minx);
 			this.minutePix = (this.maxx - this.minx) / this.count;
 		}
@@ -1125,11 +1125,11 @@ namespace com.google.finance
 				layer.clearHighlight();
 		}
 
-		getNewContext(param1: number, param2: number): Context
+		getNewContext(lastMinute: number, count: number): Context
 		{
 			let context = new Context();
-			context.lastMinute = param1;
-			context.count = param2;
+			context.lastMinute = lastMinute;
+			context.count = count;
 			context.verticalScaling = MainManager.paramsObj.verticalScaling;
 			for (const layer of this.drawingLayers)
 				context = layer.getContext(context);
@@ -1146,17 +1146,17 @@ namespace com.google.finance
 			return Math.round(this.count / Const.MARKET_DAY_LENGTH);
 		}
 
-		newLastMinute_Handler(param1: number)
+		newLastMinute_Handler(lastMinute: number)
 		{
 			//const _loc2_ = param1 - this.count;
 			const _loc3_ = this.getOldestBaseMinute();
-			if (param1 - this.count < _loc3_)
-				param1 = Number(_loc3_ + this.count);
+			if (lastMinute - this.count < _loc3_)
+				lastMinute = Number(_loc3_ + this.count);
 
-			if (param1 > 0)
-				param1 = 0;
+			if (lastMinute > 0)
+				lastMinute = 0;
 
-			this.lastMinute = param1;
+			this.lastMinute = lastMinute;
 			this.update();
 		}
 

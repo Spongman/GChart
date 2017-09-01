@@ -16,7 +16,7 @@ namespace com.google.finance
 		hasText: boolean;
 		type: string;
 
-		constructor(public readonly viewPoint: T, public dataSource: com.google.finance.DataSource)
+		constructor(public readonly viewPoint: T, public dataSource: DataSource)
 		{
 			super();
 		}

@@ -8,7 +8,7 @@ namespace com.google.finance
 		}
 	}
 
-	export interface ObjectPositions
+	export class ObjectPositions
 	{
 		exchangeTimezoneOffset: number;
 		closePrice: number;
@@ -57,13 +57,13 @@ namespace com.google.finance
 
 		private readonly events: Map<ChartEventPriorities> = {};
 
-		visibleExtendedHours = new com.google.finance.IntervalSet();
+		visibleExtendedHours = new IntervalSet();
 		readonly objects: Map<StockAssociatedObject[]> = {};
-		readonly data = new com.google.finance.DataSeries();
+		readonly data = new DataSeries();
 		tickerName: string;
 		readonly indicators: Map<Indicator> = {};
-		hiddenExtendedHours = new com.google.finance.IntervalSet();
-		readonly afterHoursData = new com.google.finance.DataSeries();
+		hiddenExtendedHours = new IntervalSet();
+		readonly afterHoursData = new DataSeries();
 		technicalsName: string;
 		dataUnavailableOnServer: boolean = false;
 		intradayMinutesInterval = Const.INTRADAY_INTERVAL / Const.SEC_PER_MINUTE;
@@ -162,7 +162,7 @@ namespace com.google.finance
 			return 0;
 		}
 
-		computeStarts(dataSeries: com.google.finance.DataSeries)
+		computeStarts(dataSeries: DataSeries)
 		{
 			let _loc3_ = -1;
 			dataSeries.years.length = 0;
@@ -288,13 +288,13 @@ namespace com.google.finance
 			{
 				if (this.hiddenExtendedHours.length() > 0)
 				{
-					this.hiddenExtendedHours = new com.google.finance.IntervalSet();
+					this.hiddenExtendedHours = new IntervalSet();
 					this.extractAfterHoursSessions(this.hiddenExtendedHours);
 				}
 				else
 				{
 					if (this.visibleExtendedHours.length() > 0)
-						this.visibleExtendedHours = new com.google.finance.IntervalSet();
+						this.visibleExtendedHours = new IntervalSet();
 
 					this.extractAfterHoursSessions(this.visibleExtendedHours);
 				}
@@ -308,7 +308,7 @@ namespace com.google.finance
 			return AddStreamResults.FIRST_DATA;
 		}
 
-		preCalculate(dataSeries: com.google.finance.DataSeries)
+		preCalculate(dataSeries: DataSeries)
 		{
 			this.computeStarts(dataSeries);
 			this.computeIntradaySessions(dataSeries);
@@ -334,9 +334,9 @@ namespace com.google.finance
 			return afterHoursUnit;
 		}
 
-		getAllDataSessions(param1: number, param2: number): com.google.finance.IntervalSet
+		getAllDataSessions(param1: number, param2: number): IntervalSet
 		{
-			const intervalSet = new com.google.finance.IntervalSet();
+			const intervalSet = new IntervalSet();
 
 			for (let sessionIndex = 0; sessionIndex < this.data.dataSessions.length(); sessionIndex++)
 				intervalSet.addPair(this.data.dataSessions.getIntervalAt(sessionIndex));
@@ -387,7 +387,7 @@ namespace com.google.finance
 			return !!this.events[eventName];
 		}
 
-		parseStream(param1: string[], param2: Map<string>, dataSeries: com.google.finance.DataSeries): DataUnit[]
+		parseStream(param1: string[], param2: Map<string>, dataSeries: DataSeries): DataUnit[]
 		{
 			let _loc20_ = 0;
 			let _loc4_ = 0;
@@ -518,7 +518,7 @@ namespace com.google.finance
 			this.objects[objectType].sort(StockAssociatedObject.compare);
 		}
 
-		private addFakeDataUnitsForSessions(dataUnits: DataUnit[], dataUnit: DataUnit, dataSeries: com.google.finance.DataSeries, param4: number, param5: number, direction: Directions)
+		private addFakeDataUnitsForSessions(dataUnits: DataUnit[], dataUnit: DataUnit, dataSeries: DataSeries, param4: number, param5: number, direction: Directions)
 		{
 			let _loc10_ = 0;
 			if (dataSeries !== this.data)
@@ -541,7 +541,7 @@ namespace com.google.finance
 			}
 		}
 
-		getFirstRelativeMinute(detailLevel: number): number
+		getFirstRelativeMinute(detailLevel: Intervals): number
 		{
 			const interval = Const.getDetailLevelInterval(detailLevel);
 			const points = this.data.getPointsInIntervalArray(interval);
@@ -561,7 +561,7 @@ namespace com.google.finance
 			return false;
 		}
 
-		private regularSanityCheck(dataUnits: DataUnit[], dataUnit: DataUnit, startInterval: StartEndPair|null, endInterval: StartEndPair, end: number, dataSeries: com.google.finance.DataSeries)
+		private regularSanityCheck(dataUnits: DataUnit[], dataUnit: DataUnit, startInterval: StartEndPair|null, endInterval: StartEndPair, end: number, dataSeries: DataSeries)
 		{
 			let _loc7_ = 0;
 			if (this.baseInterval < Const.DAILY_INTERVAL)
@@ -636,7 +636,7 @@ namespace com.google.finance
 
 		getObjectPositionsInInterval(param1: number)
 		{
-			const objectPositions = {} as ObjectPositions;
+			const objectPositions = new ObjectPositions();
 			const seriesPosition: SeriesPosition[] = [];
 			for (let detailLevelIndex = Const.DETAIL_LEVELS.length - 1; detailLevelIndex >= 0; detailLevelIndex--)
 			{
@@ -715,7 +715,7 @@ namespace com.google.finance
 			return null;
 		}
 
-		computeIntradaySessions(dataSeries: com.google.finance.DataSeries)
+		computeIntradaySessions(dataSeries: DataSeries)
 		{
 			const _loc2_ = Const.INTRADAY_INTERVAL;
 			dataSeries.intradayRegions.length = 0;
@@ -747,7 +747,7 @@ namespace com.google.finance
 			this.data.setPointsInIntervalArray(viewpointName, dataUnits);
 		}
 
-		private makeDataUnitEndOfDay(dataUnit: DataUnit, dataUnits: DataUnit[], startEndPair: StartEndPair, dataSeries: com.google.finance.DataSeries)
+		private makeDataUnitEndOfDay(dataUnit: DataUnit, dataUnits: DataUnit[], startEndPair: StartEndPair, dataSeries: DataSeries)
 		{
 			const _loc5_ = startEndPair.end - startEndPair.start;
 			const _loc6_ = dataUnit.dayMinute - startEndPair.end;
@@ -761,7 +761,7 @@ namespace com.google.finance
 		}
 
 		/*
-		private alignDataSeries(ds1: com.google.finance.DataSeries, ds2: com.google.finance.DataSeries)
+		private alignDataSeries(ds1: DataSeries, ds2: DataSeries)
 		{
 			if (ds1.units.length === 0 || ds2.units.length === 0)
 				return;
@@ -799,7 +799,7 @@ namespace com.google.finance
 			return selectedObject;
 		}
 
-		private objectInTheFuture(stockAssociatedObject: StockAssociatedObject, dataSeries: com.google.finance.DataSeries): boolean
+		private objectInTheFuture(stockAssociatedObject: StockAssociatedObject, dataSeries: DataSeries): boolean
 		{
 			let unit: DataUnit;
 			if (Const.INDICATOR_ENABLED)
@@ -842,7 +842,7 @@ namespace com.google.finance
 			return false;
 		}
 
-		private extractAfterHoursSessions(intervalSet: com.google.finance.IntervalSet)
+		private extractAfterHoursSessions(intervalSet: IntervalSet)
 		{
 			if (this.afterHoursData.units.length === 0)
 				return;
@@ -966,7 +966,7 @@ namespace com.google.finance
 			return dataUnits;
 		}
 
-		private extractSessions(param1: string, dataSeries: com.google.finance.DataSeries)
+		private extractSessions(param1: string, dataSeries: DataSeries)
 		{
 			param1 = param1.slice(1, param1.length - 1);
 			const sessionParts = param1.split("],[");
@@ -1130,7 +1130,7 @@ namespace com.google.finance
 			return this.data.units[relativeMinuteIndex];
 		}
 
-		private getObjectPositions(param1: number, dataSeries: com.google.finance.DataSeries): SeriesPosition
+		private getObjectPositions(param1: number, dataSeries: DataSeries): SeriesPosition
 		{
 			let _loc3_: number;
 			const units = dataSeries.units;
@@ -1316,7 +1316,7 @@ namespace com.google.finance
 			return _loc7_;
 		}
 
-		private checkHeaderSanity(param1: Map<string>, dataSeries: com.google.finance.DataSeries)
+		private checkHeaderSanity(param1: Map<string>, dataSeries: DataSeries)
 		{
 			const _loc3_ = param1[DataSource.MARKET_CLOSE_MINUTE_STR];
 			const _loc4_ = param1[DataSource.MARKET_OPEN_MINUTE_STR];
@@ -1364,7 +1364,7 @@ namespace com.google.finance
 			return -1;
 		}
 
-		private addFakeDataUnits(dataUnits: DataUnit[], dataUnit: DataUnit, dataSeries: com.google.finance.DataSeries, param4: number, direction: Directions, param6 = 0)
+		private addFakeDataUnits(dataUnits: DataUnit[], dataUnit: DataUnit, dataSeries: DataSeries, param4: number, direction: Directions, param6 = 0)
 		{
 			if (param4 === 0)
 				return;
@@ -1431,7 +1431,7 @@ namespace com.google.finance
 				this.objects[objectType].splice(objPos, 1);
 		}
 
-		private addAfterHoursUnitToLastMinute(dataUnit: DataUnit, dataUnits: DataUnit[], startEndPair: StartEndPair | undefined, dataSeries: com.google.finance.DataSeries)
+		private addAfterHoursUnitToLastMinute(dataUnit: DataUnit, dataUnits: DataUnit[], startEndPair: StartEndPair | undefined, dataSeries: DataSeries)
 		{
 			let _loc5_ = 0;
 			if (!startEndPair)

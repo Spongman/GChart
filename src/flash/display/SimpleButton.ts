@@ -8,9 +8,9 @@ namespace flash.display
 			super(elt, name);
 		}
 
-		private _overState: flash.display.DisplayObject;
+		private _overState: DisplayObject;
 		get overState() { return this._overState; }
-		set overState(value: flash.display.DisplayObject)
+		set overState(value: DisplayObject)
 		{
 			if (this._overState)
 			{
@@ -25,9 +25,9 @@ namespace flash.display
 			}
 		}
 
-		private _downState: flash.display.DisplayObject;
+		private _downState: DisplayObject;
 		get downState() { return this._downState; }
-		set downState(value: flash.display.DisplayObject)
+		set downState(value: DisplayObject)
 		{
 			if (this._downState)
 			{
@@ -42,9 +42,9 @@ namespace flash.display
 			}
 		}
 
-		private _hitTestState: flash.display.DisplayObject;
+		private _hitTestState: DisplayObject;
 		get hitTestState() { return this._hitTestState; }
-		set hitTestState(value: flash.display.DisplayObject)
+		set hitTestState(value: DisplayObject)
 		{
 			if (this._hitTestState)
 			{
@@ -59,9 +59,9 @@ namespace flash.display
 			}
 		}
 
-		private _upState: flash.display.DisplayObject;
+		private _upState: DisplayObject;
 		get upState() { return this._upState; }
-		set upState(value: flash.display.DisplayObject)
+		set upState(value: DisplayObject)
 		{
 			if (this._upState)
 			{

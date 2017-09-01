@@ -14,7 +14,7 @@ namespace com.google.finance
 		private readonly urlLoader = new flash.net.URLLoader();
 		private tries: number = 0;
 
-		constructor(private readonly dataManager: com.google.finance.DataManager, private readonly url: string, private readonly event: com.google.finance.ChartEvent)
+		constructor(private readonly dataManager: DataManager, private readonly url: string, private readonly event: ChartEvent)
 		{
 			this.initListeners();
 			if (url)
@@ -90,7 +90,7 @@ namespace com.google.finance
 
 		protected setUpDataReload()
 		{
-			if (this.event.type === com.google.finance.ChartEventTypes.GET_RT_DATA || this.event.type === com.google.finance.ChartEventTypes.GET_RT_AH_DATA)
+			if (this.event.type === ChartEventTypes.GET_RT_DATA || this.event.type === ChartEventTypes.GET_RT_AH_DATA)
 				return;
 
 			if (this.tries < Const.MAX_RELOAD_TRIES)

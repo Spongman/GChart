@@ -7,7 +7,7 @@ namespace com.google.finance
 
 	export class BorderLayer extends flash.display.Shape
 	{
-		constructor(public readonly displayManager: com.google.finance.DisplayManager, public topViewPoint: com.google.finance.SparklineViewPoint)
+		constructor(public readonly displayManager: DisplayManager, public topViewPoint: SparklineViewPoint)
 		{
 			super(document.createElement("div"));
 		}

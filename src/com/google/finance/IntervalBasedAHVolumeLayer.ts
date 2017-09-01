@@ -4,7 +4,7 @@ namespace com.google.finance
 {
 	export class IntervalBasedAHVolumeLayer extends IntervalBasedVolumeLayer
 	{
-		private regionsXLimits: com.google.finance.IntervalSet;
+		private regionsXLimits: IntervalSet;
 
 		highlightPoint(context: Context, param2: number, state: Dictionary)
 		{
@@ -48,7 +48,7 @@ namespace com.google.finance
 			if (visibleExtendedHours.length() === 0)
 				return;
 
-			this.regionsXLimits = new com.google.finance.IntervalSet();
+			this.regionsXLimits = new IntervalSet();
 
 			for (let intervalIndex = 0; intervalIndex < visibleExtendedHours.length(); intervalIndex++)
 			{

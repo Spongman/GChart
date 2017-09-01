@@ -29,7 +29,7 @@ namespace com.google.finance
 
 		private borders: flash.display.Bitmap[];
 
-		private pinPointContentMovie: com.google.finance.PinPointContentMovie;
+		private pinPointContentMovie: PinPointContentMovie;
 
 		private flagline: flash.display.Bitmap;
 		FlagImg: typeof flash.display.Bitmap;
@@ -41,7 +41,7 @@ namespace com.google.finance
 		private letter: flash.text.TextField;
 		private pinButton: flash.display.SimpleButton;
 		private activeOverlay: flash.display.Bitmap;
-		private object: com.google.finance.PinPoint | null;
+		private object: PinPoint | null;
 
 		constructor()
 		{
@@ -145,7 +145,7 @@ namespace com.google.finance
 			this.borders = [];
 		}
 
-		setPinPointContentMovie(pinPointContentMovie: com.google.finance.PinPointContentMovie)
+		setPinPointContentMovie(pinPointContentMovie: PinPointContentMovie)
 		{
 			this.pinPointContentMovie = pinPointContentMovie;
 		}
@@ -195,7 +195,7 @@ namespace com.google.finance
 			return -this.pinButton.y;
 		}
 
-		setObj(pinPoint: com.google.finance.PinPoint)
+		setObj(pinPoint: PinPoint)
 		{
 			this.object = pinPoint;
 			if (this.letter.text !== pinPoint.letter)

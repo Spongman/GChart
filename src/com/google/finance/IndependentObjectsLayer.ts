@@ -107,7 +107,7 @@ namespace com.google.finance
 			this.movies.splice(this.activeMovies);
 		}
 
-		private getPosition(seriesPosition: SeriesPosition, dataUnits: DataUnit[], detailLevel: number, context: Context): Position
+		private getPosition(seriesPosition: SeriesPosition, dataUnits: DataUnit[], detailLevel: Intervals, context: Context): Position
 		{
 			const position = new Position();
 			const dataSeries = notnull(seriesPosition.refDataSeries);

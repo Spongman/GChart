@@ -7,8 +7,8 @@ namespace com.google.finance
 		private localYOffset = 0;
 		private localYScale = 0;
 
-		indicator: com.google.finance.Indicator;
-		originalDataSeries: com.google.finance.DataSeries;
+		indicator: Indicator;
+		originalDataSeries: DataSeries;
 		indicatorParams: any;	// any?
 		computer: Function;
 
@@ -72,7 +72,7 @@ namespace com.google.finance
 			return value;
 		}
 
-		private drawLine_(sprite: flash.display.Sprite, param2: number, param3: number, viewPoint: ViewPoint, context: Context, dataSeries: com.google.finance.DataSeries)
+		private drawLine_(sprite: flash.display.Sprite, param2: number, param3: number, viewPoint: ViewPoint, context: Context, dataSeries: DataSeries)
 		{
 			const units = dataSeries.units;
 			const days = dataSeries.days;
@@ -131,12 +131,12 @@ namespace com.google.finance
 			}
 		}
 
-		private getPoint(dataSeries: com.google.finance.DataSeries, param2: number): DataUnit
+		private getPoint(dataSeries: DataSeries, param2: number): DataUnit
 		{
 			return dataSeries.units[this.getPointIndex(dataSeries, param2)];
 		}
 
-		private drawDayLine_(sprite: flash.display.Sprite, unitIndex: number, viewPoint: ViewPoint, param4: number, param5: number, context: Context, dataSeries: com.google.finance.DataSeries)
+		private drawDayLine_(sprite: flash.display.Sprite, unitIndex: number, viewPoint: ViewPoint, param4: number, param5: number, context: Context, dataSeries: DataSeries)
 		{
 			const units = dataSeries.units;
 			const days = dataSeries.days;
@@ -181,9 +181,9 @@ namespace com.google.finance
 			return param1;
 		}
 
-		setIndicator(indicatorName: string, fn: Function, dataSeries: com.google.finance.DataSeries, indicatorParams: any)
+		setIndicator(indicatorName: string, fn: Function, dataSeries: DataSeries, indicatorParams: any)
 		{
-			this.dataSource.indicators[indicatorName] = new com.google.finance.Indicator();
+			this.dataSource.indicators[indicatorName] = new Indicator();
 			this.indicator = this.dataSource.indicators[indicatorName];
 			fn = fn;
 			this.indicatorParams = indicatorParams;
@@ -195,7 +195,7 @@ namespace com.google.finance
 			return this.localYOffset - (dataUnit.getCloseLogValue(context.verticalScaling) - context.medPrice) * this.localYScale;
 		}
 
-		getDataSeries(context: Context): com.google.finance.DataSeries | null
+		getDataSeries(context: Context): DataSeries | null
 		{
 			if (!context)
 				return null;
@@ -229,7 +229,7 @@ namespace com.google.finance
 			this.drawLine_(this, firstMinuteIndex, lastMinuteIndex, viewPoint, context, dataSeries);
 		}
 
-		private getPointIndex(dataSeries: com.google.finance.DataSeries, xPos: number): number
+		private getPointIndex(dataSeries: DataSeries, xPos: number): number
 		{
 			const minute = this.viewPoint.getMinuteOfX(xPos);
 			let minuteIndex = dataSeries.getRelativeMinuteIndex(minute);

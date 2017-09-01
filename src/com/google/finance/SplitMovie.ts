@@ -26,7 +26,7 @@ namespace com.google.finance
 		private static readonly SplitArrowSidewaysOverClass = SplitMovie_SplitArrowSidewaysOverClass;
 		private static readonly SplitArrowOnOverClass = SplitMovie_SplitArrowOnOverClass;
 
-		private associatedSplit: com.google.finance.Split;
+		private associatedSplit: Split;
 		private persistentHide: boolean;
 
 		protected textFormat = new flash.text.TextFormat("Verdana", 9, this.getTextColor(), true, false, false);
@@ -140,10 +140,10 @@ namespace com.google.finance
 		getDateText(): string
 		{
 			const exchangeDateInUTC = this.associatedSplit.exchangeDateInUTC;
-			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
-				return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.LONG_DATE_FORMAT, exchangeDateInUTC, true);
+			if (Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()))
+				return i18n.locale.DateTimeLocale.standardFormatDateTime(i18n.locale.DateTimeFormats.LONG_DATE_FORMAT, exchangeDateInUTC, true);
 
-			return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.MEDIUM_DATE_FORMAT, exchangeDateInUTC, true);
+			return i18n.locale.DateTimeLocale.standardFormatDateTime(i18n.locale.DateTimeFormats.MEDIUM_DATE_FORMAT, exchangeDateInUTC, true);
 		}
 
 		hideDetails()
@@ -213,7 +213,7 @@ namespace com.google.finance
 
 		setObject(stockAssociatedObject: StockAssociatedObject)
 		{
-			this.associatedSplit = stockAssociatedObject as com.google.finance.Split;
+			this.associatedSplit = stockAssociatedObject as Split;
 			this.showText();
 		}
 
@@ -231,9 +231,9 @@ namespace com.google.finance
 				return;
 
 			this.addChild(this.text);
-			const _loc2_ = param1 ? param1 : this.getShortText();
-			if (this.text.text !== _loc2_)
-				this.text.text = _loc2_;
+			param1 = param1 || this.getShortText();
+			if (this.text.text !== param1)
+				this.text.text = param1;
 		}
 
 		private attachArrowListeners()

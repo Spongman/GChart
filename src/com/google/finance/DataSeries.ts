@@ -102,7 +102,7 @@ namespace com.google.finance
 			return _loc2_ && _loc2_.length > 0;
 		}
 
-		compareRefPointAndRelativeMinute(indicatorPoint: com.google.finance.indicator.IndicatorPoint, param2: number): number
+		compareRefPointAndRelativeMinute(indicatorPoint: indicator.IndicatorPoint, param2: number): number
 		{
 			return DataSeries.compareUnitAndRelativeMinute(indicatorPoint.point, param2);
 		}
@@ -394,7 +394,7 @@ namespace com.google.finance
 		{
 			const key = this.intervalHashKey(param1);
 			if (!this.intervalBounds[key])
-				this.intervalBounds[key] = new com.google.finance.IntervalSet();
+				this.intervalBounds[key] = new IntervalSet();
 			const bounds = this.intervalBounds[key];
 			bounds.addInterval(param2, param3);
 		}

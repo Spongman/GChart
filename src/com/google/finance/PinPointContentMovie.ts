@@ -22,9 +22,9 @@ namespace com.google.finance
 		private static readonly MAX_CONTENT_WIDTH = 250;
 
 		private movieLeftX: number;
-		private activePinPoint: com.google.finance.PinPoint | null;
+		private activePinPoint: PinPoint | null;
 		private closeButton = new flash.display.SimpleButton("closeButton");
-		private viewPoint: com.google.finance.ViewPoint;
+		private viewPoint: ViewPoint;
 		private content = new flash.text.TextField();
 		private movieBottomY: number;
 
@@ -75,7 +75,7 @@ namespace com.google.finance
 			});
 		}
 
-		setActivePinPoint(pinPoint: com.google.finance.PinPoint, x: number, y: number)
+		setActivePinPoint(pinPoint: PinPoint, x: number, y: number)
 		{
 			this.activePinPoint = pinPoint;
 			this.movieLeftX = x;
@@ -156,8 +156,8 @@ namespace com.google.finance
 
 		protected getDateHtml(date: Date): string
 		{
-			const _loc2_ = !!Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()) ? "yyyy-MM-dd HH:mm" : "MMM dd, yyyy h:mma";
-			return "<font color=\'#0B6CDE\'>" + com.google.i18n.locale.DateTimeLocale.formatDateTime(_loc2_, date, true) + "</font>";
+			const _loc2_ = !!Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()) ? "yyyy-MM-dd HH:mm" : "MMM dd, yyyy h:mma";
+			return "<font color=\'#0B6CDE\'>" + i18n.locale.DateTimeLocale.formatDateTime(_loc2_, date, true) + "</font>";
 		}
 
 		renderMovie()

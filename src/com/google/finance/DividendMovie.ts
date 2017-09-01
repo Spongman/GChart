@@ -16,7 +16,7 @@ namespace com.google.finance
 		private static dividendArrowSidewaysClass = DividendMovie_DividendArrowSidewaysClass;
 		private static dividendArrowSidewaysOverClass = DividendMovie_DividendArrowSidewaysOverClass;
 
-		private associatedDividend: com.google.finance.Dividend;
+		private associatedDividend: Dividend;
 
 		protected getTextColor(): number
 		{
@@ -57,10 +57,10 @@ namespace com.google.finance
 		getDateText(): string
 		{
 			const exchangeDateInUTC = this.associatedDividend.exchangeDateInUTC;
-			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
-				return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.LONG_DATE_FORMAT, exchangeDateInUTC, true);
+			if (Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()))
+				return i18n.locale.DateTimeLocale.standardFormatDateTime(i18n.locale.DateTimeFormats.LONG_DATE_FORMAT, exchangeDateInUTC, true);
 
-			return com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.MEDIUM_DATE_FORMAT, exchangeDateInUTC, true);
+			return i18n.locale.DateTimeLocale.standardFormatDateTime(i18n.locale.DateTimeFormats.MEDIUM_DATE_FORMAT, exchangeDateInUTC, true);
 		}
 
 		getShortText(param1 = false): string

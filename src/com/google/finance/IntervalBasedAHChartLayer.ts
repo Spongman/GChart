@@ -4,8 +4,8 @@ namespace com.google.finance
 {
 	export class IntervalBasedAHChartLayer extends IntervalBasedChartLayer
 	{
-		private regionsXLimits: com.google.finance.IntervalSet;
-		private visibleSessionsTimes: com.google.finance.IntervalSet;
+		private regionsXLimits: IntervalSet;
+		private visibleSessionsTimes: IntervalSet;
 
 		constructor(viewPoint: ViewPoint, dataSoure: DataSource)
 		{
@@ -72,7 +72,7 @@ namespace com.google.finance
 			this.visibleSessionsTimes = this.getVisibleSessionsTimes(context, points);
 			this.localYOffset = vp.miny + vp.medPriceY + vp.V_OFFSET;
 			this.localYScale = vp.maxPriceRangeViewSize / context.maxPriceRange;
-			this.regionsXLimits = new com.google.finance.IntervalSet();
+			this.regionsXLimits = new IntervalSet();
 
 			for (let intervalIndex = 0; intervalIndex < this.visibleSessionsTimes.length(); intervalIndex++)
 			{
@@ -91,9 +91,9 @@ namespace com.google.finance
 			super.highlightPoint(context, param2, state);
 		}
 
-		private getVisibleSessionsTimes(context: Context, dataUnits: DataUnit[]): com.google.finance.IntervalSet
+		private getVisibleSessionsTimes(context: Context, dataUnits: DataUnit[]): IntervalSet
 		{
-			const intervalSet = new com.google.finance.IntervalSet();
+			const intervalSet = new IntervalSet();
 			const visibleExtendedHours = this.dataSource.visibleExtendedHours;
 			for (let _loc5_ = visibleExtendedHours.length() - 1; _loc5_ >= 0; _loc5_--)
 			{

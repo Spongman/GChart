@@ -6,7 +6,7 @@ namespace com.google.finance
 
 	export class AHVolumeLayer extends VolumeLinesChartLayer
 	{
-		protected regionsXLimits: com.google.finance.IntervalSet;
+		protected regionsXLimits: IntervalSet;
 		protected readonly maxVolumeCache: Map<number> = {};
 
 		private drawAfterHoursSession(layer: AHVolumeLayer, dataSeries: DataSeries, startTime: number, endTime: number, context: Context, interval: number)
@@ -34,9 +34,9 @@ namespace com.google.finance
 			this.regionsXLimits.addInterval(left, right);
 		}
 
-		private getMaxVolumeHashKey(param1: number, detailLevel: number): string
+		private getMaxVolumeHashKey(param1: number, interval: number): string
 		{
-			return param1 + '-' + detailLevel;
+			return param1 + '-' + interval;
 		}
 
 		protected drawLines(sprite: flash.display.Sprite, dataSeries: DataSeries, param3: number, param4: number, viewPoint: IViewPoint, context: Context)
@@ -48,7 +48,7 @@ namespace com.google.finance
 			this.graphics.clear();
 			this.graphics.lineStyle(0, this.lineColor, 1);
 			const visibleExtendedHours = this.dataSource.visibleExtendedHours;
-			this.regionsXLimits = new com.google.finance.IntervalSet();
+			this.regionsXLimits = new IntervalSet();
 
 			for (let intervalIndex = 0; intervalIndex < visibleExtendedHours.length(); intervalIndex++)
 			{
@@ -88,20 +88,20 @@ namespace com.google.finance
 
 		protected getMaxVolume(param1: number, param2: number, param3: boolean): number
 		{
-			const skipInterval = this.viewPoint.getSkipInterval(param2, param1).interval;
-			if (skipInterval >= Intervals.DAILY)
+			const interval = this.viewPoint.getSkipInterval(param2, param1).interval;
+			if (interval >= Const.DAILY_INTERVAL)
 				return 0;
 
 			const visibleExtendedHours = this.dataSource.visibleExtendedHours;
 			let maxVolume = 0;
-			const dataSeries = notnull(this.indicator.getDataSeries(skipInterval));
+			const dataSeries = notnull(this.indicator.getDataSeries(interval));
 
 			for (let intervalIndex = 0; intervalIndex < visibleExtendedHours.length(); intervalIndex++)
 			{
-				const interval = visibleExtendedHours.getIntervalAt(intervalIndex);
-				const startUnits = this.dataSource.afterHoursData.units[interval.start];
-				const endUnits = this.dataSource.afterHoursData.units[interval.end];
-				const maxVolumeHashKey = this.getMaxVolumeHashKey(startUnits.time, skipInterval);
+				const startEndPair = visibleExtendedHours.getIntervalAt(intervalIndex);
+				const startUnits = this.dataSource.afterHoursData.units[startEndPair.start];
+				const endUnits = this.dataSource.afterHoursData.units[startEndPair.end];
+				const maxVolumeHashKey = this.getMaxVolumeHashKey(startUnits.time, interval);
 				if (this.maxVolumeCache[maxVolumeHashKey] === undefined)
 				{
 					const timeIndex1 = DataSource.getTimeIndex(endUnits.time, dataSeries.units);

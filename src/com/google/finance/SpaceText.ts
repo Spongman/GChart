@@ -49,10 +49,10 @@ namespace com.google.finance
 		private infoText: flash.text.TextField;
 		private changeText: flash.text.TextField;
 
-		endDate: com.google.finance.DateTextField;
-		startDate: com.google.finance.DateTextField;
+		endDate: DateTextField;
+		startDate: DateTextField;
 
-		constructor(private readonly displayManager: com.google.finance.DisplayManager)
+		constructor(private readonly displayManager: DisplayManager)
 		{
 			super();
 
@@ -103,7 +103,7 @@ namespace com.google.finance
 		{
 			let text = "";
 			let scale = 1000;
-			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
+			if (Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()))
 				scale = 10000;
 
 			if (value > 3 * scale * scale)
@@ -254,7 +254,7 @@ namespace com.google.finance
 			this.datesTextFormats = [];
 			const singlePointDateFormat = this.getSinglePointDateFormat(unit);
 			const exchangeDateInUTC = unit.exchangeDateInUTC;
-			this.datesText += com.google.i18n.locale.DateTimeLocale.formatDateTime(singlePointDateFormat, exchangeDateInUTC, true);
+			this.datesText += i18n.locale.DateTimeLocale.formatDateTime(singlePointDateFormat, exchangeDateInUTC, true);
 			if (state[SpaceText.OHLC_INFO_FLAG_STR])
 			{
 				this.appendOhlcText(SpaceText.OPEN_TEXT, unit.open, state[SpaceText.OHLC_BASE_PRICE_STR]);
@@ -306,7 +306,7 @@ namespace com.google.finance
 			}
 		}
 
-		private registerDateTextFieldListeners(dateTextField: com.google.finance.DateTextField)
+		private registerDateTextFieldListeners(dateTextField: DateTextField)
 		{
 			if (Const.ENABLE_CUSTOM_DATE_ENTRY !== "true")
 				return;
@@ -383,7 +383,7 @@ namespace com.google.finance
 		private getSinglePointDateFormat(dataUnit: DataUnit): string
 		{
 			let _loc2_ = "MMM dd, yyyy";
-			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
+			if (Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()))
 				_loc2_ = "yyyy年M月d日";
 
 			if (dataUnit.dayMinute !== Const.MARKET_CLOSE_MINUTE)
@@ -541,9 +541,9 @@ namespace com.google.finance
 			this.updateInfoText();
 		}
 
-		private newDateTextField(x: number, y: number, tabIndex: number): com.google.finance.DateTextField
+		private newDateTextField(x: number, y: number, tabIndex: number): DateTextField
 		{
-			const dateTextField = new com.google.finance.DateTextField();
+			const dateTextField = new DateTextField();
 			dateTextField.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			dateTextField.backgroundColor = Const.DATE_HIGHLIGHTED_BACKGROUND_COLOR;
 			dateTextField.border = Boolean(Const.ENABLE_CUSTOM_DATE_ENTRY);

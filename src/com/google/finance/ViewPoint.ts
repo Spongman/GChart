@@ -37,7 +37,7 @@ namespace com.google.finance
 	{
 		name: string;
 
-		constructor(protected readonly displayManager: com.google.finance.DisplayManager)
+		constructor(protected readonly displayManager: DisplayManager)
 		{
 			super();
 		}
@@ -91,7 +91,7 @@ namespace com.google.finance
 
 		abstract isAnimating(): boolean;
 
-		myController: com.google.finance.Controller;
+		myController: Controller;
 
 		abstract precomputeContexts(): void;
 
@@ -132,7 +132,7 @@ namespace com.google.finance
 
 		private static readonly MIN_ZOOM_CHART_AMOUNT = 6;
 
-		//private layersManager: com.google.finance.LayersManager;
+		//private layersManager: LayersManager;
 		//private xOffset = 0;
 		private topCanvas = new flash.display.Sprite("topCanvas");
 		private lastNotifyMinute = 0;
@@ -159,7 +159,7 @@ namespace com.google.finance
 
 		display: string;
 
-		constructor(displayManager: com.google.finance.DisplayManager)
+		constructor(displayManager: DisplayManager)
 		{
 			super(displayManager);
 
@@ -214,7 +214,7 @@ namespace com.google.finance
 			Utils.removeAllChildren(this.textCanvas);
 		}
 
-		adjustBarChartContext(context: Context, detailLevel: number)
+		adjustBarChartContext(context: Context, detailLevel: Intervals)
 		{
 			let _loc3_ = context.count;
 			let _loc4_ = context.lastMinute;
@@ -589,10 +589,10 @@ namespace com.google.finance
 			}
 		}
 
-		private generateEventForAllSources(chartEventStyle: ChartEventStyles, param2 = 2, eventCallbacks?: EventCallback[])
+		private generateEventForAllSources(chartEventStyle: ChartEventStyles, priority = ChartEventPriorities.OPTIONAL, eventCallbacks?: EventCallback[])
 		{
 			for (const layer of this.drawingLayers)
-				this.generateEvent(chartEventStyle, layer.dataSource, param2, eventCallbacks);
+				this.generateEvent(chartEventStyle, layer.dataSource, priority, eventCallbacks);
 		}
 
 		zoomIn_Handler(param1: number, param2: number)
@@ -747,7 +747,7 @@ namespace com.google.finance
 			return baseDataSource.getClosestDataUnitAfterMinute(this.getFirstMinute());
 		}
 
-		getDisplayManager(): com.google.finance.DisplayManager
+		getDisplayManager(): DisplayManager
 		{
 			return this.displayManager;
 		}
@@ -805,7 +805,7 @@ namespace com.google.finance
 			return baseDataSource.data.marketDayLength;
 		}
 
-		setController(controller: com.google.finance.Controller)
+		setController(controller: Controller)
 		{
 			controller.addControlListener(this);
 			const bounds = new Bounds(this.minx, this.miny, this.maxx, this.maxy);
@@ -816,7 +816,7 @@ namespace com.google.finance
 		checkAfterHoursVisibility(param1: number, param2: number)
 		{
 			const layersManager = this.displayManager.layersManager;
-			if (layersManager.getStyle() !== com.google.finance.LayersManager.SINGLE)
+			if (layersManager.getStyle() !== LayersManager.SINGLE)
 				return;
 
 			if (MainManager.paramsObj.displayExtendedHours !== "true")
@@ -879,7 +879,7 @@ namespace com.google.finance
 				return;
 
 			let _loc6_ = Number(this.getOldestBaseMinute());
-			if (Const.INDICATOR_ENABLED && this.myController && this.myController.currentIntervalLevel >= 0)
+			if (Const.INDICATOR_ENABLED && this.myController && this.myController.currentIntervalLevel >= <Intervals>0)
 			{
 				const baseDataSource = this.getBaseDataSource();
 				if (baseDataSource)
@@ -1074,7 +1074,7 @@ namespace com.google.finance
 			if (!Const.INDICATOR_ENABLED)
 				return;
 
-			if (this.displayManager.layersManager.getStyle() !== com.google.finance.LayersManager.SINGLE)
+			if (this.displayManager.layersManager.getStyle() !== LayersManager.SINGLE)
 				return;
 
 			if (MainManager.paramsObj.displayExtendedHours !== "true")
@@ -1188,7 +1188,7 @@ namespace com.google.finance
 			if (dataSource && !isNaN(dataSource.data.marketDayLength))
 				_loc2_ = dataSource.data.marketDayLength + 1;
 
-			if (Const.INDICATOR_ENABLED && this.myController && this.myController.currentIntervalLevel >= 0)
+			if (Const.INDICATOR_ENABLED && this.myController && this.myController.currentIntervalLevel >= <Intervals>0)
 				return Const.INTERVAL_PERIODS[this.myController.currentIntervalLevel].mindays * _loc2_;
 
 			if (this.displayManager.isDifferentMarketSessionComparison())
@@ -1236,7 +1236,7 @@ namespace com.google.finance
 			this.medPriceY = (this.maxy - this.miny) / 2;
 			this.maxPriceRangeViewSize = this.maxy - this.miny - ViewPoint.MIN_EDGE_DISTANCE - ViewPoint.MAX_EDGE_DISTANCE;
 			const _loc2_ = (this.maxx - this.minx) * this.unitsPerUnit / this.POINTS_DISTANCE;
-			if (Const.INDICATOR_ENABLED && this.myController && this.myController.currentIntervalLevel >= 0)
+			if (Const.INDICATOR_ENABLED && this.myController && this.myController.currentIntervalLevel >= <Intervals>0)
 			{
 				let context = new Context();
 				context.count = _loc2_;

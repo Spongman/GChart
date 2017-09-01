@@ -6,7 +6,7 @@ namespace flash.display
 		height: number;
 	}
 
-	export class Bitmap extends flash.display.DisplayObject
+	export class Bitmap extends DisplayObject
 	{
 		protected _width: number;
 		protected _height: number;

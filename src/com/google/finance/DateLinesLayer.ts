@@ -33,10 +33,10 @@ namespace com.google.finance
 			//const _loc2_ = param1.getUTCHours();
 			const minutes = date.getUTCMinutes();
 			let pattern = "HH:mm";
-			if (minutes === 0 && !Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
+			if (minutes === 0 && !Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()))
 				pattern = "h a";
 
-			return com.google.i18n.locale.DateTimeLocale.formatDateTime(pattern, date, true).toLowerCase();
+			return i18n.locale.DateTimeLocale.formatDateTime(pattern, date, true).toLowerCase();
 		}
 
 		private adjustVisibleDaysWithAfterHours(dayVisibilities: DayVisibility[])
@@ -140,7 +140,7 @@ namespace com.google.finance
 					{
 						const exchangeDateInUTC = data.units[data.days[_loc8_]].exchangeDateInUTC;
 						const weekStartDateFormat = this.getWeekStartDateFormat();
-						const _loc18_ = com.google.i18n.locale.DateTimeLocale.formatDateTime(weekStartDateFormat, exchangeDateInUTC, true);
+						const _loc18_ = i18n.locale.DateTimeLocale.formatDateTime(weekStartDateFormat, exchangeDateInUTC, true);
 						const _loc19_ = ViewPoint.TEXT_FIELD_WIDTH;
 						const _loc5_ = xPos - _loc19_ / 2;
 						const _loc20_ = ViewPoint.TEXT_FIELD_HEIGHT;
@@ -229,7 +229,7 @@ namespace com.google.finance
 				{
 					const exchangeDateInUTC = data.units[data.firsts[_loc7_]].exchangeDateInUTC;
 					const monthStartDateFormat = this.getMonthStartDateFormat(dayPixel * 20);
-					const _loc19_ = com.google.i18n.locale.DateTimeLocale.formatDateTime(monthStartDateFormat, exchangeDateInUTC, true);
+					const _loc19_ = i18n.locale.DateTimeLocale.formatDateTime(monthStartDateFormat, exchangeDateInUTC, true);
 					const _loc20_ = _loc10_ - xPos;
 					let _loc12_ = xPos;
 					const _loc21_ = ViewPoint.TEXT_FIELD_HEIGHT;
@@ -279,12 +279,12 @@ namespace com.google.finance
 			let format = "";
 			if (param1 > 90)
 			{
-				if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
+				if (Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()))
 					format = "yyyy年MMMMM";
 				else
 					format = "MMM yyyy";
 			}
-			else if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
+			else if (Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()))
 				format = "yy年MMMMM";
 			else
 				format = "MMM\'yy";
@@ -419,21 +419,21 @@ namespace com.google.finance
 			if (param3 > 50 || dayIndex === 2 || dayIndex === dayVisibilities.length - 2)
 			{
 				_loc5_ = "MMM " + _loc5_;
-				if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
+				if (Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()))
 					_loc5_ = "M月d日";
 			}
 			if (param3 > 75)
 			{
 				_loc5_ = "E " + _loc5_;
-				if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
+				if (Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()))
 					_loc5_ = "M月d日 E";
 			}
-			return com.google.i18n.locale.DateTimeLocale.formatDateTime(_loc5_, exchangeDateInUTC, true);
+			return i18n.locale.DateTimeLocale.formatDateTime(_loc5_, exchangeDateInUTC, true);
 		}
 
 		private getWeekStartDateFormat(): string
 		{
-			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
+			if (Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()))
 				return "M月d日";
 
 			return "MMM d";

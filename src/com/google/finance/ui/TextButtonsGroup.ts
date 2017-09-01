@@ -5,7 +5,7 @@ namespace com.google.finance.ui
 	// import flash.display.SimpleButton;
 	// import flash.text.TextField;
 
-	export class TextButtonsGroup extends com.google.finance.ui.ButtonsGroup
+	export class TextButtonsGroup extends ButtonsGroup
 	{
 		private currentButton: number = -1;
 

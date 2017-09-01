@@ -52,7 +52,7 @@ namespace com.google.finance
 				for (let index = 1; index < row[GVizFormatConverter.COL_PROPERTY_NAME].length; index++)
 				{
 					const value = row[GVizFormatConverter.COL_PROPERTY_NAME][index][GVizFormatConverter.VALUE_PROPERTY_NAME];
-					dataSeriesArray[index - 1].points.push(new com.google.finance.indicator.IndicatorPoint(value, point));
+					dataSeriesArray[index - 1].points.push(new indicator.IndicatorPoint(value, point));
 				}
 			}
 

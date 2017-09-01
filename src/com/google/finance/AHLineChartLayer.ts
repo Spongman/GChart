@@ -6,8 +6,8 @@ namespace com.google.finance
 
 	export class AHLineChartLayer extends LineChartLayer
 	{
-		private regionsXLimits: com.google.finance.IntervalSet;
-		private visibleSessionsTimes: com.google.finance.IntervalSet;
+		private regionsXLimits: IntervalSet;
+		private visibleSessionsTimes: IntervalSet;
 
 		protected getPoint(dataSeries: DataSeries, param2: number): DataUnit
 		{
@@ -29,9 +29,9 @@ namespace com.google.finance
 			return this.dataSource.afterHoursData;
 		}
 
-		private getVisibleSessionsTimes(context: Context): com.google.finance.IntervalSet
+		private getVisibleSessionsTimes(context: Context): IntervalSet
 		{
-			const intervalSet = new com.google.finance.IntervalSet();
+			const intervalSet = new IntervalSet();
 			const visibleExtendedHours = this.dataSource.visibleExtendedHours;
 			for (let intervalIndex = visibleExtendedHours.length() - 1; intervalIndex >= 0; intervalIndex--)
 			{
@@ -123,7 +123,7 @@ namespace com.google.finance
 
 			this.visibleSessionsTimes = this.getVisibleSessionsTimes(context);
 			this.graphics.clear();
-			this.regionsXLimits = new com.google.finance.IntervalSet();
+			this.regionsXLimits = new IntervalSet();
 			const vp = this.viewPoint;
 			this.localYOffset = this.viewPoint.miny + vp.medPriceY + vp.V_OFFSET;
 			this.localYScale = vp.maxPriceRangeViewSize / context.maxPriceRange;

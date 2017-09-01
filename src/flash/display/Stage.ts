@@ -21,7 +21,7 @@ namespace flash.display
 		{
 			super(elt);
 
-			flash.display.Graphics.initialize();
+			Graphics.initialize();
 
 			this.stage = this;
 			this.mouseEnabled = false;
@@ -67,7 +67,7 @@ namespace flash.display
 					this instanceof fNOP ? this : oThis,
 					aArgs.concat(Array.prototype.slice.call(arguments)));
 
-				flash.display.Graphics.cleanupPending();
+				Graphics.cleanupPending();
 
 				return value;
 			}

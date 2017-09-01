@@ -96,7 +96,7 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		private getIntervalText(detailLevel: number): string
+		private getIntervalText(detailLevel: Intervals): string
 		{
 			switch (detailLevel)
 			{
@@ -120,7 +120,7 @@ namespace com.google.finance.indicator
 			return this.indicatorName;
 		}
 
-		private renderHistogramLine(dataSeriesArray: DataSeries[], dataSeriesIndex: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, detailLevel: number, layerType: string)
+		private renderHistogramLine(dataSeriesArray: DataSeries[], dataSeriesIndex: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, detailLevel: Intervals, layerType: string)
 		{
 			let xPos = Number.MAX_VALUE;
 			const yPos = this.getYPos(context, new IndicatorPoint(0, <DataUnit><any>null));	// TODO
@@ -142,7 +142,7 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		private renderSingleLine(dataSeriesArray: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, detailLevel: number, layerType: string)
+		private renderSingleLine(dataSeriesArray: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, detailLevel: Intervals, layerType: string)
 		{
 			let _loc9_ = Number.MAX_VALUE;
 			let point = dataSeriesArray[param2].points[param4].getPoint();
@@ -174,7 +174,7 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		private renderHistogramLineFromBottom(dataSeriesArray: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, detailLevel: number, layerType: string)
+		private renderHistogramLineFromBottom(dataSeriesArray: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, detailLevel: Intervals, layerType: string)
 		{
 			let _loc9_ = Number.MAX_VALUE;
 			const gr = this.graphics;
@@ -501,10 +501,10 @@ namespace com.google.finance.indicator
 			return true;
 		}
 
-		getDataSeriesArray(param1: number, context?: Context): DataSeries[] | null
+		getDataSeriesArray(detailLevel: Intervals, context?: Context): DataSeries[] | null
 		{
 			let _loc6_ = 0;
-			const detailLevelInterval = Const.getDetailLevelInterval(param1);
+			const detailLevelInterval = Const.getDetailLevelInterval(detailLevel);
 			const originalDataSeries = this.originalDataSeries;
 			const points = originalDataSeries.getPointsInIntervalArray(detailLevelInterval);
 			if (!points || points.length === 0)

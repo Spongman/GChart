@@ -129,7 +129,7 @@ namespace com.google.finance
 	export class Const
 	{
 		private static DETAIL_LEVEL_INFO: { [key: number]: number };
-		private static INTERVAL_INFO: { [key: number]: number };
+		private static INTERVAL_INFO: { [key: number]: Intervals };
 		static APPLY_CHINESE_STYLE_MACD = false;
 		static CHART_TYPE_BUTTONS_ENABLED = false;
 		static DEFAULT_DISPLAY_DAYS = 3;
@@ -419,7 +419,7 @@ namespace com.google.finance
 			return Const.DETAIL_LEVEL_INFO[detailLevel];
 		}
 
-		static getIntervalDetailLevel(interval: number): number
+		static getIntervalDetailLevel(interval: number): Intervals
 		{
 			return Const.INTERVAL_INFO[interval];
 		}

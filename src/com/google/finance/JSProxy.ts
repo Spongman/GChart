@@ -10,9 +10,9 @@ namespace com.google.finance
 		private javascriptRequestMade = false;
 		private javascriptNotified = false;
 
-		constructor(private readonly mainManager: com.google.finance.MainManager)
+		constructor(private readonly mainManager: MainManager)
 		{
-			if (!com.google.finance.MainManager.paramsObj["disableExternalInterface"] && flash.external.ExternalInterface.available)
+			if (!MainManager.paramsObj["disableExternalInterface"] && flash.external.ExternalInterface.available)
 			{
 				(<Dictionary>mainManager.stage.element)["callAsFunction"] = flash.display.Stage.bind(this.callAsFunction, this);
 				//flash.external.ExternalInterface.addCallback("callAsFunction", this.callAsFunction.bind(this));
@@ -305,7 +305,7 @@ namespace com.google.finance
 		{
 			const layersManager = this.mainManager.layersManager;
 			const displayManager = this.mainManager.displayManager;
-			com.google.finance.MainManager.paramsObj[name] = value;
+			MainManager.paramsObj[name] = value;
 			if (name === "displayNewsPins")
 				Const.DISPLAY_NEWS_PINS = "true" === value;
 
@@ -318,7 +318,7 @@ namespace com.google.finance
 
 				displayManager.windowResized(Const.MOVIE_WIDTH, Const.MOVIE_HEIGHT);
 			}
-			if (name === "displayExtendedHours" && com.google.finance.MainManager.paramsObj.hasExtendedHours !== "false")
+			if (name === "displayExtendedHours" && MainManager.paramsObj.hasExtendedHours !== "false")
 			{
 				if (Boolean(value))
 					displayManager.setAfterHoursDisplay(true);
@@ -452,7 +452,7 @@ namespace com.google.finance
 			try
 			{
 				Utils.adjustExchangeNameOfArray(pinArray, "_quote");
-				com.google.finance.MainManager.paramsObj.differentDividendCurrency = com.google.finance.MainManager.paramsObj.differentDividendCurrency || Utils.hasDifferentDividendCurrency(com.google.finance.MainManager.paramsObj.companyCurrency, pinArray);
+				MainManager.paramsObj.differentDividendCurrency = MainManager.paramsObj.differentDividendCurrency || Utils.hasDifferentDividendCurrency(MainManager.paramsObj.companyCurrency, pinArray);
 				this.mainManager.addObjectArray(pinArray);
 				return;
 			}
@@ -464,7 +464,7 @@ namespace com.google.finance
 
 		shouldSkipExternalInterfaceCall(): boolean
 		{
-			return !JSProxy.isPlayingInBrowser() || !flash.external.ExternalInterface.available || com.google.finance.MainManager.paramsObj["disableExternalInterface"];
+			return !JSProxy.isPlayingInBrowser() || !flash.external.ExternalInterface.available || MainManager.paramsObj["disableExternalInterface"];
 		}
 
 		HTMLnotify(startDate: Date, endDate: Date, param3: number, param4: number, param5 = false)

@@ -24,7 +24,7 @@
 					listener.apply(null, rest);
 			}
 
-			flash.display.Graphics.cleanupPending();
+			display.Graphics.cleanupPending();
 		}
 	}
 }

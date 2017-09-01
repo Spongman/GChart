@@ -122,12 +122,12 @@ namespace com.google.i18n.locale
 		applyStandardPattern(dateTimeFormat: DateTimeFormats)
 		{
 			let pattern: string;
-			if (dateTimeFormat < 4)
+			if (dateTimeFormat < DateTimeFormats.FULL_TIME_FORMAT)
 				pattern = (<any>this.symbols).DATEFORMATS[dateTimeFormat];
-			else if (dateTimeFormat < 8)
-				pattern = (<any>this.symbols).TIMEFORMATS[dateTimeFormat - 4];
-			else if (dateTimeFormat < 12)
-				pattern = (<any>this.symbols).DATEFORMATS[dateTimeFormat - 8] + ' ' + (<any>this.symbols).TIMEFORMATS[dateTimeFormat - 8];
+			else if (dateTimeFormat < DateTimeFormats.FULL_DATETIME_FORMAT)
+				pattern = (<any>this.symbols).TIMEFORMATS[<number>dateTimeFormat - 4];
+			else if (dateTimeFormat <= DateTimeFormats.SHORT_DATETIME_FORMAT)
+				pattern = (<any>this.symbols).DATEFORMATS[<number>dateTimeFormat - 8] + ' ' + (<any>this.symbols).TIMEFORMATS[<number>dateTimeFormat - 8];
 			else
 			{
 				this.applyStandardPattern(DateTimeFormats.MEDIUM_DATETIME_FORMAT);

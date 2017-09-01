@@ -6,7 +6,7 @@
 	}
 
 	export class Timer
-		extends flash.events.EventDispatcherImpl
+		extends events.EventDispatcherImpl
 	{
 		private handle?: number;
 

@@ -5,7 +5,7 @@ namespace com.google.finance
 		private static buildEvent(chartEventType: ChartEventTypes, quote: string, period: string, interval: number, columns: string, chartEventStyle: ChartEventStyles = <ChartEventStyles>-1): ChartEvent
 		{
 			const chartEvent = new ChartEvent(chartEventType);
-			chartEvent.detailType = (chartEventStyle !== -1) ? chartEventStyle : null;
+			chartEvent.detailType = (chartEventStyle !== <ChartEventStyles>-1) ? chartEventStyle : null;
 			chartEvent.quote = quote;
 			chartEvent.period = period;
 			chartEvent.interval = "" + interval;

@@ -92,12 +92,12 @@ namespace flash.display
 
 		hitTestPoint(x: number, y: number, shapeFlag = false): boolean
 		{
-			const pt = this.globalToLocal(new flash.display.Point(x, y));
+			const pt = this.globalToLocal(new Point(x, y));
 			return pt.x >= 0 && pt.x < this.width &&
 				pt.y >= 0 && pt.y < this.height;
 		}
 
-		globalToLocal(point: flash.display.Point): flash.display.Point
+		globalToLocal(point: Point): Point
 		{
 			let node: DisplayObject = this;
 			do

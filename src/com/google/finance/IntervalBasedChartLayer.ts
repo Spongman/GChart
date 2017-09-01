@@ -72,7 +72,7 @@ namespace com.google.finance
 
 		getOhlcBasePrice(dataUnit1: DataUnit, dataUnit2: DataUnit | null): number
 		{
-			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
+			if (Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()))
 				return !dataUnit2 ? Number(dataUnit1.open) : dataUnit2.close;
 
 			return -1;
@@ -80,7 +80,7 @@ namespace com.google.finance
 
 		getCandleStickColor(dataUnit: DataUnit): number
 		{
-			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
+			if (Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()))
 				return dataUnit.close >= dataUnit.open ? Number(Const.POSITIVE_DIFFERENCE_COLOR) : Const.NEGATIVE_DIFFERENCE_COLOR;
 
 			return Const.LINE_CHART_LINE_COLOR;
@@ -233,7 +233,7 @@ namespace com.google.finance
 
 		getOhlcColor(dataUnit1: DataUnit, dataUnit2: DataUnit): number
 		{
-			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
+			if (Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()))
 				return dataUnit1.close >= dataUnit1.open ? Number(Const.POSITIVE_DIFFERENCE_COLOR) : Const.NEGATIVE_DIFFERENCE_COLOR;
 
 			return dataUnit1.close >= dataUnit2.close ? Number(Const.POSITIVE_DIFFERENCE_COLOR) : Const.NEGATIVE_DIFFERENCE_COLOR;

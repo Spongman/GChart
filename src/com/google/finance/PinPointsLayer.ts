@@ -13,7 +13,7 @@ namespace com.google.finance
 
 		private localYOffset = 0;
 		private lastAbsoluteHeightMax: number;
-		private pinPointContentMovie: com.google.finance.PinPointContentMovie;
+		private pinPointContentMovie: PinPointContentMovie;
 		private localYScale = 0;
 		private pinPointYWhenContentDisplayed = 0;
 		private activeMovies = 0;
@@ -23,11 +23,11 @@ namespace com.google.finance
 		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
 			super(viewPoint, dataSource);
-			this.pinPointContentMovie = new com.google.finance.PinPointContentMovie(viewPoint);
+			this.pinPointContentMovie = new PinPointContentMovie(viewPoint);
 			viewPoint.addChildToTopCanvas(this.pinPointContentMovie);
 		}
 
-		private getFlagGroupCount(context: Context, pinPoints: PinPoint[], pinIndex: number, detailLevel: number): number
+		private getFlagGroupCount(context: Context, pinPoints: PinPoint[], pinIndex: number, detailLevel: Intervals): number
 		{
 			let count = 1;
 			const pin = pinPoints[pinIndex];
@@ -148,7 +148,7 @@ namespace com.google.finance
 				this.pinPointContentMovie.renderMovie();
 		}
 
-		private renderFlagGroups(context: Context, pinPoints: PinPoint[], param3: number, param4: number, detailLevel: number)
+		private renderFlagGroups(context: Context, pinPoints: PinPoint[], param3: number, param4: number, detailLevel: Intervals)
 		{
 			const _loc7_: number[] = [];
 			const _loc8_: number[] = [];
@@ -215,7 +215,7 @@ namespace com.google.finance
 			return _loc5_.units[_loc4_];
 		}
 
-		private renderFlagsGroup(context: Context, param2: number, param3: number, param4: number, pinIndex: number, param6: number, pinPoints: PinPoint[], param8: number, pinOrientation: PinOrientations)
+		private renderFlagsGroup(context: Context, detailLevel: Intervals, param3: number, param4: number, pinIndex: number, param6: number, pinPoints: PinPoint[], param8: number, pinOrientation: PinOrientations)
 		{
 			this.lastAbsoluteHeightMin = param4 - param8 + PinPointsLayer.FLAG_HEIGHT;
 			let _loc10_ = false;

@@ -22,10 +22,10 @@ namespace com.google.finance
 		private leftX: number;
 		private rightX: number;
 
-		scrollSlider = new com.google.finance.ScrollSlider("scrollSlider");
+		scrollSlider = new ScrollSlider("scrollSlider");
 		initialX: number;
-		leftHandle: com.google.finance.DraggableHandle;
-		rightHandle: com.google.finance.DraggableHandle;
+		leftHandle: DraggableHandle;
+		rightHandle: DraggableHandle;
 		leftHandleXOffset = 0;
 		rightHandleXOffset = 0;
 
@@ -46,11 +46,11 @@ namespace com.google.finance
 			this.addChild(this.scrollSlider);
 			this.scrollSlider.y = viewPoint.maxy - 1;
 			this.scrollSlider.x = viewPoint.minx;
-			this.rightHandle = new com.google.finance.DraggableHandle(WindowLayer.SparkHandle, WindowLayer.SparkHandleActive);
+			this.rightHandle = new DraggableHandle(WindowLayer.SparkHandle, WindowLayer.SparkHandleActive);
 			this.rightHandle.y = Math.floor((viewPoint.maxy + viewPoint.miny) / 2 - this.rightHandle.height / 2);
 			this.rightHandle.x = viewPoint.minx;
 			this.addChild(this.rightHandle);
-			this.leftHandle = new com.google.finance.DraggableHandle(WindowLayer.SparkHandle, WindowLayer.SparkHandleActive);
+			this.leftHandle = new DraggableHandle(WindowLayer.SparkHandle, WindowLayer.SparkHandleActive);
 			this.leftHandle.y = Math.floor((viewPoint.maxy + viewPoint.miny) / 2 - this.leftHandle.height / 2);
 			this.leftHandle.x = viewPoint.minx;
 			this.addChild(this.leftHandle);
@@ -211,7 +211,7 @@ namespace com.google.finance
 			return data.units[data.getRelativeMinuteIndex(minute) + 1];
 		}
 
-		handleReleased(draggableHandle: com.google.finance.DraggableHandle)
+		handleReleased(draggableHandle: DraggableHandle)
 		{
 			let _loc7_ = NaN;
 			const _loc2_ = this.rightHandle.x + this.rightHandle.width / 2;

@@ -4,9 +4,9 @@ namespace com.google.finance
 	export class MainManager extends flash.display.Sprite
 	{
 		public static paramsObj: any;
-		public static jsProxy: com.google.finance.JSProxy;
-		public static console: com.google.finance.Console;
-		public static mouseCursor: com.google.finance.MouseCursor;
+		public static jsProxy: JSProxy;
+		public static console: Console;
+		public static mouseCursor: MouseCursor;
 
 		//private defaultDays: number;
 		private firstDataNotified = false;
@@ -17,8 +17,8 @@ namespace com.google.finance
 		private waitSizeIntId: number;
 
 		public quote: string;
-		public displayManager: com.google.finance.DisplayManager;
-		public layersManager: com.google.finance.LayersManager;
+		public displayManager: DisplayManager;
+		public layersManager: LayersManager;
 		public dataManager: DataManager;
 		public stickyArgs: string;
 		public url: string;
@@ -30,7 +30,7 @@ namespace com.google.finance
 			stage.addChild(this);
 
 			MainManager.paramsObj = window.loaderInfo.parameters;
-			MainManager.jsProxy = new com.google.finance.JSProxy(this);
+			MainManager.jsProxy = new JSProxy(this);
 			if (this.stage.stageWidth === 0)
 				this.waitSizeIntId = setInterval(flash.display.Stage.bind(this.checkSize, this), 20);
 			else
@@ -121,18 +121,18 @@ namespace com.google.finance
 				console.log("ERROR: No URL was provided!");
 			}
 			this.stickyArgs = MainManager.paramsObj.sa === undefined ? "" : MainManager.paramsObj.sa;
-			MainManager.console = new com.google.finance.Console(this);
+			MainManager.console = new Console(this);
 			this.checkParameters();
-			this.displayManager = new com.google.finance.DisplayManager(this);
+			this.displayManager = new DisplayManager(this);
 			this.addChild(this.displayManager);
 			this.addChild(MainManager.console);
-			this.dataManager = new com.google.finance.DataManager(this, this.startTime, this.endTime);
+			this.dataManager = new DataManager(this, this.startTime, this.endTime);
 			this.displayManager.init(this.stage.stageWidth, this.stage.stageHeight);
-			this.layersManager = new com.google.finance.LayersManager(this.displayManager, this);
+			this.layersManager = new LayersManager(this.displayManager, this);
 			const _loc4_ = MainManager.paramsObj.compareTo && MainManager.paramsObj.compareToDiffMarketSessions && MainManager.paramsObj.compareToDiffMarketSessions.indexOf('1') !== -1;
 			this.getQuote(this.quote, MainManager.paramsObj.displayName, Const.getDefaultDisplayDays(_loc4_), true);
 			this.addDefaultCompareToTickers();
-			MainManager.mouseCursor = new com.google.finance.MouseCursor();
+			MainManager.mouseCursor = new MouseCursor();
 			this.addChild(MainManager.mouseCursor);
 			MainManager.mouseCursor.initListeners();
 			MainManager.jsProxy.initIndicators();
@@ -179,9 +179,9 @@ namespace com.google.finance
 			if (Const.INDICATOR_ENABLED)
 				Const.SPARKLINE_HEIGHT -= 20;
 
-			Const.VOLUME_PLUS_ENABLED = "true" === String(Utils.checkUndefined(MainManager.paramsObj.enableVolumePlus, Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale())));
-			Const.CHART_TYPE_BUTTONS_ENABLED = "true" === String(Utils.checkUndefined(MainManager.paramsObj.enableChartTypeButtons, Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale())));
-			Const.APPLY_CHINESE_STYLE_MACD = "true" === String(Utils.checkUndefined(MainManager.paramsObj.applyChineseStyleMacd, com.google.i18n.locale.DateTimeLocale.getLocale() === Const.ZH_CN_LOCALE));
+			Const.VOLUME_PLUS_ENABLED = "true" === String(Utils.checkUndefined(MainManager.paramsObj.enableVolumePlus, Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale())));
+			Const.CHART_TYPE_BUTTONS_ENABLED = "true" === String(Utils.checkUndefined(MainManager.paramsObj.enableChartTypeButtons, Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale())));
+			Const.APPLY_CHINESE_STYLE_MACD = "true" === String(Utils.checkUndefined(MainManager.paramsObj.applyChineseStyleMacd, i18n.locale.DateTimeLocale.getLocale() === Const.ZH_CN_LOCALE));
 			Const.EXPAND_BUTTON_ENABLED = "true" === String(Utils.checkUndefined(MainManager.paramsObj.expandButtonEnabled, false));
 			Const.SHRINK_BUTTON_ENABLED = "true" === String(Utils.checkUndefined(MainManager.paramsObj.shrinkButtonEnabled, false));
 			if (MainManager.paramsObj.lclc !== undefined)
@@ -305,7 +305,7 @@ namespace com.google.finance
 			{
 				_loc5_ = Const.getDefaultDisplayDays();
 			}
-			if (Const.INDICATOR_ENABLED && Const.DEFAULT_CHART_STYLE_NAME !== Const.LINE_CHART && this.layersManager.getStyle() === com.google.finance.LayersManager.SINGLE)
+			if (Const.INDICATOR_ENABLED && Const.DEFAULT_CHART_STYLE_NAME !== Const.LINE_CHART && this.layersManager.getStyle() === LayersManager.SINGLE)
 				this.getQuoteForBarChart(param1, _loc5_, param4);
 			else
 				this.getQuoteForLineChart(param1, _loc5_, param4);
@@ -351,12 +351,12 @@ namespace com.google.finance
 			this.dataManager.eventHandler(_loc6_, !param3);
 		}
 
-		private shouldToggleAfterHours(detailLevel: number): boolean
+		private shouldToggleAfterHours(detailLevel: Intervals): boolean
 		{
 			if (Boolean(MainManager.paramsObj.forceDisplayExtendedHours))
 				return true;
 
-			if (MainManager.paramsObj.displayExtendedHours !== "true" || this.layersManager.getStyle() !== com.google.finance.LayersManager.SINGLE)
+			if (MainManager.paramsObj.displayExtendedHours !== "true" || this.layersManager.getStyle() !== LayersManager.SINGLE)
 				return false;
 
 			if (detailLevel === Intervals.INTRADAY || Const.INDICATOR_ENABLED && detailLevel < Intervals.DAILY && this.displayManager.getEnabledChartLayer() === Const.LINE_CHART)
@@ -375,8 +375,8 @@ namespace com.google.finance
 			this.quoteType = Const.getQuoteType(this.quote);
 			this.dataManager.checkDataSourceExistance(this.quote, param2);
 			this.layersManager.replaceFirstDataSource(this.dataManager.dataSources[this.quote]);
-			const _loc5_ = this.layersManager.numComparedTickers() > 0 ? com.google.finance.LayersManager.COMPARISON : com.google.finance.LayersManager.SINGLE;
-			const style = !!param3 ? com.google.finance.LayersManager.PERCENT : _loc5_;
+			const _loc5_ = this.layersManager.numComparedTickers() > 0 ? LayersManager.COMPARISON : LayersManager.SINGLE;
+			const style = !!param3 ? LayersManager.PERCENT : _loc5_;
 			this.layersManager.resetLayersForNewQuote(this.dataManager.dataSources[this.quote], style);
 			if (this.dataManager.dataSources[this.quote].isEmpty())
 			{
@@ -420,7 +420,7 @@ namespace com.google.finance
 			{
 				_loc5_ = EventFactory.getEvent(ChartEventStyles.GET_5D_DATA, param1, ChartEventPriorities.REQUIRED);
 			}
-			if (this.layersManager.getStyle() === com.google.finance.LayersManager.SINGLE && Const.INDICATOR_ENABLED && this.quoteType === QuoteTypes.COMPANY)
+			if (this.layersManager.getStyle() === LayersManager.SINGLE && Const.INDICATOR_ENABLED && this.quoteType === QuoteTypes.COMPANY)
 			{
 				if (param2 <= Const.HALF_HOUR_DAYS && param2 > Const.FIVE_MINUTE_DAYS)
 					_loc8_ = EventFactory.getEvent(ChartEventStyles.GET_30D_DATA, param1, ChartEventPriorities.REQUIRED);

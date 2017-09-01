@@ -50,15 +50,15 @@ namespace com.google.finance
 
 		displayDateInParseableFormat()
 		{
-			this.text = com.google.i18n.locale.DateTimeLocale.formatDateTime(DateTextField.PARSEABLE_FORMAT, this.date, true);
+			this.text = i18n.locale.DateTimeLocale.formatDateTime(DateTextField.PARSEABLE_FORMAT, this.date, true);
 		}
 
 		displayDateInLocalizedFormat()
 		{
-			if (Const.isZhLocale(com.google.i18n.locale.DateTimeLocale.getLocale()))
-				this.text = com.google.i18n.locale.DateTimeLocale.standardFormatDateTime(com.google.i18n.locale.DateTimeFormats.LONG_DATE_FORMAT, this.date, true);
+			if (Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()))
+				this.text = i18n.locale.DateTimeLocale.standardFormatDateTime(i18n.locale.DateTimeFormats.LONG_DATE_FORMAT, this.date, true);
 			else
-				this.text = com.google.i18n.locale.DateTimeLocale.formatDateTime(DateTextField.LOCALIZED_FORMAT, this.date, true);
+				this.text = i18n.locale.DateTimeLocale.formatDateTime(DateTextField.LOCALIZED_FORMAT, this.date, true);
 		}
 
 		parseUtcDate(): boolean

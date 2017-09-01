@@ -110,7 +110,7 @@ namespace com.google.finance.indicator
 			this.indicator.setDataSeries(interval, dataSeries2, 2);
 		}
 
-		setIndicatorInstanceArray(indicators: com.google.finance.indicator.MACDIndicatorLayer[])
+		setIndicatorInstanceArray(indicators: MACDIndicatorLayer[])
 		{
 			if (!indicators || indicators.length !== 1)
 				return;

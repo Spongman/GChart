@@ -65,8 +65,10 @@
 		"prefer-conditional-expression": false,
 		"no-angle-bracket-type-assertion": false,
 		"no-any": false,
+		"no-unsafe-any": false,
 		"no-stateless-class": false,
-
+		"quotemark": false,
+			
 
 		/**
          * Security Rules. The following rules should be turned on because they find security issues
@@ -152,7 +154,7 @@
 		"no-unnecessary-callback-wrapper": true,
 		"no-unnecessary-initializer": true,
 		"no-unnecessary-override": true,
-		"no-unsafe-any": true,
+		//"no-unsafe-any": true,
 		"no-unsafe-finally": true,
 		"no-unused-expression": true,
 		"no-use-before-declare": true,
@@ -162,8 +164,8 @@
 		"radix": true,
 		"react-this-binding-issue": true,
 		"react-unused-props-and-state": true,
-		"restrict-plus-operands": true, // the plus operand should really only be used for strings and numbers
-		"strict-boolean-expressions": true,
+		//"restrict-plus-operands": true, // the plus operand should really only be used for strings and numbers
+		//"strict-boolean-expressions": true,
 		//"switch-default": true,
 		"triple-equals": [
 			true,
@@ -187,10 +189,12 @@
 		"chai-vague-errors": true,
 		//"class-name": true,
 		//"comment-format": true,
+		/*
 		"completed-docs": [
 			true,
 			"classes"
 		],
+		*/
 		"export-name": true,
 		//"function-name": true,
 		"import-name": true,
@@ -337,10 +341,12 @@
 			"check-whitespace"
 		],
 		*/
+		/*
 		"quotemark": [
 			true
 			//"single"
 		],
+		*/
 		"react-tsx-curly-spacing": true,
 		"semicolon": [
 			true,

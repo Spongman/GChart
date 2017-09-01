@@ -57,7 +57,7 @@ gulp.task("tslint", ['typescript'], () => {
 	var program = tslint.Linter.createProgram("./src/tsconfig.json");
 
 	return gulp.src('./src/**/*.ts', { base: './src' })
-		.pipe(gulpTslint({ program }))
+		.pipe(gulpTslint({ program, formatter: "verbose" }))
 		.pipe(gulpTslint.report());
 		
 	/*

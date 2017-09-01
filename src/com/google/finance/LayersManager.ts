@@ -54,11 +54,11 @@ namespace com.google.finance
 		readonly config: Map<LayerConfig> = {};
 		layers: LayerInfo[] = [];
 
-		constructor(private readonly displayManager: com.google.finance.DisplayManager, private readonly mainManager: com.google.finance.MainManager)
+		constructor(private readonly displayManager: DisplayManager, private readonly mainManager: MainManager)
 		{
 			//TODO: this.registerLayerClasses();
 			this.displayManager.layersManager = this;
-			const paramsObj = com.google.finance.MainManager.paramsObj;
+			const paramsObj = MainManager.paramsObj;
 			const _loc4_ = Utils.decodeObjects(paramsObj.single_layers);
 			const _loc5_ = Utils.decodeObjects(paramsObj.single_viewpoints);
 			this.config[LayersManager.SINGLE] = new LayerConfig();
@@ -265,7 +265,7 @@ namespace com.google.finance
 				if (_loc15_ === Const.CANDLE_STICK || _loc15_ === Const.OHLC_CHART)
 				{
 					mainController.toggleZoomIntervalButtons(Const.LINE_CHART, _loc15_);
-					if (Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
+					if (Boolean(MainManager.paramsObj.displayExtendedHours))
 						this.displayManager.toggleAllAfterHoursSessions(mainController.currentIntervalLevel === Intervals.INTRADAY);
 				}
 			}
@@ -701,9 +701,9 @@ namespace com.google.finance
 					this.displayManager.mainController.enableIntervalButtons(Const.DEFAULT_D);
 					this.displayManager.mainController.currentIntervalLevel = Const.DEFAULT_D;
 					let _loc4_ = 0;
-					if (!isNaN(com.google.finance.MainManager.paramsObj.defaultEndTime))
+					if (!isNaN(MainManager.paramsObj.defaultEndTime))
 					{
-						const defaultEndTime = com.google.finance.MainManager.paramsObj.defaultEndTime;
+						const defaultEndTime = MainManager.paramsObj.defaultEndTime;
 						if (defaultEndTime > 0)
 						{
 							const detailLevelInterval = Const.getDetailLevelInterval(Const.DEFAULT_D);
@@ -719,7 +719,7 @@ namespace com.google.finance
 						_loc6_ = Const.DEFAULT_DISPLAY_MINUTES;
 
 					this.displayManager.mainController.animateTo(_loc4_, _loc6_, 1);
-					com.google.finance.MainManager.jsProxy.setJsCurrentViewParam("defaultDisplayInterval", Const.getDetailLevelInterval(Const.DEFAULT_D));
+					MainManager.jsProxy.setJsCurrentViewParam("defaultDisplayInterval", Const.getDetailLevelInterval(Const.DEFAULT_D));
 				}
 			}
 			else
@@ -756,7 +756,7 @@ namespace com.google.finance
 		setStyle(style: string)
 		{
 			if (Const.INDICATOR_ENABLED)
-				com.google.finance.MainManager.jsProxy.resetChartHeight(this.chartHeightInStyle[style]);
+				MainManager.jsProxy.resetChartHeight(this.chartHeightInStyle[style]);
 
 			const viewpoints = this.config[style].viewpoints;
 			const viewPoints = this.displayManager.getViewPoints();
@@ -786,7 +786,7 @@ namespace com.google.finance
 				else
 					_loc7_ = !!Const.INDICATOR_ENABLED ? mainViewPoint.getDetailLevelForTechnicalStyle() : mainViewPoint.getDetailLevel();
 
-				if (_loc7_ === Intervals.INTRADAY && Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
+				if (_loc7_ === Intervals.INTRADAY && Boolean(MainManager.paramsObj.displayExtendedHours))
 					this.displayManager.toggleAllAfterHoursSessions(true);
 			}
 			this.displayManager.windowResized(this.displayManager.stage.stageWidth, this.displayManager.stage.stageHeight);
@@ -825,7 +825,7 @@ namespace com.google.finance
 		getDefaultZoomPair(dataSource: DataSource): StartEndPair
 		{
 			let _loc2_ = 0;
-			const paramsObj = com.google.finance.MainManager.paramsObj;
+			const paramsObj = MainManager.paramsObj;
 			if (paramsObj.defaultEndTime !== undefined && !isNaN(paramsObj.defaultEndTime))
 			{
 				const defaultEndTime = Number(paramsObj.defaultEndTime);

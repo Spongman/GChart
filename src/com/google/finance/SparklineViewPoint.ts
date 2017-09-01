@@ -25,28 +25,28 @@ namespace com.google.finance
 		//private currentSparkTimeLength = 0;
 		private readonly ScrollbarButtonRight = SparklineViewPoint_ScrollbarButtonRight;
 		private sparklineType: string;
-		private graySparkline: com.google.finance.SparklineLayer;
+		private graySparkline: SparklineLayer;
 		private layers: AbstractLayer<SparklineViewPoint>[] = [];
 		private passiveLayers: AbstractLayer<SparklineViewPoint>[] = [];
-		private sparkline: com.google.finance.SparklineLayer;
+		private sparkline: SparklineLayer;
 		private readonly rightScrollButton = new flash.display.SimpleButton("rightScrollButton");
 		private displayThresholds: { chartDays: number, sparkDays: number }[];
 		// private textCanvas: flash.display.Sprite;
 		private readonly scrollBg = new flash.display.Sprite("scrollBg");
 		private readonly ScrollbarButtonLeft = SparklineViewPoint_ScrollbarButtonLeft;
-		// private displayManager: com.google.finance.DisplayManager;
+		// private displayManager: DisplayManager;
 
 		sparkLastMinute: number;
 		my_minx: number;
 		my_miny: number;
 		sparkCount: number;
-		windowLayer: com.google.finance.WindowLayer;
+		windowLayer: WindowLayer;
 		readonly bg = new flash.display.Sprite("bg");
 		my_maxx: number;
 		my_maxy: number;
 		lastMinute: number;
-		dataSource: com.google.finance.DataSource;
-		//myController: com.google.finance.Controller;
+		dataSource: DataSource;
+		//myController: Controller;
 		sparkButtonMinutes: number;
 		sparkMinutesOffset: number = 0;
 		hourTextFormat: flash.text.TextFormat;
@@ -54,7 +54,7 @@ namespace com.google.finance
 		readonly dateTextFormat = new flash.text.TextFormat("Verdana", 10, 0x6f6f6f);
 		topBorder = 0;
 
-		constructor(private readonly dataManager: com.google.finance.DataManager, readonly displayManager: com.google.finance.DisplayManager)
+		constructor(private readonly dataManager: DataManager, readonly displayManager: DisplayManager)
 		{
 			super(displayManager);
 
@@ -144,14 +144,14 @@ namespace com.google.finance
 			return this.maxx - this.minx;
 		}
 
-		generateEvent(style: ChartEventStyles, dataSource: com.google.finance.DataSource)
+		generateEvent(style: ChartEventStyles, dataSource: DataSource)
 		{
 			const event = EventFactory.getEvent(style, dataSource.quoteName, ChartEventPriorities.OPTIONAL);
 			this.dataManager.expectEvent(event);
 			this.dataManager.eventHandler(event);
 		}
 
-		addLayer(layerTypeName: string, dataSource: com.google.finance.DataSource, name: string): AbstractLayer<IViewPoint> | null
+		addLayer(layerTypeName: string, dataSource: DataSource, name: string): AbstractLayer<IViewPoint> | null
 		{
 			if (layerTypeName === "")
 				return null;
@@ -161,7 +161,7 @@ namespace com.google.finance
 			const layer = new layerType(this, dataSource);
 			layer.name = name;
 			layer.layerId = name;
-			if (layer instanceof com.google.finance.WindowLayer)
+			if (layer instanceof WindowLayer)
 			{
 				if (this.windowLayer && this.contains(this.windowLayer))
 				{
@@ -230,7 +230,7 @@ namespace com.google.finance
 			this.scrollBg.width = this.maxx - this.minx;
 		}
 
-		replaceSparklineDataSource(dataSource: com.google.finance.DataSource)
+		replaceSparklineDataSource(dataSource: DataSource)
 		{
 			this.sparkline.dataSource = dataSource;
 			this.graySparkline.dataSource = dataSource;
@@ -395,7 +395,7 @@ namespace com.google.finance
 			this.moveMask();
 		}
 
-		setController(controller: com.google.finance.Controller)
+		setController(controller: Controller)
 		{
 			controller.addControlListener(this, TickPositions.BOTTOM);
 			this.myController = controller;
@@ -593,7 +593,7 @@ namespace com.google.finance
 			}
 		}
 
-		private addDataSource(dataSource: com.google.finance.DataSource)
+		private addDataSource(dataSource: DataSource)
 		{
 			if (!this.dataSource)
 			{
@@ -605,7 +605,7 @@ namespace com.google.finance
 
 				this.sparkButtonMinutes = (this.leftScrollButton.width - 2) * this.sparkCount / (this.my_maxx - this.my_minx);
 				this.sparkLastMinute = 0;
-				this.graySparkline = new com.google.finance.SparklineLayer(this, dataSource);
+				this.graySparkline = new SparklineLayer(this, dataSource);
 				this.graySparkline.layerId = "GraySparkline";
 				this.graySparkline.fillColor = Const.SPARK_INACTIVE_FILL_COLOR;
 				this.graySparkline.lineColor = Const.SPARK_INACTIVE_LINE_COLOR;
@@ -614,7 +614,7 @@ namespace com.google.finance
 				this.graySparkline.bgColor = 0xffffff;
 				this.graySparkline.borderColor = 0xdddddd;
 				this.passiveLayers.push(this.graySparkline);
-				this.sparkline = new com.google.finance.SparklineLayer(this, dataSource);
+				this.sparkline = new SparklineLayer(this, dataSource);
 				this.sparkline.layerId = "Sparkline";
 				this.sparkline.fillColor = Const.SPARK_ACTIVE_FILL_COLOR;
 				this.sparkline.lineColor = Const.SPARK_ACTIVE_LINE_COLOR;

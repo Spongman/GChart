@@ -6,7 +6,7 @@
 	}
 
 	export class URLLoader
-		extends flash.events.EventDispatcherImpl
+		extends events.EventDispatcherImpl
 	{
 		data: any;
 

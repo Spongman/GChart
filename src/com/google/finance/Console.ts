@@ -7,7 +7,7 @@ namespace com.google.finance
 
 	export class Console extends flash.display.Sprite
 	{
-		private readonly loading = new com.google.finance.LoadingMessage();
+		private readonly loading = new LoadingMessage();
 		private pendingLoadings = 0;
 		private t: flash.text.TextField;
 

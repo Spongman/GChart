@@ -6,7 +6,7 @@ namespace com.google.finance
 
 		readonly dataSources: Map<DataSource> = {};
 
-		constructor(public readonly mainManager: com.google.finance.MainManager, private startTime = NaN, private endTime = NaN)
+		constructor(public readonly mainManager: MainManager, private startTime = NaN, private endTime = NaN)
 		{
 		}
 
@@ -125,21 +125,21 @@ namespace com.google.finance
 		private getQuoteData(param1: string, param2: string, chartEvent: ChartEvent, param4: boolean)
 		{
 			const quoteSymbol = Utils.getSymbolFromTicker(chartEvent.quote);
-			if (com.google.finance.MainManager.paramsObj[quoteSymbol + "_data_" + chartEvent.period] === "javascript")
+			if (MainManager.paramsObj[quoteSymbol + "_data_" + chartEvent.period] === "javascript")
 			{
-				com.google.finance.MainManager.jsProxy.getData(chartEvent.quote, chartEvent.period);
+				MainManager.jsProxy.getData(chartEvent.quote, chartEvent.period);
 				return;
 			}
 			if (!(Const.INDICATOR_ENABLED && param4))
 			{
-				if (com.google.finance.MainManager.paramsObj[quoteSymbol + "_data_" + chartEvent.period] !== undefined && chartEvent.type !== ChartEventTypes.GET_AH_DATA)
+				if (MainManager.paramsObj[quoteSymbol + "_data_" + chartEvent.period] !== undefined && chartEvent.type !== ChartEventTypes.GET_AH_DATA)
 				{
-					this.addData(chartEvent, decodeURIComponent(com.google.finance.MainManager.paramsObj[quoteSymbol + "_data_" + chartEvent.period]));
+					this.addData(chartEvent, decodeURIComponent(MainManager.paramsObj[quoteSymbol + "_data_" + chartEvent.period]));
 					return;
 				}
-				if (com.google.finance.MainManager.paramsObj[quoteSymbol + "_data_ah"] !== undefined && chartEvent.type === ChartEventTypes.GET_AH_DATA)
+				if (MainManager.paramsObj[quoteSymbol + "_data_ah"] !== undefined && chartEvent.type === ChartEventTypes.GET_AH_DATA)
 				{
-					this.addData(chartEvent, decodeURIComponent(com.google.finance.MainManager.paramsObj[quoteSymbol + "_data_ah"]));
+					this.addData(chartEvent, decodeURIComponent(MainManager.paramsObj[quoteSymbol + "_data_ah"]));
 					return;
 				}
 			}

@@ -26,7 +26,7 @@
 	}
 
 	export class TextField
-		extends flash.display.InteractiveObject
+		extends display.InteractiveObject
 	{
 		type: TextFieldType = TextFieldType.INPUT;
 		autoSize: string;

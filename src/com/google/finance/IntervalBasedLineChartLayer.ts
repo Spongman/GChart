@@ -2,11 +2,11 @@ namespace com.google.finance
 {
 	export class IntervalBasedLineChartLayer extends IntervalBasedChartLayer
 	{
-		private drawLine(param1: number, context: Context, dataUnit: DataUnit[], param4: number, param5: number, param6: number, param7: number): number
+		private drawLine(detailLevel: Intervals, context: Context, dataUnit: DataUnit[], param4: number, param5: number, param6: number, param7: number): number
 		{
 			let _loc8_ = NaN;
 			const gr = this.graphics;
-			switch (param1)
+			switch (detailLevel)
 			{
 				case Intervals.DAILY:
 				case Intervals.WEEKLY:

@@ -16,12 +16,12 @@ namespace com.google.finance
 		private viewpoints: IViewPoint[] = [];
 		private differentMarketSessionComparison: boolean;
 
-		layersManager: com.google.finance.LayersManager;
-		mainController: com.google.finance.Controller;
-		spaceText: com.google.finance.SpaceText;
-		topBorderLayer: com.google.finance.BorderLayer;
+		layersManager: LayersManager;
+		mainController: Controller;
+		spaceText: SpaceText;
+		topBorderLayer: BorderLayer;
 
-		constructor(public readonly mainManager: com.google.finance.MainManager)
+		constructor(public readonly mainManager: MainManager)
 		{
 			super();
 			if (mainManager)
@@ -34,7 +34,7 @@ namespace com.google.finance
 			const units = dataSource.data.units;
 			const map: Map<number> = {};
 			//for (const pointIndex in points)
-			for (var pointIndex = 0; pointIndex < points.length; pointIndex++)
+			for (let pointIndex = 0; pointIndex < points.length; pointIndex++)
 			{
 				const pointUnits = points[pointIndex];
 				if (<Intervals>pointIndex === Intervals.FIVE_MINUTES && pointUnits[pointUnits.length - 1].dayMinute % 2 === 1)
@@ -44,37 +44,37 @@ namespace com.google.finance
 			}
 			for (let unitIndex = units.length - 1; unitIndex >= 0; unitIndex--)
 			{
-				for (const pointIndex in points)
+				for (let pointIndex2 = 0; pointIndex2 < points.length; pointIndex2++)
 				{
-					const point = points[pointIndex];
-					if (map[pointIndex] >= 0 && point[map[pointIndex]].time === units[unitIndex].time)
+					const point = points[pointIndex2];
+					if (map[pointIndex2] >= 0 && point[map[pointIndex2]].time === units[unitIndex].time)
 					{
-						point[map[pointIndex]].relativeMinutes = units[unitIndex].relativeMinutes;
-						map[pointIndex]--;
+						point[map[pointIndex2]].relativeMinutes = units[unitIndex].relativeMinutes;
+						map[pointIndex2]--;
 					}
-					while (map[pointIndex] >= 0 && (point[map[pointIndex]].time > units[unitIndex].time || unitIndex === 0))
+					while (map[pointIndex2] >= 0 && (point[map[pointIndex2]].time > units[unitIndex].time || unitIndex === 0))
 					{
-						let session = notnull(dataSource.data.getSessionForMinute(point[map[pointIndex]].dayMinute));
-						const _loc10_ = session.end - point[map[pointIndex]].dayMinute;
-						if (_loc10_ < Number(pointIndex) / Const.SEC_PER_MINUTE)
+						let session = notnull(dataSource.data.getSessionForMinute(point[map[pointIndex2]].dayMinute));
+						const _loc10_ = session.end - point[map[pointIndex2]].dayMinute;
+						if (_loc10_ < Number(pointIndex2) / Const.SEC_PER_MINUTE)
 						{
-							if (point.length <= map[pointIndex] + 1)
+							if (point.length <= map[pointIndex2] + 1)
 							{
-								point[map[pointIndex]].relativeMinutes = -_loc10_;
+								point[map[pointIndex2]].relativeMinutes = -_loc10_;
 							}
 							else
 							{
-								session = notnull(dataSource.data.getSessionForMinute(point[map[pointIndex] + 1].dayMinute));
-								point[map[pointIndex]].relativeMinutes = point[map[pointIndex] + 1].relativeMinutes - (point[map[pointIndex] + 1].dayMinute - session.start) - 1 - _loc10_;
+								session = notnull(dataSource.data.getSessionForMinute(point[map[pointIndex2] + 1].dayMinute));
+								point[map[pointIndex2]].relativeMinutes = point[map[pointIndex2] + 1].relativeMinutes - (point[map[pointIndex2] + 1].dayMinute - session.start) - 1 - _loc10_;
 								if (session.start !== dataSource.data.marketOpenMinute)
-									point[map[pointIndex]].relativeMinutes++;
+									point[map[pointIndex2]].relativeMinutes++;
 							}
 						}
 						else
 						{
-							point[map[pointIndex]].relativeMinutes = point[map[pointIndex] + 1].relativeMinutes - (point[map[pointIndex] + 1].dayMinute - point[map[pointIndex]].dayMinute);
+							point[map[pointIndex2]].relativeMinutes = point[map[pointIndex2] + 1].relativeMinutes - (point[map[pointIndex2] + 1].dayMinute - point[map[pointIndex2]].dayMinute);
 						}
-						map[pointIndex]--;
+						map[pointIndex2]--;
 					}
 				}
 			}
@@ -82,7 +82,7 @@ namespace com.google.finance
 
 		hasOhlcRequiredIndicator(): boolean
 		{
-			const layers = this.layersManager.config[com.google.finance.LayersManager.SINGLE].layers;
+			const layers = this.layersManager.config[LayersManager.SINGLE].layers;
 			for (const layer of layers)
 			{
 				if (Const.OHLC_DEPENDENT_INDICATOR_NAMES.indexOf(layer.name) !== -1 && Boolean(layer.enabled))
@@ -117,7 +117,7 @@ namespace com.google.finance
 
 		init(width: number, height: number)
 		{
-			this.mainController = new com.google.finance.Controller(this.mainManager, this);
+			this.mainController = new Controller(this.mainManager, this);
 			let sparklineViewPoint: SparklineViewPoint | null = null;
 			if (Boolean(Const.SHOW_SPARKLINE))
 			{
@@ -137,19 +137,19 @@ namespace com.google.finance
 			{
 				this.viewpoints.push(null!);	// TODO: really?
 			}
-			const viewPoints = Utils.decodeObjects(com.google.finance.MainManager.paramsObj.single_viewpoints) as ViewPoint[];
+			const viewPoints = Utils.decodeObjects(MainManager.paramsObj.single_viewpoints) as ViewPoint[];
 			for (const viewPoint of viewPoints)
 			{
 				if (viewPoint.display !== "hidden")
 					this.addViewPoint("ViewPoint", viewPoint.name, this.stage.stageWidth, Number(viewPoint.height), Number(viewPoint.topMargin), width, height);
 			}
-			this.spaceText = new com.google.finance.SpaceText(this);
+			this.spaceText = new SpaceText(this);
 			this.spaceText.y = 0;
 			this.spaceText.x = 0;
 			this.addChild(this.spaceText);
 			if (Boolean(Const.SHOW_SPARKLINE))
 			{
-				this.topBorderLayer = new com.google.finance.BorderLayer(this, notnull(sparklineViewPoint));
+				this.topBorderLayer = new BorderLayer(this, notnull(sparklineViewPoint));
 				this.addChild(this.topBorderLayer);
 			}
 			this.resizeViewPoints(width, height);
@@ -173,7 +173,7 @@ namespace com.google.finance
 
 		isIndicatorConfigEnabled(name: string): boolean
 		{
-			const layers = this.layersManager.config[com.google.finance.LayersManager.SINGLE].layers;
+			const layers = this.layersManager.config[LayersManager.SINGLE].layers;
 			for (const layer of layers)
 			{
 				if (layer.name === name)
@@ -221,7 +221,7 @@ namespace com.google.finance
 				if (!firstDataSource)
 					return;
 
-				if (this.mainController.currentZoomLevel !== -1)
+				if (this.mainController.currentZoomLevel !== <ScaleTypes>-1)
 				{
 					this.mainController.syncZoomLevel();
 				}
@@ -323,7 +323,7 @@ namespace com.google.finance
 
 		enableIndicatorConfig(layerName: string, param2 = true)
 		{
-			const layers = this.layersManager.config[com.google.finance.LayersManager.SINGLE].layers;
+			const layers = this.layersManager.config[LayersManager.SINGLE].layers;
 			for (const layer of layers)
 			{
 				if (layer.name === layerName)
@@ -403,8 +403,8 @@ namespace com.google.finance
 			if (firstDataSource)
 			{
 				const numberOfDays = this.getNumberOfDaysForCount(mainViewPoint.count, mainViewPoint.lastMinute, firstDataSource);
-				com.google.finance.MainManager.jsProxy.HTMLnotify(firstDate, lastDate, numberOfDays, mainViewPoint.count, param2);
-				com.google.finance.MainManager.jsProxy.setForceDisplayExtendedHours(firstDataSource);
+				MainManager.jsProxy.HTMLnotify(firstDate, lastDate, numberOfDays, mainViewPoint.count, param2);
+				MainManager.jsProxy.setForceDisplayExtendedHours(firstDataSource);
 			}
 		}
 
@@ -694,7 +694,7 @@ namespace com.google.finance
 			{
 				for (const layer of viewPoint.getLayers())
 				{
-					if (layer instanceof google.finance.indicator.IndicatorLayer)
+					if (layer instanceof indicator.IndicatorLayer)
 					{
 						if (indicatorName === layer.getIndicatorName())
 							layer.setEnabled(enabled);
@@ -735,7 +735,7 @@ namespace com.google.finance
 				const detailLevel = this.getDetailLevel();
 				const _loc8_ = !!Const.INDICATOR_ENABLED ? this.getEnabledChartLayer() : "";
 				const _loc9_ = detailLevel === Intervals.INTRADAY || _loc8_ === Const.LINE_CHART && detailLevel < Intervals.DAILY;
-				if (_loc9_ && this.layersManager.getStyle() === com.google.finance.LayersManager.SINGLE)
+				if (_loc9_ && this.layersManager.getStyle() === LayersManager.SINGLE)
 				{
 					this.toggleAllAfterHoursSessions(param1, _loc3_);
 					if (_loc8_ === Const.CANDLE_STICK || _loc8_ === Const.OHLC_CHART)
@@ -769,13 +769,13 @@ namespace com.google.finance
 			{
 				if (layer instanceof IntervalBasedChartManagerLayer)
 				{
-					if (Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
+					if (Boolean(MainManager.paramsObj.displayExtendedHours))
 					{
 						if ((!dataSource || dataSource.visibleExtendedHours.length() > 0) && layerType !== Const.LINE_CHART && layer.getEnabledLayerName() === Const.LINE_CHART)
 							this.setAfterHoursDisplay(false);
 					}
 					layer.setEnabledLayer(layerType);
-					if (Boolean(com.google.finance.MainManager.paramsObj.displayExtendedHours))
+					if (Boolean(MainManager.paramsObj.displayExtendedHours))
 					{
 						if ((!dataSource || dataSource.visibleExtendedHours.length() === 0) && Const.CHART_STYLE_NAMES.indexOf(layerType) !== -1)
 							this.setAfterHoursDisplay(true);

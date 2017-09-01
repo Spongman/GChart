@@ -13,7 +13,7 @@ namespace com.google.finance
 
 		private localYOffset = 0;
 		private lastAbsoluteHeightMax: number;
-		private pinPointContentMovie: com.google.finance.PinPointContentMovie;
+		private pinPointContentMovie: PinPointContentMovie;
 		private localYScale = 0;
 		private pinPointYWhenContentDisplayed = 0;
 		private activeMovies: number = 0;
@@ -23,7 +23,7 @@ namespace com.google.finance
 		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
 			super(viewPoint, dataSource);
-			this.pinPointContentMovie = new com.google.finance.PinPointContentMovie(viewPoint);
+			this.pinPointContentMovie = new PinPointContentMovie(viewPoint);
 			viewPoint.addChildToTopCanvas(this.pinPointContentMovie);
 		}
 

@@ -22,9 +22,9 @@ namespace com.google.finance
 		{
 			this.clearHighlight();
 			const originalDataSeries = this.originalDataSeries;
-			const x = this.viewPoint.getXPos(originalDataSeries.units[0]);
+			const xPos = this.viewPoint.getXPos(originalDataSeries.units[0]);
 			//const _loc7_ = this.viewPoint.getXPos(_loc4_.units[_loc4_.points.length - 1]);
-			if (param2 < x)
+			if (param2 < xPos)
 				return;
 
 			let unit: DataUnit;
@@ -79,11 +79,11 @@ namespace com.google.finance
 			const gr = sprite.graphics;
 			gr.lineStyle(Const.LINE_CHART_LINE_THICKNESS, this.lineColor, Const.LINE_CHART_LINE_VISIBILITY);
 			let nextDayStart = dataSeries.getNextDayStart(param3);
-			let day = days[nextDayStart];
-			while (day > param2 && units[day].fake)
-				day--;
+			let _loc10_ = days[nextDayStart];
+			while (_loc10_ > param2 && units[_loc10_].fake)
+				_loc10_--;
 
-			let xPos = viewPoint.getXPos(units[day]) + 1;
+			let xPos = viewPoint.getXPos(units[_loc10_]) + 1;
 			let yPos = this.getYPos(context, units[days[nextDayStart]]);
 			gr.moveTo(xPos, this.viewPoint.maxy);
 			gr.lineStyle(0, 0, 0);
@@ -121,9 +121,9 @@ namespace com.google.finance
 					_loc16_ = Math.min(_loc16_, dataSeries.fridays.length - 1);
 					while (_loc16_ >= 0 && dataSeries.fridays[_loc16_] >= param2)
 					{
-						const unit = dataSeries.units[dataSeries.fridays[_loc16_]];
-						xPos = vp.getXPos(unit);
-						yPos = this.getYPos(context, unit);
+						const _loc17_ = dataSeries.units[dataSeries.fridays[_loc16_]];
+						xPos = vp.getXPos(_loc17_);
+						yPos = this.getYPos(context, _loc17_);
 						gr.lineTo(xPos, yPos);
 						_loc16_ -= skipInterval.skip;
 					}
@@ -136,39 +136,39 @@ namespace com.google.finance
 			return dataSeries.units[this.getPointIndex(dataSeries, param2)];
 		}
 
-		private drawDayLine_(sprite: flash.display.Sprite, dayIndex: number, viewPoint: ViewPoint, param4: number, param5: number, context: Context, dataSeries: com.google.finance.DataSeries)
+		private drawDayLine_(sprite: flash.display.Sprite, unitIndex: number, viewPoint: ViewPoint, param4: number, param5: number, context: Context, dataSeries: com.google.finance.DataSeries)
 		{
 			const units = dataSeries.units;
 			const days = dataSeries.days;
-			let previousDay;
-			if (dayIndex > 0)
-				previousDay = days[dayIndex - 1];
+			let _loc17_;
+			if (unitIndex > 0)
+				_loc17_ = days[unitIndex - 1];
 			else
-				previousDay = 0;
+				_loc17_ = 0;
 
-			let day = days[dayIndex];
-			if (units[day].fake && day === units.length - 1)
+			let _loc12_ = days[unitIndex];
+			if (units[_loc12_].fake && _loc12_ === units.length - 1)
 			{
-				while (units[day].fake)
-					day--;
+				while (units[_loc12_].fake)
+					_loc12_--;
 			}
 			//const _loc13_ = _loc12_;
-			while (day > param5 && day > param4)
-				day--;
+			while (_loc12_ > param5 && _loc12_ > param4)
+				_loc12_--;
 
-			let xPos = viewPoint.getXPos(units[day]);
+			let xPos = viewPoint.getXPos(units[_loc12_]);
 			const skipInterval = viewPoint.getSkipInterval(context.count, context.lastMinute);
 			const intervalLength = viewPoint.getIntervalLength(skipInterval.interval / 60);
 			const gr = sprite.graphics;
-			while (day >= previousDay && day >= param4)
+			while (_loc12_ >= _loc17_ && _loc12_ >= param4)
 			{
-				const _loc11_ = this.localYOffset - (dataSeries.points[day].value - context.medPrice) * this.localYScale;
+				const _loc11_ = this.localYOffset - (dataSeries.points[_loc12_].value - context.medPrice) * this.localYScale;
 				gr.lineTo(xPos, _loc11_);
-				day--;
+				_loc12_--;
 				xPos -= intervalLength;
 			}
-			const xPos2 = viewPoint.getXPos(units[previousDay]);
-			const yPos2 = this.getYPos(context, units[previousDay]);
+			const xPos2 = viewPoint.getXPos(units[_loc17_]);
+			const yPos2 = this.getYPos(context, units[_loc17_]);
 			gr.lineTo(xPos2, yPos2);
 		}
 
@@ -181,12 +181,12 @@ namespace com.google.finance
 			return param1;
 		}
 
-		setIndicator(indicatorName: string, fn: Function, dataSeries: com.google.finance.DataSeries, params: any)
+		setIndicator(indicatorName: string, fn: Function, dataSeries: com.google.finance.DataSeries, indicatorParams: any)
 		{
 			this.dataSource.indicators[indicatorName] = new com.google.finance.Indicator();
 			this.indicator = this.dataSource.indicators[indicatorName];
 			fn = fn;
-			this.indicatorParams = params;
+			this.indicatorParams = indicatorParams;
 			this.originalDataSeries = dataSeries;
 		}
 

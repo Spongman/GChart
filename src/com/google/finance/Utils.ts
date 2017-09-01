@@ -324,11 +324,11 @@ namespace com.google.finance
 			return Math.max(param1, param2);
 		}
 
-		static isSubset(param1: Dictionary, param2: Dictionary): boolean
+		static isSubset(superset: Dictionary, subset: Dictionary): boolean
 		{
-			for (const key of Object.keys(param1))
+			for (const key of Object.keys(superset))
 			{
-				if (param1[key] !== param2[key])
+				if (superset[key] !== subset[key])
 					return false;
 			}
 			return true;

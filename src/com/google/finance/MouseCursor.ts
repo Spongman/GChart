@@ -31,7 +31,7 @@ namespace com.google.finance
 
 		private displayObjectLockedOn: flash.display.DisplayObject | null;
 
-		currentType: number;
+		currentType: MouseCursors;
 		cursor: flash.display.Bitmap;
 
 		constructor()
@@ -65,9 +65,9 @@ namespace com.google.finance
 			this.displayObjectLockedOn = displayObject;
 		}
 
-		setCursor(param1: number)
+		setCursor(cursor: MouseCursors)
 		{
-			switch (param1)
+			switch (cursor)
 			{
 				default:
 				case MouseCursors.CLASSIC:

@@ -15,11 +15,11 @@ namespace com.google.finance
 		date: Date;
 		parsedDate: Date | null;
 
-		static newDateInUtc(param1: number, param2: number, param3: number): Date
+		static newDateInUtc(year: number, month: number, day: number): Date
 		{
 			const date = new Date();
-			date.setUTCFullYear(param1);
-			date.setUTCMonth(param2 - 1, param3);
+			date.setUTCFullYear(year);
+			date.setUTCMonth(month - 1, day);
 			date.setUTCHours(0, 0, 0, 0);
 			return date;
 		}
@@ -32,9 +32,9 @@ namespace com.google.finance
 			return Number(param1.replace('/', "").replace('-', "").replace('.', ""));
 		}
 
-		setHighlighted(param1: boolean)
+		setHighlighted(highlighted: boolean)
 		{
-			if (param1)
+			if (highlighted)
 			{
 				this.background = true;
 				this.borderColor = Const.DATE_HIGHLIGHTED_BORDER_COLOR;

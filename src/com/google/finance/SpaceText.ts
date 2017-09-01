@@ -139,12 +139,12 @@ namespace com.google.finance
 			return text;
 		}
 
-		private setDateEntryState(state: number)
+		private setDateEntryState(dateEntryState: number)
 		{
-			this.dateEntryState = state;
-			const _loc2_ = this.dateEntryState === SpaceText.EDIT_DATES;
-			this.startDate.setHighlighted(_loc2_);
-			this.endDate.setHighlighted(_loc2_);
+			this.dateEntryState = dateEntryState;
+			const highlighted = this.dateEntryState === SpaceText.EDIT_DATES;
+			this.startDate.setHighlighted(highlighted);
+			this.endDate.setHighlighted(highlighted);
 		}
 
 		private clearComparisonInfo()
@@ -236,10 +236,10 @@ namespace com.google.finance
 			this.updateInfoText();
 		}
 
-		private setSinglePointInfo(param1: Dictionary)
+		private setSinglePointInfo(state: Dictionary)
 		{
-			const _loc2_ = param1[SpaceText.POINT_STR];
-			switch (param1["extraText"])
+			const unit = state[SpaceText.POINT_STR];
+			switch (state["extraText"])
 			{
 				case Const.PRE_MARKET_DISPLAY_NAME:
 					this.datesText = Messages.getMsg(Messages.PREMARKET) + ": ";
@@ -252,28 +252,28 @@ namespace com.google.finance
 					break;
 			}
 			this.datesTextFormats = [];
-			const singlePointDateFormat = this.getSinglePointDateFormat(_loc2_);
-			const exchangeDateInUTC = _loc2_.exchangeDateInUTC;
+			const singlePointDateFormat = this.getSinglePointDateFormat(unit);
+			const exchangeDateInUTC = unit.exchangeDateInUTC;
 			this.datesText += com.google.i18n.locale.DateTimeLocale.formatDateTime(singlePointDateFormat, exchangeDateInUTC, true);
-			if (param1[SpaceText.OHLC_INFO_FLAG_STR])
+			if (state[SpaceText.OHLC_INFO_FLAG_STR])
 			{
-				this.appendOhlcText(SpaceText.OPEN_TEXT, _loc2_.open, param1[SpaceText.OHLC_BASE_PRICE_STR]);
-				this.appendOhlcText(SpaceText.HIGH_TEXT, _loc2_.high, param1[SpaceText.OHLC_BASE_PRICE_STR]);
-				this.appendOhlcText(SpaceText.LOW_TEXT, _loc2_.low, param1[SpaceText.OHLC_BASE_PRICE_STR]);
-				this.appendOhlcText(SpaceText.CLOSE_TEXT, _loc2_.close, param1[SpaceText.OHLC_BASE_PRICE_STR]);
+				this.appendOhlcText(SpaceText.OPEN_TEXT, unit.open, state[SpaceText.OHLC_BASE_PRICE_STR]);
+				this.appendOhlcText(SpaceText.HIGH_TEXT, unit.high, state[SpaceText.OHLC_BASE_PRICE_STR]);
+				this.appendOhlcText(SpaceText.LOW_TEXT, unit.low, state[SpaceText.OHLC_BASE_PRICE_STR]);
+				this.appendOhlcText(SpaceText.CLOSE_TEXT, unit.close, state[SpaceText.OHLC_BASE_PRICE_STR]);
 			}
 			else
 			{
 				this.datesText += SpaceText.PRICE_TEXT;
-				if (param1[SpaceText.SETTER_STR] && param1[SpaceText.SETTER_STR].dataSource && param1[SpaceText.SETTER_STR].dataSource.tickerName && param1[SpaceText.SETTER_STR].dataSource.tickerName.indexOf("CURRENCY:") === 0)
-					this.datesText += Math.round(_loc2_.close * 10000) / 10000;
+				if (state[SpaceText.SETTER_STR] && state[SpaceText.SETTER_STR].dataSource && state[SpaceText.SETTER_STR].dataSource.tickerName && state[SpaceText.SETTER_STR].dataSource.tickerName.indexOf("CURRENCY:") === 0)
+					this.datesText += Math.round(unit.close * 10000) / 10000;
 				else
-					this.datesText += this.normalizePrice(_loc2_.close);
+					this.datesText += this.normalizePrice(unit.close);
 			}
-			if (!isNaN(param1[SpaceText.VOLUME_STR]))
+			if (!isNaN(state[SpaceText.VOLUME_STR]))
 			{
 				this.datesText += ' ' + Messages.getMsg(Messages.VOLUME_SHORT) + ": ";
-				this.datesText += this.getHumanReadableVolume(param1["volume"]);
+				this.datesText += this.getHumanReadableVolume(state["volume"]);
 			}
 			this.returnText = "";
 			this.updateInfoText();
@@ -339,11 +339,11 @@ namespace com.google.finance
 			}
 			if (param1)
 			{
-				const y = Const.SPACE_HEIGHT / 2 - SpaceText.TEXT_HEIGHT / 2 + Const.INFO_TEXT_TOP_PADDING;
-				this.infoText.y = y;
-				this.changeText.y = y;
-				this.startDate.y = y;
-				this.endDate.y = y;
+				const _loc5_ = Const.SPACE_HEIGHT / 2 - SpaceText.TEXT_HEIGHT / 2 + Const.INFO_TEXT_TOP_PADDING;
+				this.infoText.y = _loc5_;
+				this.changeText.y = _loc5_;
+				this.startDate.y = _loc5_;
+				this.endDate.y = _loc5_;
 			}
 		}
 
@@ -358,24 +358,24 @@ namespace com.google.finance
 
 		private positionComparisonInfoDots()
 		{
-			let x = NaN;
+			let _loc1_ = NaN;
 			if (Const.INFO_TEXT_ALIGN === "right")
-				x = this.stage.stageWidth;
+				_loc1_ = this.stage.stageWidth;
 			else if (Const.INFO_TEXT_ALIGN === "left")
-				x = SpaceText.LEFT_PADDING + SpaceText.INFO_DOT_PADDING;
+				_loc1_ = SpaceText.LEFT_PADDING + SpaceText.INFO_DOT_PADDING;
 
 			for (const infoDot of this.infoDots)
 			{
 				infoDot.y = Const.SPACE_HEIGHT - SpaceText.TEXT_HEIGHT / 2 + 3 + Const.INFO_TEXT_TOP_PADDING;
 				if (Const.INFO_TEXT_ALIGN === "right")
 				{
-					infoDot.x = x - infoDot.width;
-					x -= infoDot.width - 3;
+					infoDot.x = _loc1_ - infoDot.width;
+					_loc1_ -= infoDot.width - 3;
 				}
 				else if (Const.INFO_TEXT_ALIGN === "left")
 				{
-					infoDot.x = x;
-					x += infoDot.width + 3;
+					infoDot.x = _loc1_;
+					_loc1_ += infoDot.width + 3;
 				}
 			}
 		}
@@ -409,12 +409,12 @@ namespace com.google.finance
 				this.endDate.displayDateInLocalizedFormat();
 				if (this.returnText.length > 0)
 				{
-					let textFormat = this.negativeTextFormat;
+					let _loc1_ = this.negativeTextFormat;
 					if (this.returnText.indexOf('+') !== -1)
-						textFormat = this.positiveTextFormat;
+						_loc1_ = this.positiveTextFormat;
 
-					if (this.changeText.getTextFormat() !== textFormat)
-						this.changeText.defaultTextFormat = textFormat;
+					if (this.changeText.getTextFormat() !== _loc1_)
+						this.changeText.defaultTextFormat = _loc1_;
 				}
 				this.changeText.text = this.returnText;
 			}
@@ -436,17 +436,17 @@ namespace com.google.finance
 			return mouseEvent.target === this.startDate.element || mouseEvent.target === this.endDate.element;
 		}
 
-		private setComparisonInfo(param1: Dictionary)
+		private setComparisonInfo(state: Dictionary)
 		{
-			const _loc2_ = param1[SpaceText.POINTS_STR];
+			const infos = state[SpaceText.POINTS_STR];
 			this.returnText = "";
 			this.updateInfoText();
 			this.clearComparisonInfo();
-			for (let _loc3_ = _loc2_.length - 1; _loc3_ >= 0; _loc3_--)
+			for (let infoIndex = infos.length - 1; infoIndex >= 0; infoIndex--)
 			{
 				const infoDot = new InfoDot();
 				this.addChild(infoDot);
-				infoDot.setInfo(_loc2_[_loc3_]);
+				infoDot.setInfo(infos[infoIndex]);
 				this.infoDots.push(infoDot);
 			}
 			this.positionComparisonInfoDots();
@@ -466,21 +466,21 @@ namespace com.google.finance
 			this.positionInfoText();
 		}
 
-		setContextualStaticInfo(param1: Dictionary)
+		setContextualStaticInfo(state: Dictionary)
 		{
-			if (!param1[SpaceText.SETTER_STR])
+			if (!state[SpaceText.SETTER_STR])
 				return;
 
-			if (param1[SpaceText.POINTS_STR])
+			if (state[SpaceText.POINTS_STR])
 			{
 				this.returnText = "";
-				this.setTimePeriod(param1[SpaceText.SETTER_STR].viewPoint);
-				this.setComparisonInfo(param1);
+				this.setTimePeriod(state[SpaceText.SETTER_STR].viewPoint);
+				this.setComparisonInfo(state);
 			}
 			else
 			{
-				this.setTimePeriod(param1[SpaceText.SETTER_STR].viewPoint);
-				this.setReturnInfo(param1[SpaceText.SETTER_STR].viewPoint);
+				this.setTimePeriod(state[SpaceText.SETTER_STR].viewPoint);
+				this.setReturnInfo(state[SpaceText.SETTER_STR].viewPoint);
 			}
 		}
 

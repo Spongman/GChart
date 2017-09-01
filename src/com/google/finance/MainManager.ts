@@ -37,7 +37,7 @@ namespace com.google.finance
 				this.init();
 		}
 
-		dataIsHere(dataSource: DataSource, param2: number)
+		dataIsHere(dataSource: DataSource, param2: AddStreamResults)
 		{
 			if (dataSource.countEvents(ChartEventPriorities.REQUIRED) + dataSource.countEvents(ChartEventPriorities.EXPECTED) > 0)
 				return;
@@ -86,13 +86,12 @@ namespace com.google.finance
 			return parts;
 		}
 
-		private needAfterHoursData(param1: string): ChartEvent | null
+		private needAfterHoursData(quote: string): ChartEvent | null
 		{
-			let _loc2_: ChartEvent | null = null;
-			if (param1 === this.quote && (Boolean(MainManager.paramsObj.forceDisplayExtendedHours) || Boolean(MainManager.paramsObj.displayExtendedHours)))
-				_loc2_ = EventFactory.getEvent(ChartEventStyles.GET_AH_DATA, param1, ChartEventPriorities.REQUIRED);
+			if (quote === this.quote && (Boolean(MainManager.paramsObj.forceDisplayExtendedHours) || Boolean(MainManager.paramsObj.displayExtendedHours)))
+				return EventFactory.getEvent(ChartEventStyles.GET_AH_DATA, quote, ChartEventPriorities.REQUIRED);
 
-			return _loc2_;
+			return null;
 		}
 
 		private init()
@@ -257,15 +256,18 @@ namespace com.google.finance
 		removeObjectArray(objects: any[])
 		{
 			for (const obj of objects)
+			{
 				this.dataManager.removeObject(obj._quote, obj._type, obj._id.toString());
-
-			this.displayManager.getMainViewPoint().updateObjectLayers();
+			}
+			const _loc3_ = this.displayManager.getMainViewPoint();
+			_loc3_.updateObjectLayers();
 		}
 
 		addObject(param1: any)
 		{
 			this.dataManager.addObject(param1);
-			this.displayManager.getMainViewPoint().updateObjectLayers();
+			const _loc2_ = this.displayManager.getMainViewPoint();
+			_loc2_.updateObjectLayers();
 		}
 
 		private addDefaultCompareToTickers()
@@ -349,7 +351,7 @@ namespace com.google.finance
 			this.dataManager.eventHandler(_loc6_, !param3);
 		}
 
-		private shouldToggleAfterHours(param1: number): boolean
+		private shouldToggleAfterHours(detailLevel: number): boolean
 		{
 			if (Boolean(MainManager.paramsObj.forceDisplayExtendedHours))
 				return true;
@@ -357,7 +359,7 @@ namespace com.google.finance
 			if (MainManager.paramsObj.displayExtendedHours !== "true" || this.layersManager.getStyle() !== com.google.finance.LayersManager.SINGLE)
 				return false;
 
-			if (param1 === Intervals.INTRADAY || Const.INDICATOR_ENABLED && param1 < Intervals.DAILY && this.displayManager.getEnabledChartLayer() === Const.LINE_CHART)
+			if (detailLevel === Intervals.INTRADAY || Const.INDICATOR_ENABLED && detailLevel < Intervals.DAILY && this.displayManager.getEnabledChartLayer() === Const.LINE_CHART)
 				return true;
 
 			return false;
@@ -374,23 +376,24 @@ namespace com.google.finance
 			this.dataManager.checkDataSourceExistance(this.quote, param2);
 			this.layersManager.replaceFirstDataSource(this.dataManager.dataSources[this.quote]);
 			const _loc5_ = this.layersManager.numComparedTickers() > 0 ? com.google.finance.LayersManager.COMPARISON : com.google.finance.LayersManager.SINGLE;
-			const _loc6_ = !!param3 ? com.google.finance.LayersManager.PERCENT : _loc5_;
-			this.layersManager.resetLayersForNewQuote(this.dataManager.dataSources[this.quote], _loc6_);
+			const style = !!param3 ? com.google.finance.LayersManager.PERCENT : _loc5_;
+			this.layersManager.resetLayersForNewQuote(this.dataManager.dataSources[this.quote], style);
 			if (this.dataManager.dataSources[this.quote].isEmpty())
 			{
 				this.getQuote(this.quote, param2);
 			}
 			else
 			{
-				this.layersManager.setStyle(_loc6_);
+				this.layersManager.setStyle(style);
 				this.displayManager.update();
 			}
 		}
 
-		removeObject(quote: string, type: string, id: string)
+		removeObject(ticker: string, id: number, objectType: string)
 		{
-			this.dataManager.removeObject(quote, type, id);
-			this.displayManager.getMainViewPoint().updateObjectLayers();
+			this.dataManager.removeObject(ticker, id, objectType);
+			const mainViewPoint = this.displayManager.getMainViewPoint();
+			mainViewPoint.updateObjectLayers();
 		}
 
 		private getQuoteForLineChart(param1: string, param2: number, param3: boolean)
@@ -498,7 +501,8 @@ namespace com.google.finance
 		htmlClicked(ticker: string, param2: number, param3?: string)
 		{
 			const _loc4_ = <PinPoint>this.dataManager.selectObject(ticker, "newspin", param2, param3);
-			this.displayManager.getMainViewPoint().updateObjectLayers();
+			const _loc5_ = this.displayManager.getMainViewPoint();
+			_loc5_.updateObjectLayers();
 			this.displayManager.animateToSelectedPin(_loc4_);
 		}
 	}

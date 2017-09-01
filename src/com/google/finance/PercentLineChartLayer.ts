@@ -6,11 +6,11 @@ namespace com.google.finance
 	{
 		private localStartPrice = 0;
 
-		protected calculatePercentChangeBase(param1 = 0): number
+		protected calculatePercentChangeBase(unitIndex = 0): number
 		{
 			const dataSeries = this.getDataSeries();
 			const units = dataSeries.units;
-			return units[param1].close;
+			return units[unitIndex].close;
 		}
 
 		protected getYPos(context: Context, dataUnit: DataUnit): number
@@ -44,26 +44,26 @@ namespace com.google.finance
 			if (!units || units.length === 0)
 				return null;
 
-			const _loc5_ = dataSeries.getRelativeMinuteIndex(param1 - param2);
-			let _loc6_ = dataSeries.getRelativeMinuteIndex(param1) + 1;
-			if (_loc6_ <= _loc5_ + 1)
-				_loc6_ = _loc5_ + 2;
+			const firstIndex = dataSeries.getRelativeMinuteIndex(param1 - param2);
+			let lastIndex = dataSeries.getRelativeMinuteIndex(param1) + 1;
+			if (lastIndex <= firstIndex + 1)
+				lastIndex = firstIndex + 2;
 
-			_loc6_ = Math.min(_loc6_, units.length - 1);
-			let _loc7_ = units[_loc5_].close;
-			let _loc8_ = units[_loc5_].close;
-			for (let _loc9_ = _loc5_; _loc9_ <= _loc6_; _loc9_++)
+			lastIndex = Math.min(lastIndex, units.length - 1);
+			let min = units[firstIndex].close;
+			let max = units[firstIndex].close;
+			for (let index = firstIndex; index <= lastIndex; index++)
 			{
-				if (units[_loc9_].close < _loc7_)
-					_loc7_ = units[_loc9_].close;
-				else if (units[_loc9_].close > _loc8_)
-					_loc8_ = units[_loc9_].close;
+				if (units[index].close < min)
+					min = units[index].close;
+				else if (units[index].close > max)
+					max = units[index].close;
 
 			}
 			return {
-				startPrice: this.calculatePercentChangeBase(_loc5_),
-				minPrice: _loc7_,
-				maxPrice: _loc8_
+				startPrice: this.calculatePercentChangeBase(firstIndex),
+				minPrice: min,
+				maxPrice: max
 			};
 		}
 
@@ -74,10 +74,10 @@ namespace com.google.finance
 			if (!range)
 				return context;
 
-			const max = Utils.getLogScaledValue(range.maxPrice / range.startPrice, context.verticalScaling);
-			context.plusVariation = Utils.extendedMax(max, context.plusVariation);
-			const min = Utils.getLogScaledValue(range.minPrice / range.startPrice, context.verticalScaling);
-			context.minusVariation = Utils.extendedMin(min, context.minusVariation);
+			const _loc5_ = Utils.getLogScaledValue(range.maxPrice / range.startPrice, context.verticalScaling);
+			context.plusVariation = Utils.extendedMax(_loc5_, context.plusVariation);
+			const _loc6_ = Utils.getLogScaledValue(range.minPrice / range.startPrice, context.verticalScaling);
+			context.minusVariation = Utils.extendedMin(_loc6_, context.minusVariation);
 			context.scaleVariation = context.plusVariation - context.minusVariation;
 			context.localYAdjustment = context.plusVariation - Utils.getLogScaledValue(1, context.verticalScaling);
 			context.plusSize = context.localYAdjustment * (viewPoint.maxPriceRangeViewSize - 20) / context.scaleVariation;
@@ -111,27 +111,27 @@ namespace com.google.finance
 		{
 			this.clearHighlight();
 			const dataSeries = this.getDataSeries();
-			const x = this.viewPoint.getXPos(dataSeries.units[0]);
+			const _loc6_ = this.viewPoint.getXPos(dataSeries.units[0]);
 			//const _loc7_ = this.viewPoint.getXPos(_loc4_.units[_loc4_.units.length - 1]);
-			if (param2 < x)
+			if (param2 < _loc6_)
 				return;
 
-			let _loc5_: DataUnit;
+			let unit: DataUnit;
 			if (param2 > this.viewPoint.maxx)
-				_loc5_ = notnull(this.viewPoint.getLastDataUnit(dataSeries));
+				unit = notnull(this.viewPoint.getLastDataUnit(dataSeries));
 			else
-				_loc5_ = notnull(this.getPoint(dataSeries, param2));
+				unit = notnull(this.getPoint(dataSeries, param2));
 
-			const _loc8_ = this.viewPoint.getMinuteXPos(_loc5_.relativeMinutes);
-			const y = this.getYPos(context, _loc5_);
+			const _loc8_ = this.viewPoint.getMinuteXPos(unit.relativeMinutes);
+			const _loc9_ = this.getYPos(context, unit);
 			const gr = this.highlightCanvas.graphics;
 			gr.lineStyle(5, this.lineColor, 1);
-			gr.moveTo(_loc8_, y - 0.2);
-			gr.lineTo(_loc8_, y + 0.2);
+			gr.moveTo(_loc8_, _loc9_ - 0.2);
+			gr.lineTo(_loc8_, _loc9_ + 0.2);
 			if (state["points"] === undefined)
 				state["points"] = [];
 
-			const _loc10_ = Math.round((_loc5_.close / this.localStartPrice - 1) * 10000) / 100;
+			const _loc10_ = Math.round((unit.close / this.localStartPrice - 1) * 10000) / 100;
 			const _loc11_ = ' ' + this.getPercentText(_loc10_) + '%';
 			let _loc12_ = Const.POSITIVE_DIFFERENCE_COLOR;
 			if (_loc10_ < 0)
@@ -159,10 +159,10 @@ namespace com.google.finance
 				percentText += '-';
 
 			param1 = Math.abs(param1);
-			const integerPart = Math.floor(param1);
-			percentText += integerPart;
+			const _loc3_ = Math.floor(param1);
+			percentText += _loc3_;
 			percentText += '.';
-			percentText += Utils.numberToMinTwoChars(Math.floor((param1 - integerPart) * 100));
+			percentText += Utils.numberToMinTwoChars(Math.floor((param1 - _loc3_) * 100));
 			return percentText;
 		}
 	}

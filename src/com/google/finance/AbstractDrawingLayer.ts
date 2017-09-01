@@ -9,15 +9,15 @@ namespace com.google.finance
 			return context;
 		}
 
-		protected getBarWidth(interval: Intervals, dataSeries: DataSeries): number
+		protected getBarWidth(detailLevel: Intervals, dataSeries: DataSeries): number
 		{
 			let numDays = 0;
-			if (interval === Intervals.WEEKLY)
+			if (detailLevel === Intervals.WEEKLY)
 				numDays = dataSeries.marketDayLength * 5;
-			else if (interval === Intervals.DAILY)
+			else if (detailLevel === Intervals.DAILY)
 				numDays = dataSeries.marketDayLength;
 			else
-				numDays = Const.getDetailLevelInterval(interval) / 60;
+				numDays = Const.getDetailLevelInterval(detailLevel) / 60;
 
 			if (this.viewPoint.count === 0)
 				return 0;

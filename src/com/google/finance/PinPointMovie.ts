@@ -176,13 +176,13 @@ namespace com.google.finance
 			}
 		}
 
-		setHeight(param1: number)
+		setHeight(height: number)
 		{
-			this.flagline.height = param1 - 2;
-			this.flagline.y = -param1 + 2;
-			this.letter.y = -param1;
-			this.pinButton.y = -param1;
-			this.activeOverlay.y = -param1;
+			this.flagline.height = height - 2;
+			this.flagline.y = -height + 2;
+			this.letter.y = -height;
+			this.pinButton.y = -height;
+			this.activeOverlay.y = -height;
 			for (let borderIndex = 0; borderIndex < this.borders.length; borderIndex++)
 			{
 				this.borders[borderIndex].y = this.pinButton.y + this.pinButton.height - 4 + borderIndex * 2;

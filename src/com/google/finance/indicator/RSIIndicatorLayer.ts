@@ -38,12 +38,12 @@ namespace com.google.finance.indicator
 			return Messages.getMsg(Messages.RSI_INTERVAL, this.period, param1);
 		}
 
-		computeIntervalIndicator(param1: number)
+		computeIntervalIndicator(interval: number)
 		{
-			if (this.indicator.hasInterval(param1))
+			if (this.indicator.hasInterval(interval))
 				return;
 
-			const points = this.originalDataSeries.getPointsInIntervalArray(param1);
+			const points = this.originalDataSeries.getPointsInIntervalArray(interval);
 			if (!points || points.length === 0)
 				return;
 
@@ -90,7 +90,7 @@ namespace com.google.finance.indicator
 					}
 				}
 			}
-			this.indicator.setDataSeries(param1, dataSeries, 0);
+			this.indicator.setDataSeries(interval, dataSeries, 0);
 		}
 
 		setIndicatorInstanceArray(indicators: any[])

@@ -167,17 +167,17 @@ namespace com.google.finance
 			return context;
 		}
 
-		private drawLines(dataUnits: DataUnit[], param2: number, param3: number, context: Context)
+		private drawLines(dataUnits: DataUnit[], param2: number, unitIndex: number, context: Context)
 		{
-			let xPos = this.viewPoint.getXPos(dataUnits[param3]);
-			let closeYPos = this.getCloseYPos(context, dataUnits[param3]);
+			let xPos = this.viewPoint.getXPos(dataUnits[unitIndex]);
+			let closeYPos = this.getCloseYPos(context, dataUnits[unitIndex]);
 			const gr = this.graphics;
 			gr.lineStyle(0, 0, 0);
 			gr.beginFill(Const.ECN_LINE_CHART_FILL_COLOR, Const.ECN_LINE_CHART_FILL_VISIBILITY);
 			gr.moveTo(xPos, this.viewPoint.maxy - 15);
 			gr.lineTo(xPos, closeYPos);
 			gr.lineStyle(Const.ECN_LINE_CHART_LINE_THICKNESS, Const.ECN_LINE_CHART_LINE_COLOR, Const.ECN_LINE_CHART_LINE_VISIBILITY);
-			for (let _loc7_ = param3; _loc7_ > param2; _loc7_--)
+			for (let _loc7_ = unitIndex; _loc7_ > param2; _loc7_--)
 			{
 				xPos = this.viewPoint.getXPos(dataUnits[_loc7_]);
 				closeYPos = this.getCloseYPos(context, dataUnits[_loc7_]);

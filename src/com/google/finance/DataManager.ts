@@ -152,10 +152,10 @@ namespace com.google.finance
 			this.dataSources[ticker].clearAllObjects(param2);
 		}
 
-		removeObject(ticker: string, type: string, id: string)
+		removeObject(ticker: string, id: number, objectType: string)
 		{
 			// TODO: is param2 always a number?
-			this.dataSources[ticker].removeObject(type, Number(id));
+			this.dataSources[ticker].removeObject(objectType, id);
 		}
 
 		private hasDataSource(ticker: string): boolean
@@ -171,10 +171,10 @@ namespace com.google.finance
 
 		dataUnavailableOnServer(ticker: string): boolean
 		{
-			const dataSource = this.dataSources[ticker];
-			if (!dataSource)
+			const _loc2_ = this.dataSources[ticker];
+			if (!_loc2_)
 				return false;
-			return dataSource.dataUnavailableOnServer;
+			return _loc2_.dataUnavailableOnServer;
 		}
 
 		private getUrlString(param1: string, param2: string, chartEvent: ChartEvent): string
@@ -222,14 +222,14 @@ namespace com.google.finance
 			return urlString;
 		}
 
-		cloneDataUnitForTargetExchange(dataUnit1: DataUnit, dataUnit2: DataUnit, interval: number): DataUnit
+		cloneDataUnitForTargetExchange(dataUnit1: DataUnit, dataUnit2: DataUnit, param3: number): DataUnit
 		{
 			const dataUnit = new DataUnit(dataUnit2.close, NaN, NaN, NaN);	// TODO
 			const time = Date.UTC(dataUnit1.exchangeDateInUTC.fullYearUTC, dataUnit1.exchangeDateInUTC.monthUTC, dataUnit1.exchangeDateInUTC.dateUTC, dataUnit2.dayMinute / 60, dataUnit2.dayMinute % 60);
 			dataUnit.setExchangeDateInUTC(time, dataUnit2.timezoneOffset);
 			dataUnit.coveredDays = dataUnit1.coveredDays;
-			dataUnit.volumes[interval] = 0;
-			dataUnit.intervals[0] = interval;
+			dataUnit.volumes[param3] = 0;
+			dataUnit.intervals[0] = param3;
 			return dataUnit;
 		}
 

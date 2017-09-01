@@ -274,14 +274,14 @@ namespace com.google.finance
 			this.highlightCanvas = sprite;
 		}
 
-		private checkArrowChange(param1: number)
+		private checkArrowChange(orientation: Orientations)
 		{
-			if ((this.arrowOrientation === Orientations.UP || this.arrowOrientation === Orientations.DOWN) && (param1 === Orientations.SIDEWAYS_UP || param1 === Orientations.SIDEWAYS_DOWN))
+			if ((this.arrowOrientation === Orientations.UP || this.arrowOrientation === Orientations.DOWN) && (orientation === Orientations.SIDEWAYS_UP || orientation === Orientations.SIDEWAYS_DOWN))
 			{
 				this.currentVisibleButton = this.attachSidewaysArrow();
 				this.positionSidewaysArrow();
 			}
-			if ((this.arrowOrientation === Orientations.SIDEWAYS_UP || this.arrowOrientation === Orientations.SIDEWAYS_DOWN) && (param1 === Orientations.UP || param1 === Orientations.DOWN))
+			if ((this.arrowOrientation === Orientations.SIDEWAYS_UP || this.arrowOrientation === Orientations.SIDEWAYS_DOWN) && (orientation === Orientations.UP || orientation === Orientations.DOWN))
 			{
 				this.currentVisibleButton = this.attachRegularArrow();
 				this.positionRegularArrow();

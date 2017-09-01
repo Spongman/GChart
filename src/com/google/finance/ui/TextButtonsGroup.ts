@@ -42,11 +42,11 @@ namespace com.google.finance.ui
 			this.currentButton = -1;
 		}
 
-		private deselectButton(param1: number)
+		private deselectButton(buttonIndex: number)
 		{
-			if (param1 !== -1)
+			if (buttonIndex !== -1)
 			{
-				const button = this.buttons[param1];
+				const button = this.buttons[buttonIndex];
 				const textField = (<flash.display.DisplayObjectContainer>button.upState).getChildAt(0) as flash.text.TextField;
 				textField.setTextFormat(this.buttonTextFormat);
 			}

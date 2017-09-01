@@ -54,10 +54,10 @@ namespace com.google.finance
 		{
 			for (let objectIndex = 0; objectIndex < stockAssociatedObjects.length; objectIndex++)
 			{
-				const object = stockAssociatedObjects[objectIndex];
-				if (notnull(object.posInInterval)[param3])
+				const _loc5_ = stockAssociatedObjects[objectIndex];
+				if (notnull(_loc5_.posInInterval)[param3])
 				{
-					const dataUnit = this.getDataUnit(object, param3);
+					const dataUnit = this.getDataUnit(_loc5_, param3);
 					if (dataUnit.relativeMinutes > context.lastMinute - context.count)
 						return objectIndex;
 				}
@@ -67,30 +67,30 @@ namespace com.google.finance
 
 		private getPinPointMovieClip(pinPoint: PinPoint): PinPointMovie
 		{
-			let movie: PinPointMovie | null;
-			const color = !!pinPoint.originalObject._color ? pinPoint.originalObject._color : "gray";
+			let _loc2_: PinPointMovie | null;
+			const _loc3_ = !!pinPoint.originalObject._color ? pinPoint.originalObject._color : "gray";
 			if (this.activeMovies >= this.pinMovies.length)
 			{
-				movie = color === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
-				this.addChild(movie);
-				this.pinMovies.push(movie);
+				_loc2_ = _loc3_ === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
+				this.addChild(_loc2_);
+				this.pinMovies.push(_loc2_);
 			}
 			else
 			{
-				movie = this.pinMovies[this.activeMovies];
-				const activeColor = movie instanceof OrangePinPointMovie ? "orange" : "gray";
-				if (activeColor !== color)
+				_loc2_ = this.pinMovies[this.activeMovies];
+				const _loc4_ = _loc2_ instanceof OrangePinPointMovie ? "orange" : "gray";
+				if (_loc4_ !== _loc3_)
 				{
-					movie = color === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
+					_loc2_ = _loc3_ === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
 					this.removeChild(this.pinMovies[this.activeMovies]);
 					this.pinMovies[this.activeMovies].clearReferences();
 					delete this.pinMovies[this.activeMovies];
-					this.pinMovies[this.activeMovies] = movie;
+					this.pinMovies[this.activeMovies] = _loc2_;
 				}
 			}
-			movie.setPinPointContentMovie(this.pinPointContentMovie);
+			_loc2_.setPinPointContentMovie(this.pinPointContentMovie);
 			this.activeMovies++;
-			return movie;
+			return _loc2_;
 		}
 
 		private removePinMovies(param1: number)
@@ -178,29 +178,29 @@ namespace com.google.finance
 			}
 		}
 
-		private renderFlag(x: number, pinOrientation: PinOrientations, param3: number, pinPoint: PinPoint, param5?: PinPoint, param6 = 1)
+		private renderFlag(x: number, pinOrientation: PinOrientations, height: number, pinPoint: PinPoint, param5?: PinPoint, count = 1)
 		{
 			const pinPointMovieClip = this.getPinPointMovieClip(pinPoint);
 			this.addChild(pinPointMovieClip);
 			pinPointMovieClip.x = x;
 			pinPointMovieClip.y = this.pinPointYWhenContentDisplayed;
-			pinPointMovieClip.setCount(param6);
+			pinPointMovieClip.setCount(count);
 			pinPointMovieClip.setObj(pinPoint);
 			pinPointMovieClip.setOrientation(pinOrientation);
-			pinPointMovieClip.setHeight(param3);
+			pinPointMovieClip.setHeight(height);
 		}
 
-		private getFlagGroupCount(context: Context, pinPoints: PinPoint[], param3: number, param4: number): number
+		private getFlagGroupCount(context: Context, pinPoints: PinPoint[], pinIndex: number, param4: number): number
 		{
 			let _loc5_ = 1;
-			const pin = pinPoints[param3];
-			const _loc7_ = notnull(pin.posInInterval)[param4];
+			const _loc6_ = pinPoints[pinIndex];
+			const _loc7_ = notnull(_loc6_.posInInterval)[param4];
 			if (!_loc7_)
 				return _loc5_;
 
-			while (param3 + _loc5_ < pinPoints.length)
+			while (pinIndex + _loc5_ < pinPoints.length)
 			{
-				const _loc8_ = notnull(pinPoints[param3 + _loc5_].posInInterval)[param4];
+				const _loc8_ = notnull(pinPoints[pinIndex + _loc5_].posInInterval)[param4];
 				if (!_loc8_ || _loc7_.position !== _loc8_.position || _loc7_.refDataSeries !== _loc8_.refDataSeries)
 					break;
 

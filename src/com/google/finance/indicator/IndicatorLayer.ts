@@ -96,9 +96,9 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		private getIntervalText(param1: number): string
+		private getIntervalText(detailLevel: number): string
 		{
-			switch (param1)
+			switch (detailLevel)
 			{
 				case Intervals.INTRADAY:
 					return "2m";
@@ -120,33 +120,33 @@ namespace com.google.finance.indicator
 			return this.indicatorName;
 		}
 
-		private renderHistogramLine(dataSeriesArray: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, param7: number, param8: string)
+		private renderHistogramLine(dataSeriesArray: DataSeries[], dataSeriesIndex: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, detailLevel: number, layerType: string)
 		{
 			let xPos = Number.MAX_VALUE;
-			const y = this.getYPos(context, new IndicatorPoint(0, <DataUnit><any>null));	// TODO
+			const yPos = this.getYPos(context, new IndicatorPoint(0, <DataUnit><any>null));	// TODO
 			const gr = this.graphics;
-			for (let _loc12_ = param4; _loc12_ >= param3; _loc12_--)
+			for (let pointIndex = param4; pointIndex >= param3; pointIndex--)
 			{
-				if (!isNaN(dataSeriesArray[param2].points[_loc12_].getValue()))
+				if (!isNaN(dataSeriesArray[dataSeriesIndex].points[pointIndex].getValue()))
 				{
-					const point = dataSeriesArray[param2].points[_loc12_].getPoint();
-					if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
+					const point = dataSeriesArray[dataSeriesIndex].points[pointIndex].getPoint();
+					if (detailLevel === Intervals.WEEKLY && layerType !== Const.LINE_CHART)
 						xPos = this.getWeeklyBarXPos(point, xPos);
 
 					const _loc13_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
-					const _loc14_ = this.getYPos(context, dataSeriesArray[param2].points[_loc12_]);
-					gr.lineStyle(1, this.getColor(param2, dataSeriesArray[param2].points[_loc12_].getValue()));
-					gr.moveTo(_loc13_, y);
+					const _loc14_ = this.getYPos(context, dataSeriesArray[dataSeriesIndex].points[pointIndex]);
+					gr.lineStyle(1, this.getColor(dataSeriesIndex, dataSeriesArray[dataSeriesIndex].points[pointIndex].getValue()));
+					gr.moveTo(_loc13_, yPos);
 					gr.lineTo(_loc13_, _loc14_);
 				}
 			}
 		}
 
-		private renderSingleLine(dataSeriesArray: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, param7: number, param8: string)
+		private renderSingleLine(dataSeriesArray: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, detailLevel: number, layerType: string)
 		{
 			let _loc9_ = Number.MAX_VALUE;
 			let point = dataSeriesArray[param2].points[param4].getPoint();
-			if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
+			if (detailLevel === Intervals.WEEKLY && layerType !== Const.LINE_CHART)
 				_loc9_ = this.getWeeklyBarXPos(point, _loc9_);
 
 			const gr = this.graphics;
@@ -158,7 +158,7 @@ namespace com.google.finance.indicator
 				if (!isNaN(dataSeriesArray[param2].points[_loc11_].getValue()))
 				{
 					point = dataSeriesArray[param2].points[_loc11_].getPoint();
-					if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
+					if (detailLevel === Intervals.WEEKLY && layerType !== Const.LINE_CHART)
 						_loc9_ = this.getWeeklyBarXPos(point, _loc9_);
 
 					const _loc12_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
@@ -174,7 +174,7 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		private renderHistogramLineFromBottom(dataSeriesArray: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, param7: number, param8: string)
+		private renderHistogramLineFromBottom(dataSeriesArray: DataSeries[], param2: number, param3: number, param4: number, viewPoint: ViewPoint, context: Context, detailLevel: number, layerType: string)
 		{
 			let _loc9_ = Number.MAX_VALUE;
 			const gr = this.graphics;
@@ -185,7 +185,7 @@ namespace com.google.finance.indicator
 				if (!isNaN(dataSeriesArray[param2].points[_loc11_].getValue()))
 				{
 					const point = dataSeriesArray[param2].points[_loc11_].getPoint();
-					if (param7 === Intervals.WEEKLY && param8 !== Const.LINE_CHART)
+					if (detailLevel === Intervals.WEEKLY && layerType !== Const.LINE_CHART)
 						_loc9_ = this.getWeeklyBarXPos(point, _loc9_);
 
 					const _loc12_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
@@ -233,9 +233,9 @@ namespace com.google.finance.indicator
 			gr.lineTo(param1, param2 + 0.2);
 		}
 
-		set enabled(param1: string)
+		set enabled(enabled: string)
 		{
-			this._enabled = param1 === IndicatorLayer.TRUE_STR;
+			this._enabled = enabled === IndicatorLayer.TRUE_STR;
 		}
 
 		protected abstract calculateLocalScaleMeters(context: Context): void;
@@ -320,9 +320,9 @@ namespace com.google.finance.indicator
 			const indicatorPoint = new IndicatorPoint(NaN, dataUnit);
 			for (let dataSeriesIndex = 0; dataSeriesIndex < dataSeriesArray.length; dataSeriesIndex++)
 			{
-				const unitCount = dataSeriesArray[dataSeriesIndex].points.length;
-				if (unitCount > 0)
-					dataSeriesArray[dataSeriesIndex].points.push(new IndicatorPoint(dataSeriesArray[dataSeriesIndex].points[unitCount - 1].getValue(), dataUnit));
+				const _loc5_ = dataSeriesArray[dataSeriesIndex].points.length;
+				if (_loc5_ > 0)
+					dataSeriesArray[dataSeriesIndex].points.push(new IndicatorPoint(dataSeriesArray[dataSeriesIndex].points[_loc5_ - 1].getValue(), dataUnit));
 				else
 					dataSeriesArray[dataSeriesIndex].points.push(indicatorPoint);
 

@@ -187,44 +187,44 @@ namespace com.google.finance
 			flash.external.ExternalInterface.call("_setCurrentViewParam", encodeURIComponent(param1), encodeURIComponent(param2.toString()));
 		}
 
-		toggleIndicator(param1: string, param2: string)
+		toggleIndicator(viewpointName: string, param2: string)
 		{
 			const layersManager = this.mainManager.layersManager;
 			const displayManager = this.mainManager.displayManager;
 			const _loc5_ = param2.split('*');
-			if (Const.DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1 || Const.VOLUME_DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1)
+			if (Const.DEPENDENT_INDICATOR_NAMES.indexOf(viewpointName) !== -1 || Const.VOLUME_DEPENDENT_INDICATOR_NAMES.indexOf(viewpointName) !== -1)
 			{
-				const _loc6_ = Const.DEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1 ? Const.MAIN_VIEW_POINT_NAME : Const.BOTTOM_VIEW_POINT_NAME;
+				const _loc6_ = Const.DEPENDENT_INDICATOR_NAMES.indexOf(viewpointName) !== -1 ? Const.MAIN_VIEW_POINT_NAME : Const.BOTTOM_VIEW_POINT_NAME;
 				if (Boolean(_loc5_[0]))
 				{
-					displayManager.enableIndicatorConfig(param1, true);
-					displayManager.enableIndicatorLayer(param1, _loc6_, true);
-					displayManager.setIndicatorInstanceArray(param1, this.getIndicatorInstanceArray(param1, _loc5_));
+					displayManager.enableIndicatorConfig(viewpointName, true);
+					displayManager.enableIndicatorLayer(viewpointName, _loc6_, true);
+					displayManager.setIndicatorInstanceArray(viewpointName, this.getIndicatorInstanceArray(viewpointName, _loc5_));
 				}
 				else
 				{
-					displayManager.enableIndicatorConfig(param1, false);
-					displayManager.enableIndicatorLayer(param1, _loc6_, false);
+					displayManager.enableIndicatorConfig(viewpointName, false);
+					displayManager.enableIndicatorLayer(viewpointName, _loc6_, false);
 				}
 			}
-			else if (Const.INDEPENDENT_INDICATOR_NAMES.indexOf(param1) !== -1)
+			else if (Const.INDEPENDENT_INDICATOR_NAMES.indexOf(viewpointName) !== -1)
 			{
 				if (Boolean(_loc5_[0]))
 				{
-					if (!displayManager.isIndicatorConfigEnabled(param1))
+					if (!displayManager.isIndicatorConfigEnabled(viewpointName))
 					{
 						this.mainManager.layersManager.chartHeightInStyle[LayersManager.SINGLE] = this.mainManager.layersManager.chartHeightInStyle[LayersManager.SINGLE] + Const.TECHNICAL_INDICATOR_HEIGHT;
-						displayManager.enableIndicatorConfig(param1, true);
-						layersManager.unhideViewPoint(param1, LayersManager.SINGLE);
-						displayManager.setIndicatorInstanceArray(param1, this.getIndicatorInstanceArray(param1, _loc5_));
+						displayManager.enableIndicatorConfig(viewpointName, true);
+						layersManager.unhideViewPoint(viewpointName, LayersManager.SINGLE);
+						displayManager.setIndicatorInstanceArray(viewpointName, this.getIndicatorInstanceArray(viewpointName, _loc5_));
 						Const.MOVIE_HEIGHT = this.mainManager.stage.stageHeight;
 					}
 				}
-				else if (displayManager.isIndicatorConfigEnabled(param1))
+				else if (displayManager.isIndicatorConfigEnabled(viewpointName))
 				{
 					this.mainManager.layersManager.chartHeightInStyle[LayersManager.SINGLE] = this.mainManager.layersManager.chartHeightInStyle[LayersManager.SINGLE] - Const.TECHNICAL_INDICATOR_HEIGHT;
-					displayManager.enableIndicatorConfig(param1, false);
-					layersManager.hideViewPoint(param1, LayersManager.SINGLE);
+					displayManager.enableIndicatorConfig(viewpointName, false);
+					layersManager.hideViewPoint(viewpointName, LayersManager.SINGLE);
 					Const.MOVIE_HEIGHT = this.mainManager.stage.stageHeight;
 				}
 				const mainViewPoint = displayManager.getMainViewPoint();
@@ -272,18 +272,18 @@ namespace com.google.finance
 			{
 				const displayManager = this.mainManager.displayManager;
 				const chartLayer = displayManager.getEnabledChartLayer();
-				const _loc4_ = lineStyle + "ChartLayer";
+				const layerType = lineStyle + "ChartLayer";
 				displayManager.setEnabledChartLayer("");
-				displayManager.mainController.toggleZoomIntervalButtons(chartLayer, _loc4_);
-				displayManager.setEnabledChartLayer(_loc4_);
+				displayManager.mainController.toggleZoomIntervalButtons(chartLayer, layerType);
+				displayManager.setEnabledChartLayer(layerType);
 				this.setJsCurrentViewParam("lineStyle", lineStyle);
 			}
 		}
 
-		removeObject(ticker: string, type: string, id: string)
+		removeObject(ticker: string, id: string, objectType: string)
 		{
 			ticker = Utils.adjustNasdToNasdaq(ticker);
-			this.mainManager.removeObject(ticker, type, id);
+			this.mainManager.removeObject(ticker, Number(id), objectType);
 		}
 
 		expandChart()
@@ -301,15 +301,15 @@ namespace com.google.finance
 			layersManager.addLayerToStyle(layerInfo, param2);
 		}
 
-		setParameter(key: string, value: string)
+		setParameter(name: string, value: string)
 		{
 			const layersManager = this.mainManager.layersManager;
 			const displayManager = this.mainManager.displayManager;
-			com.google.finance.MainManager.paramsObj[key] = value;
-			if (key === "displayNewsPins")
+			com.google.finance.MainManager.paramsObj[name] = value;
+			if (name === "displayNewsPins")
 				Const.DISPLAY_NEWS_PINS = "true" === value;
 
-			if (key === "displayVolume")
+			if (name === "displayVolume")
 			{
 				if (!Boolean(value))
 					layersManager.hideViewPoint("BottomViewPoint", "single");
@@ -318,7 +318,7 @@ namespace com.google.finance
 
 				displayManager.windowResized(Const.MOVIE_WIDTH, Const.MOVIE_HEIGHT);
 			}
-			if (key === "displayExtendedHours" && com.google.finance.MainManager.paramsObj.hasExtendedHours !== "false")
+			if (name === "displayExtendedHours" && com.google.finance.MainManager.paramsObj.hasExtendedHours !== "false")
 			{
 				if (Boolean(value))
 					displayManager.setAfterHoursDisplay(true);
@@ -333,7 +333,7 @@ namespace com.google.finance
 				if (firstDataSource)
 					this.setForceDisplayExtendedHours(firstDataSource);
 			}
-			if (key === "minZoomDays")
+			if (name === "minZoomDays")
 				displayManager.mainController.setMinDisplayDays(Number(value));
 
 			displayManager.update();
@@ -412,11 +412,11 @@ namespace com.google.finance
 			const lastRealPointIndex = Utils.getLastRealPointIndex(pointsInIntervalArray);
 			if (lastRealPointIndex >= 0)
 			{
-				const unit = pointsInIntervalArray[lastRealPointIndex];
-				unit.close = close;
-				unit.low = Utils.extendedMin(unit.low, close);
-				unit.high = Utils.extendedMax(unit.high, close);
-				unit.realtime = true;
+				const _loc5_ = pointsInIntervalArray[lastRealPointIndex];
+				_loc5_.close = close;
+				_loc5_.low = Utils.extendedMin(_loc5_.low, close);
+				_loc5_.high = Utils.extendedMax(_loc5_.high, close);
+				_loc5_.realtime = true;
 				return true;
 			}
 			return false;
@@ -428,10 +428,10 @@ namespace com.google.finance
 			this.mainManager.clearAllPins(ticker);
 		}
 
-		removeObjectArray(param1: Map<string>[])
+		removeObjectArray(maps: Map<string>[])
 		{
-			Utils.adjustExchangeNameOfArray(param1, "_quote");
-			this.mainManager.removeObjectArray(param1);
+			Utils.adjustExchangeNameOfArray(maps, "_quote");
+			this.mainManager.removeObjectArray(maps);
 		}
 
 		shrinkChart()

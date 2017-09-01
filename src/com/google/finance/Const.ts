@@ -33,6 +33,7 @@ namespace com.google.finance
 		SCALE_5D = 8,
 		SCALE_3D = 9,
 		SCALE_1D = 10,
+		SCALE_CUSTOM = 11,
 	}
 
 	export enum AddStreamResults
@@ -101,7 +102,7 @@ namespace com.google.finance
 	export class IntervalPeriod
 	{
 		constructor(
-			public type: Intervals,
+			public type: number,
 			public days: number,
 			public maxdays: number,
 			public mindays: number,
@@ -128,7 +129,7 @@ namespace com.google.finance
 	export class Const
 	{
 		private static DETAIL_LEVEL_INFO: { [key: number]: number };
-		private static INTERVAL_INFO: { [key: number]: Intervals };
+		private static INTERVAL_INFO: { [key: number]: number };
 		static APPLY_CHINESE_STYLE_MACD = false;
 		static CHART_TYPE_BUTTONS_ENABLED = false;
 		static DEFAULT_DISPLAY_DAYS = 3;
@@ -263,7 +264,6 @@ namespace com.google.finance
 		static readonly RSI = "RSI";
 		static readonly SCALE_BUTTON_HEIGHT = 15;
 		static readonly SCALE_BUTTON_WIDTH = 21;
-		static readonly SCALE_CUSTOM = 11;
 		static readonly SCROLL_HEIGHT = 12;
 		static readonly SEC_PER_MINUTE = 60;
 		static readonly SELECTING_FILL_COLOR = 14082790;
@@ -406,7 +406,7 @@ namespace com.google.finance
 			Const.INTERVAL_INFO[Const.DAILY_INTERVAL] = Intervals.DAILY;
 			Const.INTERVAL_INFO[Const.WEEKLY_INTERVAL] = Intervals.WEEKLY;
 
-			Const.DETAIL_LEVEL_INFO = {};
+			Const.DETAIL_LEVEL_INFO = [];
 			Const.DETAIL_LEVEL_INFO[Intervals.INTRADAY] = Const.INTRADAY_INTERVAL;
 			Const.DETAIL_LEVEL_INFO[Intervals.FIVE_MINUTES] = Const.FIVE_MINUTE_INTERVAL;
 			Const.DETAIL_LEVEL_INFO[Intervals.HALF_HOUR] = Const.HALF_HOUR_INTERVAL;
@@ -414,24 +414,24 @@ namespace com.google.finance
 			Const.DETAIL_LEVEL_INFO[Intervals.WEEKLY] = Const.WEEKLY_INTERVAL;
 		})();
 
-		static getDetailLevelInterval(interval: Intervals): number
+		static getDetailLevelInterval(detailLevel: Intervals): number
 		{
-			return Const.DETAIL_LEVEL_INFO[interval];
+			return Const.DETAIL_LEVEL_INFO[detailLevel];
 		}
 
-		static getIntervalDetailLevel(param1: number): Intervals
+		static getIntervalDetailLevel(interval: number): number
 		{
-			return Const.INTERVAL_INFO[param1];
+			return Const.INTERVAL_INFO[interval];
 		}
 
-		static getZoomLevel(param1: number, param2: number): number
+		static getZoomLevel(param1: number, param2: number): ScaleTypes
 		{
 			const scaleIntervals = Const.SCALE_INTERVALS;
 			let scaleIntervalIndex = scaleIntervals.length - 1;
 			while (scaleIntervals[scaleIntervalIndex].days * param2 < Math.floor(param1) && scaleIntervalIndex > 0)
 				scaleIntervalIndex--;
 
-			return scaleIntervalIndex;
+			return <ScaleTypes>scaleIntervalIndex;
 		}
 
 		static getQuoteType(param1: string): QuoteTypes

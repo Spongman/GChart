@@ -9,7 +9,7 @@ namespace com.google.finance
 		protected regionsXLimits: com.google.finance.IntervalSet;
 		protected readonly maxVolumeCache: Map<number> = {};
 
-		private drawAfterHoursSession(layer: AHVolumeLayer, dataSeries: DataSeries, startTime: number, endTime: number, context: Context, param6: number)
+		private drawAfterHoursSession(layer: AHVolumeLayer, dataSeries: DataSeries, startTime: number, endTime: number, context: Context, interval: number)
 		{
 			const timeIndex2 = DataSource.getTimeIndex(endTime, dataSeries.units);
 			const timeIndex1 = DataSource.getTimeIndex(startTime, dataSeries.units);
@@ -17,7 +17,7 @@ namespace com.google.finance
 			const points = <indicator.VolumeIndicatorPoint[]>dataSeries.points;
 			const right = viewPoint.getXPos(points[timeIndex2].point);
 			let left = right;
-			const intervalLength = viewPoint.getIntervalLength(param6 / 60);
+			const intervalLength = viewPoint.getIntervalLength(interval / 60);
 			const gr = layer.graphics;
 			for (let timeIndex = timeIndex2; timeIndex > timeIndex1; timeIndex--)
 			{
@@ -34,9 +34,9 @@ namespace com.google.finance
 			this.regionsXLimits.addInterval(left, right);
 		}
 
-		private getMaxVolumeHashKey(param1: number, param2: number): string
+		private getMaxVolumeHashKey(param1: number, detailLevel: number): string
 		{
-			return param1 + '-' + param2;
+			return param1 + '-' + detailLevel;
 		}
 
 		protected drawLines(sprite: flash.display.Sprite, dataSeries: DataSeries, param3: number, param4: number, viewPoint: IViewPoint, context: Context)

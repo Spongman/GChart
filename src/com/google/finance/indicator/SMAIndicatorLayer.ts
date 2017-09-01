@@ -22,10 +22,10 @@ namespace com.google.finance.indicator
 			return false;
 		}
 
-		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string
+		protected getIndicatorValueText(periodIndex: number, param2: number, param3: string, context: Context): string
 		{
-			if (param1 >= 0 && param1 < this.periods.length)
-				return Messages.getMsg(Messages.SMA_INTERVAL, this.periods[param1], param3, param2);
+			if (periodIndex >= 0 && periodIndex < this.periods.length)
+				return Messages.getMsg(Messages.SMA_INTERVAL, this.periods[periodIndex], param3, param2);
 
 			return "";
 		}
@@ -38,12 +38,12 @@ namespace com.google.finance.indicator
 			return IndicatorLineStyle.NONE;
 		}
 
-		computeIntervalIndicator(param1: number)
+		computeIntervalIndicator(interval: number)
 		{
-			if (this.indicator.hasInterval(param1))
+			if (this.indicator.hasInterval(interval))
 				return;
 
-			const pointsInIntervalArray = this.originalDataSeries.getPointsInIntervalArray(param1);
+			const pointsInIntervalArray = this.originalDataSeries.getPointsInIntervalArray(interval);
 			for (let pointIndex = 0; pointIndex < this.periods.length; pointIndex++)
 			{
 				const dataSeries = new DataSeries();
@@ -68,7 +68,7 @@ namespace com.google.finance.indicator
 						dataSeries.points.push(point);
 					}
 				}
-				this.indicator.setDataSeries(param1, dataSeries, pointIndex);
+				this.indicator.setDataSeries(interval, dataSeries, pointIndex);
 			}
 		}
 

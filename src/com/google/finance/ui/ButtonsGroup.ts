@@ -22,7 +22,7 @@ namespace com.google.finance.ui
 		listenerObjects: flash.display.DisplayObject[];
 		buttons: flash.display.SimpleButton[];
 		spacing = ButtonsGroup.DEFAULT_SPACING;
-		listenerFunctions: ((p1: any, text: string) => void)[];
+		listenerFunctions: ((object: any, text: string) => void)[];
 		separatorTextFormat: flash.text.TextFormat;
 		leftPadding = ButtonsGroup.DEFAULT_LEFT_PADDING;
 		buttonTextFormat: flash.text.TextFormat;
@@ -43,32 +43,32 @@ namespace com.google.finance.ui
 			};
 		}
 
-		setSpacing(spectator: string, spacing: number)
+		setSpacing(separator: string, spacing: number)
 		{
-			this.separator = spectator;
+			this.separator = separator;
 			this.spacing = spacing;
 		}
 
-		addButton(param1: string, param2?: flash.text.TextFormat, param3 = NaN, param4 = NaN)
+		addButton(text: string, textFormat?: flash.text.TextFormat, param3 = NaN, param4 = NaN)
 		{
 			if (this.buttons.length > 0 && this.separator !== "")
 			{
 				const _loc6_ = this.putSeparator(this.currentX, this.currentY, this.separator);
 				this.currentX += _loc6_.width;
 			}
-			const _loc5_ = this.attachButton(param1, param2, param3, param4);
-			this.currentX += _loc5_.width + this.spacing;
-			this.buttons.push(_loc5_);
-			_loc5_.addEventListener(MouseEvents.MOUSE_DOWN, (event) => { this.buttonPress(event); });
+			const button = this.attachButton(text, textFormat, param3, param4);
+			this.currentX += button.width + this.spacing;
+			this.buttons.push(button);
+			button.addEventListener(MouseEvents.MOUSE_DOWN, (event) => { this.buttonPress(event); });
 		}
 
-		protected getButtonIndex(param1: string): number
+		protected getButtonIndex(name: string): number
 		{
-			let _loc2_ = this.buttons.length - 1;
-			while (_loc2_ >= 0 && this.buttons[_loc2_].name !== param1)
-				_loc2_--;
+			let index = this.buttons.length - 1;
+			while (index >= 0 && this.buttons[index].name !== name)
+				index--;
 
-			return _loc2_;
+			return index;
 		}
 
 		private putSeparator(x: number, y: number, text: string): flash.text.TextField
@@ -84,7 +84,7 @@ namespace com.google.finance.ui
 			return textField;
 		}
 
-		protected attachButton(text: string, param2?: flash.text.TextFormat, param3 = NaN, param4 = NaN): flash.display.SimpleButton
+		protected attachButton(text: string, textFormat?: flash.text.TextFormat, param3 = NaN, param4 = NaN): flash.display.SimpleButton
 		{
 			const simpleButton = new flash.display.SimpleButton();
 			const nextButtonPosition = this.getNextButtonPosition();
@@ -95,7 +95,7 @@ namespace com.google.finance.ui
 			const sprite = new flash.display.Sprite();
 			sprite.addChild(textField);
 			//const _loc7_ = _loc8_;
-			textField.defaultTextFormat = !!param2 ? param2 : this.buttonTextFormat;
+			textField.defaultTextFormat = !!textFormat ? textFormat : this.buttonTextFormat;
 			textField.text = text;
 			textField.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			simpleButton.upState = sprite;
@@ -107,19 +107,19 @@ namespace com.google.finance.ui
 			return simpleButton;
 		}
 
-		setLeftPadding(leftPadding: number)
+		setLeftPadding(x: number)
 		{
-			this.leftPadding = leftPadding;
-			this.currentX = leftPadding;
+			this.leftPadding = x;
+			this.currentX = x;
 		}
 
 		resetButtonsGroup()
 		{
-			const _loc1_ = !!this.buttons ? this.buttons.length : 0;
-			for (let _loc2_ = 0; _loc2_ < _loc1_; _loc2_++)
+			const numButtons = !!this.buttons ? this.buttons.length : 0;
+			for (let buttonIndex = 0; buttonIndex < numButtons; buttonIndex++)
 			{
-				this.buttons[_loc2_].removeEventListener(MouseEvents.MOUSE_DOWN, this.buttonPress);
-				this.removeChild(this.buttons[_loc2_]);
+				this.buttons[buttonIndex].removeEventListener(MouseEvents.MOUSE_DOWN, this.buttonPress);
+				this.removeChild(this.buttons[buttonIndex]);
 			}
 			this.buttons = [];
 			this.listenerFunctions = [];
@@ -150,20 +150,20 @@ namespace com.google.finance.ui
 			this.separatorTextFormat = separatorTextFormat;
 		}
 
-		addListener(param1: (p1: any, text: string) => void, displayObject: flash.display.DisplayObject)
+		addListener(listenerFunction: (object: any, text: string) => void, displayObject: flash.display.DisplayObject)
 		{
-			this.listenerFunctions.push(param1);
+			this.listenerFunctions.push(listenerFunction);
 			this.listenerObjects.push(displayObject);
 		}
 
-		addPlainText(param1: string, param2 = NaN)
+		addPlainText(text: string, width = NaN)
 		{
 			const nextButtonPosition = this.getNextButtonPosition();
-			const _loc4_ = this.putSeparator(nextButtonPosition.x, nextButtonPosition.y, param1);
-			if (!isNaN(param2))
-				this.currentX += param2;
+			const textField = this.putSeparator(nextButtonPosition.x, nextButtonPosition.y, text);
+			if (!isNaN(width))
+				this.currentX += width;
 			else
-				this.currentX += _loc4_.width;
+				this.currentX += textField.width;
 		}
 	}
 }

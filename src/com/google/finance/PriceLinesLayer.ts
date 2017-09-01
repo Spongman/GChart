@@ -226,18 +226,17 @@ namespace com.google.finance
 			return Math.pow(10, Math.floor(_loc2_));
 		}
 
-		inverseLogTransform(param1: number, param2: string): number
+		inverseLogTransform(value: number, scaleType: string): number
 		{
-			let _loc3_ = NaN;
-			if (param2 === Const.LOG_VSCALE || param2 === Const.NEW_LOG_VSCALE)
+			if (scaleType === Const.LOG_VSCALE || scaleType === Const.NEW_LOG_VSCALE)
 			{
-				_loc3_ = Math.pow(Const.LOG_SCALE, param1);
-				if (param1 < 1)
-					_loc3_ = 10 * (_loc3_ - 1) / 9;
+				let logValue = Math.pow(Const.LOG_SCALE, value);
+				if (value < 1)
+					logValue = 10 * (logValue - 1) / 9;
 
-				return _loc3_;
+				return logValue;
 			}
-			return param1;
+			return value;
 		}
 	}
 }

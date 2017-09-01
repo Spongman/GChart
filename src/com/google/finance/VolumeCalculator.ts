@@ -57,21 +57,21 @@ namespace com.google.finance
 			}
 		}
 
-		static computeInterval(param1: number, indicator: Indicator, intput: DataSeries)
+		static computeInterval(interval: number, indicator: Indicator, intput: DataSeries)
 		{
-			if (indicator.hasInterval(param1))
+			if (indicator.hasInterval(interval))
 				return;
 
 			const output = new DataSeries();
-			if (param1 < Const.INTRADAY_INTERVAL)
+			if (interval < Const.INTRADAY_INTERVAL)
 				return;
 
-			if (param1 < Const.DAILY_INTERVAL)
-				VolumeCalculator.computeIntraday(intput, output, param1);
-			else if (param1 < Const.WEEKLY_INTERVAL)
-				VolumeCalculator.computeDaily(intput, output, param1);
+			if (interval < Const.DAILY_INTERVAL)
+				VolumeCalculator.computeIntraday(intput, output, interval);
+			else if (interval < Const.WEEKLY_INTERVAL)
+				VolumeCalculator.computeDaily(intput, output, interval);
 			else
-				VolumeCalculator.computeWeekly(intput, output, param1);
+				VolumeCalculator.computeWeekly(intput, output, interval);
 
 			output.points.reverse();
 			output.days.reverse();
@@ -81,7 +81,7 @@ namespace com.google.finance
 				output.days[_loc5_] = output.points.length - 1 - output.days[_loc5_];
 				output.fridays[_loc5_] = output.points.length - 1 - output.fridays[_loc5_];
 			}
-			indicator.setDataSeries(param1, output);
+			indicator.setDataSeries(interval, output);
 		}
 
 		private static computeIntraday(input: DataSeries, output: DataSeries, param3: number)

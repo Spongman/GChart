@@ -17,7 +17,7 @@ namespace com.google.finance
 			return viewPoint.maxy - (param1 >= 0 ? param1 : 0) * this.localYScale;
 		}
 
-		protected findPointIndex(x: number): number
+		protected findPointIndex(param1: number): number
 		{
 			const dataSeries = notnull(this.getDataSeries());
 			const detailLevel = this.viewPoint.getDetailLevelForTechnicalStyle();
@@ -26,7 +26,7 @@ namespace com.google.finance
 			if (!points)
 				return -1;
 
-			const minute = this.viewPoint.getMinuteOfX(x);
+			const minute = this.viewPoint.getMinuteOfX(param1);
 			let relativeMinuteIndex = dataSeries.getRelativeMinuteIndex(minute, points);
 			if (relativeMinuteIndex === points.length - 2)
 			{
@@ -35,7 +35,7 @@ namespace com.google.finance
 			}
 			if (detailLevel === Intervals.WEEKLY)
 			{
-				while (relativeMinuteIndex + 1 < points.length && points[relativeMinuteIndex + 1].weeklyXPos <= x)
+				while (relativeMinuteIndex + 1 < points.length && points[relativeMinuteIndex + 1].weeklyXPos <= param1)
 					relativeMinuteIndex++;
 			}
 			while (relativeMinuteIndex > 0 && (points[relativeMinuteIndex].fake || points[relativeMinuteIndex].duplicate || points[relativeMinuteIndex].volumes[detailLevelInterval] === 0))
@@ -57,7 +57,7 @@ namespace com.google.finance
 			gr.lineTo(this.viewPoint.maxx - 1, param1);
 		}
 
-		private drawOneBar(param1: number, param2: number, viewPoint: IViewPoint, sprite: flash.display.Sprite, param5: number, param6: number = -1)
+		private drawOneBar(param1: number, param2: number, viewPoint: IViewPoint, sprite: flash.display.Sprite, param5: number, color: number = -1)
 		{
 			if (viewPoint.maxy - param2 < 1 && viewPoint.maxy - param2 > 0)
 				param2 = viewPoint.maxy - 1;
@@ -65,11 +65,11 @@ namespace com.google.finance
 				param2 = viewPoint.miny;
 
 			const gr = sprite.graphics;
-			if (param6 !== -1)
-				gr.beginFill(param6);
+			if (color !== -1)
+				gr.beginFill(color);
 
 			gr.drawRect(param1 - param5 / 2, param2, param5, viewPoint.maxy - param2);
-			if (param6 !== -1)
+			if (color !== -1)
 				gr.endFill();
 		}
 
@@ -94,27 +94,28 @@ namespace com.google.finance
 			if (!points)
 				return context;
 
-			const firstMinute = context.lastMinute - context.count;
-			let firstMinuteIndex = dataSeries.getRelativeMinuteIndex(firstMinute, points) - 1;
-			if (firstMinuteIndex < 0)
-				firstMinuteIndex = 0;
+			const _loc7_ = context.lastMinute - context.count;
+			let _loc8_ = dataSeries.getRelativeMinuteIndex(_loc7_, points) - 1;
+			if (_loc8_ < 0)
+				_loc8_ = 0;
 
-			let lastMinuteIndex = dataSeries.getRelativeMinuteIndex(context.lastMinute, points) + 1;
-			if (lastMinuteIndex >= points.length)
-				lastMinuteIndex = points.length - 1;
+			let _loc9_ = dataSeries.getRelativeMinuteIndex(context.lastMinute, points) + 1;
+			if (_loc9_ >= points.length)
+				_loc9_ = points.length - 1;
 
-			let volume = points[lastMinuteIndex].volumes[detailLevelInterval];
-			for (let minuteIndex = lastMinuteIndex - 1; minuteIndex >= firstMinuteIndex; minuteIndex--)
-				volume = Utils.extendedMax(volume, points[minuteIndex].volumes[detailLevelInterval]);
-
+			let _loc10_ = points[_loc9_].volumes[detailLevelInterval];
+			for (let _loc11_ = _loc9_ - 1; _loc11_ >= _loc8_; _loc11_--)
+			{
+				_loc10_ = Utils.extendedMax(_loc10_, points[_loc11_].volumes[detailLevelInterval]);
+			}
 			let _loc12_ = NaN;
 			for (let scaleIndex = 1; scaleIndex < Const.VOLUME_SCALES.length; scaleIndex++)
 			{
 				_loc12_ = Const.VOLUME_SCALES[scaleIndex];
-				if (Math.floor(volume / _loc12_) < 10)
+				if (Math.floor(_loc10_ / _loc12_) < 10)
 					break;
 			}
-			const _loc13_ = (Math.floor(volume / _loc12_) + 1) * _loc12_;
+			const _loc13_ = (Math.floor(_loc10_ / _loc12_) + 1) * _loc12_;
 			context.maxVolume = Utils.extendedMax(context.maxVolume, _loc13_);
 			return context;
 		}
@@ -144,28 +145,28 @@ namespace com.google.finance
 				const barWidth = this.getBarWidth(detailLevel, dataSeries);
 				for (let _loc11_ = _loc8_; _loc11_ >= _loc7_; _loc11_--)
 				{
-					const unit = points[_loc11_];
-					if (!isNaN(unit.open))
+					const _loc10_ = points[_loc11_];
+					if (!isNaN(_loc10_.open))
 					{
-						if (unit.close >= unit.open)
+						if (_loc10_.close >= _loc10_.open)
 							gr.lineStyle(1, Const.POSITIVE_DIFFERENCE_COLOR);
 						else
 							gr.lineStyle(1, Const.NEGATIVE_DIFFERENCE_COLOR);
 
-						if (!dataSeries.minuteIsStartOfDataSession(unit.dayMinute))
+						if (!dataSeries.minuteIsStartOfDataSession(_loc10_.dayMinute))
 						{
 							let _loc12_: number;
 							if (detailLevel === Intervals.WEEKLY && displayManager !== Const.LINE_CHART)
 							{
-								_loc12_ = this.getWeeklyBarXPos(unit, _loc14_);
+								_loc12_ = this.getWeeklyBarXPos(_loc10_, _loc14_);
 								_loc14_ = _loc12_;
 							}
 							else
 							{
-								_loc12_ = viewPoint.getXPos(unit);
+								_loc12_ = viewPoint.getXPos(_loc10_);
 							}
-							const y = this.getYPos(unit.volumes[detailLevelInterval], viewPoint);
-							this.drawOneBar(_loc12_, y, viewPoint, this, barWidth, unit.close >= unit.open ? -1 : Const.NEGATIVE_DIFFERENCE_COLOR);
+							const yPos = this.getYPos(_loc10_.volumes[detailLevelInterval], viewPoint);
+							this.drawOneBar(_loc12_, yPos, viewPoint, this, barWidth, _loc10_.close >= _loc10_.open ? -1 : Const.NEGATIVE_DIFFERENCE_COLOR);
 						}
 					}
 				}
@@ -175,59 +176,59 @@ namespace com.google.finance
 				gr.lineStyle(1, Const.LINE_CHART_LINE_COLOR);
 				for (let _loc11_ = _loc8_; _loc11_ >= _loc7_; _loc11_--)
 				{
-					const unit = points[_loc11_];
-					if (!dataSeries.minuteIsStartOfDataSession(unit.dayMinute))
+					const _loc10_ = points[_loc11_];
+					if (!dataSeries.minuteIsStartOfDataSession(_loc10_.dayMinute))
 					{
 						let _loc12_: number;
 						if (detailLevel === Intervals.WEEKLY && displayManager !== Const.LINE_CHART)
 						{
-							_loc12_ = this.getWeeklyBarXPos(unit, _loc14_);
+							_loc12_ = this.getWeeklyBarXPos(_loc10_, _loc14_);
 							_loc14_ = _loc12_;
 						}
 						else
 						{
-							_loc12_ = viewPoint.getXPos(unit);
+							_loc12_ = viewPoint.getXPos(_loc10_);
 						}
-						const y = this.getYPos(unit.volumes[detailLevelInterval], viewPoint);
-						this.drawOneLine(_loc12_, y, viewPoint, this);
+						const yPos = this.getYPos(_loc10_.volumes[detailLevelInterval], viewPoint);
+						this.drawOneLine(_loc12_, yPos, viewPoint, this);
 					}
 				}
 			}
 			this.drawHorizontalLine(viewPoint.miny + Const.BOTTOM_VIEWPOINT_HEADER_HEIGHT);
 		}
 
-		highlightPoint(context: Context, x: number, state: Dictionary)
+		highlightPoint(context: Context, param2: number, state: Dictionary)
 		{
 			if (state["ahsetter"])
 				return;
 
 			const dataSeries = notnull(this.getDataSeries());
 			const viewPoint = this.viewPoint;
-			const pointIndex = this.findPointIndex(x);
+			const pointIndex = this.findPointIndex(param2);
 			const detailLevel = viewPoint.getDetailLevelForTechnicalStyle();
 			const detailLevelInterval = Const.getDetailLevelInterval(detailLevel);
 			const points = dataSeries.getPointsInIntervalArray(detailLevelInterval);
 			if (!points || pointIndex === -1)
 				return;
 
-			const unit = points[pointIndex];
+			const _loc10_ = points[pointIndex];
 			this.clearHighlight();
-			const _loc11_ = !isNaN(unit.weeklyXPos) ? Number(unit.weeklyXPos) : viewPoint.getXPos(unit);
-			const y = this.getYPos(unit.volumes[detailLevelInterval], viewPoint);
+			const _loc11_ = !isNaN(_loc10_.weeklyXPos) ? Number(_loc10_.weeklyXPos) : viewPoint.getXPos(_loc10_);
+			const yPos = this.getYPos(_loc10_.volumes[detailLevelInterval], viewPoint);
 			const displayManager = viewPoint.getDisplayManager().getEnabledChartLayer();
 			const gr = this.highlightCanvas.graphics;
 			if (Const.VOLUME_PLUS_ENABLED && Const.VOLUME_PLUS_CHART_TYPE.indexOf(displayManager) !== -1)
 			{
 				gr.lineStyle(5, Const.DOT_COLOR, 1);
-				gr.moveTo(_loc11_, y - 0.2);
-				gr.lineTo(_loc11_, y + 0.2);
+				gr.moveTo(_loc11_, yPos - 0.2);
+				gr.lineTo(_loc11_, yPos + 0.2);
 			}
 			else
 			{
 				gr.lineStyle(2, Const.VOLUME_HIGHLIGHT_COLOR, 1);
-				this.drawOneLine(_loc11_, y, viewPoint, this.highlightCanvas);
+				this.drawOneLine(_loc11_, yPos, viewPoint, this.highlightCanvas);
 			}
-			state[SpaceText.VOLUME_STR] = unit.volumes[detailLevelInterval];
+			state[SpaceText.VOLUME_STR] = _loc10_.volumes[detailLevelInterval];
 			state["volumesetter"] = this;
 		}
 	}

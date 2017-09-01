@@ -15,7 +15,8 @@ const buffer = require('vinyl-buffer');
 const uglifycss = require('gulp-uglifycss');
 const clean = require('gulp-clean');
 const connectProxy = require('gulp-api-proxy');
-const tslint = require("gulp-tslint");
+const gulpTslint = require("gulp-tslint");
+const tslint = require("tslint");
 
 const config = {
 	production: !!util.env.production,
@@ -50,14 +51,24 @@ gulp.task('typescript', () =>
 		.pipe(gulp.dest("dist"))
 );
 
-gulp.task("tslint", () =>
+gulp.task("tslint", ['typescript'], () => {
+
+
+	var program = tslint.Linter.createProgram("./src/tsconfig.json");
+
+	return gulp.src('./src/**/*.ts', { base: './src' })
+		.pipe(gulpTslint({ program }))
+		.pipe(gulpTslint.report());
+		
+	/*
 	tsProject.src()
 		//gulp.src("source.ts")
 		.pipe(tslint({
 			formatter: "verbose"
 		}))
-		.pipe(tslint.report())
-);
+	//.pipe(tslint.report())
+	*/
+});
 
 gulp.task('javascript', () =>
 

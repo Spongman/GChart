@@ -42,9 +42,9 @@ namespace com.google.finance
 			return this.enabledChartLayer ? this.enabledChartLayer.getLayerName() : "";
 		}
 
-		setEnabledLayer(enabledLayerName: string)
+		setEnabledLayer(layerName: string)
 		{
-			if (this.getEnabledLayerName() === enabledLayerName)
+			if (this.getEnabledLayerName() === layerName)
 				return;
 
 			if (this.enabledChartLayer)
@@ -55,11 +55,11 @@ namespace com.google.finance
 			}
 			for (const layer of this.chartLayers)
 			{
-				if (layer.getLayerName() === enabledLayerName)
+				if (layer.getLayerName() === layerName)
 				{
 					layer.setEnabled(true);
 					this.enabledChartLayer = layer;
-					IntervalBasedChartManagerLayer.enabledChartLayerName = enabledLayerName;
+					IntervalBasedChartManagerLayer.enabledChartLayerName = layerName;
 					break;
 				}
 			}

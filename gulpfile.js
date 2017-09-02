@@ -82,7 +82,7 @@ gulp.task('javascript', () =>
 /*
 Web server to test app
 */
-gulp.task('webserver', ['default'], () =>
+gulp.task('webserver', ['watch'], () =>
 	connect.server({
 		livereload: true,
 		root: 'dist/',
@@ -99,7 +99,7 @@ gulp.task('webserver', ['default'], () =>
 /*
 Automatic Live Reload
 */
-gulp.task('livereload', () =>
+gulp.task('livereload', ['webserver'], () =>
 
 	watch(['dist/*.css', 'dist/*.js', 'dist/*.html'])
 		.pipe(connect.reload())
@@ -137,7 +137,7 @@ gulp.task('browserify', () =>
 /*
 Watch typescript, styles, html, etc...
 */
-gulp.task('watch', () => {
+gulp.task('watch', ['default'], () => {
 	gulp.watch('src/**/*.css', ['styles']);
 	gulp.watch(['src/**/*.ts', 'src/**/*.tsx'], ['typescript', 'tslint']);
 	gulp.watch('src/**/*.js', ['javascript']);
@@ -162,4 +162,4 @@ gulp.task('default',
 	['styles', 'typescript', 'javascript', 'html', 'assets']);
 
 gulp.task('serve',
-	['webserver', 'livereload', 'watch']);
+	['livereload']);

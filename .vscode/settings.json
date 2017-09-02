@@ -1,5 +1,10 @@
 // Place your settings in this file to overwrite default and user settings.
 {
     "typescript.format.placeOpenBraceOnNewLineForControlBlocks": true,
-	"typescript.format.placeOpenBraceOnNewLineForFunctions": true
+	"typescript.format.placeOpenBraceOnNewLineForFunctions": true,
+	"search.exclude": {
+		"**/node_modules": true,
+		"./dist/**/*": true,
+		"**/bower_components": true
+	}
 }

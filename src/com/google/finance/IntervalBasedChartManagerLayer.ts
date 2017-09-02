@@ -7,7 +7,7 @@ namespace com.google.finance
 		private static enabledChartLayerName: string | null;
 
 		private chartLayers: IntervalBasedChartLayer[] = [];
-		private enabledChartLayer: com.google.finance.IntervalBasedChartLayer | null;
+		private enabledChartLayer: IntervalBasedChartLayer | null;
 
 		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{

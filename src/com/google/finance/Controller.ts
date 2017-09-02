@@ -125,7 +125,7 @@ namespace com.google.finance
 		{
 			const mainViewPoint = this.displayManager.getMainViewPoint();
 			if (mainViewPoint)
-				this.notifyListenersToMove(direction * (mainViewPoint.maxx - mainViewPoint.minx));
+				this.notifyListenersToMove(<number>direction * (mainViewPoint.maxx - mainViewPoint.minx));
 		}
 
 		private getInitialZoomLevel(): ScaleTypes

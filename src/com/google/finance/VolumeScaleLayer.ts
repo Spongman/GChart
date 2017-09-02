@@ -39,7 +39,7 @@ namespace com.google.finance
 				this.volumeLabel.text = Messages.getMsg(Messages.VOLUME_LONG) + " (" + Messages.getMsg(Messages.THOUSAND_SHORT) + " / ";
 				_loc2_ = 1000;
 			}
-			const _loc4_ = !!Const.INDICATOR_ENABLED ? Number(viewPoint.getDetailLevelForTechnicalStyle()) : viewPoint.getDetailLevel();
+			const _loc4_ = !!Const.INDICATOR_ENABLED ? viewPoint.getDetailLevelForTechnicalStyle() : viewPoint.getDetailLevel();
 			const _loc5_ = !!Const.INDICATOR_ENABLED ? 1 : viewPoint.getSkipInterval().skip;
 			switch (_loc4_)
 			{

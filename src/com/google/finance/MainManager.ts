@@ -89,7 +89,7 @@ namespace com.google.finance
 		private needAfterHoursData(quote: string): ChartEvent | null
 		{
 			if (quote === this.quote && (Boolean(MainManager.paramsObj.forceDisplayExtendedHours) || Boolean(MainManager.paramsObj.displayExtendedHours)))
-				return EventFactory.getEvent(ChartEventStyles.GET_AH_DATA, quote, ChartEventPriorities.REQUIRED);
+				return EventFactory.getEvent(ChartDetailTypes.GET_AH_DATA, quote, ChartEventPriorities.REQUIRED);
 
 			return null;
 		}
@@ -313,13 +313,13 @@ namespace com.google.finance
 
 		private getQuoteForBarChart(param1: string, param2: number, param3: boolean)
 		{
-			const event = EventFactory.getEvent(ChartEventStyles.GET_5D_DATA, param1, ChartEventPriorities.REQUIRED);
+			const event = EventFactory.getEvent(ChartDetailTypes.GET_5D_DATA, param1, ChartEventPriorities.REQUIRED);
 
 			let _loc7_: ChartEvent;
 			if (MainManager.paramsObj.sparklineType === Const.STATIC || param2 > Const.SCALE_INTERVALS[ScaleTypes.SCALE_1Y].days)
-				_loc7_ = EventFactory.getEvent(ChartEventStyles.GET_40Y_DATA, param1, ChartEventPriorities.REQUIRED);
+				_loc7_ = EventFactory.getEvent(ChartDetailTypes.GET_40Y_DATA, param1, ChartEventPriorities.REQUIRED);
 			else
-				_loc7_ = EventFactory.getEvent(ChartEventStyles.GET_5Y_DATA, param1, ChartEventPriorities.REQUIRED);
+				_loc7_ = EventFactory.getEvent(ChartDetailTypes.GET_5Y_DATA, param1, ChartEventPriorities.REQUIRED);
 
 			let _loc5_: ChartEvent | null = null;
 			let _loc6_: ChartEvent | null = null;
@@ -329,15 +329,15 @@ namespace com.google.finance
 					_loc6_ = this.needAfterHoursData(param1);
 					break;
 				case Intervals.FIVE_MINUTES:
-					_loc5_ = EventFactory.getEvent(ChartEventStyles.GET_1Y_DATA, param1, ChartEventPriorities.REQUIRED);
-					_loc6_ = EventFactory.getEvent(ChartEventStyles.GET_10D_DATA, param1, ChartEventPriorities.REQUIRED);
+					_loc5_ = EventFactory.getEvent(ChartDetailTypes.GET_1Y_DATA, param1, ChartEventPriorities.REQUIRED);
+					_loc6_ = EventFactory.getEvent(ChartDetailTypes.GET_10D_DATA, param1, ChartEventPriorities.REQUIRED);
 					break;
 				case Intervals.HALF_HOUR:
-					_loc5_ = EventFactory.getEvent(ChartEventStyles.GET_1Y_DATA, param1, ChartEventPriorities.REQUIRED);
-					_loc6_ = EventFactory.getEvent(ChartEventStyles.GET_30D_DATA, param1, ChartEventPriorities.REQUIRED);
+					_loc5_ = EventFactory.getEvent(ChartDetailTypes.GET_1Y_DATA, param1, ChartEventPriorities.REQUIRED);
+					_loc6_ = EventFactory.getEvent(ChartDetailTypes.GET_30D_DATA, param1, ChartEventPriorities.REQUIRED);
 					break;
 				case Intervals.DAILY:
-					_loc6_ = EventFactory.getEvent(ChartEventStyles.GET_1Y_DATA, param1, ChartEventPriorities.REQUIRED);
+					_loc6_ = EventFactory.getEvent(ChartDetailTypes.GET_1Y_DATA, param1, ChartEventPriorities.REQUIRED);
 					break;
 			}
 			this.dataManager.expectEvent(event);
@@ -405,33 +405,33 @@ namespace com.google.finance
 			let _loc8_: ChartEvent | null = null;
 			if (param2 > Const.INTRADAY_DAYS)
 			{
-				_loc5_ = EventFactory.getEvent(ChartEventStyles.GET_1Y_DATA, param1, ChartEventPriorities.REQUIRED);
+				_loc5_ = EventFactory.getEvent(ChartDetailTypes.GET_1Y_DATA, param1, ChartEventPriorities.REQUIRED);
 				if (!Const.INDICATOR_ENABLED || this.quoteType === QuoteTypes.COMPANY)
 				{
-					_loc4_ = EventFactory.getEvent(ChartEventStyles.GET_5D_DATA, param1, ChartEventPriorities.REQUIRED);
+					_loc4_ = EventFactory.getEvent(ChartDetailTypes.GET_5D_DATA, param1, ChartEventPriorities.REQUIRED);
 					this.dataManager.expectEvent(_loc4_);
 				}
 			}
 			else if (this.quoteType === QuoteTypes.MUTUAL_FUND)
 			{
-				_loc5_ = EventFactory.getEvent(ChartEventStyles.MUTF_5D_DATA, param1, ChartEventPriorities.REQUIRED);
+				_loc5_ = EventFactory.getEvent(ChartDetailTypes.MUTF_5D_DATA, param1, ChartEventPriorities.REQUIRED);
 			}
 			else
 			{
-				_loc5_ = EventFactory.getEvent(ChartEventStyles.GET_5D_DATA, param1, ChartEventPriorities.REQUIRED);
+				_loc5_ = EventFactory.getEvent(ChartDetailTypes.GET_5D_DATA, param1, ChartEventPriorities.REQUIRED);
 			}
 			if (this.layersManager.getStyle() === LayersManager.SINGLE && Const.INDICATOR_ENABLED && this.quoteType === QuoteTypes.COMPANY)
 			{
 				if (param2 <= Const.HALF_HOUR_DAYS && param2 > Const.FIVE_MINUTE_DAYS)
-					_loc8_ = EventFactory.getEvent(ChartEventStyles.GET_30D_DATA, param1, ChartEventPriorities.REQUIRED);
+					_loc8_ = EventFactory.getEvent(ChartDetailTypes.GET_30D_DATA, param1, ChartEventPriorities.REQUIRED);
 
 				if (param2 <= Const.FIVE_MINUTE_DAYS && param2 > Const.INTRADAY_DAYS)
-					_loc8_ = EventFactory.getEvent(ChartEventStyles.GET_10D_DATA, param1, ChartEventPriorities.REQUIRED);
+					_loc8_ = EventFactory.getEvent(ChartDetailTypes.GET_10D_DATA, param1, ChartEventPriorities.REQUIRED);
 			}
 			if (MainManager.paramsObj.sparklineType === Const.STATIC || param2 > Const.SCALE_INTERVALS[ScaleTypes.SCALE_1Y].days)
-				_loc6_ = EventFactory.getEvent(ChartEventStyles.GET_40Y_DATA, param1, ChartEventPriorities.REQUIRED);
+				_loc6_ = EventFactory.getEvent(ChartDetailTypes.GET_40Y_DATA, param1, ChartEventPriorities.REQUIRED);
 			else
-				_loc6_ = EventFactory.getEvent(ChartEventStyles.GET_5Y_DATA, param1, ChartEventPriorities.REQUIRED);
+				_loc6_ = EventFactory.getEvent(ChartDetailTypes.GET_5Y_DATA, param1, ChartEventPriorities.REQUIRED);
 
 			if (Const.INDICATOR_ENABLED)
 			{

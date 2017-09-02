@@ -3,7 +3,7 @@ namespace com.google.finance
 	export class DataSeries
 	{
 		private readonly noPointsInIntervals: { [key: number]: boolean } = {};
-		private readonly pointsInIntervals: DataUnit[][] = [];
+		private readonly pointsInIntervals: { [key: number]: DataUnit[] } = [];
 		private currentSessionIndex: number = 0;
 
 		readonly intradayRegions: StartEndPair[] = [];
@@ -91,7 +91,7 @@ namespace com.google.finance
 			this.noPointsInIntervals[param1] = true;
 		}
 
-		getPointsInIntervals(): DataUnit[][]
+		getPointsInIntervals()
 		{
 			return this.pointsInIntervals;
 		}

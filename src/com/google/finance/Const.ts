@@ -3,6 +3,8 @@ namespace com.google.finance
 {
 	export enum Intervals
 	{
+		INVALID = -1,
+
 		INTRADAY = 0,
 		FIVE_MINUTES,
 		HALF_HOUR,
@@ -22,6 +24,8 @@ namespace com.google.finance
 
 	export enum ScaleTypes
 	{
+		INVALID = -1,
+
 		SCALE_MAX = 0,
 		SCALE_10Y = 1,
 		SCALE_5Y = 2,
@@ -59,7 +63,7 @@ namespace com.google.finance
 		FORWARD = -1,
 	}
 
-	export enum ChartEventStyles
+	export enum ChartDetailTypes
 	{
 		GET_1Y_DATA = 0,
 		GET_5D_DATA = 1,

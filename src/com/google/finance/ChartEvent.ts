@@ -28,7 +28,7 @@ namespace com.google.finance
 		period: string;
 		priority: ChartEventPriorities;
 		startTime: string;
-		detailType: number|null;
+		detailType: ChartDetailTypes|null;
 		columns: string;
 		callbacks?: EventCallback[];
 

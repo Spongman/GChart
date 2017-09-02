@@ -33,19 +33,22 @@ namespace com.google.finance
 			const points = dataSource.data.getPointsInIntervals();
 			const units = dataSource.data.units;
 			const map: Map<number> = {};
-			//for (const pointIndex in points)
-			for (let pointIndex = 0; pointIndex < points.length; pointIndex++)
+			for (const key of Object.keys(points))
 			{
+				const pointIndex = Number(key);
 				const pointUnits = points[pointIndex];
-				if (<Intervals>pointIndex === Intervals.FIVE_MINUTES && pointUnits[pointUnits.length - 1].dayMinute % 2 === 1)
+				console.log(pointIndex);
+				// TODO: should this be Const.FIVE_MINUTE_INTERVAL?
+				if (pointIndex === Intervals.FIVE_MINUTES && pointUnits[pointUnits.length - 1].dayMinute % 2 === 1)
 					pointUnits.splice(pointUnits.length - 1, 1);
 
 				map[pointIndex] = pointUnits.length - 1;
 			}
 			for (let unitIndex = units.length - 1; unitIndex >= 0; unitIndex--)
 			{
-				for (let pointIndex2 = 0; pointIndex2 < points.length; pointIndex2++)
+				for (const key2 of Object.keys(points))
 				{
+					const pointIndex2 = <Intervals>Number(key2);
 					const point = points[pointIndex2];
 					if (map[pointIndex2] >= 0 && point[map[pointIndex2]].time === units[unitIndex].time)
 					{
@@ -221,7 +224,7 @@ namespace com.google.finance
 				if (!firstDataSource)
 					return;
 
-				if (this.mainController.currentZoomLevel !== <ScaleTypes>-1)
+				if (this.mainController.currentZoomLevel !== ScaleTypes.INVALID)
 				{
 					this.mainController.syncZoomLevel();
 				}
@@ -726,7 +729,7 @@ namespace com.google.finance
 			const _loc5_ = _loc3_.hiddenExtendedHours.length();
 			if (param1 === true && _loc4_ + _loc5_ === 0)
 			{
-				const event = EventFactory.getEvent(ChartEventStyles.GET_AH_DATA, _loc3_.quoteName, ChartEventPriorities.OPTIONAL);
+				const event = EventFactory.getEvent(ChartDetailTypes.GET_AH_DATA, _loc3_.quoteName, ChartEventPriorities.OPTIONAL);
 				this.mainManager.dataManager.expectEvent(event);
 				this.mainManager.dataManager.eventHandler(event);
 			}
@@ -882,7 +885,7 @@ namespace com.google.finance
 		{
 			const mainViewPoint = this.getMainViewPoint();
 			const interval = !!Const.INDICATOR_ENABLED ? mainViewPoint.getDetailLevelForTechnicalStyle() : mainViewPoint.getDetailLevel();
-			if (interval === <Intervals>-1)
+			if (interval === Intervals.INVALID)
 			{
 				const defaultDisplayDays = Const.getDefaultDisplayDays();
 				const zoomLevel = Const.getZoomLevel(Const.MARKET_DAY_LENGTH * defaultDisplayDays, Const.MARKET_DAY_LENGTH);

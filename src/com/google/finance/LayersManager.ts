@@ -696,7 +696,7 @@ namespace com.google.finance
 					const defaultZoomPair = this.getDefaultZoomPair(dataSource);
 					this.applyStartEndToViewPoints(defaultZoomPair);
 				}
-				if (Const.INDICATOR_ENABLED && dataSource.quoteName === this.mainManager.quote && Const.DEFAULT_CHART_STYLE_NAME !== Const.LINE_CHART && this.displayManager.mainController.currentIntervalLevel === <Intervals>-1)
+				if (Const.INDICATOR_ENABLED && dataSource.quoteName === this.mainManager.quote && Const.DEFAULT_CHART_STYLE_NAME !== Const.LINE_CHART && this.displayManager.mainController.currentIntervalLevel === Intervals.INVALID)
 				{
 					this.displayManager.mainController.enableIntervalButtons(Const.DEFAULT_D);
 					this.displayManager.mainController.currentIntervalLevel = Const.DEFAULT_D;
@@ -781,7 +781,7 @@ namespace com.google.finance
 			{
 				const _loc8_ = !!Const.INDICATOR_ENABLED ? this.displayManager.getEnabledChartLayer() : "";
 				let _loc7_;
-				if (this.displayManager.mainController.currentIntervalLevel === <Intervals>-1 && (_loc8_ === Const.CANDLE_STICK || _loc8_ === Const.OHLC_CHART))
+				if (this.displayManager.mainController.currentIntervalLevel === Intervals.INVALID && (_loc8_ === Const.CANDLE_STICK || _loc8_ === Const.OHLC_CHART))
 					_loc7_ = Const.DEFAULT_D;
 				else
 					_loc7_ = !!Const.INDICATOR_ENABLED ? mainViewPoint.getDetailLevelForTechnicalStyle() : mainViewPoint.getDetailLevel();

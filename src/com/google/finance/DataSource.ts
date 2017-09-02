@@ -227,7 +227,7 @@ namespace com.google.finance
 			this.checkHeaderSanity(_loc6_, data);
 			const _loc7_ = Utils.assocArrayLength(_loc6_) + 1;
 			this.baseInterval = Number(_loc6_[DataSource.INTERVAL_STR]);
-			if (chartEvent.detailType !== ChartEventStyles.GET_RT_DATA && chartEvent.detailType !== ChartEventStyles.GET_RT_AH_DATA)
+			if (chartEvent.detailType !== ChartDetailTypes.GET_RT_DATA && chartEvent.detailType !== ChartDetailTypes.GET_RT_AH_DATA)
 			{
 				const _loc15_ = _loc6_[DataSource.COLUMNS_STR].split(',');
 				if (_loc15_.indexOf(this.columnNames[ColumnTypes.COL_OPEN_TYPE]) !== -1 && _loc15_.indexOf(this.columnNames[ColumnTypes.COL_HIGH_TYPE]) !== -1 && _loc15_.indexOf(this.columnNames[ColumnTypes.COL_LOW_TYPE]) !== -1)
@@ -252,25 +252,25 @@ namespace com.google.finance
 			{
 				switch (chartEvent.detailType)
 				{
-					case ChartEventStyles.GET_10D_DATA:
-					case ChartEventStyles.GET_30D_DATA:
+					case ChartDetailTypes.GET_10D_DATA:
+					case ChartDetailTypes.GET_30D_DATA:
 						this.addStreamForPointsInIntervals(this.baseInterval, _loc9_);
 						return AddStreamResults.ADDED_DATA;
-					case ChartEventStyles.GET_5D_DATA:
-					case ChartEventStyles.GET_1Y_DATA:
-					case ChartEventStyles.GET_5Y_DATA:
-					case ChartEventStyles.GET_40Y_DATA:
+					case ChartDetailTypes.GET_5D_DATA:
+					case ChartDetailTypes.GET_1Y_DATA:
+					case ChartDetailTypes.GET_5Y_DATA:
+					case ChartDetailTypes.GET_40Y_DATA:
 						this.addStreamForPointsInIntervals(this.baseInterval, _loc9_);
 						break;
-					case ChartEventStyles.GET_AH_DATA:
+					case ChartDetailTypes.GET_AH_DATA:
 						this.addAHStreamForPointsInIntervals(_loc9_);
 						break;
-					case ChartEventStyles.GET_RT_DATA:
+					case ChartDetailTypes.GET_RT_DATA:
 						_loc11_ = true;
 						const points1 = this.data.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
 						this.addStreamForPointsInIntervals(this.baseInterval, this.mergePoints(_loc9_, points1, _loc11_, lastRealPointIndex));
 						break;
-					case ChartEventStyles.GET_RT_AH_DATA:
+					case ChartDetailTypes.GET_RT_AH_DATA:
 						_loc11_ = true;
 						const points2 = this.afterHoursData.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
 						this.addAHStreamForPointsInIntervals(this.mergePoints(_loc9_, points2, _loc11_, lastRealPointIndex));

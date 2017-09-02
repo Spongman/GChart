@@ -138,7 +138,7 @@ namespace com.google.finance
 				if (Const.SCALE_INTERVALS[index].days === Const.DEFAULT_DISPLAY_DAYS && index >= ScaleTypes.SCALE_5D)
 					return index;
 			}
-			return <ScaleTypes>-1;
+			return ScaleTypes.INVALID;
 		}
 
 		createChartSizeChangeButton(showExpand: boolean)
@@ -190,7 +190,7 @@ namespace com.google.finance
 
 		private applyLastOrDefaultInterval(dataSource: DataSource | null, viewPoint: ViewPoint)
 		{
-			if (this.lastIntervalLevel >= <Intervals>0 && this.lastIntervalLevel <= Intervals.WEEKLY)
+			if (this.lastIntervalLevel !== Intervals.INVALID && this.lastIntervalLevel <= Intervals.WEEKLY)
 			{
 				this.enableIntervalButtons(this.lastIntervalLevel);
 				this.currentIntervalLevel = this.lastIntervalLevel;
@@ -333,7 +333,7 @@ namespace com.google.finance
 			const firstDataSource = this.displayManager.layersManager.getFirstDataSource();
 			const sparkLastMinute = sparklineViewPoint.getSparkLastMinute() < 0;
 			let sparkFirstMinute = sparklineViewPoint.getSparkFirstMinute() > sparklineViewPoint.getOldestMinute();
-			if (this.currentIntervalLevel !== <Intervals>-1 && firstDataSource)
+			if (this.currentIntervalLevel !== Intervals.INVALID && firstDataSource)
 			{
 				const tFirstRelativeMinute = firstDataSource.getFirstRelativeMinute(this.currentIntervalLevel);
 				sparkFirstMinute = sparklineViewPoint.getSparkFirstMinute() > tFirstRelativeMinute;
@@ -489,7 +489,7 @@ namespace com.google.finance
 					const _loc9_ = this.displayManager.layersManager.getFirstDataSource();
 					_loc10_ = sparklineViewPoint.getSparkLastMinute() < 0;
 					_loc11_ = sparklineViewPoint.getSparkFirstMinute() > sparklineViewPoint.getOldestMinute();
-					if (this.currentIntervalLevel !== <Intervals>-1 && _loc9_)
+					if (this.currentIntervalLevel !== Intervals.INVALID && _loc9_)
 					{
 						const firstRelativeMinute = _loc9_.getFirstRelativeMinute(this.currentIntervalLevel);
 						_loc11_ = sparklineViewPoint.getSparkFirstMinute() > firstRelativeMinute;
@@ -660,13 +660,13 @@ namespace com.google.finance
 
 		clearCurrentInterval()
 		{
-			this.currentIntervalLevel = <Intervals>-1;
+			this.currentIntervalLevel = Intervals.INVALID;
 			this.intervalButtons.clearSelection();
 		}
 
 		clearCurrentZoom()
 		{
-			this.currentZoomLevel = <ScaleTypes>-1;
+			this.currentZoomLevel = ScaleTypes.INVALID;
 			this.zoomButtons.clearSelection();
 		}
 
@@ -799,7 +799,7 @@ namespace com.google.finance
 		findBestFitDetailLevel(viewPoint: ViewPoint, dataSource: DataSource | null): Intervals
 		{
 			if (!viewPoint || !dataSource)
-				return <Intervals>-1;
+				return Intervals.INVALID;
 
 			const firstMinute = viewPoint.getFirstMinute();
 			const count = viewPoint.count;
@@ -811,7 +811,7 @@ namespace com.google.finance
 				if (this.isFitDetailLevel(intervalIndex, dataSource, firstMinute, count))
 					return intervalIndex;
 			}
-			return <Intervals>-1;
+			return Intervals.INVALID;
 		}
 
 		private drawSquare(param1: number, param2: number, param3: number, param4: number)
@@ -928,12 +928,12 @@ namespace com.google.finance
 			this.stateRemainingMinutes = newMarketState.stateRemainingMinutes;
 			if (firstDataSource.data.hasPointsInIntervalArray(Const.INTRADAY_INTERVAL) && this.shouldRequestRegularMarketData(this.isMarketOpen, this.stateRemainingMinutes, this.delayedMinutes, minutes))
 			{
-				const event = EventFactory.getEvent(ChartEventStyles.GET_RT_DATA, firstDataSource.quoteName, ChartEventPriorities.POLLING);
+				const event = EventFactory.getEvent(ChartDetailTypes.GET_RT_DATA, firstDataSource.quoteName, ChartEventPriorities.POLLING);
 				this.mainManager.dataManager.eventHandler(event);
 			}
 			if (Boolean(MainManager.paramsObj.hasExtendedHours) && firstDataSource.afterHoursData.hasPointsInIntervalArray(Const.INTRADAY_INTERVAL) && this.shouldRequestAfterHoursData(this.isMarketOpen, this.stateRemainingMinutes, this.delayedMinutes, minutes))
 			{
-				const event = EventFactory.getEvent(ChartEventStyles.GET_RT_AH_DATA, firstDataSource.quoteName, ChartEventPriorities.POLLING);
+				const event = EventFactory.getEvent(ChartDetailTypes.GET_RT_AH_DATA, firstDataSource.quoteName, ChartEventPriorities.POLLING);
 				this.mainManager.dataManager.eventHandler(event);
 			}
 		}
@@ -967,7 +967,7 @@ namespace com.google.finance
 					return;
 				}
 				const dBestFitDetailLevel = this.findBestFitDetailLevel(mainViewPoint, firstDataSource);
-				if (dBestFitDetailLevel === <Intervals>-1)
+				if (dBestFitDetailLevel === Intervals.INVALID)
 				{
 					this.applyLastOrDefaultInterval(firstDataSource, mainViewPoint);
 				}
@@ -1103,10 +1103,10 @@ namespace com.google.finance
 
 			const intervalPeriods = Const.INTERVAL_PERIODS;
 			let intervalIndex = <Intervals>(intervalPeriods.length - 1);
-			while (intervalIndex >= <Intervals>0 && Messages.getMsg(intervalPeriods[intervalIndex].text) !== param1)
+			while (intervalIndex !== Intervals.INVALID && Messages.getMsg(intervalPeriods[intervalIndex].text) !== param1)
 				intervalIndex--;
 
-			if (intervalIndex === <Intervals>-1)
+			if (intervalIndex === Intervals.INVALID)
 				return;
 
 			MainManager.jsProxy.logIntervalButtonClick(intervalPeriods[intervalIndex].logtext);
@@ -1176,7 +1176,7 @@ namespace com.google.finance
 				lastMinute = mainViewPoint.getNewestMinute();
 				count = Math.abs(mainViewPoint.getOldestBaseMinute());
 			}
-			else if (scaleIntervalIndex >= <ScaleTypes>0 && scaleIntervalIndex <= ScaleTypes.SCALE_1M)
+			else if (scaleIntervalIndex !== ScaleTypes.INVALID && scaleIntervalIndex <= ScaleTypes.SCALE_1M)
 			{
 				const lastDataUnit = sparklineViewPoint.getLastDataUnit();
 				const date = new Date(lastDataUnit.time);

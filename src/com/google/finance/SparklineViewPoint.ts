@@ -144,9 +144,9 @@ namespace com.google.finance
 			return this.maxx - this.minx;
 		}
 
-		generateEvent(style: ChartEventStyles, dataSource: DataSource)
+		generateEvent(detailType: ChartDetailTypes, dataSource: DataSource)
 		{
-			const event = EventFactory.getEvent(style, dataSource.quoteName, ChartEventPriorities.OPTIONAL);
+			const event = EventFactory.getEvent(detailType, dataSource.quoteName, ChartEventPriorities.OPTIONAL);
 			this.dataManager.expectEvent(event);
 			this.dataManager.eventHandler(event);
 		}
@@ -525,7 +525,7 @@ namespace com.google.finance
 					this.sparkLastMinute = 0;
 
 				if (_loc4_ === this.displayThresholds.length - 1)
-					this.generateEvent(ChartEventStyles.GET_40Y_DATA, this.dataSource);
+					this.generateEvent(ChartDetailTypes.GET_40Y_DATA, this.dataSource);
 
 				this.redraw();
 			}
@@ -658,10 +658,10 @@ namespace com.google.finance
 			else if (_loc3_ < this.getOldestMinute())
 			{
 				_loc2_ = this.getOldestMinute() + this.sparkCount - this.sparkLastMinute;
-				this.generateEvent(ChartEventStyles.GET_40Y_DATA, this.dataSource);
+				this.generateEvent(ChartDetailTypes.GET_40Y_DATA, this.dataSource);
 			}
 			const firstDataSource = this.displayManager.layersManager.getFirstDataSource();
-			if (this.myController.currentIntervalLevel !== <Intervals>-1 && firstDataSource)
+			if (this.myController.currentIntervalLevel !== Intervals.INVALID && firstDataSource)
 			{
 				_loc3_ = this.sparkLastMinute + _loc2_ - this.sparkCount;
 				if (_loc3_ > this.getOldestMinute() && _loc3_ < firstDataSource.firstOpenRelativeMinutes)

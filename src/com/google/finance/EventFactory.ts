@@ -2,10 +2,10 @@ namespace com.google.finance
 {
 	export class EventFactory
 	{
-		private static buildEvent(chartEventType: ChartEventTypes, quote: string, period: string, interval: number, columns: string, chartEventStyle: ChartEventStyles = <ChartEventStyles>-1): ChartEvent
+		private static buildEvent(chartEventType: ChartEventTypes, quote: string, period: string, interval: number, columns: string, detailType: ChartDetailTypes | null = null): ChartEvent
 		{
 			const chartEvent = new ChartEvent(chartEventType);
-			chartEvent.detailType = (chartEventStyle !== <ChartEventStyles>-1) ? chartEventStyle : null;
+			chartEvent.detailType = detailType;
 			chartEvent.quote = quote;
 			chartEvent.period = period;
 			chartEvent.interval = "" + interval;
@@ -13,75 +13,75 @@ namespace com.google.finance
 			return chartEvent;
 		}
 
-		static getEvent(chartEventStyle: ChartEventStyles, param2: string, priorities: ChartEventPriorities): ChartEvent
+		static getEvent(detailType: ChartDetailTypes, quote: string, priorities: ChartEventPriorities): ChartEvent
 		{
 			let _loc4_: ChartEvent;
 			if (Const.INDICATOR_ENABLED)
 			{
 				const _loc5_ = MainManager.paramsObj && MainManager.paramsObj.delayedMinutes >= 0 ? MainManager.paramsObj.delayedMinutes : 0;
-				switch (chartEventStyle)
+				switch (detailType)
 				{
 					default:
-					case ChartEventStyles.GET_1Y_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, param2, "1Y", Const.DAILY_INTERVAL, "d,c,v,o,h,l", chartEventStyle);
+					case ChartDetailTypes.GET_1Y_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, quote, "1Y", Const.DAILY_INTERVAL, "d,c,v,o,h,l", detailType);
 						break;
-					case ChartEventStyles.GET_5Y_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, param2, "5Y", Const.WEEKLY_INTERVAL, "d,c,v,k,o,h,l", chartEventStyle);
+					case ChartDetailTypes.GET_5Y_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, quote, "5Y", Const.WEEKLY_INTERVAL, "d,c,v,k,o,h,l", detailType);
 						break;
-					case ChartEventStyles.GET_2Y_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, param2, "2Y", Const.DAILY_INTERVAL, "d,c,v", chartEventStyle);
+					case ChartDetailTypes.GET_2Y_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, quote, "2Y", Const.DAILY_INTERVAL, "d,c,v", detailType);
 						break;
-					case ChartEventStyles.GET_5D_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, param2, "5d", Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", chartEventStyle);
+					case ChartDetailTypes.GET_5D_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, quote, "5d", Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", detailType);
 						break;
-					case ChartEventStyles.GET_AH_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_AH_DATA, param2, "5d", Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", chartEventStyle);
+					case ChartDetailTypes.GET_AH_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_AH_DATA, quote, "5d", Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", detailType);
 						break;
-					case ChartEventStyles.MUTF_5D_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_MUTF_DATA, param2, "5d", Const.DAILY_INTERVAL, "d,c,v", chartEventStyle);
+					case ChartDetailTypes.MUTF_5D_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_MUTF_DATA, quote, "5d", Const.DAILY_INTERVAL, "d,c,v", detailType);
 						break;
-					case ChartEventStyles.GET_40Y_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, param2, "40Y", Const.WEEKLY_INTERVAL, "d,c,v,k,o,h,l", chartEventStyle);
+					case ChartDetailTypes.GET_40Y_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, quote, "40Y", Const.WEEKLY_INTERVAL, "d,c,v,k,o,h,l", detailType);
 						break;
-					case ChartEventStyles.GET_10D_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, param2, "10d", Const.FIVE_MINUTE_INTERVAL, "d,c,v,o,h,l", chartEventStyle);
+					case ChartDetailTypes.GET_10D_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, quote, "10d", Const.FIVE_MINUTE_INTERVAL, "d,c,v,o,h,l", detailType);
 						break;
-					case ChartEventStyles.GET_30D_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, param2, "30d", Const.HALF_HOUR_INTERVAL, "d,c,v,o,h,l", chartEventStyle);
+					case ChartDetailTypes.GET_30D_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, quote, "30d", Const.HALF_HOUR_INTERVAL, "d,c,v,o,h,l", detailType);
 						break;
-					case ChartEventStyles.GET_RT_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_RT_DATA, param2, "" + (_loc5_ + 10) + 'm', Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", chartEventStyle);
+					case ChartDetailTypes.GET_RT_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_RT_DATA, quote, "" + (_loc5_ + 10) + 'm', Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", detailType);
 						break;
-					case ChartEventStyles.GET_RT_AH_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_RT_AH_DATA, param2, "" + (_loc5_ + 10) + 'm', Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", chartEventStyle);
+					case ChartDetailTypes.GET_RT_AH_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_RT_AH_DATA, quote, "" + (_loc5_ + 10) + 'm', Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", detailType);
 						break;
 				}
 			}
 			else
 			{
-				switch (chartEventStyle)
+				switch (detailType)
 				{
 					default:
-					case ChartEventStyles.GET_1Y_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, param2, "1Y", Const.DAILY_INTERVAL, "d,c,v");
+					case ChartDetailTypes.GET_1Y_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, quote, "1Y", Const.DAILY_INTERVAL, "d,c,v");
 						break;
-					case ChartEventStyles.GET_5Y_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, param2, "5Y", Const.WEEKLY_INTERVAL, "d,c,v,k");
+					case ChartDetailTypes.GET_5Y_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, quote, "5Y", Const.WEEKLY_INTERVAL, "d,c,v,k");
 						break;
-					case ChartEventStyles.GET_2Y_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, param2, "2Y", Const.DAILY_INTERVAL, "d,c,v");
+					case ChartDetailTypes.GET_2Y_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, quote, "2Y", Const.DAILY_INTERVAL, "d,c,v");
 						break;
-					case ChartEventStyles.GET_5D_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, param2, "5d", Const.INTRADAY_INTERVAL, "d,c,v");
+					case ChartDetailTypes.GET_5D_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, quote, "5d", Const.INTRADAY_INTERVAL, "d,c,v");
 						break;
-					case ChartEventStyles.GET_AH_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_AH_DATA, param2, "5d", Const.INTRADAY_INTERVAL, "d,c,v");
+					case ChartDetailTypes.GET_AH_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_AH_DATA, quote, "5d", Const.INTRADAY_INTERVAL, "d,c,v");
 						break;
-					case ChartEventStyles.MUTF_5D_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_MUTF_DATA, param2, "5d", Const.DAILY_INTERVAL, "d,c,v");
+					case ChartDetailTypes.MUTF_5D_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_MUTF_DATA, quote, "5d", Const.DAILY_INTERVAL, "d,c,v");
 						break;
-					case ChartEventStyles.GET_40Y_DATA:
-						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, param2, "40Y", Const.WEEKLY_INTERVAL, "d,c,v,k");
+					case ChartDetailTypes.GET_40Y_DATA:
+						_loc4_ = EventFactory.buildEvent(ChartEventTypes.GET_DATA, quote, "40Y", Const.WEEKLY_INTERVAL, "d,c,v,k");
 						break;
 				}
 			}

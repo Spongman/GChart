@@ -343,6 +343,7 @@ namespace com.google.finance
 		{
 			ticker = Utils.adjustNasdToNasdaq(ticker);
 			const dataManager = this.mainManager.dataManager;
+			// TODO: wtf?
 			const event = EventFactory.getEvent(ChartEventTypes.GET_DATA, ticker, ChartEventPriorities.OPTIONAL);
 			dataManager.addData(event, decodeURIComponent(param3));
 			if (param5)

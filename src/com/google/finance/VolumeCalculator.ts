@@ -31,7 +31,7 @@ namespace com.google.finance
 
 		private static computeDaily(input: DataSeries, output: DataSeries, param3: number)
 		{
-			const _loc4_ = Const.DAILY_INTERVAL;
+			const dailyInterval = Const.DAILY_INTERVAL;
 			const _loc5_ = param3 / Const.DAILY_INTERVAL;
 			for (let _loc6_ = input.days.length - 1; _loc6_ >= 0; _loc6_ -= _loc5_)
 			{
@@ -40,7 +40,7 @@ namespace com.google.finance
 				output.days.push(output.points.length);
 				while (_loc7_ > _loc6_ - _loc5_ && _loc7_ >= 0)
 				{
-					volume = Number(volume + Number(input.units[input.days[_loc7_]].volumes[_loc4_]));
+					volume = Number(volume + Number(input.units[input.days[_loc7_]].volumes[dailyInterval]));
 					_loc7_--;
 				}
 				if (_loc7_ < 0)
@@ -86,7 +86,7 @@ namespace com.google.finance
 
 		private static computeIntraday(input: DataSeries, output: DataSeries, param3: number)
 		{
-			const _loc4_ = Const.INTRADAY_INTERVAL;
+			const intradayInterval = Const.INTRADAY_INTERVAL;
 			const _loc5_ = param3 / Const.INTRADAY_INTERVAL;
 			for (let regionIndex = input.intradayRegions.length - 1; regionIndex >= 0; regionIndex--)
 			{
@@ -98,7 +98,7 @@ namespace com.google.finance
 				{
 					let volume = 0;
 					for (let _loc10_ = _loc9_; _loc10_ > _loc9_ - _loc5_ && _loc10_ >= start; _loc10_--)
-						volume = Number(volume + input.units[_loc10_].volumes[_loc4_]);
+						volume = Number(volume + input.units[_loc10_].volumes[intradayInterval]);
 
 					const point = new indicator.VolumeIndicatorPoint(
 						volume,

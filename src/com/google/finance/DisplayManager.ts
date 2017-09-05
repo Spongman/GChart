@@ -165,8 +165,8 @@ namespace com.google.finance
 			let _loc7_ = param3;
 			for (let _loc8_ = param2; _loc8_ >= param1; _loc8_--)
 			{
-				const _loc9_ = dataSeries.units[_loc8_];
-				_loc9_.relativeMinutes = _loc7_;
+				const unit = dataSeries.units[_loc8_];
+				unit.relativeMinutes = _loc7_;
 				if (dataUnits)
 					dataUnits[_loc8_].relativeMinutes = _loc7_;
 
@@ -611,38 +611,38 @@ namespace com.google.finance
 			if (_loc6_ !== -1)
 				_loc5_ = dataSource.visibleExtendedHours.getIntervalAt(_loc6_);
 
-			const _loc7_ = data.units[data.units.length - 1];
-			let session = notnull(data.getSessionForMinute(_loc7_.dayMinute));
+			const lastUnit = data.units[data.units.length - 1];
+			let session = notnull(data.getSessionForMinute(lastUnit.dayMinute));
 			const intradayMinutesInterval = dataSource.intradayMinutesInterval;
 			let _loc10_ = 0;
 			for (let unitIndex = data.units.length - 1; unitIndex > 0; unitIndex--)
 			{
-				const _loc11_ = data.units[unitIndex];
-				_loc11_.relativeMinutes = _loc10_;
-				if (_loc11_.time >= Const.YEAR_2000 && _loc10_ < dataSource.firstOpenRelativeMinutes)
+				const unit = data.units[unitIndex];
+				unit.relativeMinutes = _loc10_;
+				if (unit.time >= Const.YEAR_2000 && _loc10_ < dataSource.firstOpenRelativeMinutes)
 					dataSource.firstOpenRelativeMinutes = _loc10_;
 
-				if (_loc11_.coveredDays > 0)
+				if (unit.coveredDays > 0)
 				{
 					if (unitIndex > 0)
 					{
-						const _loc13_ = _loc11_.time - data.units[unitIndex - 1].time;
+						const _loc13_ = unit.time - data.units[unitIndex - 1].time;
 						const _loc14_ = Math.floor(_loc13_ / (Const.DAILY_INTERVAL * 1000));
-						if (_loc11_.coveredDays > _loc14_)
-							_loc11_.coveredDays = _loc14_;
+						if (unit.coveredDays > _loc14_)
+							unit.coveredDays = _loc14_;
 					}
-					if (_loc11_.coveredDays === 0)
+					if (unit.coveredDays === 0)
 						_loc10_ -= intradayMinutesInterval;
 					else
-						_loc10_ -= (data.marketDayLength + 1) * _loc11_.coveredDays;
+						_loc10_ -= (data.marketDayLength + 1) * unit.coveredDays;
 				}
-				else if (_loc11_.dayMinute === session.end && data.minuteIsEndOfDataSession(data.units[unitIndex - 1].dayMinute))
+				else if (unit.dayMinute === session.end && data.minuteIsEndOfDataSession(data.units[unitIndex - 1].dayMinute))
 				{
 					_loc10_ -= data.marketDayLength + 1;
 				}
 				else
 				{
-					const _loc15_ = _loc11_.dayMinute - session.start;
+					const _loc15_ = unit.dayMinute - session.start;
 					if (_loc15_ >= 0 && _loc15_ < intradayMinutesInterval)
 					{
 						_loc10_ -= _loc15_ + (session.start === data.marketOpenMinute ? 1 : 0);
@@ -650,15 +650,15 @@ namespace com.google.finance
 						if (!isNaN(_loc16_))
 							session = notnull(data.getSessionForMinute(_loc16_));
 					}
-					else if (_loc11_.dayMinute === session.end && _loc5_)
+					else if (unit.dayMinute === session.end && _loc5_)
 					{
 						let start = _loc5_.start;
 						let end = _loc5_.end;
 						let _loc19_ = Number(afterHoursData.units[start].time);
-						while (_loc11_.time <= _loc19_)
+						while (unit.time <= _loc19_)
 						{
 							const _loc20_ = afterHoursData.units[end].dayMinute - afterHoursData.units[start].dayMinute;
-							_loc11_.relativeMinutes -= _loc20_ + 1;
+							unit.relativeMinutes -= _loc20_ + 1;
 							this.positionAfterHoursTimes(start, end, _loc10_, intradayMinutesInterval, afterHoursData, _loc4_);
 							_loc10_ -= _loc20_ + 1;
 							_loc6_--;

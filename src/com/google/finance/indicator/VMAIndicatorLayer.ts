@@ -61,15 +61,15 @@ namespace com.google.finance.indicator
 				{
 					if (!this.shouldSkip(originalPoint, dataSeries))
 					{
-						const _loc11_ = originalPoint.volumes[interval];
-						if (_loc11_ === 0)
+						const volume = originalPoint.volumes[interval];
+						if (volume === 0)
 						{
 							this.copyLastIndicatorPoint(originalPoint, dataSeries);
 						}
 						else
 						{
-							_loc3_ = Number(_loc3_ + _loc11_);
-							_loc8_.push(_loc11_);
+							_loc3_ = Number(_loc3_ + volume);
+							_loc8_.push(volume);
 							let point: IndicatorPoint;
 							if (_loc8_.length < this.periods[_loc4_])
 							{

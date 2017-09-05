@@ -112,20 +112,20 @@ namespace com.google.finance
 			sprite.graphics.lineTo(param1, viewPoint.maxy);
 		}
 
-		private getPointIndex(dataSeries: DataSeries, param2: number): number
+		private getPointIndex(dataSeries: DataSeries, x: number): number
 		{
-			const minute = this.viewPoint.getMinuteOfX(param2);
+			const minute = this.viewPoint.getMinuteOfX(x);
 			let referencePointIndex = dataSeries.getReferencePointIndex(minute);
 			while (dataSeries.units[referencePointIndex].fake && referencePointIndex >= 0)
 				referencePointIndex--;
 
 			if (referencePointIndex < dataSeries.points.length - 1)
 			{
-				const _loc5_ = dataSeries.points[referencePointIndex].point;
-				const _loc6_ = dataSeries.points[referencePointIndex + 1].point;
-				const _loc7_ = this.viewPoint.getMinuteXPos(_loc6_.relativeMinutes);
-				const _loc8_ = this.viewPoint.getMinuteXPos(_loc5_.relativeMinutes);
-				if (Math.abs(_loc7_ - param2) < Math.abs(_loc8_ - param2))
+				const point = dataSeries.points[referencePointIndex].point;
+				const nextPoint = dataSeries.points[referencePointIndex + 1].point;
+				const pointX = this.viewPoint.getMinuteXPos(nextPoint.relativeMinutes);
+				const nextPointX = this.viewPoint.getMinuteXPos(point.relativeMinutes);
+				if (Math.abs(pointX - x) < Math.abs(nextPointX - x))
 					return referencePointIndex + 1;
 			}
 			return referencePointIndex;

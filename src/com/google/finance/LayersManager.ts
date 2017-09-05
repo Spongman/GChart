@@ -233,8 +233,8 @@ namespace com.google.finance
 		{
 			for (let layerIndex = 0; layerIndex < this.layers.length; layerIndex++)
 			{
-				const _loc3_ = this.layers[layerIndex];
-				if (dataSource === _loc3_.ds)
+				const layer = this.layers[layerIndex];
+				if (dataSource === layer.ds)
 					return layerIndex;
 			}
 			return -1;
@@ -384,8 +384,8 @@ namespace com.google.finance
 			const layerId = this.getLayerId(layerInfo);
 			for (let layerIndex = this.layers.length - 1; layerIndex >= 0; layerIndex--)
 			{
-				const _loc5_ = this.layers[layerIndex];
-				if (this.getLayerId(_loc5_) === layerId && _loc5_.vp === layerInfo.vp && (!dataSource || dataSource === _loc5_.ds)) // TODO:_loc5_.dataSource?
+				const layer = this.layers[layerIndex];
+				if (this.getLayerId(layer) === layerId && layer.vp === layerInfo.vp && (!dataSource || dataSource === layer.ds)) // TODO:_loc5_.dataSource?
 					return layerIndex;
 			}
 			return -1;
@@ -486,16 +486,16 @@ namespace com.google.finance
 			if (dataSourceNames.length <= 1)
 				return false;
 
-			const _loc2_ = this.mainManager.dataManager.dataSources[dataSourceNames[0]];
-			if (!_loc2_ || _loc2_.isEmpty())
+			const dataSource1 = this.mainManager.dataManager.dataSources[dataSourceNames[0]];
+			if (!dataSource1 || dataSource1.isEmpty())
 				return false;
 
-			for (let _loc3_ = 1; _loc3_ < dataSourceNames.length; _loc3_++)
+			for (let index = 1; index < dataSourceNames.length; index++)
 			{
-				const _loc4_ = this.mainManager.dataManager.dataSources[dataSourceNames[_loc3_]];
-				if (!(!_loc4_ || _loc4_.isEmpty()))
+				const dataSource2 = this.mainManager.dataManager.dataSources[dataSourceNames[index]];
+				if (!(!dataSource2 || dataSource2.isEmpty()))
 				{
-					if (!_loc2_.data.dataSessions.equals(_loc4_.data.dataSessions))
+					if (!dataSource1.data.dataSessions.equals(dataSource2.data.dataSessions))
 						return true;
 				}
 			}
@@ -833,9 +833,9 @@ namespace com.google.finance
 				if (defaultEndTime > 0)
 				{
 					const timeIndex = DataSource.getTimeIndex(defaultEndTime, dataSource.data.units);
-					const _loc8_ = dataSource.data.units[timeIndex];
-					_loc2_ = Number(_loc8_.relativeMinutes);
-					if (dataSource.data.minuteIsEndOfDataSession(_loc8_.dayMinute) && dataSource.afterHoursData && dataSource.afterHoursData.units.length > 0)
+					const unit = dataSource.data.units[timeIndex];
+					_loc2_ = Number(unit.relativeMinutes);
+					if (dataSource.data.minuteIsEndOfDataSession(unit.dayMinute) && dataSource.afterHoursData && dataSource.afterHoursData.units.length > 0)
 					{
 						const afterHoursTimeIndex = DataSource.getTimeIndex(defaultEndTime, dataSource.afterHoursData.units);
 						const relativeMinutes = dataSource.afterHoursData.units[afterHoursTimeIndex].relativeMinutes;

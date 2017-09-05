@@ -63,7 +63,7 @@ namespace com.google.finance
 
 		minutePix: number;
 
-		abstract getNewContext(param1: number, param2: number): Context;
+		abstract getNewContext(lastMinute: number, count: number): Context;
 
 		abstract highlightPoint(param1: number, state: Dictionary): void;
 		abstract getMinuteOfX(param1: number): number;
@@ -216,14 +216,14 @@ namespace com.google.finance
 
 		adjustBarChartContext(context: Context, detailLevel: Intervals)
 		{
-			let _loc3_ = context.count;
-			let _loc4_ = context.lastMinute;
+			let count = context.count;
+			let lastMinute = context.lastMinute;
 			let _loc5_ = (this.getMarketDayLength() + 1) * Const.INTERVAL_PERIODS[detailLevel].maxdays;
 			const _loc6_ = (this.getMarketDayLength() + 1) * Const.INTERVAL_PERIODS[detailLevel].mindays;
-			if (_loc3_ > _loc5_)
-				_loc3_ = _loc5_;
-			else if (_loc3_ < _loc6_)
-				_loc3_ = _loc6_;
+			if (count > _loc5_)
+				count = _loc5_;
+			else if (count < _loc6_)
+				count = _loc6_;
 
 			const baseDataSource = this.getBaseDataSource();
 			if (baseDataSource)
@@ -232,20 +232,20 @@ namespace com.google.finance
 				const points = baseDataSource.data.getPointsInIntervalArray(detailLevelInterval);
 				if (points && points.length > 0)
 				{
-					_loc5_ = _loc4_ - Math.max(baseDataSource.firstOpenRelativeMinutes, points[0].relativeMinutes);
+					_loc5_ = lastMinute - Math.max(baseDataSource.firstOpenRelativeMinutes, points[0].relativeMinutes);
 					if (_loc5_ < _loc6_)
 					{
-						_loc3_ = _loc6_;
-						_loc4_ += _loc6_ - _loc5_;
+						count = _loc6_;
+						lastMinute += _loc6_ - _loc5_;
 					}
-					else if (_loc3_ > _loc5_)
+					else if (count > _loc5_)
 					{
-						_loc3_ = _loc5_;
+						count = _loc5_;
 					}
 				}
 			}
-			if (_loc3_ !== context.count)
-				return this.getNewContext(_loc4_, _loc3_);
+			if (count !== context.count)
+				return this.getNewContext(lastMinute, count);
 
 			return context;
 		}
@@ -597,11 +597,11 @@ namespace com.google.finance
 
 		zoomIn_Handler(param1: number, param2: number)
 		{
-			let _loc3_ = (param2 - param1) * 1 * this.count / (this.maxx - this.minx);
+			let count = (param2 - param1) * 1 * this.count / (this.maxx - this.minx);
 			const oldestBaseMinute = Math.abs(this.getOldestBaseMinute());
-			_loc3_ = Math.min(_loc3_, oldestBaseMinute);
-			const _loc5_ = this.lastMinute - this.count * (this.maxx - param2) / (this.maxx - this.minx);
-			const newContext = this.getNewContext(_loc5_, _loc3_);
+			count = Math.min(count, oldestBaseMinute);
+			const lastMinute = this.lastMinute - this.count * (this.maxx - param2) / (this.maxx - this.minx);
+			const newContext = this.getNewContext(lastMinute, count);
 			this.zoomInMinutes_Handler(newContext);
 		}
 
@@ -961,28 +961,28 @@ namespace com.google.finance
 
 		adjustLineChartContext(context: Context)
 		{
-			let _loc2_ = context.count;
-			let _loc3_ = context.lastMinute;
+			let count = context.count;
+			let lastMinute = context.lastMinute;
 			const _loc4_ = this.getMinDisplayMinutes(this.getBaseDataSource());
-			if (_loc2_ < _loc4_)
+			if (count < _loc4_)
 			{
-				_loc2_ = _loc4_;
-				if (this.count === _loc2_)
+				count = _loc4_;
+				if (this.count === count)
 					return null;
 			}
 
-			const _loc5_ = Math.abs(_loc3_ - this.getOldestBaseMinute());
-			_loc2_ = Math.min(_loc2_, _loc5_);
-			const _loc6_ = this.POINTS_DISTANCE * _loc2_ / (this.maxx - this.minx);
+			const _loc5_ = Math.abs(lastMinute - this.getOldestBaseMinute());
+			count = Math.min(count, _loc5_);
+			const _loc6_ = this.POINTS_DISTANCE * count / (this.maxx - this.minx);
 			if (_loc6_ < 0.3 && !this.displayManager.isDifferentMarketSessionComparison())
 				return null;
 
 			const newestMinute = this.getNewestMinute();
-			if (_loc3_ >= newestMinute)
-				_loc3_ = newestMinute;
+			if (lastMinute >= newestMinute)
+				lastMinute = newestMinute;
 
-			if (_loc2_ !== context.count || _loc3_ !== context.lastMinute)
-				return this.getNewContext(_loc3_, _loc2_);
+			if (count !== context.count || lastMinute !== context.lastMinute)
+				return this.getNewContext(lastMinute, count);
 
 			return context;
 		}
@@ -1062,8 +1062,8 @@ namespace com.google.finance
 
 		newFinalAnimationState(context: Context)
 		{
-			const _loc2_ = Math.max(context.count, this.getMinDisplayMinutes(this.getBaseDataSource()));
-			this.zoomingFinalState = this.getNewContext(context.lastMinute, _loc2_);
+			const count = Math.max(context.count, this.getMinDisplayMinutes(this.getBaseDataSource()));
+			this.zoomingFinalState = this.getNewContext(context.lastMinute, count);
 		}
 
 		private checkAfterHoursVisibilityWhenChartMoved(param1: number)
@@ -1126,7 +1126,7 @@ namespace com.google.finance
 		{
 			let context = new Context();
 			context.lastMinute = lastMinute;
-			context.count = count;
+			context.count = Math.round(count);
 			context.verticalScaling = MainManager.paramsObj.verticalScaling;
 			for (const layer of this.drawingLayers)
 				context = layer.getContext(context);

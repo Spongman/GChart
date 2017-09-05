@@ -296,11 +296,11 @@ namespace com.google.finance
 		{
 			if (delta !== 0)
 			{
-				const _loc2_ = Math.abs(delta);
+				const distance = Math.abs(delta);
 				if (delta > 0)
-					this.zoomStuff(Directions.FORWARD, this.mouseX, _loc2_);
+					this.zoomStuff(Directions.FORWARD, this.mouseX, distance);
 				else if (delta < 0)
-					this.zoomStuff(Directions.BACKWARD, this.mouseY, _loc2_);
+					this.zoomStuff(Directions.BACKWARD, this.mouseY, distance);
 
 				clearInterval(this.notifyHtmlIntervalId);
 				this.notifyHtmlIntervalId = setInterval(this.listenersNotifyHtml.bind(this), Controller.NOTIFY_TIMEOUT);
@@ -614,9 +614,9 @@ namespace com.google.finance
 				for (let intervalIndex = 0; intervalIndex < dataSource.visibleExtendedHours.length(); intervalIndex++)
 				{
 					const interval = dataSource.visibleExtendedHours.getIntervalAt(intervalIndex);
-					const _loc7_ = dataSource.afterHoursData.units[interval.start];
-					const _loc8_ = dataSource.afterHoursData.units[interval.end];
-					param1 -= _loc8_.dayMinute - _loc7_.dayMinute;
+					const startUnit = dataSource.afterHoursData.units[interval.start];
+					const endUnit = dataSource.afterHoursData.units[interval.end];
+					param1 -= endUnit.dayMinute - startUnit.dayMinute;
 				}
 			}
 			else if (startInterval > Intervals.INTRADAY && endInterval === Intervals.INTRADAY)
@@ -624,9 +624,9 @@ namespace com.google.finance
 				for (let intervalIndex = 0; intervalIndex < dataSource.hiddenExtendedHours.length(); intervalIndex++)
 				{
 					const interval = dataSource.hiddenExtendedHours.getIntervalAt(intervalIndex);
-					const _loc7_ = dataSource.afterHoursData.units[interval.start];
-					const _loc8_ = dataSource.afterHoursData.units[interval.end];
-					param1 += _loc8_.dayMinute - _loc7_.dayMinute;
+					const startUnit = dataSource.afterHoursData.units[interval.start];
+					const endUnit = dataSource.afterHoursData.units[interval.end];
+					param1 += endUnit.dayMinute - startUnit.dayMinute;
 				}
 			}
 			return param1;
@@ -1162,8 +1162,8 @@ namespace com.google.finance
 			else if (scaleIntervalIndex === ScaleTypes.SCALE_YTD)
 			{
 				const numUnits = firstDataSource.data.units.length;
-				const _loc12_ = firstDataSource.data.units[numUnits - 1];
-				const date = new Date(_loc12_.time);
+				const lastUnit = firstDataSource.data.units[numUnits - 1];
+				const date = new Date(lastUnit.time);
 				date.setMonth(0);
 				date.setDate(1);
 				const units = firstDataSource.data.units;

@@ -358,9 +358,9 @@ namespace com.google.finance
 			flash.external.ExternalInterface.call("_setChartType", encodeURIComponent(param1));
 		}
 
-		private callAsFunction(param1: string, ...rest: any[])
+		private callAsFunction(functionName: string, ...rest: any[])
 		{
-			switch (param1)
+			switch (functionName)
 			{
 				case "addCompareTo":
 					this.addCompareTo.apply(this, rest[0]);

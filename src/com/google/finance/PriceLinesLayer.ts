@@ -216,8 +216,7 @@ namespace com.google.finance
 			this.graphics.lineTo(this.viewPoint.maxx - 1, labelPos.yPos);
 			const text = this.getTextForValue(labelPos.label) + this.valueSuffix;
 			const _loc4_ = labelPos.yPos - ViewPoint.TEXT_VERTICAL_OFFSET + ViewPoint.GRID_TEXT_VERTICAL_OFFSET - ViewPoint.TEXT_FIELD_HEIGHT;
-			const _loc6_ = ViewPoint.TEXT_FIELD_HEIGHT;
-			ViewPoint.addTextField(this.textCanvas, text, param2, _loc4_, 0, _loc6_, "right", this.viewPoint.priceTextFormat, flash.text.TextFieldAutoSize.RIGHT);
+			ViewPoint.addTextField(this.textCanvas, text, param2, _loc4_, 0, ViewPoint.TEXT_FIELD_HEIGHT, "right", this.viewPoint.priceTextFormat, flash.text.TextFieldAutoSize.RIGHT);
 		}
 
 		private getIncreaseInterval(param1: number): number

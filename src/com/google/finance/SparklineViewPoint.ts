@@ -582,13 +582,12 @@ namespace com.google.finance
 			}
 			if (!_loc1_)
 			{
-				const _loc3_ = Number.POSITIVE_INFINITY;
 				this.displayThresholds = [{
 					chartDays: 230,
 					sparkDays: 520
 				}, {
-					chartDays: _loc3_,
-					sparkDays: _loc3_
+					chartDays: Number.POSITIVE_INFINITY,
+					sparkDays: Number.POSITIVE_INFINITY
 				}];
 			}
 		}

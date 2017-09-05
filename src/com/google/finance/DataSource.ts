@@ -202,15 +202,15 @@ namespace com.google.finance
 			}
 		}
 
-		addStream(param1: string, chartEvent: ChartEvent): AddStreamResults
+		addStream(stream: string, chartEvent: ChartEvent): AddStreamResults
 		{
-			const _loc3_ = this.data.points.length !== 0;
+			const hasData = this.data.points.length !== 0;
 			this.clearAllIndicatorsOnAddData(Number(chartEvent.interval));
 			this.clearCoalescedChildren();
-			if (param1.indexOf(DataSource.EXCHANGE_STR) !== 0)
+			if (stream.indexOf(DataSource.EXCHANGE_STR) !== 0)
 				return AddStreamResults.ERROR;
 
-			const _loc4_ = param1.split("\n");
+			const lines = stream.split("\n");
 			let data = this.data;
 			switch (chartEvent.type)
 			{
@@ -220,23 +220,23 @@ namespace com.google.finance
 					break;
 			}
 
-			const _loc6_ = this.parseHeader(_loc4_, chartEvent);
-			if (!_loc6_)
+			const map = this.parseHeader(lines, chartEvent);
+			if (!map)
 				return AddStreamResults.ERROR;
 
-			this.checkHeaderSanity(_loc6_, data);
-			const _loc7_ = Utils.assocArrayLength(_loc6_) + 1;
-			this.baseInterval = Number(_loc6_[DataSource.INTERVAL_STR]);
+			this.checkHeaderSanity(map, data);
+			const _loc7_ = Utils.assocArrayLength(map) + 1;
+			this.baseInterval = Number(map[DataSource.INTERVAL_STR]);
 			if (chartEvent.detailType !== ChartDetailTypes.GET_RT_DATA && chartEvent.detailType !== ChartDetailTypes.GET_RT_AH_DATA)
 			{
-				const _loc15_ = _loc6_[DataSource.COLUMNS_STR].split(',');
-				if (_loc15_.indexOf(this.columnNames[ColumnTypes.COL_OPEN_TYPE]) !== -1 && _loc15_.indexOf(this.columnNames[ColumnTypes.COL_HIGH_TYPE]) !== -1 && _loc15_.indexOf(this.columnNames[ColumnTypes.COL_LOW_TYPE]) !== -1)
+				const columnNames = map[DataSource.COLUMNS_STR].split(',');
+				if (columnNames.indexOf(this.columnNames[ColumnTypes.COL_OPEN_TYPE]) !== -1 && columnNames.indexOf(this.columnNames[ColumnTypes.COL_HIGH_TYPE]) !== -1 && columnNames.indexOf(this.columnNames[ColumnTypes.COL_LOW_TYPE]) !== -1)
 					this.eventOhlcDone(chartEvent.getEventName());
 				else
 					this.eventDone(chartEvent.getEventName());
 			}
 			const units = data.units;
-			const _loc9_ = this.parseStream(_loc4_.slice(_loc7_), _loc6_, data);
+			const _loc9_ = this.parseStream(lines.slice(_loc7_), map, data);
 			if (!_loc9_)
 				return AddStreamResults.ERROR;
 
@@ -299,7 +299,7 @@ namespace com.google.finance
 					this.extractAfterHoursSessions(this.visibleExtendedHours);
 				}
 			}
-			if (_loc3_)
+			if (hasData)
 				return AddStreamResults.ADDED_DATA;
 
 			if (_loc9_.length === 0)
@@ -698,34 +698,34 @@ namespace com.google.finance
 			return objectPositions;
 		}
 
-		private parseHeader(param1: string[], chartEvent: ChartEvent)
+		private parseHeader(lines: string[], chartEvent: ChartEvent)
 		{
-			const _loc3_: Map<string> = {};
-			for (const pair of param1)
+			const map: Map<string> = {};
+			for (const pair of lines)
 			{
-				const _loc5_ = pair.split('=');
-				if (_loc5_.length <= 1)
+				const parts = pair.split('=');
+				if (parts.length <= 1)
 					return null;
 
-				if (_loc5_[0] === DataSource.DATA_STR)
-					return _loc3_;
+				if (parts[0] === DataSource.DATA_STR)
+					return map;
 
-				_loc3_[_loc5_[0]] = _loc5_[1];
+				map[parts[0]] = parts[1];
 			}
 			return null;
 		}
 
 		computeIntradaySessions(dataSeries: DataSeries)
 		{
-			const _loc2_ = Const.INTRADAY_INTERVAL;
+			const intradayInterval = Const.INTRADAY_INTERVAL;
 			dataSeries.intradayRegions.length = 0;
 			let _loc3_ = 0;
 			let _loc4_ = 0;
 			for (let unitIndex = 1; unitIndex < dataSeries.units.length; unitIndex++)
 			{
-				const _loc6_ = dataSeries.units[unitIndex];
-				const _loc7_ = dataSeries.units[unitIndex - 1];
-				if ((_loc6_.time - _loc7_.time) / 1000 !== _loc2_)
+				const unit = dataSeries.units[unitIndex];
+				const previousUnit = dataSeries.units[unitIndex - 1];
+				if ((unit.time - previousUnit.time) / 1000 !== intradayInterval)
 				{
 					if (_loc4_ > 0)
 						dataSeries.intradayRegions.push(new StartEndPair(_loc3_, unitIndex - 1));
@@ -873,37 +873,37 @@ namespace com.google.finance
 
 		computeObjectPositions()
 		{
-			let _loc6_ = NaN;
+			let closePrice = NaN;
 			for (const objectType of Object.keys(this.objects))
 			{
-				const _loc2_ = this.objects[objectType];
-				for (let objectIndex = _loc2_.length - 1; objectIndex >= 0; objectIndex--)
+				const objects = this.objects[objectType];
+				for (let objectIndex = objects.length - 1; objectIndex >= 0; objectIndex--)
 				{
-					const _loc4_ = _loc2_[objectIndex];
+					const object = objects[objectIndex];
 					if (Const.INDICATOR_ENABLED)
 					{
-						const objectPositions = this.getObjectPositionsInInterval(_loc2_[objectIndex].time);
-						_loc4_.posInInterval = objectPositions.posInInterval;
-						_loc6_ = objectPositions.closePrice;
+						const objectPositions = this.getObjectPositionsInInterval(objects[objectIndex].time);
+						object.posInInterval = objectPositions.posInInterval;
+						closePrice = objectPositions.closePrice;
 					}
 					else
 					{
-						const seriesPosition = this.getObjectPositions(_loc2_[objectIndex].time, this.data);
+						const seriesPosition = this.getObjectPositions(objects[objectIndex].time, this.data);
 						if (seriesPosition.pos >= 0 && seriesPosition.pos < notnull(seriesPosition.refDataSeries).units.length)
 						{
-							_loc4_.pos = seriesPosition.pos;
-							_loc4_.dayPos = seriesPosition.dayPos;
-							_loc4_.refDataSeries = seriesPosition.refDataSeries;
-							_loc6_ = notnull(seriesPosition.refDataSeries).units[seriesPosition.pos].close;
+							object.pos = seriesPosition.pos;
+							object.dayPos = seriesPosition.dayPos;
+							object.refDataSeries = seriesPosition.refDataSeries;
+							closePrice = notnull(seriesPosition.refDataSeries).units[seriesPosition.pos].close;
 						}
 					}
 					if (objectType === "dividend")
 					{
-						const _loc7_ = <Dividend>_loc4_;
-						_loc7_.yield = _loc7_.amount / _loc6_;
+						const dividand = <Dividend>object;
+						dividand.yield = dividand.amount / closePrice;
 					}
 				}
-				_loc2_.sort(StockAssociatedObject.compare);
+				objects.sort(StockAssociatedObject.compare);
 			}
 		}
 
@@ -979,11 +979,11 @@ namespace com.google.finance
 			}
 		}
 
-		getClosestDataUnitAfterMinute(param1: number): DataUnit | null
+		getClosestDataUnitAfterMinute(minute: number): DataUnit | null
 		{
-			const _loc2_ = this.afterHoursData.getRelativeMinuteIndex(param1);
+			const _loc2_ = this.afterHoursData.getRelativeMinuteIndex(minute);
 			const _loc3_ = this.afterHoursData.units[_loc2_ + 1];
-			const _loc4_ = this.data.getRelativeMinuteIndex(param1);
+			const _loc4_ = this.data.getRelativeMinuteIndex(minute);
 			const _loc5_ = this.data.units[_loc4_ + 1];
 			if (!_loc3_ && !_loc5_)
 				return null;
@@ -994,16 +994,16 @@ namespace com.google.finance
 			if (!_loc5_)
 				return _loc3_;
 
-			if (param1 > _loc5_.relativeMinutes && param1 > _loc3_.relativeMinutes)
+			if (minute > _loc5_.relativeMinutes && minute > _loc3_.relativeMinutes)
 				return null;
 
-			if (this.visibleExtendedHours.length() === 0 || isNaN(_loc3_.relativeMinutes) || _loc3_.relativeMinutes < param1)
+			if (this.visibleExtendedHours.length() === 0 || isNaN(_loc3_.relativeMinutes) || _loc3_.relativeMinutes < minute)
 				return _loc5_;
 
-			if (_loc5_.relativeMinutes < param1)
+			if (_loc5_.relativeMinutes < minute)
 				return _loc3_;
 
-			if (_loc5_.relativeMinutes - param1 < _loc3_.relativeMinutes - param1)
+			if (_loc5_.relativeMinutes - minute < _loc3_.relativeMinutes - minute)
 				return _loc5_;
 
 			return _loc3_;
@@ -1316,30 +1316,27 @@ namespace com.google.finance
 			return _loc7_;
 		}
 
-		private checkHeaderSanity(param1: Map<string>, dataSeries: DataSeries)
+		private checkHeaderSanity(map: Map<string>, dataSeries: DataSeries)
 		{
-			const _loc3_ = param1[DataSource.MARKET_CLOSE_MINUTE_STR];
-			const _loc4_ = param1[DataSource.MARKET_OPEN_MINUTE_STR];
-			if (_loc4_)
-				dataSeries.marketOpenMinute = Number(_loc4_);
+			const closeMinute = map[DataSource.MARKET_CLOSE_MINUTE_STR];
+			const openMinute = map[DataSource.MARKET_OPEN_MINUTE_STR];
+			if (openMinute)
+				dataSeries.marketOpenMinute = Number(openMinute);
 
-			if (_loc3_)
+			if (closeMinute)
 			{
-				dataSeries.marketCloseMinute = Number(_loc3_);
+				dataSeries.marketCloseMinute = Number(closeMinute);
 				if (this.quoteName.indexOf("CURRENCY") >= 0)
-				{
-					const _loc5_ = (dataSeries.marketCloseMinute - dataSeries.marketOpenMinute) % this.intradayMinutesInterval;
-					dataSeries.marketCloseMinute -= _loc5_;
-				}
+					dataSeries.marketCloseMinute -= (dataSeries.marketCloseMinute - dataSeries.marketOpenMinute) % this.intradayMinutesInterval;
 			}
-			if (Number(_loc3_) - Number(_loc4_) < 30)
+			if (Number(closeMinute) - Number(openMinute) < 30)
 			{
 				dataSeries.marketCloseMinute = Const.MARKET_CLOSE_MINUTE;
 				dataSeries.marketOpenMinute = Const.MARKET_OPEN_MINUTE;
 			}
 
-			if (param1[DataSource.DATA_SESSIONS_STR])
-				this.extractSessions(param1[DataSource.DATA_SESSIONS_STR], dataSeries);
+			if (map[DataSource.DATA_SESSIONS_STR])
+				this.extractSessions(map[DataSource.DATA_SESSIONS_STR], dataSeries);
 			else
 				dataSeries.addDataSession(dataSeries.marketOpenMinute, dataSeries.marketCloseMinute, Const.REGULAR_MARKET_NAME);
 
@@ -1444,21 +1441,21 @@ namespace com.google.finance
 				this.makeDataUnitEndOfDay(dataUnit, dataUnits, startEndPair, dataSeries);
 				return;
 			}
-			let _loc7_ = dataUnits[dataUnits.length - 1];
-			const _loc8_ = notnull(dataSeries.getSessionForMinute(_loc7_.dayMinute));
-			const _loc9_ = dataSeries.getSessionIndex(_loc7_.dayMinute);
-			if (_loc7_ && _loc7_.dayMinute < _loc8_.end)
+			let lastUnit = dataUnits[dataUnits.length - 1];
+			const _loc8_ = notnull(dataSeries.getSessionForMinute(lastUnit.dayMinute));
+			const _loc9_ = dataSeries.getSessionIndex(lastUnit.dayMinute);
+			if (lastUnit && lastUnit.dayMinute < _loc8_.end)
 			{
-				_loc5_ = (_loc8_.end - _loc7_.dayMinute) / this.baseMinutesInterval;
-				this.addFakeDataUnits(dataUnits, _loc7_, dataSeries, _loc5_, Directions.FORWARD);
-				_loc7_ = dataUnits[dataUnits.length - 1];
+				_loc5_ = (_loc8_.end - lastUnit.dayMinute) / this.baseMinutesInterval;
+				this.addFakeDataUnits(dataUnits, lastUnit, dataSeries, _loc5_, Directions.FORWARD);
+				lastUnit = dataUnits[dataUnits.length - 1];
 			}
-			const _loc10_ = (dataUnit.time - _loc7_.time) / Const.MS_PER_MINUTE;
+			const _loc10_ = (dataUnit.time - lastUnit.time) / Const.MS_PER_MINUTE;
 			const _loc11_ = startEndPair.end - startEndPair.start;
 			const _loc12_ = dataUnit.dayMinute - startEndPair.end;
 			if (_loc10_ > _loc12_ + _loc11_)
 			{
-				if (!DataSource.unitsInDifferentDays(_loc7_, dataUnit))
+				if (!DataSource.unitsInDifferentDays(lastUnit, dataUnit))
 				{
 					this.addFakeDataUnitsForSessions(dataUnits, dataUnits[dataUnits.length - 1], dataSeries, _loc9_ + 1, sessionIndex, Directions.FORWARD);
 				}
@@ -1471,15 +1468,15 @@ namespace com.google.finance
 			}
 			else
 			{
-				_loc7_.close = dataUnit.close;
-				if (!isNaN(_loc7_.high) && _loc7_.high < _loc7_.close)
-					_loc7_.high = _loc7_.close;
+				lastUnit.close = dataUnit.close;
+				if (!isNaN(lastUnit.high) && lastUnit.high < lastUnit.close)
+					lastUnit.high = lastUnit.close;
 
-				if (!isNaN(_loc7_.low) && _loc7_.low > _loc7_.close)
-					_loc7_.low = _loc7_.close;
+				if (!isNaN(lastUnit.low) && lastUnit.low > lastUnit.close)
+					lastUnit.low = lastUnit.close;
 
 				const _loc13_ = dataUnit.intervals[0];
-				_loc7_.volumes[_loc13_] += dataUnit.volumes[_loc13_];
+				lastUnit.volumes[_loc13_] += dataUnit.volumes[_loc13_];
 			}
 		}
 

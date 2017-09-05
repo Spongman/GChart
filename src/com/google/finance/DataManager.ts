@@ -171,10 +171,10 @@ namespace com.google.finance
 
 		dataUnavailableOnServer(ticker: string): boolean
 		{
-			const _loc2_ = this.dataSources[ticker];
-			if (!_loc2_)
+			const dataSource = this.dataSources[ticker];
+			if (!dataSource)
 				return false;
-			return _loc2_.dataUnavailableOnServer;
+			return dataSource.dataUnavailableOnServer;
 		}
 
 		private getUrlString(param1: string, param2: string, chartEvent: ChartEvent): string

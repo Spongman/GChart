@@ -43,9 +43,9 @@ namespace com.google.finance
 			if (_loc2_ >= this.days.length)
 				return null;
 
-			const _loc3_ = this.units[this.days[_loc2_]];
-			if ((_loc3_.time - param1) / Const.MS_PER_MINUTE < _loc3_.dayMinute)
-				return _loc3_;
+			const unit = this.units[this.days[_loc2_]];
+			if ((unit.time - param1) / Const.MS_PER_MINUTE < unit.dayMinute)
+				return unit;
 
 			return null;
 		}
@@ -98,8 +98,8 @@ namespace com.google.finance
 
 		hasPointsInIntervalArray(param1: number): boolean
 		{
-			const _loc2_ = this.pointsInIntervals[param1];
-			return _loc2_ && _loc2_.length > 0;
+			const points = this.pointsInIntervals[param1];
+			return points && points.length > 0;
 		}
 
 		compareRefPointAndRelativeMinute(indicatorPoint: indicator.IndicatorPoint, param2: number): number
@@ -222,18 +222,18 @@ namespace com.google.finance
 
 		intervalDataContainsTime(param1: number, param2: number, param3 = NaN): boolean
 		{
-			let _loc5_ = this.intervalHashKey(param2);
-			if (this.intervalBounds[_loc5_])
+			let key = this.intervalHashKey(param2);
+			if (this.intervalBounds[key])
 			{
-				const _loc4_ = this.intervalBounds[_loc5_];
-				if (_loc4_.containsValue(param1))
+				const bounds = this.intervalBounds[key];
+				if (bounds.containsValue(param1))
 					return true;
 			}
-			_loc5_ = this.intervalHashKey(param3);
-			if (!isNaN(param3) && this.intervalBounds[_loc5_])
+			key = this.intervalHashKey(param3);
+			if (!isNaN(param3) && this.intervalBounds[key])
 			{
-				const _loc4_ = this.intervalBounds[_loc5_];
-				if (_loc4_.containsValue(param1))
+				const bounds = this.intervalBounds[key];
+				if (bounds.containsValue(param1))
 					return true;
 			}
 			return false;
@@ -530,19 +530,20 @@ namespace com.google.finance
 			const firstDailyDayIndex = this.getFirstDailyDayIndex();
 			for (let _loc4_ = firstDailyDayIndex; _loc4_ < this.days.length; _loc4_++)
 			{
-				const _loc5_ = this.days[_loc4_];
+				const day = this.days[_loc4_];
+				const originalUnit = this.units[day];
 				const dataUnit = new DataUnit(
-					this.units[_loc5_].close,
-					this.units[_loc5_].high,
-					this.units[_loc5_].low,
-					this.units[_loc5_].open
+					originalUnit.close,
+					originalUnit.high,
+					originalUnit.low,
+					originalUnit.open
 				);
 
-				dataUnit.exchangeDateInUTC = this.units[_loc5_].exchangeDateInUTC;
-				dataUnit.dayMinute = this.units[_loc5_].dayMinute;
-				dataUnit.time = this.units[_loc5_].time;
-				dataUnit.relativeMinutes = this.units[_loc5_].relativeMinutes;
-				dataUnit.coveredDays = this.units[_loc5_].coveredDays;
+				dataUnit.exchangeDateInUTC = originalUnit.exchangeDateInUTC;
+				dataUnit.dayMinute = originalUnit.dayMinute;
+				dataUnit.time = originalUnit.time;
+				dataUnit.relativeMinutes = originalUnit.relativeMinutes;
+				dataUnit.coveredDays = originalUnit.coveredDays;
 				dataSeries.days.push(dataSeries.points.length);
 				dataSeries.units.push(dataUnit);
 			}

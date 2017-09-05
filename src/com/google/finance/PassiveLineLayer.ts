@@ -121,9 +121,9 @@ namespace com.google.finance
 					_loc16_ = Math.min(_loc16_, dataSeries.fridays.length - 1);
 					while (_loc16_ >= 0 && dataSeries.fridays[_loc16_] >= param2)
 					{
-						const _loc17_ = dataSeries.units[dataSeries.fridays[_loc16_]];
-						xPos = vp.getXPos(_loc17_);
-						yPos = this.getYPos(context, _loc17_);
+						const unit = dataSeries.units[dataSeries.fridays[_loc16_]];
+						xPos = vp.getXPos(unit);
+						yPos = this.getYPos(context, unit);
 						gr.lineTo(xPos, yPos);
 						_loc16_ -= skipInterval.skip;
 					}

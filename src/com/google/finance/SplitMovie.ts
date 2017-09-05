@@ -79,25 +79,25 @@ namespace com.google.finance
 			else
 				this.detailsTextField.y = this.y - this.currentVisibleButton.height - this.detailsTextField.height;
 
-			const _loc2_ = this.detailsTextField.x - 2;
-			const _loc3_ = this.detailsTextField.y - 2;
-			const _loc4_ = this.detailsTextField.x + this.detailsTextField.width + 2;
-			const _loc5_ = this.detailsTextField.y + this.detailsTextField.height + 2;
-			let _loc6_ = -2;
+			const left = this.detailsTextField.x - 2;
+			const top = this.detailsTextField.y - 2;
+			const right = this.detailsTextField.x + this.detailsTextField.width + 2;
+			const bottom = this.detailsTextField.y + this.detailsTextField.height + 2;
+			let leftMargin = -2;
 			const minx = this.supportingLayer.viewPoint.minx;
 			const maxx = this.supportingLayer.viewPoint.maxx;
-			if (_loc2_ < minx)
-				_loc6_ = Number(minx - _loc2_ - 2);
-			else if (_loc4_ > maxx)
-				_loc6_ = Number(maxx - _loc4_ - 2);
+			if (left < minx)
+				leftMargin = Number(minx - left - 2);
+			else if (right > maxx)
+				leftMargin = Number(maxx - right - 2);
 
-			this.detailsTextField.x += _loc6_;
+			this.detailsTextField.x += leftMargin;
 			const graphics = this.highlightCanvas.graphics;
 			graphics.lineStyle(0, this.textColor, 1);
 			graphics.beginFill(0xffffff, 1);
 			graphics.drawRect(
-				_loc2_ + _loc6_, _loc3_,
-				_loc4_ - _loc2_, _loc5_ - _loc3_
+				left + leftMargin, top,
+				right - left, bottom - top
 			);
 			/*
 			_loc9_.moveTo(_loc2_ + _loc6_, _loc3_);

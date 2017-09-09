@@ -143,7 +143,7 @@ namespace com.google.finance
 
 		private playerMouseWheelHandler(wheelEvent: WheelEvent)
 		{
-			const delta = wheelEvent.deltaY < 0 ? -3 : 3;
+			const delta = wheelEvent.deltaY < 0 ? 3 : -3;
 			this.handleMouseWheel(delta);
 
 			wheelEvent.preventDefault();

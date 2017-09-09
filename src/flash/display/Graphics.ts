@@ -137,27 +137,35 @@ namespace flash.display
 			const oldWidth = canvas.width;
 			const oldHeight = canvas.height;
 
-			if (Graphics._blitCanvas.width < oldWidth)
-				Graphics._blitCanvas.width = oldWidth;
-			if (Graphics._blitCanvas.height < oldHeight)
-				Graphics._blitCanvas.height = oldHeight;
+			if (oldWidth === 0 || oldHeight === 0)
+			{
+				canvas.width = w + 5;
+				canvas.height = h + 5;
+			}
+			else
+			{
+				if (Graphics._blitCanvas.width < oldWidth)
+					Graphics._blitCanvas.width = oldWidth;
+				if (Graphics._blitCanvas.height < oldHeight)
+					Graphics._blitCanvas.height = oldHeight;
 
-			const globalCompositeOperation = context.globalCompositeOperation;
-			context.globalCompositeOperation = "copy";
-			Graphics._blitContext.globalCompositeOperation = "copy";
-			Graphics._blitContext.drawImage(canvas, 0, 0);
-			context.globalCompositeOperation = globalCompositeOperation;
+				const globalCompositeOperation = context.globalCompositeOperation;
+				context.globalCompositeOperation = "copy";
+				Graphics._blitContext.globalCompositeOperation = "copy";
+				Graphics._blitContext.drawImage(canvas, 0, 0);
+				context.globalCompositeOperation = globalCompositeOperation;
 
-			canvas.width = w + 5;
-			canvas.height = h + 5;
+				canvas.width = w + 5;
+				canvas.height = h + 5;
 
-			context.drawImage(
-				Graphics._blitCanvas,
-				0, 0,
-				oldWidth, oldHeight,
-				oldminx - this._minx, oldminy - this._miny,
-				oldWidth, oldHeight
-			);
+				context.drawImage(
+					Graphics._blitCanvas,
+					0, 0,
+					oldWidth, oldHeight,
+					oldminx - this._minx, oldminy - this._miny,
+					oldWidth, oldHeight
+				);
+			}	
 
 			context.lineWidth = this._thickness;
 			context.lineCap = (this._thickness > 4) ? "round" : "butt";
@@ -257,7 +265,7 @@ namespace flash.display
 			}
 		}
 
-		private _ops: Function[] = [];
+		private _ops: (() => void)[] = [];
 		private flushOps()
 		{
 			for (const op of this._ops)

@@ -37,9 +37,8 @@ namespace com.google.finance
 			{
 				const pointIndex = Number(key);
 				const pointUnits = points[pointIndex];
-				console.log(pointIndex);
-				// TODO: should this be Const.FIVE_MINUTE_INTERVAL?
-				if (pointIndex === Intervals.FIVE_MINUTES && pointUnits[pointUnits.length - 1].dayMinute % 2 === 1)
+				// TODO: was Intervals.FIVE_MINUTES
+				if (pointIndex === Const.FIVE_MINUTE_INTERVAL && pointUnits[pointUnits.length - 1].dayMinute % 2 === 1)
 					pointUnits.splice(pointUnits.length - 1, 1);
 
 				map[pointIndex] = pointUnits.length - 1;
@@ -165,8 +164,7 @@ namespace com.google.finance
 			let _loc7_ = param3;
 			for (let _loc8_ = param2; _loc8_ >= param1; _loc8_--)
 			{
-				const unit = dataSeries.units[_loc8_];
-				unit.relativeMinutes = _loc7_;
+				dataSeries.units[_loc8_].relativeMinutes = _loc7_;
 				if (dataUnits)
 					dataUnits[_loc8_].relativeMinutes = _loc7_;
 
@@ -220,8 +218,7 @@ namespace com.google.finance
 			if (this.firstResize)
 			{
 				this.firstResize = false;
-				const firstDataSource = this.layersManager.getFirstDataSource();
-				if (!firstDataSource)
+				if (!this.layersManager.getFirstDataSource())
 					return;
 
 				if (this.mainController.currentZoomLevel !== ScaleTypes.INVALID)
@@ -330,7 +327,7 @@ namespace com.google.finance
 			for (const layer of layers)
 			{
 				if (layer.name === layerName)
-					layer.enabled = !!param2 ? "true" : "false";
+					layer.enabled = param2 ? "true" : "false";
 			}
 		}
 
@@ -418,22 +415,22 @@ namespace com.google.finance
 			if (viewPoint)
 				viewPoint.setNewSize(bounds);
 			height = bounds.miny - Const.SPARK_PADDING;
-			let _loc5_: number;
-			for (_loc5_ = this.viewpoints.length - 1; _loc5_ >= 2; _loc5_--)
+			let viewpointIndex: number;
+			for (viewpointIndex = this.viewpoints.length - 1; viewpointIndex >= 2; viewpointIndex--)
 			{
 				bounds = new Bounds(
 					Const.BORDER_WIDTH,
-					height - (this.viewpoints[_loc5_].maxy - this.viewpoints[_loc5_].miny),
+					height - (this.viewpoints[viewpointIndex].maxy - this.viewpoints[viewpointIndex].miny),
 					width - Const.BORDER_WIDTH,
 					height
 				);
-				this.viewpoints[_loc5_].setNewSize(bounds);
-				height = bounds.miny - (<ViewPoint>this.viewpoints[_loc5_]).topMargin;
+				this.viewpoints[viewpointIndex].setNewSize(bounds);
+				height = bounds.miny - (<ViewPoint>this.viewpoints[viewpointIndex]).topMargin;
 			}
-			this.spaceText.setSize(width, Const.SPACE_HEIGHT + (<ViewPoint>this.viewpoints[_loc5_]).topMargin);
+			this.spaceText.setSize(width, Const.SPACE_HEIGHT + (<ViewPoint>this.viewpoints[viewpointIndex]).topMargin);
 			bounds = new Bounds(
 				Const.BORDER_WIDTH,
-				Const.SPACE_HEIGHT + Const.INFO_TEXT_TOP_PADDING + (<ViewPoint>this.viewpoints[_loc5_]).topMargin,
+				Const.SPACE_HEIGHT + Const.INFO_TEXT_TOP_PADDING + (<ViewPoint>this.viewpoints[viewpointIndex]).topMargin,
 				width - Const.BORDER_WIDTH,
 				height
 			);
@@ -604,12 +601,12 @@ namespace com.google.finance
 				return;
 
 			const afterHoursData = dataSource.afterHoursData;
-			const _loc4_ = !!Const.INDICATOR_ENABLED ? afterHoursData.getPointsInIntervalArray(Const.INTRADAY_INTERVAL) : null;
+			const _loc4_ = Const.INDICATOR_ENABLED ? afterHoursData.getPointsInIntervalArray(Const.INTRADAY_INTERVAL) : null;
 			dataSource.firstOpenRelativeMinutes = 0;
-			let _loc5_: StartEndPair | null = null;
+			let interval: StartEndPair | null = null;
 			let _loc6_ = dataSource.visibleExtendedHours.length() - 1;
 			if (_loc6_ !== -1)
-				_loc5_ = dataSource.visibleExtendedHours.getIntervalAt(_loc6_);
+				interval = dataSource.visibleExtendedHours.getIntervalAt(_loc6_);
 
 			const lastUnit = data.units[data.units.length - 1];
 			let session = notnull(data.getSessionForMinute(lastUnit.dayMinute));
@@ -650,10 +647,10 @@ namespace com.google.finance
 						if (!isNaN(_loc16_))
 							session = notnull(data.getSessionForMinute(_loc16_));
 					}
-					else if (unit.dayMinute === session.end && _loc5_)
+					else if (unit.dayMinute === session.end && interval)
 					{
-						let start = _loc5_.start;
-						let end = _loc5_.end;
+						let start = interval.start;
+						let end = interval.end;
 						let _loc19_ = Number(afterHoursData.units[start].time);
 						while (unit.time <= _loc19_)
 						{
@@ -662,11 +659,11 @@ namespace com.google.finance
 							this.positionAfterHoursTimes(start, end, _loc10_, intradayMinutesInterval, afterHoursData, _loc4_);
 							_loc10_ -= _loc20_ + 1;
 							_loc6_--;
-							_loc5_ = dataSource.visibleExtendedHours.getIntervalAt(_loc6_);
-							if (_loc5_)
+							interval = dataSource.visibleExtendedHours.getIntervalAt(_loc6_);
+							if (interval)
 							{
-								start = _loc5_.start;
-								end = _loc5_.end;
+								start = interval.start;
+								end = interval.end;
 								_loc19_ = Number(afterHoursData.units[start].time);
 							}
 							else
@@ -736,7 +733,7 @@ namespace com.google.finance
 			else
 			{
 				const detailLevel = this.getDetailLevel();
-				const _loc8_ = !!Const.INDICATOR_ENABLED ? this.getEnabledChartLayer() : "";
+				const _loc8_ = Const.INDICATOR_ENABLED ? this.getEnabledChartLayer() : "";
 				const _loc9_ = detailLevel === Intervals.INTRADAY || _loc8_ === Const.LINE_CHART && detailLevel < Intervals.DAILY;
 				if (_loc9_ && this.layersManager.getStyle() === LayersManager.SINGLE)
 				{
@@ -744,8 +741,7 @@ namespace com.google.finance
 					if (_loc8_ === Const.CANDLE_STICK || _loc8_ === Const.OHLC_CHART)
 					{
 						const _loc10_ = _loc3_.data.marketDayLength + 1;
-						const days = Const.INTERVAL_PERIODS[detailLevel].days;
-						this.mainController.jumpTo(0, _loc10_ * days);
+						this.mainController.jumpTo(0, _loc10_ * Const.INTERVAL_PERIODS[detailLevel].days);
 					}
 					else
 					{
@@ -767,7 +763,7 @@ namespace com.google.finance
 		{
 			const mainViewPoint = this.getMainViewPoint();
 			const layers = mainViewPoint.getLayers();
-			const dataSource = !!this.layersManager ? this.layersManager.getFirstDataSource() : null;
+			const dataSource = this.layersManager ? this.layersManager.getFirstDataSource() : null;
 			for (const layer of layers)
 			{
 				if (layer instanceof IntervalBasedChartManagerLayer)
@@ -884,11 +880,10 @@ namespace com.google.finance
 		getDetailLevel(): Intervals
 		{
 			const mainViewPoint = this.getMainViewPoint();
-			const interval = !!Const.INDICATOR_ENABLED ? mainViewPoint.getDetailLevelForTechnicalStyle() : mainViewPoint.getDetailLevel();
+			const interval = Const.INDICATOR_ENABLED ? mainViewPoint.getDetailLevelForTechnicalStyle() : mainViewPoint.getDetailLevel();
 			if (interval === Intervals.INVALID)
 			{
-				const defaultDisplayDays = Const.getDefaultDisplayDays();
-				const zoomLevel = Const.getZoomLevel(Const.MARKET_DAY_LENGTH * defaultDisplayDays, Const.MARKET_DAY_LENGTH);
+				const zoomLevel = Const.getZoomLevel(Const.MARKET_DAY_LENGTH * Const.getDefaultDisplayDays(), Const.MARKET_DAY_LENGTH);
 				if (zoomLevel <= ScaleTypes.SCALE_1Y)
 					return Intervals.WEEKLY;
 

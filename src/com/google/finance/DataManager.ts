@@ -10,10 +10,10 @@ namespace com.google.finance
 		{
 		}
 
-		addObject(param1: any)
+		addObject(object: any)
 		{
-			if (this.dataSources[param1._quote])
-				this.dataSources[param1._quote].addObject(param1);
+			if (this.dataSources[object._quote])
+				this.dataSources[object._quote].addObject(object);
 		}
 
 		expectEvent(chartEvent: ChartEvent | null)
@@ -61,8 +61,7 @@ namespace com.google.finance
 						const data2 = otherDataSource.data;
 						if (data2.days.length > otherData.days.length - numOtherDays)
 						{
-							const _loc18_ = data2.days.length - (otherData.days.length - numOtherDays);
-							const day = data2.days[_loc18_];
+							const day = data2.days[data2.days.length - (otherData.days.length - numOtherDays)];
 							const _loc3_ = this.cloneDataUnitForTargetExchange(unit, data2.units[day], Const.DAILY_INTERVAL);
 							data2.units.splice(day + 1, 0, _loc3_);
 						}

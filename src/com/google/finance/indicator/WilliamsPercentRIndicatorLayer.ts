@@ -9,7 +9,7 @@ namespace com.google.finance.indicator
 
 	export class WilliamsPercentRIndicatorLayer extends IndependentIndicatorLayer
 	{
-		private static readonly PARAMETER_NAMES = ["period"];
+		private static readonly PARAMETER_NAMES: ReadonlyArray<string> = ["period"];
 
 		private period = 10;
 
@@ -21,7 +21,7 @@ namespace com.google.finance.indicator
 		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string
 		{
 			if (param1 === 0)
-				return Messages.getMsg(Messages.PR_WPR, param2);
+				return Message.getMsg(Messages.PR_WPR, param2);
 
 			return "";
 		}
@@ -36,7 +36,7 @@ namespace com.google.finance.indicator
 
 		protected getIndicatorNameText(param1: string): string
 		{
-			return Messages.getMsg(Messages.WPR_INTERVAL, this.period, param1);
+			return Message.getMsg(Messages.WPR_INTERVAL, this.period, param1);
 		}
 
 		computeIntervalIndicator(interval: number)
@@ -70,8 +70,8 @@ namespace com.google.finance.indicator
 						}
 						if (_loc3_ !== _loc4_)
 						{
-							const _loc5_ = (_loc3_ - point.close) / (_loc3_ - _loc4_) * 100;
-							dataSeries.points.push(new IndicatorPoint(_loc5_, point));
+							const value = (_loc3_ - point.close) / (_loc3_ - _loc4_) * 100;
+							dataSeries.points.push(new IndicatorPoint(value, point));
 						}
 						else
 						{

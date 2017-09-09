@@ -8,7 +8,7 @@ namespace com.google.finance.indicator
 
 	export class SMAIndicatorLayer extends DependentIndicatorLayer
 	{
-		private static readonly PARAMETER_NAMES = ["period"];
+		private static readonly PARAMETER_NAMES: ReadonlyArray<string> = ["period"];
 
 		protected periods = [20];
 
@@ -25,7 +25,7 @@ namespace com.google.finance.indicator
 		protected getIndicatorValueText(periodIndex: number, param2: number, param3: string, context: Context): string
 		{
 			if (periodIndex >= 0 && periodIndex < this.periods.length)
-				return Messages.getMsg(Messages.SMA_INTERVAL, this.periods[periodIndex], param3, param2);
+				return Message.getMsg(Messages.SMA_INTERVAL, this.periods[periodIndex], param3, param2);
 
 			return "";
 		}

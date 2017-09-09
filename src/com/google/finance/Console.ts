@@ -25,10 +25,10 @@ namespace com.google.finance
 			}
 		}
 
-		println(param1: string)
+		println(text: string)
 		{
 			if (Boolean(MainManager.paramsObj.debug))
-				this.t.appendText(param1 + "\n");
+				this.t.appendText(text + "\n");
 		}
 
 		dataLoading()

@@ -32,14 +32,13 @@ namespace com.google.finance
 		addObject(ticker: string, type: string, date: Date, letter: string, id: number)
 		{
 			ticker = Utils.adjustNasdToNasdaq(ticker);
-			const obj = {
+			this.mainManager.addObject({
 				_qname: ticker,
 				_type: type,
 				_date: date,
 				_id: id,
 				_letter: letter
-			};
-			this.mainManager.addObject(obj);
+			});
 		}
 
 		removeLayerFromStyle(layerInfo: LayerInfo, param2: string)
@@ -135,20 +134,20 @@ namespace com.google.finance
 			if (!firstDataSource)
 				return;
 
-			if (this.updateLastPriceInDataSeries(!!param1 ? firstDataSource.afterHoursData : firstDataSource.data, param2))
+			if (this.updateLastPriceInDataSeries(param1 ? firstDataSource.afterHoursData : firstDataSource.data, param2))
 			{
 				if (displayManager.getDetailLevel() === Intervals.INTRADAY)
 					displayManager.update(true);
 			}
 		}
 
-		private playerMouseWheelHandler(mouseWheelEvent: MouseWheelEvent)
+		private playerMouseWheelHandler(wheelEvent: WheelEvent)
 		{
-			const delta = mouseWheelEvent.wheelDelta < 0 ? -3 : 3;
+			const delta = wheelEvent.deltaY < 0 ? -3 : 3;
 			this.handleMouseWheel(delta);
 
-			mouseWheelEvent.preventDefault();
-			mouseWheelEvent.stopPropagation();
+			wheelEvent.preventDefault();
+			wheelEvent.stopPropagation();
 		}
 
 		firstDataIsHere()
@@ -494,7 +493,7 @@ namespace com.google.finance
 				return;
 
 			flash.external.ExternalInterface.call("_flashClicked", param3);
-			flash.external.ExternalInterface.call("_GF_click", "", param2 === "newspin" ? "n-f-" : "n-fp-", !!param4 ? param4.replace(/\\/g, "\\\\") : param3, "");
+			flash.external.ExternalInterface.call("_GF_click", "", param2 === "newspin" ? "n-f-" : "n-fp-", param4 ? param4.replace(/\\/g, "\\\\") : param3, "");
 			this.mainManager.htmlClicked(param1, param3, param4);
 		}
 

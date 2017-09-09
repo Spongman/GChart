@@ -139,7 +139,7 @@ Watch typescript, styles, html, etc...
 */
 gulp.task('watch', ['default'], () => {
 	gulp.watch('src/**/*.css', ['styles']);
-	gulp.watch(['src/**/*.ts', 'src/**/*.tsx'], ['typescript', 'tslint']);
+	gulp.watch(['src/**/*.ts', 'src/**/*.tsx'], ['typescript']);
 	gulp.watch('src/**/*.js', ['javascript']);
 	gulp.watch('src/**/*.html', ['html']);
 	gulp.watch('assets/**/*.*', ['assets']);

@@ -186,7 +186,6 @@ namespace com.google.finance
 				const _loc8_ = lines[0] - lines[lines.length - 1];
 				let _loc9_ = lines[0] - lines[1];
 				const _loc10_ = lines[1] - lines[2];
-				const _loc11_ = lines[2] - lines[3];
 				if (_loc9_ / _loc8_ > 0.4)
 				{
 					const _loc12_ = this.getLinePosAndLabelToFillGap(lines[0], context, _loc2_);
@@ -196,7 +195,7 @@ namespace com.google.finance
 				}
 				else if (_loc10_ / _loc8_ > 0.4)
 				{
-					this.drawHorizontalMidLine(_loc10_, _loc11_, lines[1], _loc2_, context);
+					this.drawHorizontalMidLine(_loc10_, lines[2] - lines[3], lines[1], _loc2_, context);
 				}
 			}
 		}

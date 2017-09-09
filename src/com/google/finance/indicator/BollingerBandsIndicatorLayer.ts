@@ -10,7 +10,7 @@ namespace com.google.finance.indicator
 
 	export class BollingerBandsIndicatorLayer extends DependentIndicatorLayer
 	{
-		private static readonly PARAMETER_NAMES = ["period"];
+		private static readonly PARAMETER_NAMES: ReadonlyArray<string> = ["period"];
 
 		private multiplier = 2;
 		private period = 20;
@@ -22,7 +22,7 @@ namespace com.google.finance.indicator
 
 		protected getIndicatorNameText(param1: string): string
 		{
-			return Messages.getMsg(Messages.BOLL_INTERVAL, this.period, param1);
+			return Message.getMsg(Messages.BOLL_INTERVAL, this.period, param1);
 		}
 
 		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string
@@ -30,11 +30,11 @@ namespace com.google.finance.indicator
 			switch (param1)
 			{
 				case 0:
-					return Messages.getMsg(Messages.MID_BOLL, param2);
+					return Message.getMsg(Messages.MID_BOLL, param2);
 				case 1:
-					return Messages.getMsg(Messages.LOWER_BOLL, param2);
+					return Message.getMsg(Messages.LOWER_BOLL, param2);
 				case 2:
-					return Messages.getMsg(Messages.UPPER_BOLL, param2);
+					return Message.getMsg(Messages.UPPER_BOLL, param2);
 				default:
 					return "";
 			}
@@ -77,17 +77,17 @@ namespace com.google.finance.indicator
 					}
 					else
 					{
-						const _loc5_ = _loc9_ / this.period;
+						const value0 = _loc9_ / this.period;
 						let _loc6_ = 0;
 						for (let periodIndex = 0; periodIndex < this.period; periodIndex++)
-							_loc6_ = Number(_loc6_ + (_loc14_[periodIndex] - _loc5_) * (_loc14_[periodIndex] - _loc5_));
+							_loc6_ = Number(_loc6_ + (_loc14_[periodIndex] - value0) * (_loc14_[periodIndex] - value0));
 
 						_loc6_ = Number(Math.sqrt(_loc6_ / this.period));
-						const _loc7_ = _loc5_ + this.multiplier * _loc6_;
-						const _loc8_ = _loc5_ - this.multiplier * _loc6_;
-						dataSeries0.points.push(new IndicatorPoint(_loc5_, point));
-						dataSeries1.points.push(new IndicatorPoint(_loc7_, point));
-						dataSeries2.points.push(new IndicatorPoint(_loc8_, point));
+						const value1 = value0 + this.multiplier * _loc6_;
+						const value2 = value0 - this.multiplier * _loc6_;
+						dataSeries0.points.push(new IndicatorPoint(value0, point));
+						dataSeries1.points.push(new IndicatorPoint(value1, point));
+						dataSeries2.points.push(new IndicatorPoint(value2, point));
 						_loc9_ = Number(_loc9_ - _loc14_.shift()!);
 					}
 				}

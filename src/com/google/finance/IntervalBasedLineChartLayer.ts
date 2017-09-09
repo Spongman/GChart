@@ -57,9 +57,9 @@ namespace com.google.finance
 						_loc8_ = this.viewPoint.getXPos(dataUnit[_loc10_]);
 						gr.lineTo(_loc8_, this.viewPoint.maxy);
 						gr.lineTo(_loc8_, this.getCloseYPos(context, dataUnit[_loc10_]));
-						const _loc14_ = notnull(this.getDataSeries());
+						const dataSeries = notnull(this.getDataSeries());
 						gr.lineStyle(this.lineThickness, this.lineColor, this.lineVisibility);
-						while (_loc10_ > param4 && dataUnit[_loc10_].dayMinute !== _loc14_.marketOpenMinute)
+						while (_loc10_ > param4 && dataUnit[_loc10_].dayMinute !== dataSeries.marketOpenMinute)
 						{
 							_loc10_--;
 							_loc8_ = this.viewPoint.getXPos(dataUnit[_loc10_]);

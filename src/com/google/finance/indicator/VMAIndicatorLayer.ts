@@ -12,7 +12,7 @@ namespace com.google.finance.indicator
 
 	export class VMAIndicatorLayer extends VolumeDependentIndicatorLayer
 	{
-		private static readonly PARAMETER_NAMES = ["period"];
+		private static readonly PARAMETER_NAMES: ReadonlyArray<string> = ["period"];
 
 		protected periods = [20];
 
@@ -33,7 +33,7 @@ namespace com.google.finance.indicator
 				_loc5_ = 1000000;
 
 			if (param1 >= 0 && param1 < this.periods.length)
-				return Messages.getMsg(Messages.VMA_INTERVAL, this.periods[param1], param3, Utils.numberToString(param2 / _loc5_, 2, 4));
+				return Message.getMsg(Messages.VMA_INTERVAL, this.periods[param1], param3, Utils.numberToString(param2 / _loc5_, 2, 4));
 
 			return "";
 		}

@@ -398,7 +398,7 @@ namespace com.google.finance
 
 			const columnTypes = this.getColumnTypes(param2[DataSource.COLUMNS_STR]);
 			const dataUnits: DataUnit[] = [];
-			let _loc7_ = 0;
+			let index = 0;
 			this.timezoneOffset = 0;
 			this.lastAbsTime = 0;
 			const _loc8_ = DataSource.TIMEZONE_OFFSET_STR.charCodeAt(0);
@@ -408,11 +408,10 @@ namespace com.google.finance
 
 			do
 			{
-				const _loc14_ = param1[_loc7_++];
+				const _loc14_ = param1[index++];
 				if (_loc14_.charCodeAt(0) === _loc8_)
 				{
-					const _loc17_ = _loc14_.split('=');
-					this.timezoneOffset = Number(_loc17_[1]);
+					this.timezoneOffset = Number(_loc14_.split('=')[1]);
 				}
 				else
 				{
@@ -473,8 +472,7 @@ namespace com.google.finance
 							}
 							else if (!isNaN(dataUnit.close))
 							{
-								const interval = Number(param2[DataSource.INTERVAL_STR]);
-								if (dataUnit.volumes[interval] >= 0)
+								if (dataUnit.volumes[Number(param2[DataSource.INTERVAL_STR])] >= 0)
 								{
 									if (this.quoteType === QuoteTypes.COMPANY && dataUnits.length > 0)
 									{
@@ -495,7 +493,7 @@ namespace com.google.finance
 					}
 				}
 			}
-			while (_loc7_ < param1.length);
+			while (index < param1.length);
 
 			if (dataUnits.length !== 0 && _loc12_ && Number(param2[DataSource.INTERVAL_STR]) < Const.DAILY_INTERVAL && _loc4_ !== _loc12_.end)
 			{
@@ -527,7 +525,6 @@ namespace com.google.finance
 			for (let _loc7_ = param4; _loc7_ < param5; _loc7_++)
 			{
 				const interval = dataSeries.dataSessions.getIntervalAt(_loc7_);
-				const _loc9_ = Math.floor((interval.end - interval.start) / this.baseMinutesInterval) + 1;
 				switch (direction)
 				{
 					case Directions.BACKWARD:
@@ -537,6 +534,7 @@ namespace com.google.finance
 						_loc10_ = interval.start - dataUnit.dayMinute - this.baseMinutesInterval;
 						break;
 				}
+				const _loc9_ = Math.floor((interval.end - interval.start) / this.baseMinutesInterval) + 1;
 				this.addFakeDataUnits(dataUnits, dataUnit, dataSeries, _loc9_, direction, _loc10_);
 			}
 		}
@@ -672,8 +670,7 @@ namespace com.google.finance
 					if (seriesPosition[Const.INTRADAY_INTERVAL])
 					{
 						const units = this.data.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
-						const unit = units[seriesPosition[Const.INTRADAY_INTERVAL].position];
-						const unitTime = unit.time;
+						const unitTime = units[seriesPosition[Const.INTRADAY_INTERVAL].position].time;
 						const pointTime = points2[timeIndex].time;
 						if (unitTime >= param1 && pointTime >= param1 && pointTime < unitTime || unitTime < param1 && pointTime > unitTime)
 						{
@@ -973,9 +970,7 @@ namespace com.google.finance
 			for (const sessionPart of sessionParts)
 			{
 				const _loc5_ = sessionPart.split(',');
-				const _loc6_ = Number(_loc5_[1]);
-				const _loc7_ = Number(_loc5_[2]);
-				dataSeries.addDataSession(_loc6_, _loc7_, _loc5_[0]);
+				dataSeries.addDataSession(Number(_loc5_[1]), Number(_loc5_[2]), _loc5_[0]);
 			}
 		}
 
@@ -1026,13 +1021,13 @@ namespace com.google.finance
 			else
 				return;
 
-			let _loc6_ = NaN;
-			let _loc7_ = NaN;
+			let pos = NaN;
+			let dayPos = NaN;
 
-			let _loc8_: DataSeries | null;
-			let _loc9_: SeriesPosition[] | null;
-			let _loc10_: number;
-			let _loc11_: number;
+			let refDataSeries: DataSeries | null;
+			let seriesPositions: SeriesPosition[] | null;
+			let close: number;
+			let timezomeOffset: number;
 
 			if (Const.INDICATOR_ENABLED)
 			{
@@ -1040,10 +1035,10 @@ namespace com.google.finance
 				if (isNaN(objectPositions.exchangeTimezoneOffset))
 					return;
 
-				_loc11_ = objectPositions.exchangeTimezoneOffset;
-				_loc10_ = objectPositions.closePrice;
-				_loc9_ = objectPositions.posInInterval;
-				_loc8_ = null;
+				timezomeOffset = objectPositions.exchangeTimezoneOffset;
+				close = objectPositions.closePrice;
+				seriesPositions = objectPositions.posInInterval;
+				refDataSeries = null;
 			}
 			else
 			{
@@ -1052,41 +1047,41 @@ namespace com.google.finance
 				if (objectPositions.pos < 0 || objectPositions.pos >= dataSeries.units.length)
 					return;
 
-				_loc11_ = dataSeries.units[objectPositions.pos].timezoneOffset;
-				_loc10_ = dataSeries.units[objectPositions.pos].close;
-				_loc6_ = objectPositions.pos;
-				_loc7_ = notnull(objectPositions.dayPos);
-				_loc8_ = objectPositions.refDataSeries;
-				_loc9_ = null;
+				timezomeOffset = dataSeries.units[objectPositions.pos].timezoneOffset;
+				close = dataSeries.units[objectPositions.pos].close;
+				pos = objectPositions.pos;
+				dayPos = notnull(objectPositions.dayPos);
+				refDataSeries = objectPositions.refDataSeries;
+				seriesPositions = null;
 			}
-			const _loc12_ = Utils.newDateInTimezone(new Date(_loc3_), _loc11_);
+			const _loc12_ = Utils.newDateInTimezone(new Date(_loc3_), timezomeOffset);
 			let newObject: StockAssociatedObject;
 			switch (objectType)
 			{
 				case "newspin":
-					newObject = new PinPoint(_loc6_, _loc7_, _loc9_, _loc3_, _loc12_, object._id, this.quoteName, object._letter);
+					newObject = new PinPoint(pos, dayPos, seriesPositions, _loc3_, _loc12_, object._id, this.quoteName, object._letter);
 					break;
 				case "split":
-					newObject = new Split(_loc6_, _loc7_, _loc9_, _loc3_, _loc12_, object._id, this.quoteName, object._old_shares, object._new_shares);
+					newObject = new Split(pos, dayPos, seriesPositions, _loc3_, _loc12_, object._id, this.quoteName, object._old_shares, object._new_shares);
 					if (this.objectInTheFuture(newObject, this.data))
 						return;
 					break;
 				case "dividend":
-					newObject = new Dividend(_loc6_, _loc7_, _loc9_, _loc3_, _loc12_, object._id, this.quoteName, object._amount, object._amount_currency, _loc10_);
+					newObject = new Dividend(pos, dayPos, seriesPositions, _loc3_, _loc12_, object._id, this.quoteName, object._amount, object._amount_currency, close);
 					if (this.objectInTheFuture(newObject, this.data))
 						return;
 					break;
 				case "stock_dividend":
-					newObject = new StockDividend(_loc6_, _loc7_, _loc9_, _loc3_, _loc12_, object._id, this.quoteName, object._ticker, object._adjustment_factor);
+					newObject = new StockDividend(pos, dayPos, seriesPositions, _loc3_, _loc12_, object._id, this.quoteName, object._ticker, object._adjustment_factor);
 					if (this.objectInTheFuture(newObject, this.data))
 						return;
 					break;
 				default:
-					newObject = new StockAssociatedObject(_loc6_, _loc7_, _loc9_, _loc3_, _loc12_, object._id, this.quoteName);
+					newObject = new StockAssociatedObject(pos, dayPos, seriesPositions, _loc3_, _loc12_, object._id, this.quoteName);
 					break;
 			}
 			newObject.originalObject = object;
-			newObject.refDataSeries = _loc8_;
+			newObject.refDataSeries = refDataSeries;
 			this.objects[objectType].push(newObject);
 		}
 
@@ -1238,8 +1233,7 @@ namespace com.google.finance
 			const eventName = chartEvent.getEventName();
 			if (chartEvent.period === "5Y")
 			{
-				const eventName2 = chartEvent.getEventName("40Y");
-				if (this.hasEvent(eventName2))
+				if (this.hasEvent(chartEvent.getEventName("40Y")))
 					return false;
 			}
 			if (this.hasEvent(eventName))
@@ -1495,8 +1489,7 @@ namespace com.google.finance
 					}
 					else
 					{
-						const _loc7_ = this.lastAbsTime + Number(param1[columnTypeIndex]) * this.baseInterval;
-						time = _loc7_ * 1000;
+						time = (this.lastAbsTime + Number(param1[columnTypeIndex]) * this.baseInterval) * 1000;
 					}
 					dataUnit.setDate(time, this.timezoneOffset);
 				}

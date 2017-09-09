@@ -10,7 +10,7 @@ namespace com.google.finance.indicator
 
 	export class CCIIndicatorLayer extends IndependentIndicatorLayer
 	{
-		private static readonly PARAMETER_NAMES = ["period"];
+		private static readonly PARAMETER_NAMES: ReadonlyArray<string> = ["period"];
 
 		private period = 20;
 
@@ -22,7 +22,7 @@ namespace com.google.finance.indicator
 		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string
 		{
 			if (param1 === 0)
-				return Messages.getMsg(Messages.CCI_CCI, param2);
+				return Message.getMsg(Messages.CCI_CCI, param2);
 
 			return "";
 		}
@@ -37,7 +37,7 @@ namespace com.google.finance.indicator
 
 		protected getIndicatorNameText(param1: string): string
 		{
-			return Messages.getMsg(Messages.CCI_INTERVAL, this.period, param1);
+			return Message.getMsg(Messages.CCI_INTERVAL, this.period, param1);
 		}
 
 		computeIntervalIndicator(interval: number)

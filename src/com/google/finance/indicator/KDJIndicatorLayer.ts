@@ -9,7 +9,7 @@ namespace com.google.finance.indicator
 
 	export class KDJIndicatorLayer extends IndependentIndicatorLayer
 	{
-		private static readonly PARAMETER_NAMES = ["period"];
+		private static readonly PARAMETER_NAMES: ReadonlyArray<string> = ["period"];
 
 		private period = 14;
 		private alphaNumber = 0.3333333333333333;
@@ -24,11 +24,11 @@ namespace com.google.finance.indicator
 			switch (param1)
 			{
 				case 0:
-					return Messages.getMsg(Messages.K_KDJ, param2);
+					return Message.getMsg(Messages.K_KDJ, param2);
 				case 1:
-					return Messages.getMsg(Messages.D_KDJ, param2);
+					return Message.getMsg(Messages.D_KDJ, param2);
 				case 2:
-					return Messages.getMsg(Messages.J_KDJ, param2);
+					return Message.getMsg(Messages.J_KDJ, param2);
 				default:
 					return "";
 			}
@@ -44,7 +44,7 @@ namespace com.google.finance.indicator
 
 		protected getIndicatorNameText(param1: string): string
 		{
-			return Messages.getMsg(Messages.KDJ_INTERVAL, this.period, param1);
+			return Message.getMsg(Messages.KDJ_INTERVAL, this.period, param1);
 		}
 
 		computeIntervalIndicator(interval: number)

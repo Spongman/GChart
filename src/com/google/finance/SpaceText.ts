@@ -17,15 +17,15 @@ namespace com.google.finance
 	{
 		static readonly OHLC_INFO_FLAG_STR = "ohlcInfo";
 		static readonly POINT_STR = "point";
-		static readonly PRICE_TEXT = ' ' + Messages.getMsg(Messages.PRICE) + ": ";
-		static readonly OPEN_TEXT = ' ' + Messages.getMsg(Messages.OPEN) + ": ";
+		static readonly PRICE_TEXT = ' ' + Message.getMsg(Messages.PRICE) + ": ";
+		static readonly OPEN_TEXT = ' ' + Message.getMsg(Messages.OPEN) + ": ";
 		static readonly SETTER_STR = "setter";
-		static readonly LOW_TEXT = ' ' + Messages.getMsg(Messages.LOW) + ": ";
-		static readonly VOL_TEXT = ' ' + Messages.getMsg(Messages.VOLUME_SHORT) + ": ";
+		static readonly LOW_TEXT = ' ' + Message.getMsg(Messages.LOW) + ": ";
+		static readonly VOL_TEXT = ' ' + Message.getMsg(Messages.VOLUME_SHORT) + ": ";
 		static readonly OHLC_BASE_PRICE_STR = "basePrice";
 		static readonly VOLUME_STR = "volume";
-		static readonly HIGH_TEXT = ' ' + Messages.getMsg(Messages.HIGH) + ": ";
-		static readonly CLOSE_TEXT = ' ' + Messages.getMsg(Messages.CLOSE) + ": ";
+		static readonly HIGH_TEXT = ' ' + Message.getMsg(Messages.HIGH) + ": ";
+		static readonly CLOSE_TEXT = ' ' + Message.getMsg(Messages.CLOSE) + ": ";
 		static readonly POINTS_STR = "points";
 		static readonly EXTRA_TEXT_STR = "extraText";
 
@@ -112,10 +112,10 @@ namespace com.google.finance
 				switch (scale)
 				{
 					case 1000:
-						text += Messages.getMsg(Messages.MILLION_ONE_LETTER);
+						text += Message.getMsg(Messages.MILLION_ONE_LETTER);
 						break;
 					case 10000:
-						text += Messages.getMsg(Messages.HUNDRED_MILLION_ONE_LETTER);
+						text += Message.getMsg(Messages.HUNDRED_MILLION_ONE_LETTER);
 						break;
 				}
 			}
@@ -125,10 +125,10 @@ namespace com.google.finance
 				switch (scale)
 				{
 					case 1000:
-						text += Messages.getMsg(Messages.THOUSAND_ONE_LETTER);
+						text += Message.getMsg(Messages.THOUSAND_ONE_LETTER);
 						break;
 					case 10000:
-						text += Messages.getMsg(Messages.TEN_THOUSAND_ONE_LETTER);
+						text += Message.getMsg(Messages.TEN_THOUSAND_ONE_LETTER);
 						break;
 				}
 			}
@@ -204,10 +204,10 @@ namespace com.google.finance
 		{
 			const buttonsWidth = this.displayManager.mainController.getButtonsWidth();
 			let _loc2_ = 0;
-			_loc2_ = Number(_loc2_ + (!!this.startDate.visible ? this.startDate.width + 3 : 0));
-			_loc2_ = Number(_loc2_ + (!!this.endDate.visible ? this.endDate.width + 3 : 0));
+			_loc2_ = Number(_loc2_ + (this.startDate.visible ? this.startDate.width + 3 : 0));
+			_loc2_ = Number(_loc2_ + (this.endDate.visible ? this.endDate.width + 3 : 0));
 			_loc2_ = Number(_loc2_ + (this.infoText.width + 2));
-			_loc2_ = Number(_loc2_ + (!!this.changeText.visible ? this.changeText.width : 0));
+			_loc2_ = Number(_loc2_ + (this.changeText.visible ? this.changeText.width : 0));
 			if (Const.INDICATOR_ENABLED)
 				_loc2_ = Number(_loc2_ + 160);
 
@@ -242,10 +242,10 @@ namespace com.google.finance
 			switch (state["extraText"])
 			{
 				case Const.PRE_MARKET_DISPLAY_NAME:
-					this.datesText = Messages.getMsg(Messages.PREMARKET) + ": ";
+					this.datesText = Message.getMsg(Messages.PREMARKET) + ": ";
 					break;
 				case Const.AFTER_HOURS_DISPLAY_NAME:
-					this.datesText = Messages.getMsg(Messages.AFTER_HOURS) + ": ";
+					this.datesText = Message.getMsg(Messages.AFTER_HOURS) + ": ";
 					break;
 				default:
 					this.datesText = "";
@@ -272,7 +272,7 @@ namespace com.google.finance
 			}
 			if (!isNaN(state[SpaceText.VOLUME_STR]))
 			{
-				this.datesText += ' ' + Messages.getMsg(Messages.VOLUME_SHORT) + ": ";
+				this.datesText += ' ' + Message.getMsg(Messages.VOLUME_SHORT) + ": ";
 				this.datesText += this.getHumanReadableVolume(state["volume"]);
 			}
 			this.returnText = "";
@@ -319,8 +319,8 @@ namespace com.google.finance
 
 		private positionInfoText(param1 = true)
 		{
-			const _loc2_ = !!this.startDate.visible ? Number(this.startDate.width + 3) : 0;
-			const _loc3_ = !!this.endDate.visible ? Number(this.endDate.width + 3) : 0;
+			const _loc2_ = this.startDate.visible ? Number(this.startDate.width + 3) : 0;
+			const _loc3_ = this.endDate.visible ? Number(this.endDate.width + 3) : 0;
 			const _loc4_ = this.infoText.width + 2;
 			switch (Const.INFO_TEXT_ALIGN)
 			{
@@ -530,9 +530,9 @@ namespace com.google.finance
 
 			if (lastDataUnit.time < firstDataUnit.time)
 			{
-				const _loc4_ = lastDataUnit;
+				const tmp = lastDataUnit;
 				lastDataUnit = firstDataUnit;
-				firstDataUnit = _loc4_;
+				firstDataUnit = tmp;
 			}
 			this.datesText = "";
 			this.datesTextFormats = [];

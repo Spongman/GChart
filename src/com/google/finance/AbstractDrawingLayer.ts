@@ -61,7 +61,7 @@ namespace com.google.finance
 			return Utils.getLastRealPointIndex(dataUnits);
 		}
 
-		highlightPoint(context: Context, param2: number, state: Dictionary)
+		highlightPoint(context: Context, x: number, state: Dictionary)
 		{
 		}
 

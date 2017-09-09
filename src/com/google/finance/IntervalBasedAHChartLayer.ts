@@ -24,8 +24,7 @@ namespace com.google.finance
 					const unit = dataUnits[_loc6_];
 					const x = this.viewPoint.getXPos(unit);
 					const ohlcYPos = this.getOhlcYPos(context, unit);
-					const ohlcColor = this.getOhlcColor(unit, dataUnits[Math.max(_loc6_ - 1, 0)]);
-					gr.lineStyle(1, ohlcColor);
+					gr.lineStyle(1, this.getOhlcColor(unit, dataUnits[Math.max(_loc6_ - 1, 0)]));
 					if (!unit.fake)
 					{
 						if (Math.abs(ohlcYPos.highY - ohlcYPos.lowY) <= 1)
@@ -81,14 +80,14 @@ namespace com.google.finance
 			}
 		}
 
-		highlightPoint(context: Context, param2: number, state: Dictionary)
+		highlightPoint(context: Context, x: number, state: Dictionary)
 		{
-			if (!this.regionsXLimits || !this.regionsXLimits.containsValue(param2))
+			if (!this.regionsXLimits || !this.regionsXLimits.containsValue(x))
 			{
 				this.clearHighlight();
 				return;
 			}
-			super.highlightPoint(context, param2, state);
+			super.highlightPoint(context, x, state);
 		}
 
 		private getVisibleSessionsTimes(context: Context, dataUnits: DataUnit[]): IntervalSet
@@ -139,20 +138,20 @@ namespace com.google.finance
 						}
 						else
 						{
-							gr.moveTo(x - afterHoursBarWidth / 2, !!_loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
+							gr.moveTo(x - afterHoursBarWidth / 2, _loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
 							if (!_loc11_)
 								gr.beginFill(candleStickColor);
 
-							gr.lineTo(x + afterHoursBarWidth / 2, !!_loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
-							gr.lineTo(x + afterHoursBarWidth / 2, !!_loc11_ ? Number(ohlcYPos.openY) : ohlcYPos.closeY);
-							gr.lineTo(x - afterHoursBarWidth / 2, !!_loc11_ ? Number(ohlcYPos.openY) : ohlcYPos.closeY);
-							gr.lineTo(x - afterHoursBarWidth / 2, !!_loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
+							gr.lineTo(x + afterHoursBarWidth / 2, _loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
+							gr.lineTo(x + afterHoursBarWidth / 2, _loc11_ ? Number(ohlcYPos.openY) : ohlcYPos.closeY);
+							gr.lineTo(x - afterHoursBarWidth / 2, _loc11_ ? Number(ohlcYPos.openY) : ohlcYPos.closeY);
+							gr.lineTo(x - afterHoursBarWidth / 2, _loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
 							if (!_loc11_)
 								gr.endFill();
 						}
 						gr.moveTo(x, ohlcYPos.lowY);
-						gr.lineTo(x, !!_loc11_ ? Number(ohlcYPos.openY) : ohlcYPos.closeY);
-						gr.moveTo(x, !!_loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
+						gr.lineTo(x, _loc11_ ? Number(ohlcYPos.openY) : ohlcYPos.closeY);
+						gr.moveTo(x, _loc11_ ? Number(ohlcYPos.closeY) : ohlcYPos.openY);
 						gr.lineTo(x, ohlcYPos.highY);
 					}
 				}

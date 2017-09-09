@@ -24,12 +24,12 @@ namespace com.google.finance
 			return date;
 		}
 
-		static stringToNumberOrOne(param1: string): number
+		static stringToNumberOrOne(text: string): number
 		{
-			if (!param1)
+			if (!text)
 				return 1;
 
-			return Number(param1.replace('/', "").replace('-', "").replace('.', ""));
+			return Number(text.replace('/', "").replace('-', "").replace('.', ""));
 		}
 
 		setHighlighted(highlighted: boolean)

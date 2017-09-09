@@ -7,10 +7,10 @@ namespace com.google.finance
 		private localYOffset = 0;
 		private localYScale = 0;
 
-		indicator: Indicator;
-		originalDataSeries: DataSeries;
-		indicatorParams: any;	// any?
-		computer: Function;
+		private indicator: Indicator;
+		private originalDataSeries: DataSeries;
+		private indicatorParams: any;	// any?
+		private computer: (interval: number, indicator: Indicator, intput: DataSeries, state: any) => void;
 
 		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
@@ -18,20 +18,20 @@ namespace com.google.finance
 			this.lineColor = Const.LINE_CHART_LINE_COLOR;
 		}
 
-		highlightPoint(context: Context, param2: number, state: Dictionary)
+		highlightPoint(context: Context, x: number, state: Dictionary)
 		{
 			this.clearHighlight();
 			const originalDataSeries = this.originalDataSeries;
 			const xPos = this.viewPoint.getXPos(originalDataSeries.units[0]);
 			//const _loc7_ = this.viewPoint.getXPos(_loc4_.units[_loc4_.points.length - 1]);
-			if (param2 < xPos)
+			if (x < xPos)
 				return;
 
 			let unit: DataUnit;
-			if (param2 > this.viewPoint.maxx)
+			if (x > this.viewPoint.maxx)
 				unit = notnull(this.viewPoint.getLastDataUnit(originalDataSeries));
 			else
-				unit = notnull(this.getPoint(originalDataSeries, param2));
+				unit = notnull(this.getPoint(originalDataSeries, x));
 
 			//const _loc8_ = this.viewPoint.getMinuteXPos(_loc5_.relativeMinutes);
 			//const _loc9_ = this.getYPos(param1, _loc5_);
@@ -162,8 +162,7 @@ namespace com.google.finance
 			const gr = sprite.graphics;
 			while (_loc12_ >= _loc17_ && _loc12_ >= param4)
 			{
-				const _loc11_ = this.localYOffset - (dataSeries.points[_loc12_].value - context.medPrice) * this.localYScale;
-				gr.lineTo(xPos, _loc11_);
+				gr.lineTo(xPos, this.localYOffset - (dataSeries.points[_loc12_].value - context.medPrice) * this.localYScale);
 				_loc12_--;
 				xPos -= intervalLength;
 			}
@@ -181,11 +180,11 @@ namespace com.google.finance
 			return param1;
 		}
 
-		setIndicator(indicatorName: string, fn: Function, dataSeries: DataSeries, indicatorParams: any)
+		setIndicator(indicatorName: string, computer: (interval: number, indicator: Indicator, intput: DataSeries, state: any) => void, dataSeries: DataSeries, indicatorParams: any)
 		{
 			this.dataSource.indicators[indicatorName] = new Indicator();
 			this.indicator = this.dataSource.indicators[indicatorName];
-			fn = fn;
+			this.computer = computer;
 			this.indicatorParams = indicatorParams;
 			this.originalDataSeries = dataSeries;
 		}
@@ -229,9 +228,9 @@ namespace com.google.finance
 			this.drawLine_(this, firstMinuteIndex, lastMinuteIndex, viewPoint, context, dataSeries);
 		}
 
-		private getPointIndex(dataSeries: DataSeries, xPos: number): number
+		private getPointIndex(dataSeries: DataSeries, x: number): number
 		{
-			const minute = this.viewPoint.getMinuteOfX(xPos);
+			const minute = this.viewPoint.getMinuteOfX(x);
 			let minuteIndex = dataSeries.getRelativeMinuteIndex(minute);
 			while (dataSeries.units[minuteIndex].fake && minuteIndex > 0)
 				minuteIndex--;

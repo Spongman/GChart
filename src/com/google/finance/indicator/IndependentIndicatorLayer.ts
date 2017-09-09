@@ -109,7 +109,7 @@ namespace com.google.finance.indicator
 			{
 				let _loc4_ = param2 + (param1 - param2) * levelTextIndex / (this.levelTextArray.length - 1);
 				_loc4_ = Math.round(_loc4_ * 100) / 100;
-				this.levelTextArray[levelTextIndex].text = !!isNaN(_loc4_) ? "" : "" + _loc4_;
+				this.levelTextArray[levelTextIndex].text = isNaN(_loc4_) ? "" : "" + _loc4_;
 				this.levelTextArray[levelTextIndex].x = this.viewPoint.maxx - IndependentIndicatorLayer.LEVEL_TEXT_WIDTH;
 				this.levelTextArray[levelTextIndex].y = this.viewPoint.miny + IndependentIndicatorLayer.NAME_TEXT_BLOCK_HEIGHT + (this.viewPoint.maxy - this.viewPoint.miny - 15 - IndependentIndicatorLayer.NAME_TEXT_BLOCK_HEIGHT) * (this.levelTextArray.length - 1 - levelTextIndex) / (this.levelTextArray.length - 1);
 			}

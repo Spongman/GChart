@@ -9,9 +9,9 @@ namespace com.google.finance
 		private regionsXLimits: IntervalSet;
 		private visibleSessionsTimes: IntervalSet;
 
-		protected getPoint(dataSeries: DataSeries, param2: number): DataUnit
+		protected getPoint(dataSeries: DataSeries, x: number): DataUnit
 		{
-			const minute = this.viewPoint.getMinuteOfX(param2);
+			const minute = this.viewPoint.getMinuteOfX(x);
 			let relativeMinuteIndex = dataSeries.getRelativeMinuteIndex(minute);
 			const time = dataSeries.units[relativeMinuteIndex].time;
 			const interval = notnull(this.visibleSessionsTimes.getIntervalForValue(time));

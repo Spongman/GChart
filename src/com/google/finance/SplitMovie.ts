@@ -298,7 +298,7 @@ namespace com.google.finance
 
 		getDetailedText(): string
 		{
-			return Messages.getMsg(Messages.SPLIT_TEXT, this.getShortText());
+			return Message.getMsg(Messages.SPLIT_TEXT, this.getShortText());
 		}
 
 		setPersistentHide(persistentHide: boolean)

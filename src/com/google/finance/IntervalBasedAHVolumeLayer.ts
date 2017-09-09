@@ -57,9 +57,9 @@ namespace com.google.finance
 				const endUnit = points[interval.end];
 				if (ViewPoint.sessionVisible(startUnit, endUnit, context))
 				{
-					const xPos1 = vp.getXPos(startUnit);
-					const xPos2 = vp.getXPos(endUnit);
-					this.regionsXLimits.addInterval(xPos1, xPos2);
+					const startX = vp.getXPos(startUnit);
+					const endX = vp.getXPos(endUnit);
+					this.regionsXLimits.addInterval(startX, endX);
 				}
 			}
 			super.renderLayer(context);

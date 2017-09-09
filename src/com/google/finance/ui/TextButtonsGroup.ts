@@ -17,9 +17,9 @@ namespace com.google.finance.ui
 			this.selectButton(textField.text);
 		}
 
-		private selectButton(param1: string): number
+		private selectButton(name: string): number
 		{
-			const buttonIndex = this.getButtonIndex(param1);
+			const buttonIndex = this.getButtonIndex(name);
 			this.selectButtonByIndex(buttonIndex);
 			return buttonIndex;
 		}

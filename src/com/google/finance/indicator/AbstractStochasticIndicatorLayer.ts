@@ -8,7 +8,7 @@ namespace com.google.finance.indicator
 
 	export class AbstractStochasticIndicatorLayer extends IndependentIndicatorLayer
 	{
-		private static readonly PARAMETER_NAMES = ["kPeriod", "dPeriod"];
+		private static readonly PARAMETER_NAMES: ReadonlyArray<string> = ["kPeriod", "dPeriod"];
 
 		protected dPeriod = 3;
 		protected kPeriod = 14;
@@ -28,9 +28,9 @@ namespace com.google.finance.indicator
 			switch (param1)
 			{
 				case 0:
-					return Messages.getMsg(Messages.K_STOCHASTIC, param2);
+					return Message.getMsg(Messages.K_STOCHASTIC, param2);
 				case 1:
-					return Messages.getMsg(Messages.D_STOCHASTIC, param2);
+					return Message.getMsg(Messages.D_STOCHASTIC, param2);
 				default:
 					return "";
 			}

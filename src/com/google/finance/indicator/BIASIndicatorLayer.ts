@@ -10,7 +10,7 @@ namespace com.google.finance.indicator
 
 	export class BIASIndicatorLayer extends IndependentIndicatorLayer
 	{
-		private static readonly PARAMETER_NAMES = ["period"];
+		private static readonly PARAMETER_NAMES: ReadonlyArray<string> = ["period"];
 
 		private period = 20;
 
@@ -22,7 +22,7 @@ namespace com.google.finance.indicator
 		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string
 		{
 			if (param1 === 0)
-				return Messages.getMsg(Messages.BIAS_BIAS, param2);
+				return Message.getMsg(Messages.BIAS_BIAS, param2);
 
 			return "";
 		}
@@ -37,7 +37,7 @@ namespace com.google.finance.indicator
 
 		protected getIndicatorNameText(param1: string): string
 		{
-			return Messages.getMsg(Messages.BIAS_INTERVAL, this.period, param1);
+			return Message.getMsg(Messages.BIAS_INTERVAL, this.period, param1);
 		}
 
 		computeIntervalIndicator(interval: number)
@@ -70,8 +70,7 @@ namespace com.google.finance.indicator
 						_loc4_ = (point.close - _loc6_) / _loc6_ * 100;
 						_loc5_ = Number(_loc5_ - _loc8_.shift()!);
 					}
-					const indicatorPoint = new IndicatorPoint(_loc4_, point);
-					dataSeries.points.push(indicatorPoint);
+					dataSeries.points.push(new IndicatorPoint(_loc4_, point));
 				}
 			}
 			this.indicator.setDataSeries(interval, dataSeries, 0);

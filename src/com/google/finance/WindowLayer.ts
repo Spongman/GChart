@@ -175,10 +175,9 @@ namespace com.google.finance
 			return this.leftHandle.x + this.leftHandle.width / 2;
 		}
 
-		toggleHandles(param1: boolean)
+		toggleHandles(visibility: boolean)
 		{
 			//return false;	// TODO (hitTestPoint)
-			const visibility = param1;
 			if (visibility === this.currentHandlesVisibility)
 				return;
 

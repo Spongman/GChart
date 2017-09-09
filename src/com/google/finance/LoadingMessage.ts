@@ -12,9 +12,9 @@ namespace com.google.finance
 	{
 		private static readonly LOADING_TEXT_FORMAT = new flash.text.TextFormat("Helvetica", 12, 0xffffff);
 
-		private static readonly states = ["...", '.', ".."];
+		private static readonly states: ReadonlyArray<string> = ["...", '.', ".."];
 
-		private intervalId: number;
+		private intervalId: number | null = null;
 		private loadingText = new flash.text.TextField();
 		private currentState = -1;
 
@@ -25,20 +25,20 @@ namespace com.google.finance
 		{
 			super();
 			this.loadingText.defaultTextFormat = LoadingMessage.LOADING_TEXT_FORMAT;
-			//this.loadingText.appendText(Messages.getMsg(Messages.LOADING_MESSAGE) + LoadingMessage.states[0]);
+			//this.loadingText.appendText(Message.getMsg(Messages.LOADING_MESSAGE) + LoadingMessage.states[0]);
 			this.loadingText.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			this.loadingText.x = 0;
 			this.loadingText.y = 0;
 			this.rollMessage();
 			this.addChild(this.loadingText);
 			this.drawBackground();
-			this.intervalId = setInterval(flash.display.Stage.bind(this.rollMessage, this), 500);
+			//this.intervalId = setInterval(flash.display.Stage.bind(this.rollMessage, this), 500);
 		}
 
 		private rollMessage()
 		{
 			this.currentState = (this.currentState + 1) % LoadingMessage.states.length;
-			this.loadingText.text = Messages.getMsg(Messages.LOADING_MESSAGE) + LoadingMessage.states[this.currentState];
+			this.loadingText.text = Message.getMsg(Messages.LOADING_MESSAGE) + LoadingMessage.states[this.currentState];
 		}
 
 		private drawBackground()
@@ -47,6 +47,18 @@ namespace com.google.finance
 			gr.beginFill(0x339933, 1);
 			gr.drawRect(0, 0, this.loadingText.width, this.loadingText.height);
 			gr.endFill();
+		}
+
+		set visible(value: boolean)
+		{
+			this.element.style.visibility = value ? "" : "hidden";
+			if (value && !this.intervalId)
+				this.intervalId = setInterval(flash.display.Stage.bind(this.rollMessage, this), 500);
+			else if (!value && this.intervalId)
+			{
+				clearInterval(this.intervalId);
+				this.intervalId = null;
+			}
 		}
 	}
 }

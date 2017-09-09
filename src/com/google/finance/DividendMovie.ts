@@ -34,11 +34,11 @@ namespace com.google.finance
 		getDetailedText(): string
 		{
 			if (MainManager.paramsObj.companyCurrency && this.associatedDividend.currency && MainManager.paramsObj.differentDividendCurrency)
-				return Messages.getMsg(Messages.DIVIDEND_TEXT_NO_PERCENT, this.getShortText(true));
+				return Message.getMsg(Messages.DIVIDEND_TEXT_NO_PERCENT, this.getShortText(true));
 
 			const _loc1_ = Math.floor(this.associatedDividend.yield * 10000) / 100;
 			const _loc2_ = _loc1_ + '%';
-			return Messages.getMsg(Messages.DIVIDEND_TEXT, this.getShortText(true), _loc2_);
+			return Message.getMsg(Messages.DIVIDEND_TEXT, this.getShortText(true), _loc2_);
 		}
 
 		setObject(dividend: Dividend)

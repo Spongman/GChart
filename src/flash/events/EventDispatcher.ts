@@ -7,9 +7,9 @@
 
 	export class EventDispatcherImpl
 	{
-		private _events: Map<Function[]> = {};
+		private _events: Map<((event: Event) => void)[]> = {};
 
-		addEventListener(eventType: string, listener: Function, useCapture?: boolean, priority?: number, useWeakReference?: boolean): void
+		addEventListener(eventType: string, listener: (event: Event) => void, useCapture?: boolean, priority?: number, useWeakReference?: boolean): void
 		{
 			const listeners = this._events[eventType] || (this._events[eventType] = []);
 			listeners.push(listener);

@@ -107,20 +107,20 @@ namespace com.google.finance
 			gr.lineTo(point.x, point.y);
 		}
 
-		highlightPoint(context: Context, param2: number, state: Dictionary)
+		highlightPoint(context: Context, x: number, state: Dictionary)
 		{
 			this.clearHighlight();
 			const dataSeries = this.getDataSeries();
 			const _loc6_ = this.viewPoint.getXPos(dataSeries.units[0]);
 			//const _loc7_ = this.viewPoint.getXPos(_loc4_.units[_loc4_.units.length - 1]);
-			if (param2 < _loc6_)
+			if (x < _loc6_)
 				return;
 
 			let unit: DataUnit;
-			if (param2 > this.viewPoint.maxx)
+			if (x > this.viewPoint.maxx)
 				unit = notnull(this.viewPoint.getLastDataUnit(dataSeries));
 			else
-				unit = notnull(this.getPoint(dataSeries, param2));
+				unit = notnull(this.getPoint(dataSeries, x));
 
 			const _loc8_ = this.viewPoint.getMinuteXPos(unit.relativeMinutes);
 			const _loc9_ = this.getYPos(context, unit);

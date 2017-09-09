@@ -71,30 +71,30 @@ namespace com.google.finance
 
 		private getPinPointMovieClip(pinPoint: PinPoint): PinPointMovie
 		{
-			let _loc2_: PinPointMovie;
-			const _loc3_ = !!pinPoint.originalObject._color ? pinPoint.originalObject._color : "gray";
+			let movie: PinPointMovie;
+			const originalColor = pinPoint.originalObject._color ? pinPoint.originalObject._color : "gray";
 			if (this.activeMovies >= this.pinMovies.length)
 			{
-				_loc2_ = _loc3_ === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
-				this.addChild(_loc2_);
-				this.pinMovies.push(_loc2_);
+				movie = originalColor === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
+				this.addChild(movie);
+				this.pinMovies.push(movie);
 			}
 			else
 			{
-				_loc2_ = this.pinMovies[this.activeMovies];
-				const _loc4_ = _loc2_ instanceof OrangePinPointMovie ? "orange" : "gray";
-				if (_loc4_ !== _loc3_)
+				movie = this.pinMovies[this.activeMovies];
+				const movieColor = movie instanceof OrangePinPointMovie ? "orange" : "gray";
+				if (movieColor !== originalColor)
 				{
-					_loc2_ = _loc3_ === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
+					movie = originalColor === "orange" ? new OrangePinPointMovie() : new PinPointMovie();
 					this.removeChild(this.pinMovies[this.activeMovies]);
 					this.pinMovies[this.activeMovies].clearReferences();
 					delete this.pinMovies[this.activeMovies];
-					this.pinMovies[this.activeMovies] = _loc2_;
+					this.pinMovies[this.activeMovies] = movie;
 				}
 			}
-			_loc2_.setPinPointContentMovie(this.pinPointContentMovie);
+			movie.setPinPointContentMovie(this.pinPointContentMovie);
 			this.activeMovies++;
-			return _loc2_;
+			return movie;
 		}
 
 		private removePinMovies(param1: number)
@@ -198,21 +198,18 @@ namespace com.google.finance
 
 		private getVisibleDataUnit(pinPoint: PinPoint): DataUnit
 		{
-			const _loc5_ = notnull(pinPoint.refDataSeries);
+			const dataSeries = notnull(pinPoint.refDataSeries);
 			//const _loc2_ = _loc5_.units[param1.pos];
 			const skipInterval = this.viewPoint.getSkipInterval();
-			let _loc4_ = 0;
+			let unitIndex = 0;
 			if (skipInterval.interval >= Const.WEEKLY_INTERVAL)
-			{
-				const nextWeekEnd = _loc5_.getNextWeekEnd(pinPoint.pos);
-				_loc4_ = Number(_loc5_.fridays[nextWeekEnd]);
-			}
+				unitIndex = Number(dataSeries.fridays[dataSeries.getNextWeekEnd(pinPoint.pos)]);
 			else if (skipInterval.interval >= Const.DAILY_INTERVAL)
-				_loc4_ = Number(pinPoint.dayPos);
+				unitIndex = Number(pinPoint.dayPos);
 			else
-				_loc4_ = Number(pinPoint.pos + (notnull(pinPoint.dayPos) - pinPoint.pos) % skipInterval.skip);
+				unitIndex = Number(pinPoint.pos + (notnull(pinPoint.dayPos) - pinPoint.pos) % skipInterval.skip);
 
-			return _loc5_.units[_loc4_];
+			return dataSeries.units[unitIndex];
 		}
 
 		private renderFlagsGroup(context: Context, detailLevel: Intervals, param3: number, param4: number, pinIndex: number, param6: number, pinPoints: PinPoint[], param8: number, pinOrientation: PinOrientations)

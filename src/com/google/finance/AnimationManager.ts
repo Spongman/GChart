@@ -21,7 +21,7 @@ namespace com.google.finance
 			const lobjects = displayObjects;
 			const opt_stepCount = param3;
 			const opt_pinClicked = param4;
-			this.stepCount = !!isNaN(opt_stepCount) ? AnimationManager.MAX_STEPS : opt_stepCount;
+			this.stepCount = isNaN(opt_stepCount) ? AnimationManager.MAX_STEPS : opt_stepCount;
 			this.amount = 1;
 			this.stopAnimation();
 			if (this.stepCount === 1)

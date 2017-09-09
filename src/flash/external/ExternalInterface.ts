@@ -15,7 +15,7 @@
 
 		static call(name: string, ...rest: any[])
 		{
-			console.log.apply(null, arguments);
+			console.log.apply(console, arguments);
 		}
 	}
 }

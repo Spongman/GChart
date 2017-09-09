@@ -56,11 +56,7 @@ namespace com.google.finance
 				const startUnit = this.dataSource.afterHoursData.units[interval.start];
 				const endUnit = this.dataSource.afterHoursData.units[interval.end];
 				if (ViewPoint.sessionVisible(startUnit, endUnit, context))
-				{
-					const startTime = startUnit.time;
-					const endTime = endUnit.time;
-					this.drawAfterHoursSession(this, dataSeries, startTime, endTime, context, skip);
-				}
+					this.drawAfterHoursSession(this, dataSeries, startUnit.time, endUnit.time, context, skip);
 			}
 		}
 

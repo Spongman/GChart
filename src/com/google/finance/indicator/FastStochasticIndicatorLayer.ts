@@ -16,7 +16,7 @@ namespace com.google.finance.indicator
 
 		protected getIndicatorNameText(param1: string): string
 		{
-			return Messages.getMsg(Messages.FSTO_INTERVAL, this.kPeriod, this.dPeriod, param1);
+			return Message.getMsg(Messages.FSTO_INTERVAL, this.kPeriod, this.dPeriod, param1);
 		}
 
 		computeIntervalIndicator(interval: number)

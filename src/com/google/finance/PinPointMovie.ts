@@ -86,11 +86,10 @@ namespace com.google.finance
 			return "newspin";
 		}
 
-		setCount(param1: number)
+		setCount(count: number)
 		{
-			let i = 0;
-			let count = param1;
 			count = Math.min(count, PinPointMovie.MAX_SHOWN_GROUP_COUNT);
+			let i = 0;
 			if (this.borders.length > count - 1)
 			{
 				i = count - 1;

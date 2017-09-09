@@ -120,7 +120,7 @@ namespace com.google.finance
 		{
 			const viewPoint = this.viewPoint;
 			const units = dataSeries.units;
-			const _loc10_ = {
+			const result = {
 				cnt: 0,
 				sum: 0
 			};
@@ -158,12 +158,12 @@ namespace com.google.finance
 						else if (closeLogValue > this.maxPrice)
 							this.maxPrice = closeLogValue;
 					}
-					_loc10_.sum += closeLogValue;
-					_loc10_.cnt++;
+					result.sum += closeLogValue;
+					result.cnt++;
 				}
 				unitIndex -= _loc13_;
 			}
-			return _loc10_;
+			return result;
 		}
 
 		private computeMaxRange2(param1: number, param2: number, param3: string, param4 = false)
@@ -215,8 +215,7 @@ namespace com.google.finance
 			if (units[unitIndex - 1].dayMinute === dataSeries.marketCloseMinute)
 			{
 				const xPos3 = viewPoint.getXPos(units[unitIndex - 1]);
-				const yPos3 = this.getYPos(context, units[unitIndex - 1]);
-				gr.lineTo(xPos3, yPos3);
+				gr.lineTo(xPos3, this.getYPos(context, units[unitIndex - 1]));
 				return xPos3;
 			}
 			let _loc13_ = 1;
@@ -252,8 +251,7 @@ namespace com.google.finance
 			let minutes = units[unitIndex].relativeMinutes;
 			while (unitIndex >= _loc16_ && unitIndex >= param4)
 			{
-				const yPos = this.getYPos(context, units[unitIndex]);
-				gr.lineTo(xPos, yPos);
+				gr.lineTo(xPos, this.getYPos(context, units[unitIndex]));
 				unitIndex -= _loc13_;
 				if (unitIndex > _loc16_ && unitIndex > param4 && minutes - units[unitIndex - 1].relativeMinutes === _loc21_)
 					unitIndex--;
@@ -269,13 +267,13 @@ namespace com.google.finance
 			return xPos2;
 		}
 
-		highlightPoint(context: Context, param2: number, state: Dictionary)
+		highlightPoint(context: Context, x: number, state: Dictionary)
 		{
 			if (state[SpaceText.SETTER_STR])
 				state[SpaceText.SETTER_STR].clearHighlight();
 
 			const dataSeries = this.getDataSeries();
-			const point = this.getPoint(dataSeries, param2);
+			const point = this.getPoint(dataSeries, x);
 			const minuteXPos = this.viewPoint.getMinuteXPos(point.relativeMinutes);
 			const yPos = this.getYPos(context, point);
 			if (this.lastHighlightX !== minuteXPos || this.lastHighlightY !== yPos)
@@ -400,30 +398,30 @@ namespace com.google.finance
 			gr.endFill();
 		}
 
-		private getPointIndex(dataSeries: DataSeries, param2: number): number
+		private getPointIndex(dataSeries: DataSeries, x: number): number
 		{
-			const _loc4_ = this.viewPoint.getMinuteOfX(param2);
-			let _loc5_ = dataSeries.getRelativeMinuteIndex(_loc4_);
-			while (dataSeries.units[_loc5_].fake && _loc5_ > 0)
-				_loc5_--;
+			const minute = this.viewPoint.getMinuteOfX(x);
+			let minuteIndex = dataSeries.getRelativeMinuteIndex(minute);
+			while (dataSeries.units[minuteIndex].fake && minuteIndex > 0)
+				minuteIndex--;
 
-			const _loc6_ = this.viewPoint.getSkipInterval();
-			const skip = _loc6_.skip;
-			const interval = _loc6_.interval;
+			const skipInterval = this.viewPoint.getSkipInterval();
+			const skip = skipInterval.skip;
+			const interval = skipInterval.interval;
 			if (interval < Const.DAILY_INTERVAL)
 			{
-				const _loc3_ = dataSeries.getNextDayStart(_loc5_);
-				return _loc5_ + (dataSeries.days[_loc3_] - _loc5_) % skip;
+				const nextDayStart = dataSeries.getNextDayStart(minuteIndex);
+				return minuteIndex + (dataSeries.days[nextDayStart] - minuteIndex) % skip;
 			}
 			if (interval === Const.DAILY_INTERVAL)
 			{
-				const _loc3_ = dataSeries.getNextDayStart(_loc5_ + 1);
-				return this.getPrevOrNextClosestToX(dataSeries.units, dataSeries.days, _loc3_, param2, 1);
+				const nextDayStart = dataSeries.getNextDayStart(minuteIndex + 1);
+				return this.getPrevOrNextClosestToX(dataSeries.units, dataSeries.days, nextDayStart, x, 1);
 			}
-			let _loc9_ = dataSeries.getNextWeekEnd(_loc5_);
-			_loc9_ -= (dataSeries.fridays.length - 1 - _loc9_) % skip;
-			_loc9_ = Math.min(_loc9_, dataSeries.fridays.length - 1);
-			return this.getPrevOrNextClosestToX(dataSeries.units, dataSeries.fridays, _loc9_, param2, skip);
+			let nextWeekEnd = dataSeries.getNextWeekEnd(minuteIndex);
+			nextWeekEnd -= (dataSeries.fridays.length - 1 - nextWeekEnd) % skip;
+			nextWeekEnd = Math.min(nextWeekEnd, dataSeries.fridays.length - 1);
+			return this.getPrevOrNextClosestToX(dataSeries.units, dataSeries.fridays, nextWeekEnd, x, skip);
 		}
 
 		protected drawLineToDataUnit(viewPoint: ViewPoint, sprite: flash.display.Sprite, context: Context, dataUnit: DataUnit)
@@ -494,11 +492,11 @@ namespace com.google.finance
 					if (unit.relativeMinutes < _loc14_)
 						break;
 
-					const _loc7_ = !!unit.low ? unit.low : unit.close;
+					const _loc7_ = unit.low ? unit.low : unit.close;
 					if (_loc7_ < _loc12_)
 						_loc12_ = _loc7_;
 
-					const _loc8_ = !!unit.high ? unit.high : unit.close;
+					const _loc8_ = unit.high ? unit.high : unit.close;
 					if (_loc8_ > _loc13_)
 						_loc13_ = _loc8_;
 
@@ -506,8 +504,8 @@ namespace com.google.finance
 				}
 				if (unitIndex >= 0)
 				{
-					_loc12_ = Utils.extendedMin(_loc12_, !!unit.low ? unit.low : unit.close);
-					_loc13_ = Utils.extendedMax(_loc13_, !!unit.high ? unit.high : unit.close);
+					_loc12_ = Utils.extendedMin(_loc12_, unit.low ? unit.low : unit.close);
+					_loc13_ = Utils.extendedMax(_loc13_, unit.high ? unit.high : unit.close);
 				}
 			}
 			else
@@ -531,11 +529,11 @@ namespace com.google.finance
 					if (unit.relativeMinutes < _loc14_)
 						break;
 
-					const _loc7_ = !!unit.low ? Number(unit.low) : unit.close;
+					const _loc7_ = unit.low ? unit.low : unit.close;
 					if (_loc7_ < _loc12_)
 						_loc12_ = _loc7_;
 
-					const _loc8_ = !!unit.high ? Number(unit.high) : unit.close;
+					const _loc8_ = unit.high ? unit.high : unit.close;
 					if (_loc8_ > _loc13_)
 						_loc13_ = _loc8_;
 
@@ -543,8 +541,8 @@ namespace com.google.finance
 				}
 				if (_loc15_ >= 0)
 				{
-					_loc12_ = Utils.extendedMin(_loc12_, !!unit.low ? unit.low : unit.close);
-					_loc13_ = Utils.extendedMax(_loc13_, !!unit.high ? unit.high : unit.close);
+					_loc12_ = Utils.extendedMin(_loc12_, unit.low ? unit.low : unit.close);
+					_loc13_ = Utils.extendedMax(_loc13_, unit.high ? unit.high : unit.close);
 				}
 			}
 			if (_loc13_ === _loc12_)

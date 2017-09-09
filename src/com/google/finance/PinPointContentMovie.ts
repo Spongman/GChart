@@ -156,7 +156,7 @@ namespace com.google.finance
 
 		protected getDateHtml(date: Date): string
 		{
-			const _loc2_ = !!Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()) ? "yyyy-MM-dd HH:mm" : "MMM dd, yyyy h:mma";
+			const _loc2_ = Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()) ? "yyyy-MM-dd HH:mm" : "MMM dd, yyyy h:mma";
 			return "<font color=\'#0B6CDE\'>" + i18n.locale.DateTimeLocale.formatDateTime(_loc2_, date, true) + "</font>";
 		}
 

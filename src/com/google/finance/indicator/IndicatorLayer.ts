@@ -14,26 +14,19 @@ namespace com.google.finance.indicator
 	export abstract class IndicatorLayer extends AbstractDrawingLayer<ViewPoint>
 	{
 		static readonly TRUE_STR = "true";
-
-		static readonly INDICATOR_TEXT_WIDTH = 118;
-
-		static readonly NAME_TEXT_COLOR = 0x999999;
-
-		static readonly TEXT_TOP_MARGIN = 2;
-
-		static readonly MEDIAN_LINE_COLOR = 0xaa0000;
-
-		static readonly COLORS = [0x66cc, 0xcc3300, 0x339933, 0xff00ff];
-
-		static readonly INDICATOR_TEXT_FONT = "Verdana";
-
 		static readonly FALSE_STR = "false";
 
-		static readonly INDICATOR_TEXT_FONT_SIZE = 9;
+		static readonly TEXT_LEFT_MARGIN = 2;
+		static readonly TEXT_TOP_MARGIN = 2;
 
+		static readonly INDICATOR_TEXT_FONT = "Verdana";
+		static readonly INDICATOR_TEXT_FONT_SIZE = 9;
+		static readonly INDICATOR_TEXT_WIDTH = 118;
 		static readonly INDICATOR_TEXT_HEIGHT = 16;
 
-		static readonly TEXT_LEFT_MARGIN = 2;
+		static readonly NAME_TEXT_COLOR = 0x999999;
+		static readonly MEDIAN_LINE_COLOR = 0xaa0000;
+		static readonly COLORS: ReadonlyArray<number> = [0x66cc, 0xcc3300, 0x339933, 0xff00ff];
 
 		protected localYOffset = 0;
 
@@ -61,7 +54,8 @@ namespace com.google.finance.indicator
 
 		protected originalDataSeries: DataSeries;
 
-		static getParameterNames(): string[] { return []; }
+		private static readonly INDICATOR_LAYER_PARAMETER_NAMES: ReadonlyArray<string> = [];
+		static getParameterNames() { return IndicatorLayer.INDICATOR_LAYER_PARAMETER_NAMES; }
 
 		constructor(viewPoint: ViewPoint, dataSource: DataSource)
 		{
@@ -133,11 +127,11 @@ namespace com.google.finance.indicator
 					if (detailLevel === Intervals.WEEKLY && layerType !== Const.LINE_CHART)
 						xPos = this.getWeeklyBarXPos(point, xPos);
 
-					const _loc13_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
-					const _loc14_ = this.getYPos(context, dataSeriesArray[dataSeriesIndex].points[pointIndex]);
+					const x = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
+					const y = this.getYPos(context, dataSeriesArray[dataSeriesIndex].points[pointIndex]);
 					gr.lineStyle(1, this.getColor(dataSeriesIndex, dataSeriesArray[dataSeriesIndex].points[pointIndex].getValue()));
-					gr.moveTo(_loc13_, yPos);
-					gr.lineTo(_loc13_, _loc14_);
+					gr.moveTo(x, yPos);
+					gr.lineTo(x, y);
 				}
 			}
 		}
@@ -188,10 +182,10 @@ namespace com.google.finance.indicator
 					if (detailLevel === Intervals.WEEKLY && layerType !== Const.LINE_CHART)
 						_loc9_ = this.getWeeklyBarXPos(point, _loc9_);
 
-					const _loc12_ = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
-					const _loc13_ = this.getYPos(context, dataSeriesArray[param2].points[_loc11_]);
-					gr.moveTo(_loc12_, this.viewPoint.maxy);
-					gr.lineTo(_loc12_, _loc13_);
+					const x = !isNaN(point.weeklyXPos) ? point.weeklyXPos : viewPoint.getXPos(point);
+					const y = this.getYPos(context, dataSeriesArray[param2].points[_loc11_]);
+					gr.moveTo(x, this.viewPoint.maxy);
+					gr.lineTo(x, y);
 				}
 				_loc11_--;
 			}
@@ -250,7 +244,7 @@ namespace com.google.finance.indicator
 			return null;
 		}
 
-		highlightPoint(context: Context, param2: number, state: Dictionary)
+		highlightPoint(context: Context, x: number, state: Dictionary)
 		{
 
 			if (!this._enabled)
@@ -264,7 +258,7 @@ namespace com.google.finance.indicator
 			if (!dataSeriesArray)
 				return;
 
-			const dPointIndex = this.findPointIndex(param2);
+			const dPointIndex = this.findPointIndex(x);
 			if (dPointIndex === -1)
 				return;
 
@@ -330,7 +324,7 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		protected findPointIndex(param1: number): number
+		protected findPointIndex(x: number): number
 		{
 			const viewPoint = this.viewPoint;
 			const originalDataSeries = this.originalDataSeries;
@@ -340,7 +334,7 @@ namespace com.google.finance.indicator
 			if (!points)
 				return -1;
 
-			const minuteOfX = viewPoint.getMinuteOfX(param1);
+			const minuteOfX = viewPoint.getMinuteOfX(x);
 			let relativeMinuteIndex = originalDataSeries.getRelativeMinuteIndex(minuteOfX, points);
 			if (relativeMinuteIndex === points.length - 2)
 			{
@@ -349,7 +343,7 @@ namespace com.google.finance.indicator
 			}
 			if (detailLevel === Intervals.WEEKLY)
 			{
-				while (relativeMinuteIndex + 1 < points.length && points[relativeMinuteIndex + 1].weeklyXPos <= param1)
+				while (relativeMinuteIndex + 1 < points.length && points[relativeMinuteIndex + 1].weeklyXPos <= x)
 					relativeMinuteIndex++;
 			}
 			while (relativeMinuteIndex > 0 && (points[relativeMinuteIndex].fake || points[relativeMinuteIndex].duplicate))
@@ -562,7 +556,7 @@ namespace com.google.finance.indicator
 			for (let textFieldIndex = 0; textFieldIndex < this.indicatorValueTextArray.length; textFieldIndex++)
 			{
 				this.indicatorValueTextArray[textFieldIndex].y = this.viewPoint.miny + IndicatorLayer.TEXT_TOP_MARGIN;
-				this.indicatorValueTextArray[textFieldIndex].x = this.viewPoint.minx + IndicatorLayer.TEXT_LEFT_MARGIN + (!!this.indicatorNameText ? textFieldIndex + 1 : textFieldIndex) * IndicatorLayer.INDICATOR_TEXT_WIDTH;
+				this.indicatorValueTextArray[textFieldIndex].x = this.viewPoint.minx + IndicatorLayer.TEXT_LEFT_MARGIN + (this.indicatorNameText ? textFieldIndex + 1 : textFieldIndex) * IndicatorLayer.INDICATOR_TEXT_WIDTH;
 			}
 		}
 

@@ -10,7 +10,7 @@ namespace com.google.finance.indicator
 
 	export class MACDIndicatorLayer extends IndependentIndicatorLayer
 	{
-		private static readonly PARAMETER_NAMES = ["shortPeriod", "longPeriod", "emaPeriod"];
+		private static readonly PARAMETER_NAMES: ReadonlyArray<string> = ["shortPeriod", "longPeriod", "emaPeriod"];
 
 		private emaPeriod = 9;
 		private longPeriod = 26;
@@ -26,11 +26,11 @@ namespace com.google.finance.indicator
 			switch (param1)
 			{
 				case 0:
-					return Messages.getMsg(!!Const.APPLY_CHINESE_STYLE_MACD ? Number(Messages.DIFF_MACD) : Messages.MACD_MACD, param2);
+					return Message.getMsg(Const.APPLY_CHINESE_STYLE_MACD ? Messages.DIFF_MACD : Messages.MACD_MACD, param2);
 				case 1:
-					return Messages.getMsg(!!Const.APPLY_CHINESE_STYLE_MACD ? Number(Messages.DEA_MACD) : Messages.EMA_MACD, param2);
+					return Message.getMsg(Const.APPLY_CHINESE_STYLE_MACD ? Messages.DEA_MACD : Messages.EMA_MACD, param2);
 				case 2:
-					return Messages.getMsg(!!Const.APPLY_CHINESE_STYLE_MACD ? Number(Messages.MACD_MACD) : Messages.DIVERGENCE_MACD, param2);
+					return Message.getMsg(Const.APPLY_CHINESE_STYLE_MACD ? Messages.MACD_MACD : Messages.DIVERGENCE_MACD, param2);
 				default:
 					return "";
 			}
@@ -57,7 +57,7 @@ namespace com.google.finance.indicator
 				case 0:
 					return Const.COLOR_BLUE;
 				case 1:
-					return !!Const.APPLY_CHINESE_STYLE_MACD ? Const.COLOR_YELLOW : Const.COLOR_RED;
+					return Const.APPLY_CHINESE_STYLE_MACD ? Const.COLOR_YELLOW : Const.COLOR_RED;
 				case 2:
 					return Const.APPLY_CHINESE_STYLE_MACD && param2 > 0 ? Const.COLOR_RED : Const.COLOR_GREEN;
 				default:
@@ -67,7 +67,7 @@ namespace com.google.finance.indicator
 
 		protected getIndicatorNameText(param1: string): string
 		{
-			return Messages.getMsg(Messages.MACD_INTERVAL, this.shortPeriod, this.longPeriod, this.emaPeriod, param1);
+			return Message.getMsg(Messages.MACD_INTERVAL, this.shortPeriod, this.longPeriod, this.emaPeriod, param1);
 		}
 
 		computeIntervalIndicator(interval: number)
@@ -84,8 +84,8 @@ namespace com.google.finance.indicator
 			const dataSeries2 = new DataSeries();
 			let close = points[0].close;
 			let _loc4_ = close;
-			let _loc5_ = close - _loc4_;
-			let _loc6_ = _loc5_;
+			let value0 = close - _loc4_;
+			let value1 = value0;
 			const indicatorPoint = new IndicatorPoint(0, points[0]);
 			dataSeries0.points.push(indicatorPoint);
 			dataSeries1.points.push(indicatorPoint);
@@ -97,12 +97,12 @@ namespace com.google.finance.indicator
 				{
 					close = (close * (this.shortPeriod - 1) + unit.close * 2) / (this.shortPeriod + 1);
 					_loc4_ = (_loc4_ * (this.longPeriod - 1) + unit.close * 2) / (this.longPeriod + 1);
-					_loc5_ = close - _loc4_;
-					_loc6_ = (_loc6_ * (this.emaPeriod - 1) + _loc5_ * 2) / (this.emaPeriod + 1);
-					const _loc7_ = (!!Const.APPLY_CHINESE_STYLE_MACD ? 2 : 1) * (_loc5_ - _loc6_);
-					dataSeries0.points.push(new IndicatorPoint(_loc5_, unit));
-					dataSeries1.points.push(new IndicatorPoint(_loc6_, unit));
-					dataSeries2.points.push(new IndicatorPoint(_loc7_, unit));
+					value0 = close - _loc4_;
+					value1 = (value1 * (this.emaPeriod - 1) + value0 * 2) / (this.emaPeriod + 1);
+					const value2 = (Const.APPLY_CHINESE_STYLE_MACD ? 2 : 1) * (value0 - value1);
+					dataSeries0.points.push(new IndicatorPoint(value0, unit));
+					dataSeries1.points.push(new IndicatorPoint(value1, unit));
+					dataSeries2.points.push(new IndicatorPoint(value2, unit));
 				}
 			}
 			this.indicator.setDataSeries(interval, dataSeries0, 0);

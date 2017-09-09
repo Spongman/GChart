@@ -5,27 +5,25 @@ namespace com.google.finance
 		private static computeWeekly(input: DataSeries, output: DataSeries, duration: number)
 		{
 			const weeks = duration / Const.WEEKLY_INTERVAL;
-			for (let _loc6_ = input.fridays.length - 1; _loc6_ >= 0; _loc6_ -= weeks)
+			for (let dayIndex = input.fridays.length - 1; dayIndex >= 0; dayIndex -= weeks)
 			{
-				let _loc7_ = Number(_loc6_);
+				let dayIndex2 = Number(dayIndex);
 				let volume = 0;
 				output.fridays.push(output.points.length);
-				while (_loc7_ > _loc6_ - weeks && _loc7_ >= 0)
+				while (dayIndex2 > dayIndex - weeks && dayIndex2 >= 0)
 				{
-					volume = Number(volume + input.units[input.fridays[_loc7_]].volumes[Const.WEEKLY_INTERVAL]);
-					_loc7_--;
+					volume = Number(volume + input.units[input.fridays[dayIndex2]].volumes[Const.WEEKLY_INTERVAL]);
+					dayIndex2--;
 				}
-				if (_loc7_ < 0)
-					_loc7_ = 0;
+				if (dayIndex2 < 0)
+					dayIndex2 = 0;
 
-				const point = new indicator.VolumeIndicatorPoint(
+				output.points.push(new indicator.VolumeIndicatorPoint(
 					volume,
-					(input.units[input.fridays[_loc6_]]).relativeMinutes,
-					(<indicator.IndicatorPoint>input.points[input.fridays[_loc6_]]).point,
-					(input.units[input.fridays[_loc7_]]).time
-				);
-
-				output.points.push(point);
+					(input.units[input.fridays[dayIndex]]).relativeMinutes,
+					(<indicator.IndicatorPoint>input.points[input.fridays[dayIndex]]).point,
+					(input.units[input.fridays[dayIndex2]]).time
+				));
 			}
 		}
 
@@ -33,27 +31,25 @@ namespace com.google.finance
 		{
 			const dailyInterval = Const.DAILY_INTERVAL;
 			const _loc5_ = param3 / Const.DAILY_INTERVAL;
-			for (let _loc6_ = input.days.length - 1; _loc6_ >= 0; _loc6_ -= _loc5_)
+			for (let dayIndex = input.days.length - 1; dayIndex >= 0; dayIndex -= _loc5_)
 			{
-				let _loc7_ = Number(_loc6_);
+				let dayIndex2 = Number(dayIndex);
 				let volume = 0;
 				output.days.push(output.points.length);
-				while (_loc7_ > _loc6_ - _loc5_ && _loc7_ >= 0)
+				while (dayIndex2 > dayIndex - _loc5_ && dayIndex2 >= 0)
 				{
-					volume = Number(volume + Number(input.units[input.days[_loc7_]].volumes[dailyInterval]));
-					_loc7_--;
+					volume = Number(volume + Number(input.units[input.days[dayIndex2]].volumes[dailyInterval]));
+					dayIndex2--;
 				}
-				if (_loc7_ < 0)
-					_loc7_ = 0;
+				if (dayIndex2 < 0)
+					dayIndex2 = 0;
 
-				const point = new indicator.VolumeIndicatorPoint(
+				output.points.push(new indicator.VolumeIndicatorPoint(
 					volume,
-					(input.units[input.days[_loc6_]]).relativeMinutes,
-					(<indicator.IndicatorPoint>input.points[input.days[_loc6_]]).point,
-					(input.units[input.days[_loc7_]]).time
-				);
-
-				output.points.push(point);
+					(input.units[input.days[dayIndex]]).relativeMinutes,
+					(<indicator.IndicatorPoint>input.points[input.days[dayIndex]]).point,
+					(input.units[input.days[dayIndex2]]).time
+				));
 			}
 		}
 
@@ -76,10 +72,10 @@ namespace com.google.finance
 			output.points.reverse();
 			output.days.reverse();
 			output.fridays.reverse();
-			for (let _loc5_ = 0; _loc5_ < output.days.length; _loc5_++)
+			for (let dayIndex = 0; dayIndex < output.days.length; dayIndex++)
 			{
-				output.days[_loc5_] = output.points.length - 1 - output.days[_loc5_];
-				output.fridays[_loc5_] = output.points.length - 1 - output.fridays[_loc5_];
+				output.days[dayIndex] = output.points.length - 1 - output.days[dayIndex];
+				output.fridays[dayIndex] = output.points.length - 1 - output.fridays[dayIndex];
 			}
 			indicator.setDataSeries(interval, output);
 		}
@@ -93,21 +89,21 @@ namespace com.google.finance
 				const end = input.intradayRegions[regionIndex].end;
 				const start = input.intradayRegions[regionIndex].start;
 				output.days.push(output.points.length);
-				let _loc9_ = end;
-				while (_loc9_ >= start)
+				let unitIndex = end;
+				while (unitIndex >= start)
 				{
 					let volume = 0;
-					for (let _loc10_ = _loc9_; _loc10_ > _loc9_ - _loc5_ && _loc10_ >= start; _loc10_--)
-						volume = Number(volume + input.units[_loc10_].volumes[intradayInterval]);
+					for (let unitIndex2 = unitIndex; unitIndex2 > unitIndex - _loc5_ && unitIndex2 >= start; unitIndex2--)
+						volume = Number(volume + input.units[unitIndex2].volumes[intradayInterval]);
 
-					const point = new indicator.VolumeIndicatorPoint(
+					output.points.push(new indicator.VolumeIndicatorPoint(
 						volume,
-						input.units[_loc9_].relativeMinutes,
-						(<indicator.IndicatorPoint>input.points[_loc9_]).point,
-						input.units[_loc9_].time
-					);
-					output.points.push(point);
-					_loc9_ -= _loc5_;
+						input.units[unitIndex].relativeMinutes,
+						(<indicator.IndicatorPoint>input.points[unitIndex]).point,
+						input.units[unitIndex].time
+					));
+
+					unitIndex -= _loc5_;
 				}
 			}
 		}

@@ -13,11 +13,10 @@ namespace com.google.finance
 			if (!this.text)
 			{
 				this.text = new flash.text.TextField();
-				const textFormat = new flash.text.TextFormat("Arial", 12, 0, false, false, false);
-				this.text.defaultTextFormat = textFormat;
+				this.text.defaultTextFormat = new flash.text.TextFormat("Arial", 12, 0, false, false, false);
 				this.text.autoSize = flash.text.TextFieldAutoSize.CENTER;
 				this.text.selectable = false;
-				this.text.text = Messages.getMsg(Messages.NO_DATA_AVAILABLE);
+				this.text.text = Message.getMsg(Messages.NO_DATA_AVAILABLE);
 			}
 			if (this.contains(this.text))
 				this.removeChild(this.text);

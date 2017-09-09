@@ -49,13 +49,10 @@ namespace com.google.finance
 
 			param1 = decodeURIComponent(param1);
 			const _loc2_: Map<string>[] = [];
-			const objects = param1.split(MainManager.paramsObj.objectSeparator);
-			for (const obj of objects)
+			for (const obj of param1.split(MainManager.paramsObj.objectSeparator))
 			{
-				const fields = obj.split(MainManager.paramsObj.fieldSeparator);
-
 				const _loc5_: Map<string> = {};
-				for (const field of fields)
+				for (const field of obj.split(MainManager.paramsObj.fieldSeparator))
 				{
 					const _loc8_ = field.split(':');
 					let value: any = _loc8_[1];
@@ -74,9 +71,9 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		static getTickerParts(param1: string)
+		static getTickerParts(ticker: string)
 		{
-			const _loc2_ = param1.split(':');
+			const _loc2_ = ticker.split(':');
 			let _loc3_ = _loc2_.shift()!;	// TODO: check undefined
 			let _loc4_ = _loc2_.join(':');
 			if (_loc4_ === "")
@@ -90,39 +87,39 @@ namespace com.google.finance
 			};
 		}
 
-		static binarySearch<T, T2, T3>(items: T[], value: T2, param3: (p1: T, p2: T2) => number, thisObj: T3): number
+		static binarySearch<T, T2, T3>(items: T[], value: T2, comparer: (p1: T, p2: T2) => number, thisObj: T3): number
 		{
 			if (!items || items.length === 0)
 				return -1;
 
-			if (param3.call(thisObj, items[0], value) > 0)
+			if (comparer.call(thisObj, items[0], value) > 0)
 				return -1;
 
-			if (param3.call(thisObj, items[items.length - 1], value) <= 0)
+			if (comparer.call(thisObj, items[items.length - 1], value) <= 0)
 				return items.length - 1;
 
-			let _loc5_ = 0;
-			let _loc6_ = items.length - 1;
-			while (_loc5_ < _loc6_ - 1)
+			let left = 0;
+			let right = items.length - 1;
+			while (left < right - 1)
 			{
-				const _loc7_ = Math.round((_loc5_ + _loc6_) / 2);
-				const _loc8_ = param3.call(thisObj, items[_loc7_], value);
-				if (_loc8_ < 0)
-					_loc5_ = Number(_loc7_);
-				else if (_loc8_ > 0)
-					_loc6_ = _loc7_;
+				const mid = Math.round((left + right) / 2);
+				const comparison = comparer.call(thisObj, items[mid], value);
+				if (comparison < 0)
+					left = mid;
+				else if (comparison > 0)
+					right = mid;
 				else
-					return _loc7_;
+					return mid;
 			}
-			return _loc5_;
+			return left;
 		}
 
 		static assocArrayLength(map: Dictionary): number
 		{
-			let _loc2_ = 0;
+			let length = 0;
 			for (const _ of Object.keys(map))
-				_loc2_++;
-			return _loc2_;
+				length++;
+			return length;
 		}
 
 		static newDateInTimezone(date: Date, minutes: number): Date
@@ -166,11 +163,11 @@ namespace com.google.finance
 			if (!dataUnits || dataUnits.length === 0)
 				return -1;
 
-			let _loc2_ = dataUnits.length - 1;
-			while (_loc2_ >= 0 && dataUnits[_loc2_].fake)
-				_loc2_--;
+			let unitIndex = dataUnits.length - 1;
+			while (unitIndex >= 0 && dataUnits[unitIndex].fake)
+				unitIndex--;
 
-			return _loc2_;
+			return unitIndex;
 		}
 
 		static getExchangeFromTicker(param1: string): string

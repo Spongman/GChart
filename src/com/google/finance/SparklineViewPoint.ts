@@ -206,7 +206,7 @@ namespace com.google.finance
 			return this.layers;
 		}
 
-		highlightPoint(param1: number, state: Dictionary)
+		highlightPoint(x: number, state: Dictionary)
 		{
 		}
 
@@ -381,7 +381,7 @@ namespace com.google.finance
 		private resetCanvas()
 		{
 			this.textCanvas.graphics.clear();
-			//Utils.removeAllChildren(this.textCanvas);
+			Utils.removeAllChildren(this.textCanvas);
 		}
 
 		get maxy(): number
@@ -558,8 +558,7 @@ namespace com.google.finance
 
 		getMinuteXPos(param1: number): number
 		{
-			const _loc2_ = this.maxx - (this.getSparkLastMinute() - param1) * (this.maxx - this.minx) / this.sparkCount;
-			return Math.round(_loc2_);
+			return Math.round(this.maxx - (this.getSparkLastMinute() - param1) * (this.maxx - this.minx) / this.sparkCount);
 		}
 
 		getSparkLastMinute(): number
@@ -696,9 +695,9 @@ namespace com.google.finance
 			this.moveMask();
 		}
 
-		getMinuteOfX(param1: number): number
+		getMinuteOfX(x: number): number
 		{
-			return this.getSparkLastMinute() - (this.maxx - param1) * this.sparkCount / (this.maxx - this.minx);
+			return this.getSparkLastMinute() - (this.maxx - x) * this.sparkCount / (this.maxx - this.minx);
 		}
 
 		zoomingAnimation_init(context: Context)

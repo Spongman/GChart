@@ -12,7 +12,7 @@
 
 		load(request: URLRequest): void
 		{
-			console.log("URLRequest", request.url);
+			//console.log("URLRequest", request.url);
 
 			const xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = () =>

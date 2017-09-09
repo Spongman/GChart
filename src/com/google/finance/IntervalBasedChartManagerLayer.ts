@@ -76,10 +76,10 @@ namespace com.google.finance
 				this.enabledChartLayer.renderLayer(context);
 		}
 
-		highlightPoint(context: Context, param2: number, state: Dictionary)
+		highlightPoint(context: Context, x: number, state: Dictionary)
 		{
 			if (this.enabledChartLayer)
-				this.enabledChartLayer.highlightPoint(context, param2, state);
+				this.enabledChartLayer.highlightPoint(context, x, state);
 		}
 
 		clearHighlight()

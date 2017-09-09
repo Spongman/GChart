@@ -34,20 +34,20 @@ namespace com.google.finance
 			}
 			else
 			{
-				gr.moveTo(x - this.barWidth / 2, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
+				gr.moveTo(x - this.barWidth / 2, _loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
 				if (!_loc9_)
 					gr.beginFill(candleStickColor);
 
-				gr.lineTo(x + this.barWidth / 2, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
-				gr.lineTo(x + this.barWidth / 2, !!_loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
-				gr.lineTo(x - this.barWidth / 2, !!_loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
-				gr.lineTo(x - this.barWidth / 2, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
+				gr.lineTo(x + this.barWidth / 2, _loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
+				gr.lineTo(x + this.barWidth / 2, _loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
+				gr.lineTo(x - this.barWidth / 2, _loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
+				gr.lineTo(x - this.barWidth / 2, _loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
 				if (!_loc9_)
 					gr.endFill();
 			}
 			gr.moveTo(x, ohlcYPos.lowY);
-			gr.lineTo(x, !!_loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
-			gr.moveTo(x, !!_loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
+			gr.lineTo(x, _loc9_ ? ohlcYPos.openY : ohlcYPos.closeY);
+			gr.moveTo(x, _loc9_ ? ohlcYPos.closeY : ohlcYPos.openY);
 			gr.lineTo(x, ohlcYPos.highY);
 		}
 	}

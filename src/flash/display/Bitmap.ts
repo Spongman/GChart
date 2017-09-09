@@ -21,7 +21,7 @@ namespace flash.display
 				if (!this.element.style.height)
 					this.element.style.height = (<HTMLImageElement>this.element).naturalHeight + "px";
 			};
-			console.log(getClassName(this) + ".png");
+			//console.log(getClassName(this) + ".png");
 			(<HTMLImageElement>this.element).src = "images/" + getClassName(this) + ".png";
 		}
 

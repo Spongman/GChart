@@ -91,20 +91,19 @@ namespace com.google.finance
 			gr.lineStyle(Const.LINE_CHART_LINE_THICKNESS, this.lineColor, Const.LINE_CHART_LINE_VISIBILITY);
 			while (_loc13_ >= 0 && param5[_loc13_] >= param2)
 			{
-				const xPos2 = sparklineViewPoint.getXPos(maxx, minx, units[param5[_loc13_]]);
-				const yPos2 = this.getYPos(maxy, miny, units[param5[_loc13_]]);
-				gr.lineTo(xPos2, yPos2);
+				gr.lineTo(
+					sparklineViewPoint.getXPos(maxx, minx, units[param5[_loc13_]]),
+					this.getYPos(maxy, miny, units[param5[_loc13_]]));
 				_loc13_ -= skipInterval;
 			}
 			if (_loc13_ >= 0)
 			{
-				const xPos3 = sparklineViewPoint.getXPos(maxx, minx, units[param5[_loc13_]]);
-				const yPos3 = this.getYPos(maxy, miny, units[param5[_loc13_]]);
-				gr.lineTo(xPos3, yPos3);
+				gr.lineTo(
+					sparklineViewPoint.getXPos(maxx, minx, units[param5[_loc13_]]),
+					this.getYPos(maxy, miny, units[param5[_loc13_]]));
 			}
-			const xPos4 = sparklineViewPoint.getXPos(maxx, minx, units[param2]);
-			const yPos4 = this.getYPos(maxy, miny, units[param2]);
-			gr.lineTo(xPos4, yPos4);
+			let xPos4 = sparklineViewPoint.getXPos(maxx, minx, units[param2]);
+			gr.lineTo(xPos4, this.getYPos(maxy, miny, units[param2]));
 			return xPos4;
 		}
 

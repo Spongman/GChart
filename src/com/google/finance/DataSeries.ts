@@ -3,7 +3,7 @@ namespace com.google.finance
 	export class DataSeries
 	{
 		private readonly noPointsInIntervals: { [key: number]: boolean } = {};
-		private readonly pointsInIntervals: { [key: number]: DataUnit[] } = [];
+		private readonly pointsInIntervals: { [key: number]: DataUnit[] } = {};
 		private currentSessionIndex: number = 0;
 
 		readonly intradayRegions: StartEndPair[] = [];
@@ -26,34 +26,34 @@ namespace com.google.finance
 			this.units = <any>this.points;
 		}
 
-		static compareUnitAndRelativeMinute(dataUnit: DataUnit, param2: number): number
+		static compareUnitAndRelativeMinute(dataUnit: DataUnit, relativeMinute: number): number
 		{
-			if (dataUnit.relativeMinutes < param2)
+			if (dataUnit.relativeMinutes < relativeMinute)
 				return -1;
 
-			if (dataUnit.relativeMinutes > param2)
+			if (dataUnit.relativeMinutes > relativeMinute)
 				return 1;
 
 			return 0;
 		}
 
-		getDayContainingTime(param1: number): DataUnit | null
+		getDayContainingTime(time: number): DataUnit | null
 		{
-			const _loc2_ = 1 + Utils.binarySearch(this.days, param1, this.compareIndexWithTime, this);
+			const _loc2_ = 1 + Utils.binarySearch(this.days, time, this.compareIndexWithTime, this);
 			if (_loc2_ >= this.days.length)
 				return null;
 
 			const unit = this.units[this.days[_loc2_]];
-			if ((unit.time - param1) / Const.MS_PER_MINUTE < unit.dayMinute)
+			if ((unit.time - time) / Const.MS_PER_MINUTE < unit.dayMinute)
 				return unit;
 
 			return null;
 		}
 
-		getRelativeMinuteIndex(param1: number, dataUnits?: DataUnit[]): number
+		getRelativeMinuteIndex(minute: number, dataUnits?: DataUnit[]): number
 		{
 			const units = !dataUnits ? this.units : dataUnits;
-			const index = Utils.binarySearch(units, param1, DataSeries.compareUnitAndRelativeMinute, this);
+			const index = Utils.binarySearch(units, minute, DataSeries.compareUnitAndRelativeMinute, this);
 			return index === -1 ? 0 : index;
 		}
 
@@ -86,9 +86,9 @@ namespace com.google.finance
 			return _loc2_;
 		}
 
-		setNoPointsInIntervalArray(param1: number)
+		setNoPointsInIntervalArray(interval: number)
 		{
-			this.noPointsInIntervals[param1] = true;
+			this.noPointsInIntervals[interval] = true;
 		}
 
 		getPointsInIntervals()
@@ -96,9 +96,9 @@ namespace com.google.finance
 			return this.pointsInIntervals;
 		}
 
-		hasPointsInIntervalArray(param1: number): boolean
+		hasPointsInIntervalArray(interval: number): boolean
 		{
-			const points = this.pointsInIntervals[param1];
+			const points = this.pointsInIntervals[interval];
 			return points && points.length > 0;
 		}
 
@@ -115,11 +115,11 @@ namespace com.google.finance
 
 		getLastWeeklyWeekIndex(): number
 		{
-			let _loc1_ = this.fridays.length - 1;
-			while (_loc1_ > 0 && this.fridays[_loc1_] !== this.fridays[_loc1_ - 1] + 1 || _loc1_ === 0 && this.fridays[_loc1_] > 0)
-				_loc1_--;
+			let index = this.fridays.length - 1;
+			while (index > 0 && this.fridays[index] !== this.fridays[index - 1] + 1 || index === 0 && this.fridays[index] > 0)
+				index--;
 
-			return _loc1_;
+			return index;
 		}
 
 		getFirstRelativeMinute(): number
@@ -165,11 +165,11 @@ namespace com.google.finance
 
 		getLastDailyDayIndex(): number
 		{
-			let _loc1_ = this.days.length - 1;
-			while (_loc1_ > 0 && this.days[_loc1_] !== this.days[_loc1_ - 1] + 1 || _loc1_ === 0 && this.days[_loc1_] > 0)
-				_loc1_--;
+			let index = this.days.length - 1;
+			while (index > 0 && this.days[index] !== this.days[index - 1] + 1 || index === 0 && this.days[index] > 0)
+				index--;
 
-			return _loc1_;
+			return index;
 		}
 
 		getFirstReferencePoint(): DataUnit | null
@@ -220,22 +220,18 @@ namespace com.google.finance
 			return null;
 		}
 
-		intervalDataContainsTime(param1: number, param2: number, param3 = NaN): boolean
+		intervalDataContainsTime(time: number, interval1: number, interval2 = NaN): boolean
 		{
-			let key = this.intervalHashKey(param2);
-			if (this.intervalBounds[key])
-			{
-				const bounds = this.intervalBounds[key];
-				if (bounds.containsValue(param1))
+			const bounds1 = this.intervalBounds[this.intervalHashKey(interval1)];
+			if (bounds1 && bounds1.containsValue(time))
+				return true;
+
+			if (!isNaN(interval2)) {
+				const bounds2 = this.intervalBounds[this.intervalHashKey(interval2)];
+				if (bounds2 && bounds2.containsValue(time))
 					return true;
 			}
-			key = this.intervalHashKey(param3);
-			if (!isNaN(param3) && this.intervalBounds[key])
-			{
-				const bounds = this.intervalBounds[key];
-				if (bounds.containsValue(param1))
-					return true;
-			}
+
 			return false;
 		}
 
@@ -370,12 +366,12 @@ namespace com.google.finance
 
 		getFirstDailyIndex(): number
 		{
-			let _loc1_: number;
-			for (_loc1_ = 0; _loc1_ < this.units.length && this.units[_loc1_].coveredDays > 1; _loc1_++)
+			let index: number;
+			for (index = 0; index < this.units.length && this.units[index].coveredDays > 1; index++)
 			{
 				//const _loc2_ = this.units[_loc1_];
 			}
-			return _loc1_;
+			return index;
 		}
 
 		hasNoPointsInIntervalArray(param1: number): boolean
@@ -458,8 +454,7 @@ namespace com.google.finance
 			const key = this.intervalHashKey(param2);
 			if (this.intervalBounds[key])
 			{
-				const bounds = this.intervalBounds[key];
-				const earliestInterval = bounds.getEarliestInterval();
+				const earliestInterval = this.intervalBounds[key].getEarliestInterval();
 				if (earliestInterval && param1 > earliestInterval.start)
 					return true;
 			}
@@ -507,14 +502,14 @@ namespace com.google.finance
 
 		getFirstDailyDayIndex(): number
 		{
-			let _loc1_ = 0;
+			let index = 0;
 			const firstDailyIndex = this.getFirstDailyIndex();
-			while (_loc1_ < this.days.length && this.days[_loc1_] < firstDailyIndex)
+			while (index < this.days.length && this.days[index] < firstDailyIndex)
 			{
 				//const _loc3_ = this.units[this.days[_loc1_]];
-				_loc1_++;
+				index++;
 			}
-			return _loc1_;
+			return index;
 		}
 
 		getPrevDayStart(param1: number): number
@@ -530,8 +525,7 @@ namespace com.google.finance
 			const firstDailyDayIndex = this.getFirstDailyDayIndex();
 			for (let _loc4_ = firstDailyDayIndex; _loc4_ < this.days.length; _loc4_++)
 			{
-				const day = this.days[_loc4_];
-				const originalUnit = this.units[day];
+				const originalUnit = this.units[this.days[_loc4_]];
 				const dataUnit = new DataUnit(
 					originalUnit.close,
 					originalUnit.high,

@@ -25,8 +25,7 @@ namespace com.google.finance
 			for (let index = data.firsts.length - 1; _loc7_ > minx && index >= 0; index--)
 			{
 				const unit = data.units[data.firsts[index]];
-				const month = unit.exchangeDateInUTC.getUTCMonth();
-				if (month % 3 === 0)
+				if (unit.exchangeDateInUTC.getUTCMonth() % 3 === 0)
 				{
 					_loc7_ = viewPoint.getXPos(maxx, minx, unit);
 					gr.lineStyle(0, SparklineDateLinesLayer.DATE_LINES_COLOR, 1);
@@ -115,7 +114,7 @@ namespace com.google.finance
 		private drawVerticalLines()
 		{
 			this.textCanvas.graphics.clear();
-			//Utils.removeAllChildren(this.textCanvas);
+			Utils.removeAllChildren(this.textCanvas);
 			this.drawYearStarts(this.textCanvas);
 			if (this.getOneYearWidth() > SparklineDateLinesLayer.MIN_YEAR_WIDTH)
 				this.drawQuarterStarts(this.textCanvas);

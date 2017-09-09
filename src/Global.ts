@@ -50,7 +50,7 @@ module MouseEvents
 	export const MOUSE_UP = "mouseup";
 	export const ROLL_OUT = "rollout";
 	export const ROLL_OVER = "rollover";
-	export const MOUSE_WHEEL = "mousewheel";
+	export const MOUSE_WHEEL = "wheel";//mousewheel";
 	export const MOUSE_LEAVE = "mouseleave";
 }
 
@@ -128,10 +128,7 @@ function parseQueryString(str: string)
 	for (const pair of pairs)
 	{
 		const parts = pair.split('=');
-		const key = decodeURIComponent(parts[0]);
-		const value = decodeURIComponent(parts[1]);
-		result[key] = value;
-		//console.log("  " + key + " = " + value);
+		result[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
 	}
 	return result;
 }

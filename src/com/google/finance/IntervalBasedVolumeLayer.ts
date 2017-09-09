@@ -17,7 +17,7 @@ namespace com.google.finance
 			return viewPoint.maxy - (param1 >= 0 ? param1 : 0) * this.localYScale;
 		}
 
-		protected findPointIndex(param1: number): number
+		protected findPointIndex(x: number): number
 		{
 			const dataSeries = notnull(this.getDataSeries());
 			const detailLevel = this.viewPoint.getDetailLevelForTechnicalStyle();
@@ -26,7 +26,7 @@ namespace com.google.finance
 			if (!points)
 				return -1;
 
-			const minute = this.viewPoint.getMinuteOfX(param1);
+			const minute = this.viewPoint.getMinuteOfX(x);
 			let relativeMinuteIndex = dataSeries.getRelativeMinuteIndex(minute, points);
 			if (relativeMinuteIndex === points.length - 2)
 			{
@@ -35,7 +35,7 @@ namespace com.google.finance
 			}
 			if (detailLevel === Intervals.WEEKLY)
 			{
-				while (relativeMinuteIndex + 1 < points.length && points[relativeMinuteIndex + 1].weeklyXPos <= param1)
+				while (relativeMinuteIndex + 1 < points.length && points[relativeMinuteIndex + 1].weeklyXPos <= x)
 					relativeMinuteIndex++;
 			}
 			while (relativeMinuteIndex > 0 && (points[relativeMinuteIndex].fake || points[relativeMinuteIndex].duplicate || points[relativeMinuteIndex].volumes[detailLevelInterval] === 0))
@@ -197,14 +197,14 @@ namespace com.google.finance
 			this.drawHorizontalLine(viewPoint.miny + Const.BOTTOM_VIEWPOINT_HEADER_HEIGHT);
 		}
 
-		highlightPoint(context: Context, param2: number, state: Dictionary)
+		highlightPoint(context: Context, x: number, state: Dictionary)
 		{
 			if (state["ahsetter"])
 				return;
 
 			const dataSeries = notnull(this.getDataSeries());
 			const viewPoint = this.viewPoint;
-			const pointIndex = this.findPointIndex(param2);
+			const pointIndex = this.findPointIndex(x);
 			const detailLevel = viewPoint.getDetailLevelForTechnicalStyle();
 			const detailLevelInterval = Const.getDetailLevelInterval(detailLevel);
 			const points = dataSeries.getPointsInIntervalArray(detailLevelInterval);

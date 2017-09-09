@@ -20,7 +20,7 @@ namespace flash.display
 
 		private prepareChild(child: DisplayObject)
 		{
-			assert(!!child && !!child.element);
+			assert(child && !!child.element);
 
 			if (child.parent)
 				child.parent.removeChild(child);
@@ -59,14 +59,10 @@ namespace flash.display
 		}
 		removeChild(child: DisplayObject)
 		{
-			assert(!!child);
-
 			this.removeChildAt(this.getChildIndex(child));
 		}
 		removeChildAt(i: number)
 		{
-			assert(i >= 0 && i < this.children.length);
-
 			const child = this.getChildAt(i);
 			//this.element.removeChild(child.element);
 			child.element.remove();
@@ -81,8 +77,7 @@ namespace flash.display
 		}
 		getChildIndex(child: DisplayObject): number
 		{
-			assert(!!child);
-
+			assert(child && child.parent === this);
 			return this.children.indexOf(child);
 		}
 		swapChildrenAt(i1: number, i2: number)
@@ -99,9 +94,7 @@ namespace flash.display
 
 		contains(child: DisplayObject): boolean
 		{
-			assert(!!child);
-
-			return this.getChildIndex(child) >= 0;
+			return child.parent === this;
 		}
 
 		private _width: number;

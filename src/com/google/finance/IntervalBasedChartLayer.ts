@@ -113,8 +113,7 @@ namespace com.google.finance
 			let _loc7_ = 0;
 			do
 			{
-				const _loc17_ = Const.getDetailLevelInterval(detailLevel);
-				const points = dataSeries.getPointsInIntervalArray(_loc17_);
+				const points = dataSeries.getPointsInIntervalArray(Const.getDetailLevelInterval(detailLevel));
 				const _loc19_ = Const.getDetailLevelInterval(detailLevel) / 60;
 				if (points && points.length > 0 && points[0].relativeMinutes <= lastMinute)
 				{

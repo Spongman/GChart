@@ -34,11 +34,11 @@ namespace com.google.finance
 		{
 			let msg: string;
 			if (this.associatedStockDividend.ticker)
-				msg = Messages.getMsg(Messages.STOCK_DIVIDEND_TEXT_WITH_TICKER, this.associatedStockDividend.ticker);
+				msg = Message.getMsg(Messages.STOCK_DIVIDEND_TEXT_WITH_TICKER, this.associatedStockDividend.ticker);
 			else
-				msg = Messages.getMsg(Messages.STOCK_DIVIDEND_TEXT);
+				msg = Message.getMsg(Messages.STOCK_DIVIDEND_TEXT);
 
-			return msg.concat("\n", Messages.getMsg(Messages.ADJUSTMENT_FACTOR_TEXT, this.associatedStockDividend.adjustmentFactor));
+			return msg.concat("\n", Message.getMsg(Messages.ADJUSTMENT_FACTOR_TEXT, this.associatedStockDividend.adjustmentFactor));
 		}
 
 		setObject(stockDividend: StockDividend)

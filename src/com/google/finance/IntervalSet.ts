@@ -4,16 +4,16 @@ namespace com.google.finance
 	{
 		private intervals: StartEndPair[] = [];
 
-		getIntervalForValue(param1: number): StartEndPair | null
+		getIntervalForValue(value: number): StartEndPair | null
 		{
-			let _loc2_ = this.intervals.length - 1;
-			while (_loc2_ >= 0 && this.intervals[_loc2_].start > param1)
-				_loc2_--;
+			let index = this.intervals.length - 1;
+			while (index >= 0 && this.intervals[index].start > value)
+				index--;
 
-			if (_loc2_ === -1 || this.intervals[_loc2_].end < param1)
+			if (index === -1 || this.intervals[index].end < value)
 				return null;	// error?
 
-			return this.intervals[_loc2_];
+			return this.intervals[index];
 		}
 
 		addInterval(start: number, end: number)
@@ -21,25 +21,25 @@ namespace com.google.finance
 			this.addPair(new StartEndPair(start, end));
 		}
 
-		getClosestEarlierIntervalForValue(param1: number): StartEndPair | null
+		getClosestEarlierIntervalForValue(value: number): StartEndPair | null
 		{
 			if (this.intervals.length === 0)
 				return null;	// throw?
 
-			let _loc2_: StartEndPair | null = null;
+			let latestInterval: StartEndPair | null = null;
 			for (const interval of this.intervals)
 			{
-				if (interval.start <= param1 && param1 <= interval.end)
+				if (interval.start <= value && value <= interval.end)
 					return interval;
 
-				if (interval.end < param1)
+				if (interval.end < value)
 				{
-					if (!_loc2_ || _loc2_.end < interval.end)
-						_loc2_ = interval;
+					if (!latestInterval || latestInterval.end < interval.end)
+						latestInterval = interval;
 				}
 			}
-			if (_loc2_)
-				return _loc2_;
+			if (latestInterval)
+				return latestInterval;
 
 			return this.getEarliestInterval();
 		}
@@ -62,10 +62,9 @@ namespace com.google.finance
 			return this.intervals[0];
 		}
 
-		containsValue(param1: number): boolean
+		containsValue(value: number): boolean
 		{
-			const interval = this.getIntervalForValue(param1);
-			return !!interval;
+			return !!this.getIntervalForValue(value);
 		}
 
 		allIntervalsLength(): number
@@ -86,27 +85,27 @@ namespace com.google.finance
 			if (pair.start > pair.end)
 				return;
 
-			let _loc2_: number = 0;
-			while (_loc2_ < this.intervals.length)
+			let intervalIndex: number = 0;
+			while (intervalIndex < this.intervals.length)
 			{
-				if (pair.end < this.intervals[_loc2_].start)
+				if (pair.end < this.intervals[intervalIndex].start)
 				{
-					this.intervals.splice(_loc2_, 0, pair);
+					this.intervals.splice(intervalIndex, 0, pair);
 					return;
 				}
 
-				if (pair.start <= this.intervals[_loc2_].end)
+				if (pair.start <= this.intervals[intervalIndex].end)
 				{
-					pair.start = Math.min(pair.start, this.intervals[_loc2_].start);
-					pair.end = Math.max(pair.end, this.intervals[_loc2_].end);
-					this.intervals.splice(_loc2_, 1);
+					pair.start = Math.min(pair.start, this.intervals[intervalIndex].start);
+					pair.end = Math.max(pair.end, this.intervals[intervalIndex].end);
+					this.intervals.splice(intervalIndex, 1);
 				}
 				else
 				{
-					_loc2_++;
+					intervalIndex++;
 				}
 			}
-			if (_loc2_ === this.intervals.length)
+			if (intervalIndex === this.intervals.length)
 				this.intervals.push(pair);
 		}
 

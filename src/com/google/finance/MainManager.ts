@@ -298,8 +298,7 @@ namespace com.google.finance
 			}
 			else if (!isNaN(mainViewPoint.count) && firstDataSource)
 			{
-				const _loc8_ = !!this.displayManager.isDifferentMarketSessionComparison() ? 1 : firstDataSource.data.marketDayLength;
-				_loc5_ = mainViewPoint.count / _loc8_;
+				_loc5_ = mainViewPoint.count / (this.displayManager.isDifferentMarketSessionComparison() ? 1 : firstDataSource.data.marketDayLength);
 			}
 			else
 			{
@@ -376,7 +375,7 @@ namespace com.google.finance
 			this.dataManager.checkDataSourceExistance(this.quote, param2);
 			this.layersManager.replaceFirstDataSource(this.dataManager.dataSources[this.quote]);
 			const _loc5_ = this.layersManager.numComparedTickers() > 0 ? LayersManager.COMPARISON : LayersManager.SINGLE;
-			const style = !!param3 ? LayersManager.PERCENT : _loc5_;
+			const style = param3 ? LayersManager.PERCENT : _loc5_;
 			this.layersManager.resetLayersForNewQuote(this.dataManager.dataSources[this.quote], style);
 			if (this.dataManager.dataSources[this.quote].isEmpty())
 			{

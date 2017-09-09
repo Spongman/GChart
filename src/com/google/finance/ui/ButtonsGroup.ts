@@ -53,8 +53,7 @@ namespace com.google.finance.ui
 		{
 			if (this.buttons.length > 0 && this.separator !== "")
 			{
-				const _loc6_ = this.putSeparator(this.currentX, this.currentY, this.separator);
-				this.currentX += _loc6_.width;
+				this.currentX += this.putSeparator(this.currentX, this.currentY, this.separator).width;
 			}
 			const button = this.attachButton(text, textFormat, param3, param4);
 			this.currentX += button.width + this.spacing;
@@ -95,7 +94,7 @@ namespace com.google.finance.ui
 			const sprite = new flash.display.Sprite();
 			sprite.addChild(textField);
 			//const _loc7_ = _loc8_;
-			textField.defaultTextFormat = !!textFormat ? textFormat : this.buttonTextFormat;
+			textField.defaultTextFormat = textFormat ? textFormat : this.buttonTextFormat;
 			textField.text = text;
 			textField.autoSize = flash.text.TextFieldAutoSize.LEFT;
 			simpleButton.upState = sprite;
@@ -115,7 +114,7 @@ namespace com.google.finance.ui
 
 		resetButtonsGroup()
 		{
-			const numButtons = !!this.buttons ? this.buttons.length : 0;
+			const numButtons = this.buttons ? this.buttons.length : 0;
 			for (let buttonIndex = 0; buttonIndex < numButtons; buttonIndex++)
 			{
 				this.buttons[buttonIndex].removeEventListener(MouseEvents.MOUSE_DOWN, this.buttonPress);
@@ -137,8 +136,7 @@ namespace com.google.finance.ui
 			{
 				for (let functionIndex = 0; functionIndex < this.listenerFunctions.length; functionIndex++)
 				{
-					const fn = this.listenerFunctions[functionIndex];
-					fn.call(this.listenerObjects[functionIndex], textField.text);
+					this.listenerFunctions[functionIndex].call(this.listenerObjects[functionIndex], textField.text);
 				}
 			}
 		}

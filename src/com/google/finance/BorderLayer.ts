@@ -103,10 +103,9 @@ namespace com.google.finance
 			if (Const.INDICATOR_ENABLED)
 			{
 				gr.lineStyle(0, Const.HORIZONTAL_LINE_COLOR, 1);
-				const viewPoints = this.displayManager.getViewPoints();
 
 				let renderedViewPointIndex = 1;
-				for (const viewPoint of viewPoints)
+				for (const viewPoint of this.displayManager.getViewPoints())
 				{
 					if (Const.INDEPENDENT_INDICATOR_NAMES.indexOf(viewPoint.name) !== -1 || viewPoint.name === Const.BOTTOM_VIEW_POINT_NAME)
 					{

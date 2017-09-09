@@ -14,7 +14,7 @@ namespace com.google.finance
 
 		static validateGVizData(param1: any): boolean
 		{
-			const _loc2_ = !!param1 ? param1[GVizFormatConverter.COLS_PROPERTY_NAME] : null;
+			const _loc2_ = param1 ? param1[GVizFormatConverter.COLS_PROPERTY_NAME] : null;
 			if (!_loc2_ || _loc2_.length === 0)
 				return false;
 
@@ -47,8 +47,7 @@ namespace com.google.finance
 			{
 				const _loc9_ = row[GVizFormatConverter.COL_PROPERTY_NAME][0][GVizFormatConverter.VALUE_PROPERTY_NAME];
 				const _loc10_ = Date.parse(_loc9_.toString());
-				const timestampIndex = dataSeries.getTimestampIndex(_loc10_, points);
-				const point = points[timestampIndex];
+				const point = points[dataSeries.getTimestampIndex(_loc10_, points)];
 				for (let index = 1; index < row[GVizFormatConverter.COL_PROPERTY_NAME].length; index++)
 				{
 					const value = row[GVizFormatConverter.COL_PROPERTY_NAME][index][GVizFormatConverter.VALUE_PROPERTY_NAME];

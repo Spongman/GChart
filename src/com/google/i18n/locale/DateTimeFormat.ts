@@ -39,8 +39,8 @@ namespace com.google.i18n.locale
 
 				if (_loc5_ !== _loc2_)
 				{
-					const _loc4_ = pattern.substring(_loc2_, _loc5_);
-					this.patternParts.push(new PatternPart(_loc4_, PatternPartTypes.LITERAL));
+					const literal = pattern.substring(_loc2_, _loc5_);
+					this.patternParts.push(new PatternPart(literal, PatternPartTypes.LITERAL));
 				}
 				_loc2_ = _loc5_;
 				while (_loc5_ < length && this.tokensHash[pattern.substr(_loc5_, 1)] && pattern.charAt(_loc5_) === pattern.charAt(_loc2_))
@@ -48,8 +48,8 @@ namespace com.google.i18n.locale
 
 				if (_loc5_ !== _loc2_)
 				{
-					const _loc4_ = pattern.substring(_loc2_, _loc5_);
-					this.patternParts.push(new PatternPart(_loc4_, PatternPartTypes.FIELD));
+					const field = pattern.substring(_loc2_, _loc5_);
+					this.patternParts.push(new PatternPart(field, PatternPartTypes.FIELD));
 				}
 				_loc2_ = _loc5_;
 			}

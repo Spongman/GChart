@@ -7,7 +7,7 @@ namespace com.google.finance
 		protected scaledFactor: number;
 		protected factor: number;
 		protected indicator: Indicator;
-		protected computer: Function;
+		protected computer: (interval: number, indicator: Indicator, intput: DataSeries) => void;
 		protected highlightCanvas: flash.display.Sprite = new flash.display.Sprite();
 		protected maxVolume: Map<number> = {};
 		protected originalDataSeries: DataSeries;
@@ -51,7 +51,7 @@ namespace com.google.finance
 			return dayIndex;
 		}
 
-		setIndicator(indicatorName: string, computer: Function, dataSeries: DataSeries)
+		setIndicator(indicatorName: string, computer: (interval: number, indicator: Indicator, intput: DataSeries) => void, dataSeries: DataSeries)
 		{
 			this.dataSource.indicators[indicatorName] = new Indicator();
 			this.indicator = this.dataSource.indicators[indicatorName];
@@ -74,13 +74,12 @@ namespace com.google.finance
 			return viewPoint.maxy - indicatorPoint.volume * this.verticalScale;
 		}
 
-		getPoint(dataSeries: DataSeries, param2: number)
+		getPoint(dataSeries: DataSeries, x: number)
 		{
-			let pointIndex = this.getPointIndex(dataSeries, param2);
+			let pointIndex = this.getPointIndex(dataSeries, x);
 			while (pointIndex > 0 && (<indicator.VolumeIndicatorPoint>dataSeries.points[pointIndex]).volume === 0)
-			{
 				pointIndex--;
-			}
+
 			return dataSeries.points[pointIndex];
 		}
 
@@ -239,7 +238,7 @@ namespace com.google.finance
 				context = vp.layersContext;
 
 			const skipInterval = vp.getSkipInterval(context.count, context.lastMinute);
-			this.computer(skipInterval.interval, indicator, this.originalDataSeries);
+			this.computer(skipInterval.interval, this.indicator, this.originalDataSeries);
 			return notnull(this.indicator.getDataSeries(skipInterval.interval));
 		}
 
@@ -258,7 +257,7 @@ namespace com.google.finance
 			return context;
 		}
 
-		highlightPoint(context: Context, param2: number, state: Dictionary)
+		highlightPoint(context: Context, x: number, state: Dictionary)
 		{
 			this.clearHighlight();
 			const skipInterval = this.viewPoint.getSkipInterval(context.count, context.lastMinute);
@@ -273,13 +272,13 @@ namespace com.google.finance
 
 			const firstMinuteXPos = this.viewPoint.getMinuteXPos(firstReferencePoint.relativeMinutes);
 			const lastMinuteXPos = this.viewPoint.getMinuteXPos(lastReferencePoint.relativeMinutes);
-			if (param2 < firstMinuteXPos || param2 > lastMinuteXPos)
+			if (x < firstMinuteXPos || x > lastMinuteXPos)
 				return;
 
 			if (state["ahsetter"] !== undefined)
 				return;
 
-			const point = this.getPoint(dataSeries, param2) as indicator.VolumeIndicatorPoint;
+			const point = this.getPoint(dataSeries, x) as indicator.VolumeIndicatorPoint;
 			const xPos = this.viewPoint.getXPos(point.point);
 			const yPos = this.getYPos(this.viewPoint, point);
 			this.highlightCanvas.graphics.lineStyle(2, Const.VOLUME_HIGHLIGHT_COLOR, 1);

@@ -45,9 +45,9 @@ namespace com.google.finance
 			this.urlLoader.load(new flash.net.URLRequest(this.url));
 		}
 
-		protected configReloadInterval(fn: Function, param2: number)
+		protected configReloadInterval(fn: () => void, timeout: number)
 		{
-			this.intervalId = setInterval(fn, param2);
+			this.intervalId = setInterval(fn, timeout);
 		}
 
 		private completeHandler(event: Event)

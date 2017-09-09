@@ -110,7 +110,7 @@ namespace com.google.finance
 			public days: number,
 			public maxdays: number,
 			public mindays: number,
-			public text: number, //TODO Messages,
+			public text: Messages,
 			public logtext: string)
 		{
 		}
@@ -122,7 +122,7 @@ namespace com.google.finance
 			public type: ScaleTypes,
 			public days: number,
 			public months: number,
-			public text: number,	// TODO: enum
+			public text: Messages,
 			public logtext: string,
 			public width: number
 		)
@@ -132,8 +132,8 @@ namespace com.google.finance
 
 	export class Const
 	{
-		private static DETAIL_LEVEL_INFO: { [key: number]: number };
-		private static INTERVAL_INFO: { [key: number]: Intervals };
+		private static readonly DETAIL_LEVEL_INFO: { [key: number]: number } = {};
+		private static readonly INTERVAL_INFO: { [key: number]: Intervals } = [];
 		static APPLY_CHINESE_STYLE_MACD = false;
 		static CHART_TYPE_BUTTONS_ENABLED = false;
 		static DEFAULT_DISPLAY_DAYS = 3;
@@ -248,7 +248,7 @@ namespace com.google.finance
 		static readonly MS_PER_MINUTE = 60 * 1000;
 		static readonly MUTUAL_FUND_PREFIX = "MUTF(_.*?)?:";
 		static readonly NEW_LOG_VSCALE = "Logarithmic";
-		static readonly NO_BUTTON_TEXT = -1;
+		static readonly NO_BUTTON_TEXT = <Messages>-1;
 		static readonly NORMAL_THEME = 1;
 		static readonly OHLC_CHART = "OhlcChartLayer";
 		static readonly PAGE_LEFT_BUTTON = 6;
@@ -286,13 +286,13 @@ namespace com.google.finance
 		static readonly VOLUME_CHART = "VolumeLinesChartLayer";
 		static readonly VOLUME_INDICATOR_NAME = "Volume";
 		static readonly VOLUME_SCALE = 1;
-		static readonly VOLUME_SCALES = [100, 250, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000];
+		static readonly VOLUME_SCALES: ReadonlyArray<number> = [100, 250, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000];
 		static readonly WEEKDAY_PER_WEEK = 5;
 		static readonly WEEKLY_INTERVAL = 7 * 24 * 60 * 60;
 		static readonly WilliamsPercentR = "WilliamsPercentR";
 		static readonly WINDOW_LAYER = "WindowLayer";
 		static readonly YEAR_2000 = 946684800000;
-		static readonly YSCALE_INTERVALS = [0.00001, 0.000025, 0.00005, 0.0001, 0.00025, 0.0005, 0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000, 20000000, 50000000, 100000000, 200000000, 500000000, 1000000000, 2000000000, 5000000000, 10000000000, 20000000000, 50000000000, 100000000000, 200000000000, 500000000000, 1000000000000, 2000000000000, 5000000000000, 10000000000000, 20000000000000, 50000000000000, 100000000000000, 200000000000000, 500000000000000, 1000000000000000, 2000000000000000, 5000000000000000, 10000000000000000, 20000000000000000, 50000000000000000, 100000000000000000, 200000000000000000, 500000000000000000, 1000000000000000000, 2000000000000000000, 5000000000000000000];
+		static readonly YSCALE_INTERVALS: ReadonlyArray<number> = [0.00001, 0.000025, 0.00005, 0.0001, 0.00025, 0.0005, 0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000, 20000000, 50000000, 100000000, 200000000, 500000000, 1000000000, 2000000000, 5000000000, 10000000000, 20000000000, 50000000000, 100000000000, 200000000000, 500000000000, 1000000000000, 2000000000000, 5000000000000, 10000000000000, 20000000000000, 50000000000000, 100000000000000, 200000000000000, 500000000000000, 1000000000000000, 2000000000000000, 5000000000000000, 10000000000000000, 20000000000000000, 50000000000000000, 100000000000000000, 200000000000000000, 500000000000000000, 1000000000000000000, 2000000000000000000, 5000000000000000000];
 		static readonly ZERO_PERCENT_LINE_COLOR = 8015181;
 		static readonly ZH_CN_LOCALE = "zh_CN";
 		static readonly ZH_HK_LOCALE = "zh_HK";
@@ -333,7 +333,7 @@ namespace com.google.finance
 			}]
 		};
 
-		static readonly SCALE_INTERVALS = [
+		static readonly SCALE_INTERVALS: ReadonlyArray<ScaleInterval> = [
 			new ScaleInterval(ScaleTypes.SCALE_MAX, 10000, 480, Messages.ZOOM_ALL, "max", 24),
 			new ScaleInterval(ScaleTypes.SCALE_10Y, 3100, 2 * 60, Messages.ZOOM_10Y, "10y", 20),
 			new ScaleInterval(ScaleTypes.SCALE_5Y, 1550, 60, Messages.ZOOM_5Y, "5y", 17),
@@ -347,26 +347,26 @@ namespace com.google.finance
 			new ScaleInterval(ScaleTypes.SCALE_1D, 1, 0, Messages.ZOOM_1D, "1d", 15)
 		];
 
-		static readonly CHART_STYLE_NAMES = [
+		static readonly CHART_STYLE_NAMES: ReadonlyArray<string> = [
 			Const.LINE_CHART,
 			Const.CANDLE_STICK,
 			Const.OHLC_CHART
 		];
-		static readonly OHLC_DEPENDENT_INDICATOR_NAMES = [
+		static readonly OHLC_DEPENDENT_INDICATOR_NAMES: ReadonlyArray<string> = [
 			Const.WilliamsPercentR,
 			Const.KDJ,
 			Const.FastStochastic,
 			Const.SlowStochastic,
 			Const.CCI
 		];
-		static readonly DETAIL_LEVELS = [
+		static readonly DETAIL_LEVELS: ReadonlyArray<Intervals> = [
 			Intervals.INTRADAY,
 			Intervals.FIVE_MINUTES,
 			Intervals.HALF_HOUR,
 			Intervals.DAILY,
 			Intervals.WEEKLY
 		];
-		static readonly INDEPENDENT_INDICATOR_NAMES = [
+		static readonly INDEPENDENT_INDICATOR_NAMES: ReadonlyArray<string> = [
 			Const.MACD,
 			Const.RSI,
 			Const.WilliamsPercentR,
@@ -376,20 +376,20 @@ namespace com.google.finance
 			Const.SlowStochastic,
 			Const.CCI
 		];
-		static readonly VOLUME_DEPENDENT_INDICATOR_NAMES = [
+		static readonly VOLUME_DEPENDENT_INDICATOR_NAMES: ReadonlyArray<string> = [
 			Const.VMA
 		];
-		static readonly DEPENDENT_INDICATOR_NAMES = [
+		static readonly DEPENDENT_INDICATOR_NAMES: ReadonlyArray<string> = [
 			Const.SMA,
 			Const.EMA,
 			Const.BollingerBands
 		];
-		static readonly VOLUME_PLUS_CHART_TYPE = [
+		static readonly VOLUME_PLUS_CHART_TYPE: ReadonlyArray<string> = [
 			Const.CANDLE_STICK,
 			Const.OHLC_CHART
 		];
 
-		static readonly INTERVAL_PERIODS = [
+		static readonly INTERVAL_PERIODS: ReadonlyArray<IntervalPeriod> = [
 			new IntervalPeriod(Intervals.INTRADAY, 1, 1, 0.2, Messages.INTERVAL_2_MINUTES, "2min"),
 			new IntervalPeriod(Intervals.FIVE_MINUTES, 2, 3, 0.4, Messages.INTERVAL_5_MINUTES, "5min"),
 			new IntervalPeriod(Intervals.HALF_HOUR, 10, 15, 2, Messages.INTERVAL_30_MINUTES, "30min"),
@@ -403,14 +403,12 @@ namespace com.google.finance
 
 		private static _staticConstructor = (() =>
 		{
-			Const.INTERVAL_INFO = {};
 			Const.INTERVAL_INFO[Const.INTRADAY_INTERVAL] = Intervals.INTRADAY;
 			Const.INTERVAL_INFO[Const.FIVE_MINUTE_INTERVAL] = Intervals.FIVE_MINUTES;
 			Const.INTERVAL_INFO[Const.HALF_HOUR_INTERVAL] = Intervals.HALF_HOUR;
 			Const.INTERVAL_INFO[Const.DAILY_INTERVAL] = Intervals.DAILY;
 			Const.INTERVAL_INFO[Const.WEEKLY_INTERVAL] = Intervals.WEEKLY;
 
-			Const.DETAIL_LEVEL_INFO = [];
 			Const.DETAIL_LEVEL_INFO[Intervals.INTRADAY] = Const.INTRADAY_INTERVAL;
 			Const.DETAIL_LEVEL_INFO[Intervals.FIVE_MINUTES] = Const.FIVE_MINUTE_INTERVAL;
 			Const.DETAIL_LEVEL_INFO[Intervals.HALF_HOUR] = Const.HALF_HOUR_INTERVAL;
@@ -438,21 +436,21 @@ namespace com.google.finance
 			return <ScaleTypes>scaleIntervalIndex;
 		}
 
-		static getQuoteType(param1: string): QuoteTypes
+		static getQuoteType(quote: string): QuoteTypes
 		{
-			if (param1.indexOf(Const.CURRENCY_PREFIX) === 0)
+			if (quote.indexOf(Const.CURRENCY_PREFIX) === 0)
 				return QuoteTypes.CURRENCY;
 
-			if (param1.indexOf(Const.PORTFOLIO_PREFIX) === 0)
+			if (quote.indexOf(Const.PORTFOLIO_PREFIX) === 0)
 				return QuoteTypes.PORTFOLIO;
 
-			if (param1.indexOf(Const.BACKTESTING_PREFIX) === 0)
+			if (quote.indexOf(Const.BACKTESTING_PREFIX) === 0)
 				return QuoteTypes.BACKTESTING;
 
-			if (param1.search(Const.MUTUAL_FUND_PREFIX) === 0)
+			if (quote.search(Const.MUTUAL_FUND_PREFIX) === 0)
 				return QuoteTypes.MUTUAL_FUND;
 
-			if (param1.search(Const.QUERY_INDEX_PREFIX) === 0)
+			if (quote.search(Const.QUERY_INDEX_PREFIX) === 0)
 				return QuoteTypes.QUERY_INDEX;
 
 			return QuoteTypes.COMPANY;
@@ -462,15 +460,15 @@ namespace com.google.finance
 		{
 			if (Const.DEFAULT_DISPLAY_MINUTES !== -1)
 			{
-				const dayLength = !!param1 ? 1 : Const.MARKET_DAY_LENGTH;
+				const dayLength = param1 ? 1 : Const.MARKET_DAY_LENGTH;
 				return Const.DEFAULT_DISPLAY_MINUTES / dayLength;
 			}
 			return Const.DEFAULT_DISPLAY_DAYS;
 		}
 
-		static isZhLocale(param1: string): boolean
+		static isZhLocale(locale: string): boolean
 		{
-			return param1 === Const.ZH_CN_LOCALE || param1 === Const.ZH_HK_LOCALE || param1 === Const.ZH_TW_LOCALE;
+			return locale === Const.ZH_CN_LOCALE || locale === Const.ZH_HK_LOCALE || locale === Const.ZH_TW_LOCALE;
 		}
 	}
 }

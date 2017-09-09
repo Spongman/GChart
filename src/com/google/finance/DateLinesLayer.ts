@@ -12,7 +12,7 @@ namespace com.google.finance
 
 	export class DateLinesLayer extends AbstractLayer<ViewPoint>
 	{
-		private static readonly HOUR_INTERVALS = [60, 2 * 60, 4 * 60];
+		private static readonly HOUR_INTERVALS: ReadonlyArray<number> = [60, 2 * 60, 4 * 60];
 		private static readonly WEEK_TEXT_MIN_DAYS = 3;
 		private static readonly MONTH_TEXT_MIN_PIXELS = 55;
 		private static readonly FULL_YEAR_TEXT_MAX_WIDTH = 40;
@@ -25,7 +25,7 @@ namespace com.google.finance
 
 		getDayPixel(viewPoint: ViewPoint, dataSeries: DataSeries, param3: number): number
 		{
-			return (!!viewPoint.getDisplayManager().isDifferentMarketSessionComparison() ? 1 : (dataSeries.marketDayLength + param3)) * viewPoint.minutePix;
+			return (viewPoint.getDisplayManager().isDifferentMarketSessionComparison() ? 1 : (dataSeries.marketDayLength + param3)) * viewPoint.minutePix;
 		}
 
 		private getHourTextFromUtcDate(date: Date): string
@@ -81,8 +81,7 @@ namespace com.google.finance
 			const _loc7_ = !!Const.INDICATOR_ENABLED ? viewPoint.getDetailLevelForTechnicalStyle() : viewPoint.getDetailLevel();
 			if (!viewPoint.getDisplayManager().isDifferentMarketSessionComparison() && dayPixel > Const.MIN_DAY_WIDTH_FOR_INTRADAY && _loc7_ <= Intervals.DAILY)
 			{
-				const visibleDays = this.getVisibleDaysArray(context);
-				this.drawDayStarts(this, this.textCanvas, visibleDays, _loc7_);
+				this.drawDayStarts(this, this.textCanvas, this.getVisibleDaysArray(context), _loc7_);
 			}
 			else if (dayPixel > 15)
 			{
@@ -184,14 +183,11 @@ namespace com.google.finance
 				AbstractLayer.drawVerticalLine(displayObject, xPos - dayPixel, Const.DAY_LINE_COLOR, Const.DAY_LINE_ALPHA, _loc13_, _loc14_, ViewPoint.TICK_SIZE_BIG, this.tickPosition);
 				if (viewPoint.bottomTextHeight > 0 && _loc7_ >= 0)
 				{
-					const exchangeDateInUTC = data.units[data.years[_loc7_]].exchangeDateInUTC;
-					let fullYear = exchangeDateInUTC.getUTCFullYear().toString();
+					let fullYear = data.units[data.years[_loc7_]].exchangeDateInUTC.getUTCFullYear().toString();
 					if (_loc10_ - xPos < DateLinesLayer.FULL_YEAR_TEXT_MAX_WIDTH)
 						fullYear = "\'" + fullYear.substr(2, 2);
 
-					const _loc17_ = _loc10_ - xPos;
-					const _loc11_ = xPos;
-					ViewPoint.addTextField(sprite, fullYear, _loc11_, _loc12_, _loc17_, ViewPoint.TEXT_FIELD_HEIGHT, "center", viewPoint.dateTextFormat);
+					ViewPoint.addTextField(sprite, fullYear, xPos, _loc12_, _loc10_ - xPos, ViewPoint.TEXT_FIELD_HEIGHT, "center", viewPoint.dateTextFormat);
 				}
 				_loc7_ -= param3;
 				_loc10_ = xPos;
@@ -233,8 +229,7 @@ namespace com.google.finance
 					{
 						if (_loc14_)
 						{
-							const month = exchangeDateInUTC.getUTCMonth();
-							if (month % 3 === 0)
+							if (exchangeDateInUTC.getUTCMonth() % 3 === 0)
 							{
 								_loc12_ -= _loc20_ / 2;
 								ViewPoint.addTextField(sprite, _loc19_, _loc12_, _loc13_, _loc20_, ViewPoint.TEXT_FIELD_HEIGHT, "center", viewPoint.dateTextFormat);
@@ -334,8 +329,7 @@ namespace com.google.finance
 					return;
 
 				coveredMinutes -= minutesSkip;
-				const intervalLength2 = this.viewPoint.getIntervalLength(coveredMinutes);
-				if (intervalLength2 < DateLinesLayer.DAY_START_TEXT_MAX_WIDTH)
+				if (this.viewPoint.getIntervalLength(coveredMinutes) < DateLinesLayer.DAY_START_TEXT_MAX_WIDTH)
 					return;
 
 				AbstractLayer.drawVerticalLine(displayObject, xPos, Const.HOUR_LINE_COLOR, Const.HOUR_LINE_ALPHA, _loc11_, _loc12_, ViewPoint.TICK_SIZE_SMALL, this.tickPosition);
@@ -392,14 +386,12 @@ namespace com.google.finance
 			for (let _loc7_ = minuteMetaIndex; _loc7_ <= _loc5_; _loc7_++)
 			{
 				const dataUnit = data.units[data.days[_loc7_]];
-				const marketOpenMinute = data.marketOpenMinute;
-				const marketDayLength = data.marketDayLength;
 				if (dataUnit)
 				{
 					const dayVisibility = new DayVisibility();
 					dayVisibility.dataUnit = dataUnit;
-					dayVisibility.startMinute = marketOpenMinute;
-					dayVisibility.coveredMinutes = marketDayLength;
+					dayVisibility.startMinute = data.marketOpenMinute;
+					dayVisibility.coveredMinutes = data.marketDayLength;
 
 					dayVisibilities.push(dayVisibility);
 				}

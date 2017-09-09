@@ -21,7 +21,7 @@ namespace com.google.i18n.locale
 			FIRSTWEEKCUTOFFDAY: 2,
 		};
 
-		static register(registerResource: Function): boolean
+		static register(registerResource: (resource: Dictionary, locale: string) => void): boolean
 		{
 			registerResource(DateTimeConstants.DateTimeConstants_en, "en");
 			return true;

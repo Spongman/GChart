@@ -1,16 +1,15 @@
-/// <reference path="../../../flash/display/Sprite.ts" />
+import { Bitmap } from "../../../flash/display/Bitmap";
+import { DisplayObject } from "../../../flash/display/DisplayObject";
+import { Sprite } from "../../../flash/display/Sprite";
 
-namespace com.google.finance
-{
 	// import flash.display.Sprite;
 	// import flash.events.Event;
 	// import flash.display.DisplayObject;
 	// import flash.events.MouseEvent;
-	// import flash.display.Bitmap;
+	// import Bitmap;
 	// import flash.ui.Mouse;
 
-	export enum MouseCursors
-	{
+export enum MouseCursors {
 		H_ARROWS = 4,
 		OPENED_HAND = 2,
 		HIDDEN = 0,
@@ -19,8 +18,7 @@ namespace com.google.finance
 		CLOSED_HAND = 3,
 	}
 
-	export class MouseCursor extends flash.display.Sprite
-	{
+export class MouseCursor extends Sprite {
 		static readonly DRAGGABLE_CURSOR = MouseCursors.OPENED_HAND;
 
 		/*
@@ -29,46 +27,40 @@ namespace com.google.finance
 		private static readonly CursorClosedHand = MouseCursor_CursorClosedHand;
 		*/
 
-		private displayObjectLockedOn: flash.display.DisplayObject | null;
+		private displayObjectLockedOn: DisplayObject | null;
 
 		currentType: MouseCursors;
-		cursor: flash.display.Bitmap;
+		cursor: Bitmap;
 
-		constructor()
-		{
+		constructor() {
 			super();
 			this.currentType = MouseCursors.CLASSIC;
 			this.mouseEnabled = false;
-			//this.cursor = new this.CursorOpenedHand();
+			// this.cursor = new this.CursorOpenedHand();
 			this.setCursor(MouseCursors.OPENED_HAND);
 		}
 
-		onMouseLeave(event: Event)
-		{
+		onMouseLeave(event: Event) {
 			this.setCursor(MouseCursors.CLASSIC);
 		}
 
-		initListeners()
-		{
+		initListeners() {
 			return;
 			/*TODO
 			if (this.stage)
 			{
-				this.stage.addEventListener(MouseEvents.MOUSE_MOVE, flash.display.Stage.bind(this.onMouseMove, this));
-				this.stage.addEventListener(MouseEvents.MOUSE_LEAVE, flash.display.Stage.bind(this.onMouseLeave, this));
+				this.stage.addEventListener(MouseEvents.MOUSE_MOVE, Stage.bind(this.onMouseMove, this));
+				this.stage.addEventListener(MouseEvents.MOUSE_LEAVE, Stage.bind(this.onMouseLeave, this));
 			}
 			*/
 		}
 
-		lockOnDisplayObject(displayObject: flash.display.DisplayObject)
-		{
+		lockOnDisplayObject(displayObject: DisplayObject) {
 			this.displayObjectLockedOn = displayObject;
 		}
 
-		setCursor(cursor: MouseCursors)
-		{
-			switch (cursor)
-			{
+		setCursor(cursor: MouseCursors) {
+			switch (cursor) {
 				default:
 				case MouseCursors.CLASSIC:
 					this.element.style.cursor = "auto";
@@ -129,15 +121,12 @@ namespace com.google.finance
 			*/
 		}
 
-		unlock()
-		{
+		unlock() {
 			this.displayObjectLockedOn = null;
 		}
 
-		onMouseMove(mouseEvent: MouseEvent)
-		{
+		onMouseMove(mouseEvent: MouseEvent) {
 			this.cursor.x = this.mouseX - this.cursor.width / 2;
 			this.cursor.y = this.mouseY - this.cursor.height / 2;
 		}
 	}
-}

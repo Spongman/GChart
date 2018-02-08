@@ -1,5 +1,13 @@
-namespace com.google.finance.indicator
-{
+import { IndependentIndicatorLayer } from "IndependentIndicatorLayer";
+import { Messages } from "Messages";
+import { DataSeries } from "../DataSeries";
+import { DataUnit } from "../DataUnit";
+import { Message } from "../Messages";
+import { Utils } from "../Utils";
+import { Context } from "../ViewPoint";
+import { IndicatorLineStyle } from "./IndicatorLineStyle";
+import { IndicatorPoint } from "./IndicatorPoint";
+
 	// import com.google.finance.Messages;
 	// import com.google.finance.DataUnit;
 	// import com.google.finance.DataSeries;
@@ -7,22 +15,18 @@ namespace com.google.finance.indicator
 	// import com.google.finance.ViewPoint;
 	// import com.google.finance.DataSource;
 
-	export class KDJIndicatorLayer extends IndependentIndicatorLayer
-	{
+export class KDJIndicatorLayer extends IndependentIndicatorLayer {
 		private static readonly PARAMETER_NAMES: ReadonlyArray<string> = ["period"];
 
 		private period = 14;
 		private alphaNumber = 0.3333333333333333;
 
-		static getParameterNames()
-		{
+		static getParameterNames() {
 			return KDJIndicatorLayer.PARAMETER_NAMES;
 		}
 
-		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string
-		{
-			switch (param1)
-			{
+		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string {
+			switch (param1) {
 				case 0:
 					return Message.getMsg(Messages.K_KDJ, param2);
 				case 1:
@@ -34,27 +38,27 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		protected getLineStyle(param1: number): number
-		{
-			if (param1 >= 0 && param1 < 3)
+		protected getLineStyle(param1: number): number {
+			if (param1 >= 0 && param1 < 3) {
 				return IndicatorLineStyle.SIMPLE_LINE;
+			}
 
 			return IndicatorLineStyle.NONE;
 		}
 
-		protected getIndicatorNameText(param1: string): string
-		{
+		protected getIndicatorNameText(param1: string): string {
 			return Message.getMsg(Messages.KDJ_INTERVAL, this.period, param1);
 		}
 
-		computeIntervalIndicator(interval: number)
-		{
-			if (this.indicator.hasInterval(interval))
+		computeIntervalIndicator(interval: number) {
+			if (this.indicator.hasInterval(interval)) {
 				return;
+			}
 
 			const points = this.originalDataSeries.getPointsInIntervalArray(interval);
-			if (!points)
+			if (!points) {
 				return;
+			}
 
 			let _loc8_ = NaN;
 			let _loc9_ = NaN;
@@ -63,30 +67,23 @@ namespace com.google.finance.indicator
 			const dataSeries1 = new DataSeries();
 			const dataSeries2 = new DataSeries();
 			const dataUnits: DataUnit[] = [];
-			for (const point of points)
-			{
-				if (!this.shouldSkip(point, dataSeries0, dataSeries1, dataSeries2))
-				{
+			for (const point of points) {
+				if (!this.shouldSkip(point, dataSeries0, dataSeries1, dataSeries2)) {
 					dataUnits.push(point);
-					if (dataUnits.length < this.period)
-					{
+					if (dataUnits.length < this.period) {
 						const indicatorPoint = new IndicatorPoint(NaN, point);
 						dataSeries0.points.push(indicatorPoint);
 						dataSeries1.points.push(indicatorPoint);
 						dataSeries2.points.push(indicatorPoint);
-					}
-					else
-					{
+					} else {
 						let _loc3_ = Number.NEGATIVE_INFINITY;
 						let _loc4_ = Number.POSITIVE_INFINITY;
-						for (let periodIndex = 0; periodIndex < this.period; periodIndex++)
-						{
+						for (let periodIndex = 0; periodIndex < this.period; periodIndex++) {
 							_loc3_ = Utils.extendedMax(_loc3_, dataUnits[periodIndex].high);
 							_loc4_ = Utils.extendedMin(_loc4_, dataUnits[periodIndex].low);
 						}
 						const _loc5_ = (point.close - _loc4_) / (_loc3_ - _loc4_) * 100;
-						if (isNaN(_loc8_))
-						{
+						if (isNaN(_loc8_)) {
 							const indicatorPoint = new IndicatorPoint(_loc5_, point);
 							_loc8_ = _loc5_;
 							_loc9_ = _loc5_;
@@ -94,13 +91,9 @@ namespace com.google.finance.indicator
 							dataSeries0.points.push(indicatorPoint);
 							dataSeries1.points.push(indicatorPoint);
 							dataSeries2.points.push(indicatorPoint);
-						}
-						else if (_loc3_ === _loc4_)
-						{
+						} else if (_loc3_ === _loc4_) {
 							this.copyLastIndicatorPoint(point, dataSeries0, dataSeries1, dataSeries2);
-						}
-						else
-						{
+						} else {
 							_loc8_ = _loc5_ * this.alphaNumber + _loc8_ * (1 - this.alphaNumber);
 							_loc9_ = _loc8_ * this.alphaNumber + _loc9_ * (1 - this.alphaNumber);
 							_loc10_ = 3 * _loc9_ - 2 * _loc8_;
@@ -117,18 +110,16 @@ namespace com.google.finance.indicator
 			this.indicator.setDataSeries(interval, dataSeries2, 2);
 		}
 
-		isOhlcDataRequired(): boolean
-		{
+		isOhlcDataRequired(): boolean {
 			return true;
 		}
 
-		setIndicatorInstanceArray(indicators: any[])
-		{
-			if (!indicators || indicators.length !== 1)
+		setIndicatorInstanceArray(indicators: any[]) {
+			if (!indicators || indicators.length !== 1) {
 				return;
+			}
 
 			this.indicator.clear();
-			this.period = (<KDJIndicatorLayer><any>indicators[0]).period;
+			this.period = (indicators[0] as any as KDJIndicatorLayer).period;
 		}
 	}
-}

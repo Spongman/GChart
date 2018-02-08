@@ -1,50 +1,57 @@
-/// <reference path="../../../flash/display/Sprite.ts" />
+import { Bitmap } from "../../../flash/display/Bitmap";
+import { SimpleButton } from "../../../flash/display/SimpleButton";
+import { Sprite } from "../../../flash/display/Sprite";
+import { TextField, TextFormat } from "../../../flash/text/TextField";
+import { MainManager } from "./MainManager";
+import { PinPoint } from "./PinPoint";
+import { PinPointContentMovie } from "./PinPointContentMovie";
+import { PinPointMovie_LocalExtraFlagBorder } from "./PinPointMovie_LocalExtraFlagBorder";
+import { PinPointMovie_LocalFlagActiveImg } from "./PinPointMovie_LocalFlagActiveImg";
+import { PinPointMovie_LocalFlagImg } from "./PinPointMovie_LocalFlagImg";
+import { PinPointMovie_LocalFlagOverImg } from "./PinPointMovie_LocalFlagOverImg";
+import { PinPointMovie_LocalFlagPoleImg } from "./PinPointMovie_LocalFlagPoleImg";
+import { MouseCursors } from './MouseCursor';
 
-namespace com.google.finance
-{
 	// import flash.display.Sprite;
 	// import flash.text.TextFormat;
-	// import flash.display.Bitmap;
+	// import Bitmap;
 	// import flash.display.SimpleButton;
 	// import flash.text.TextField;
 	// import flash.events.MouseEvent;
 	// import flash.events.Event;
 
-	export enum PinOrientations
-	{
+export enum PinOrientations {
 		RIGHT_ORIENTATION = 0,
 		LEFT_ORIENTATION = 1,
 	}
 
-	export class PinPointMovie extends flash.display.Sprite
-	{
+export class PinPointMovie extends Sprite {
 		static readonly MAX_SHOWN_GROUP_COUNT = 7;
 
-		private static letterTextFormat = new flash.text.TextFormat("Arial", 12, 0, true);
+		private static letterTextFormat = new TextFormat("Arial", 12, 0, true);
 
-		static passiveTextFormat = new flash.text.TextFormat();
-		static activeTextFormat = new flash.text.TextFormat();
-		static overPassiveTextFormat = new flash.text.TextFormat();
-		static overActiveTextFormat = new flash.text.TextFormat();
+		static passiveTextFormat = new TextFormat();
+		static activeTextFormat = new TextFormat();
+		static overPassiveTextFormat = new TextFormat();
+		static overActiveTextFormat = new TextFormat();
 
-		private borders: flash.display.Bitmap[];
+		private borders: Bitmap[];
 
 		private pinPointContentMovie: PinPointContentMovie;
 
-		private flagline: flash.display.Bitmap;
-		FlagImg: typeof flash.display.Bitmap;
-		FlagPoleImg: typeof flash.display.Bitmap;
-		FlagOverImg: typeof flash.display.Bitmap;
-		FlagActiveImg: typeof flash.display.Bitmap;
-		ExtraFlagBorder: typeof flash.display.Bitmap;
+		private flagline: Bitmap;
+		FlagImg: typeof Bitmap;
+		FlagPoleImg: typeof Bitmap;
+		FlagOverImg: typeof Bitmap;
+		FlagActiveImg: typeof Bitmap;
+		ExtraFlagBorder: typeof Bitmap;
 
-		private letter: flash.text.TextField;
-		private pinButton: flash.display.SimpleButton;
-		private activeOverlay: flash.display.Bitmap;
+		private letter: TextField;
+		private pinButton: SimpleButton;
+		private activeOverlay: Bitmap;
 		private object: PinPoint | null;
 
-		constructor()
-		{
+		constructor() {
 			super();
 			this.initImageClasses();
 			this.initFlagComponents();
@@ -52,66 +59,51 @@ namespace com.google.finance
 			PinPointMovie.passiveTextFormat.color = 0x444444;
 			PinPointMovie.overPassiveTextFormat.color = 0;
 			PinPointMovie.overActiveTextFormat.color = 0xeeeeee;
-			this.pinButton.addEventListener(MouseEvents.MOUSE_DOWN, (event: Event) =>
-			{
-				if (!this.object)
+			this.pinButton.addEventListener(MouseEvents.MOUSE_DOWN, (event: Event) => {
+				if (!this.object) {
 					throw new Error();
+				}
 
-				if (this.object.active)
-				{
+				if (this.object.active) {
 					this.object.active = false;
 					this.object.forceExpandInGroup = true;
 					this.pinPointContentMovie.clearMovie();
-				}
-				else
-				{
+				} else {
 					MainManager.jsProxy.iClicked(this.object.qname, this.getPinPointType(), this.object.id, this.object.letter);
 				}
 			});
-			this.pinButton.addEventListener(MouseEvents.MOUSE_OVER, (event: Event) =>
-			{
+			this.pinButton.addEventListener(MouseEvents.MOUSE_OVER, (event: Event) => {
 				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.pinButton);
 				this.letter.defaultTextFormat = this.object && this.object.active ? PinPointMovie.overActiveTextFormat : PinPointMovie.overPassiveTextFormat;
 			});
-			this.pinButton.addEventListener(MouseEvents.MOUSE_OUT, (event: Event) =>
-			{
+			this.pinButton.addEventListener(MouseEvents.MOUSE_OUT, (event: Event) => {
 				MainManager.mouseCursor.unlock();
 				this.letter.defaultTextFormat = this.object && this.object.active ? PinPointMovie.activeTextFormat : PinPointMovie.passiveTextFormat;
 			});
 		}
 
-		protected getPinPointType(): string
-		{
+		protected getPinPointType(): string {
 			return "newspin";
 		}
 
-		setCount(count: number)
-		{
+		setCount(count: number) {
 			count = Math.min(count, PinPointMovie.MAX_SHOWN_GROUP_COUNT);
 			let i = 0;
-			if (this.borders.length > count - 1)
-			{
+			if (this.borders.length > count - 1) {
 				i = count - 1;
-				while (i < this.borders.length)
-				{
-					try
-					{
+				while (i < this.borders.length) {
+					try {
 						this.removeChild(this.borders[i]);
-					}
-					catch (e /*:Error*/)
-					{
+					} catch (e /*:Error*/) {
 					}
 					i++;
 				}
 				this.borders.splice(count - 1, this.borders.length - count + 1);
-			}
-			else if (this.borders.length < count - 1)
-			{
+			} else if (this.borders.length < count - 1) {
 				i = this.borders.length;
-				while (i < count - 1)
-				{
-					const newBorder: flash.display.Bitmap = new this.ExtraFlagBorder();
+				while (i < count - 1) {
+					const newBorder: Bitmap = new this.ExtraFlagBorder();
 					newBorder.x = 0;
 					this.borders.push(newBorder);
 					this.addChild(newBorder);
@@ -120,9 +112,8 @@ namespace com.google.finance
 			}
 		}
 
-		private initFlagComponents()
-		{
-			this.pinButton = new flash.display.SimpleButton("pinButton");
+		private initFlagComponents() {
+			this.pinButton = new SimpleButton("pinButton");
 			const flagImg = new this.FlagImg();
 			const flagOverImg = new this.FlagOverImg();
 			this.pinButton.overState = flagOverImg;
@@ -134,7 +125,7 @@ namespace com.google.finance
 			this.flagline = new this.FlagPoleImg();
 			this.flagline.x = -1;
 			this.addChildAt(this.flagline, 0);
-			this.letter = new flash.text.TextField();
+			this.letter = new TextField();
 			this.letter.autoSize = "left";
 			this.letter.selectable = false;
 			this.letter.defaultTextFormat = PinPointMovie.letterTextFormat;
@@ -144,83 +135,73 @@ namespace com.google.finance
 			this.borders = [];
 		}
 
-		setPinPointContentMovie(pinPointContentMovie: PinPointContentMovie)
-		{
+		setPinPointContentMovie(pinPointContentMovie: PinPointContentMovie) {
 			this.pinPointContentMovie = pinPointContentMovie;
 		}
 
-		setOrientation(pinOrientation: PinOrientations)
-		{
-			if (pinOrientation === PinOrientations.LEFT_ORIENTATION)
-			{
+		setOrientation(pinOrientation: PinOrientations) {
+			if (pinOrientation === PinOrientations.LEFT_ORIENTATION) {
 				this.activeOverlay.scaleX = -1;
 				this.activeOverlay.x = 1;
 				this.pinButton.scaleX = -1;
 				this.pinButton.x = 1;
 				this.flagline.x = -2;
 				this.letter.x = -14;
-				for (const border of this.borders)
+				for (const border of this.borders) {
 					border.scaleX = -1;
-			}
-			else
-			{
+				}
+			} else {
 				this.activeOverlay.scaleX = 1;
 				this.activeOverlay.x = -1;
 				this.pinButton.scaleX = 1;
 				this.pinButton.x = -1;
 				this.flagline.x = -1;
 				this.letter.x = 3;
-				for (const border of this.borders)
+				for (const border of this.borders) {
 					border.scaleX = 1;
+				}
 			}
 		}
 
-		setHeight(height: number)
-		{
+		setHeight(height: number) {
 			this.flagline.height = height - 2;
 			this.flagline.y = -height + 2;
 			this.letter.y = -height;
 			this.pinButton.y = -height;
 			this.activeOverlay.y = -height;
-			for (let borderIndex = 0; borderIndex < this.borders.length; borderIndex++)
-			{
+			for (let borderIndex = 0; borderIndex < this.borders.length; borderIndex++) {
 				this.borders[borderIndex].y = this.pinButton.y + this.pinButton.height - 4 + borderIndex * 2;
 				this.borders[borderIndex].y = Math.min(-this.borders[borderIndex].height, this.borders[borderIndex].y);
 			}
 		}
 
-		getHeight(): number
-		{
+		getHeight(): number {
 			return -this.pinButton.y;
 		}
 
-		setObj(pinPoint: PinPoint)
-		{
+		setObj(pinPoint: PinPoint) {
 			this.object = pinPoint;
-			if (this.letter.text !== pinPoint.letter)
+			if (this.letter.text !== pinPoint.letter) {
 				this.letter.text = pinPoint.letter;
+			}
 
-			if (pinPoint.active)
-			{
-				if (!this.contains(this.activeOverlay))
-				{
+			if (pinPoint.active) {
+				if (!this.contains(this.activeOverlay)) {
 					this.activeOverlay.x = this.pinButton.x;
 					this.activeOverlay.y = this.pinButton.y;
 					this.addChildAt(this.activeOverlay, this.numChildren - 1);
 				}
 				this.letter.setTextFormat(PinPointMovie.activeTextFormat);
-			}
-			else
-			{
-				if (this.contains(this.activeOverlay))
+			} else {
+				if (this.contains(this.activeOverlay)) {
 					this.removeChild(this.activeOverlay);
+				}
 
 				this.letter.setTextFormat(PinPointMovie.passiveTextFormat);
 			}
 		}
 
-		initImageClasses()
-		{
+		initImageClasses() {
 			this.FlagImg = PinPointMovie_LocalFlagImg;
 			this.FlagOverImg = PinPointMovie_LocalFlagOverImg;
 			this.FlagActiveImg = PinPointMovie_LocalFlagActiveImg;
@@ -228,9 +209,7 @@ namespace com.google.finance
 			this.ExtraFlagBorder = PinPointMovie_LocalExtraFlagBorder;
 		}
 
-		clearReferences()
-		{
+		clearReferences() {
 			this.object = null;
 		}
 	}
-}

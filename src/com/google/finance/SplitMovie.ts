@@ -1,15 +1,13 @@
-/// <reference path="../../../flash/display/Sprite.ts" />
-/// <reference path="SplitMovie_SplitArrowClass.ts" />
-/// <reference path="SplitMovie_SplitArrowSidewaysClass.ts" />
-/// <reference path="SplitMovie_SplitArrowSidewaysOverClass.ts" />
-/// <reference path="SplitMovie_SplitArrowOnOverClass.ts" />
+import { SplitMovie_SplitArrowClass } from "SplitMovie_SplitArrowClass";
+import { SplitMovie_SplitArrowOnOverClass } from "SplitMovie_SplitArrowOnOverClass";
+import { SplitMovie_SplitArrowSidewaysClass } from "SplitMovie_SplitArrowSidewaysClass";
+import { SplitMovie_SplitArrowSidewaysOverClass } from "SplitMovie_SplitArrowSidewaysOverClass";
+import { Sprite } from "../../../flash/display/Sprite";
 
-namespace com.google.finance
-{
 	//import flash.display.Sprite;
 	//import flash.text.TextFormat;
 	//import flash.display.Graphics;
-	//import flash.display.Bitmap;
+	//import Bitmap;
 	//import com.google.i18n.locale.DateTimeLocale;
 	//import flash.text.TextField;
 	//import flash.text.TextFieldAutoSize;
@@ -18,9 +16,21 @@ namespace com.google.finance
 	//import flash.events.Event;
 
 	//import { MainManager } from "./com/google/*";
+import { Split } from './Split';
+import { TextFormat, TextField, TextFieldAutoSize } from '../../../flash/text/TextField';
+import { Orientations, Const } from './Const';
+import { Bitmap } from '../../../flash/display/Bitmap';
+import { SimpleButton } from '../../../flash/display/SimpleButton';
+import { AbstractLayer } from 'AbstractLayer';
+import { ViewPoint } from './ViewPoint';
+import { DateTimeLocale, DateTimeFormats } from '../i18n/locale/DateTimeLocale';
+import { StockAssociatedObject } from './StockAssociatedObject';
+import { MouseCursors } from './MouseCursor';
+import { MainManager } from './MainManager';
+import { Message } from './Messages';
+import { Messages } from 'Messages';
 
-	export class SplitMovie extends flash.display.Sprite
-	{
+export class SplitMovie extends Sprite {
 		private static readonly SplitArrowClass = SplitMovie_SplitArrowClass;
 		private static readonly SplitArrowSidewaysClass = SplitMovie_SplitArrowSidewaysClass;
 		private static readonly SplitArrowSidewaysOverClass = SplitMovie_SplitArrowSidewaysOverClass;
@@ -29,55 +39,53 @@ namespace com.google.finance
 		private associatedSplit: Split;
 		private persistentHide: boolean;
 
-		protected textFormat = new flash.text.TextFormat("Verdana", 9, this.getTextColor(), true, false, false);
+		protected textFormat = new TextFormat("Verdana", 9, this.getTextColor(), true, false, false);
 		protected arrowOrientation = Orientations.DOWN;
-		protected arrow: flash.display.Bitmap;
-		protected readonly detailsTextField = new flash.text.TextField();
-		protected highlightCanvas: flash.display.Sprite;
-		protected text: flash.text.TextField;
+		protected arrow: Bitmap;
+		protected readonly detailsTextField = new TextField();
+		protected highlightCanvas: Sprite;
+		protected text: TextField;
 		protected textColor: number;
-		protected arrowOnOver: flash.display.Bitmap;
+		protected arrowOnOver: Bitmap;
 		protected previousText: string;
-		protected currentVisibleButton: flash.display.SimpleButton;
-		protected sidewaysButton: flash.display.SimpleButton;
-		protected arrowSidewaysOver: flash.display.Bitmap;
+		protected currentVisibleButton: SimpleButton;
+		protected sidewaysButton: SimpleButton;
+		protected arrowSidewaysOver: Bitmap;
 		protected supportingLayer: AbstractLayer<ViewPoint>;
-		protected arrowSideways: flash.display.Bitmap;
-		protected readonly detailsTextFormat = new flash.text.TextFormat("Arial", 11, 0, false, false, false);
-		protected regularButton: flash.display.SimpleButton;
+		protected arrowSideways: Bitmap;
+		protected readonly detailsTextFormat = new TextFormat("Arial", 11, 0, false, false, false);
+		protected regularButton: SimpleButton;
 
-		constructor()
-		{
+		constructor() {
 			super();
 			this.initArrows();
 			this.createButtons();
 			this.currentVisibleButton = this.attachRegularArrow();
 			this.regularButton.x = -this.regularButton.width / 2;
 			this.detailsTextField.defaultTextFormat = this.detailsTextFormat;
-			this.detailsTextField.autoSize = flash.text.TextFieldAutoSize.LEFT;
+			this.detailsTextField.autoSize = TextFieldAutoSize.LEFT;
 			this.text = this.initTextField();
 			this.addChild(this.text);
 			this.attachArrowListeners();
 			this.highlightCanvas = this;
 		}
 
-		protected getTextColor(): number
-		{
+		protected getTextColor(): number {
 			return 2210891;
 		}
 
-		showDetails()
-		{
+		showDetails() {
 			this.hideText();
 			this.highlightCanvas.addChild(this.detailsTextField);
 			this.detailsTextField.x = this.x + this.currentVisibleButton.x;
 			this.detailsTextField.y = this.y - this.currentVisibleButton.height;
 			this.detailsTextField.text = this.getDetailedText();
 			this.detailsTextField.appendText("\n" + this.getDateText());
-			if (this.currentVisibleButton.scaleY === -1)
+			if (this.currentVisibleButton.scaleY === -1) {
 				this.detailsTextField.y = this.y + this.currentVisibleButton.height - this.detailsTextField.height;
-			else
+			} else {
 				this.detailsTextField.y = this.y - this.currentVisibleButton.height - this.detailsTextField.height;
+			}
 
 			const left = this.detailsTextField.x - 2;
 			const top = this.detailsTextField.y - 2;
@@ -86,10 +94,11 @@ namespace com.google.finance
 			let leftMargin = -2;
 			const minx = this.supportingLayer.viewPoint.minx;
 			const maxx = this.supportingLayer.viewPoint.maxx;
-			if (left < minx)
+			if (left < minx) {
 				leftMargin = Number(minx - left - 2);
-			else if (right > maxx)
+			} else if (right > maxx) {
 				leftMargin = Number(maxx - right - 2);
+								}
 
 			this.detailsTextField.x += leftMargin;
 			const graphics = this.highlightCanvas.graphics;
@@ -97,7 +106,7 @@ namespace com.google.finance
 			graphics.beginFill(0xffffff, 1);
 			graphics.drawRect(
 				left + leftMargin, top,
-				right - left, bottom - top
+				right - left, bottom - top,
 			);
 			/*
 			_loc9_.moveTo(_loc2_ + _loc6_, _loc3_);
@@ -109,18 +118,14 @@ namespace com.google.finance
 			graphics.endFill();
 		}
 
-		getShortText(param1 = false): string
-		{
-			return this.associatedSplit.newShares + ':' + this.associatedSplit.oldShares;
+		getShortText(param1 = false): string {
+			return this.associatedSplit.newShares + ":" + this.associatedSplit.oldShares;
 		}
 
-		setOrientation(orientation: Orientations)
-		{
+		setOrientation(orientation: Orientations) {
 			this.checkArrowChange(orientation);
-			if (this.currentVisibleButton)
-			{
-				switch (orientation)
-				{
+			if (this.currentVisibleButton) {
+				switch (orientation) {
 					case Orientations.UP:
 					case Orientations.SIDEWAYS_UP:
 						this.currentVisibleButton.scaleY = -1;
@@ -137,37 +142,31 @@ namespace com.google.finance
 			this.arrowOrientation = orientation;
 		}
 
-		getDateText(): string
-		{
+		getDateText(): string {
 			const exchangeDateInUTC = this.associatedSplit.exchangeDateInUTC;
-			if (Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()))
-				return i18n.locale.DateTimeLocale.standardFormatDateTime(i18n.locale.DateTimeFormats.LONG_DATE_FORMAT, exchangeDateInUTC, true);
+			if (Const.isZhLocale(DateTimeLocale.getLocale())) {
+				return DateTimeLocale.standardFormatDateTime(DateTimeFormats.LONG_DATE_FORMAT, exchangeDateInUTC, true);
+			}
 
-			return i18n.locale.DateTimeLocale.standardFormatDateTime(i18n.locale.DateTimeFormats.MEDIUM_DATE_FORMAT, exchangeDateInUTC, true);
+			return DateTimeLocale.standardFormatDateTime(DateTimeFormats.MEDIUM_DATE_FORMAT, exchangeDateInUTC, true);
 		}
 
-		hideDetails()
-		{
+		hideDetails() {
 			this.showText();
-			try
-			{
+			try {
 				this.highlightCanvas.removeChild(this.detailsTextField);
-			}
-			catch (ae /*:ArgumentError*/)
-			{
+			} catch (ae /*:ArgumentError*/) {
 			}
 			this.highlightCanvas.graphics.clear();
 		}
 
-		setSupportingLayer(abstractLayer: AbstractLayer<ViewPoint>)
-		{
+		setSupportingLayer(abstractLayer: AbstractLayer<ViewPoint>) {
 			this.supportingLayer = abstractLayer;
 		}
 
-		private initTextField(): flash.text.TextField
-		{
-			const textField = new flash.text.TextField();
-			textField.autoSize = flash.text.TextFieldAutoSize.CENTER;
+		private initTextField(): TextField {
+			const textField = new TextField();
+			textField.autoSize = TextFieldAutoSize.CENTER;
 			textField.x = 0;
 			textField.selectable = false;
 			textField.cacheAsBitmap = false;
@@ -175,92 +174,82 @@ namespace com.google.finance
 			return textField;
 		}
 
-		private positionRegularArrow()
-		{
+		private positionRegularArrow() {
 			this.currentVisibleButton.x = -this.currentVisibleButton.width / 2;
 			this.text.x = -this.text.width / 2;
 		}
 
-		hideText()
-		{
-			try
-			{
+		hideText() {
+			try {
 				this.removeChild(this.text);
 				return;
-			}
-			catch (ae /*:ArgumentError*/)
-			{
+			} catch (ae /*:ArgumentError*/) {
 				return;
 			}
 		}
 
-		private attachRegularArrow(): flash.display.SimpleButton
-		{
-			if (this.currentVisibleButton)
+		private attachRegularArrow(): SimpleButton {
+			if (this.currentVisibleButton) {
 				this.removeChild(this.currentVisibleButton);
+			}
 
 			this.addChild(this.regularButton);
 			return this.regularButton;
 		}
 
-		protected initArrows()
-		{
+		protected initArrows() {
 			this.arrow = new SplitMovie.SplitArrowClass();
 			this.arrowOnOver = new SplitMovie.SplitArrowOnOverClass();
 			this.arrowSideways = new SplitMovie.SplitArrowSidewaysClass();
 			this.arrowSidewaysOver = new SplitMovie.SplitArrowSidewaysOverClass();
 		}
 
-		setObject(stockAssociatedObject: StockAssociatedObject)
-		{
+		setObject(stockAssociatedObject: StockAssociatedObject) {
 			this.associatedSplit = stockAssociatedObject as Split;
 			this.showText();
 		}
 
-		private attachSidewaysArrow(): flash.display.SimpleButton
-		{
-			if (this.currentVisibleButton)
+		private attachSidewaysArrow(): SimpleButton {
+			if (this.currentVisibleButton) {
 				this.removeChild(this.currentVisibleButton);
+			}
 			this.addChild(this.sidewaysButton);
 			return this.sidewaysButton;
 		}
 
-		showText(param1?: string)
-		{
-			if (this.persistentHide)
+		showText(param1?: string) {
+			if (this.persistentHide) {
 				return;
+			}
 
 			this.addChild(this.text);
 			param1 = param1 || this.getShortText();
-			if (this.text.text !== param1)
+			if (this.text.text !== param1) {
 				this.text.text = param1;
+			}
 		}
 
-		private attachArrowListeners()
-		{
-			this.currentVisibleButton.addEventListener(MouseEvents.MOUSE_OVER, (event: Event) =>
-			{
+		private attachArrowListeners() {
+			this.currentVisibleButton.addEventListener(MouseEvents.MOUSE_OVER, (event: Event) => {
 				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.currentVisibleButton);
 				this.showDetails();
 			});
-			this.currentVisibleButton.addEventListener(MouseEvents.MOUSE_OUT, (event: Event) =>
-			{
+			this.currentVisibleButton.addEventListener(MouseEvents.MOUSE_OUT, (event: Event) => {
 				MainManager.mouseCursor.unlock();
 				this.hideDetails();
 			});
 		}
 
-		private createButtons()
-		{
-			this.regularButton = new flash.display.SimpleButton("regularButton");
+		private createButtons() {
+			this.regularButton = new SimpleButton("regularButton");
 			this.regularButton.overState = this.arrowOnOver;
 			this.regularButton.downState = this.arrowOnOver;
 			this.regularButton.hitTestState = this.arrow;
 			this.regularButton.upState = this.arrow;
 			this.arrowOnOver.y = this.arrow.y + this.arrow.height - this.arrowOnOver.height;
 			this.arrowOnOver.x = this.arrow.x;
-			this.sidewaysButton = new flash.display.SimpleButton("sidewaysButton");
+			this.sidewaysButton = new SimpleButton("sidewaysButton");
 			this.sidewaysButton.overState = this.arrowSidewaysOver;
 			this.sidewaysButton.downState = this.arrowSidewaysOver;
 			this.sidewaysButton.hitTestState = this.arrowSideways;
@@ -269,41 +258,33 @@ namespace com.google.finance
 			this.arrowSidewaysOver.x = this.arrowSideways.x;
 		}
 
-		setHighlightCanvas(sprite: flash.display.Sprite)
-		{
+		setHighlightCanvas(sprite: Sprite) {
 			this.highlightCanvas = sprite;
 		}
 
-		private checkArrowChange(orientation: Orientations)
-		{
-			if ((this.arrowOrientation === Orientations.UP || this.arrowOrientation === Orientations.DOWN) && (orientation === Orientations.SIDEWAYS_UP || orientation === Orientations.SIDEWAYS_DOWN))
-			{
+		private checkArrowChange(orientation: Orientations) {
+			if ((this.arrowOrientation === Orientations.UP || this.arrowOrientation === Orientations.DOWN) && (orientation === Orientations.SIDEWAYS_UP || orientation === Orientations.SIDEWAYS_DOWN)) {
 				this.currentVisibleButton = this.attachSidewaysArrow();
 				this.positionSidewaysArrow();
 			}
-			if ((this.arrowOrientation === Orientations.SIDEWAYS_UP || this.arrowOrientation === Orientations.SIDEWAYS_DOWN) && (orientation === Orientations.UP || orientation === Orientations.DOWN))
-			{
+			if ((this.arrowOrientation === Orientations.SIDEWAYS_UP || this.arrowOrientation === Orientations.SIDEWAYS_DOWN) && (orientation === Orientations.UP || orientation === Orientations.DOWN)) {
 				this.currentVisibleButton = this.attachRegularArrow();
 				this.positionRegularArrow();
 			}
 			this.attachArrowListeners();
 		}
 
-		protected positionSidewaysArrow()
-		{
+		protected positionSidewaysArrow() {
 			this.currentVisibleButton.x = -this.currentVisibleButton.width + 1;
-			this.text.autoSize = flash.text.TextFieldAutoSize.LEFT;
+			this.text.autoSize = TextFieldAutoSize.LEFT;
 			this.text.x = -this.text.width + 1;
 		}
 
-		getDetailedText(): string
-		{
+		getDetailedText(): string {
 			return Message.getMsg(Messages.SPLIT_TEXT, this.getShortText());
 		}
 
-		setPersistentHide(persistentHide: boolean)
-		{
+		setPersistentHide(persistentHide: boolean) {
 			this.persistentHide = persistentHide;
 		}
 	}
-}

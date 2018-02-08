@@ -1,28 +1,31 @@
-namespace com.google.finance
-{
+import { Point } from "../../../flash/display/Sprite";
+import { Const } from "./Const";
+import { DataUnit } from "./DataUnit";
+import { InfoDotInfo } from "./InfoDot";
+import { LineChartLayer } from "./LineChartLayer";
+import { Utils } from "./Utils";
+import { Context } from "./ViewPoint";
+import { ViewPoint } from 'ViewPoint';
+import { Dictionary } from '../../../Global';
+
 	// import flash.geom.Point;
 
-	export class PercentLineChartLayer extends LineChartLayer
-	{
+export class PercentLineChartLayer extends LineChartLayer {
 		private localStartPrice = 0;
 
-		protected calculatePercentChangeBase(unitIndex = 0): number
-		{
+		protected calculatePercentChangeBase(unitIndex = 0): number {
 			const dataSeries = this.getDataSeries();
 			const units = dataSeries.units;
 			return units[unitIndex].close;
 		}
 
-		protected getYPos(context: Context, dataUnit: DataUnit): number
-		{
+		protected getYPos(context: Context, dataUnit: DataUnit): number {
 			return this.localYOffset + context.plusSize - (Utils.getLogScaledValue(dataUnit.close / this.localStartPrice, context.verticalScaling) - Utils.getLogScaledValue(1, context.verticalScaling)) * this.localYScale;
 		}
 
-		private getQuoteText(param1: string): string
-		{
+		private getQuoteText(param1: string): string {
 			const symbol = Utils.getSymbolFromTicker(param1);
-			switch (symbol)
-			{
+			switch (symbol) {
 				case ".INX":
 					return "S&P500";
 				case ".DJI":
@@ -34,45 +37,47 @@ namespace com.google.finance
 			}
 		}
 
-		protected getRange(param1: number, param2: number)
-		{
+		protected getRange(param1: number, param2: number) {
 			const dataSeries = this.getDataSeries();
-			if (!dataSeries)
+			if (!dataSeries) {
 				return null;
+			}
 
 			const units = dataSeries.units;
-			if (!units || units.length === 0)
+			if (!units || units.length === 0) {
 				return null;
+			}
 
 			const firstIndex = dataSeries.getRelativeMinuteIndex(param1 - param2);
 			let lastIndex = dataSeries.getRelativeMinuteIndex(param1) + 1;
-			if (lastIndex <= firstIndex + 1)
+			if (lastIndex <= firstIndex + 1) {
 				lastIndex = firstIndex + 2;
+			}
 
 			lastIndex = Math.min(lastIndex, units.length - 1);
 			let min = units[firstIndex].close;
 			let max = units[firstIndex].close;
-			for (let index = firstIndex; index <= lastIndex; index++)
-			{
-				if (units[index].close < min)
+			for (let index = firstIndex; index <= lastIndex; index++) {
+				if (units[index].close < min) {
 					min = units[index].close;
-				else if (units[index].close > max)
+				} else if (units[index].close > max) {
 					max = units[index].close;
+									}
 
 			}
 			return {
 				startPrice: this.calculatePercentChangeBase(firstIndex),
 				minPrice: min,
-				maxPrice: max
+				maxPrice: max,
 			};
 		}
 
-		getContext(context: Context, param2 = false)
-		{
+		getContext(context: Context, param2 = false) {
 			const viewPoint = this.viewPoint;
 			const range = this.getRange(context.lastMinute, context.count);
-			if (!range)
+			if (!range) {
 				return context;
+			}
 
 			const _loc5_ = Utils.getLogScaledValue(range.maxPrice / range.startPrice, context.verticalScaling);
 			context.plusVariation = Utils.extendedMax(_loc5_, context.plusVariation);
@@ -84,8 +89,7 @@ namespace com.google.finance
 			return context;
 		}
 
-		renderLayer(context: Context)
-		{
+		renderLayer(context: Context) {
 			const viewPoint = this.viewPoint;
 			const dataSeries = this.getDataSeries();
 			const points = dataSeries.points;
@@ -95,32 +99,33 @@ namespace com.google.finance
 			lastRelativeMinuteIndex = Math.min(lastRelativeMinuteIndex, points.length - 1);
 			let _loc6_ = dataSeries.getRelativeMinuteIndex(viewPoint.getFirstMinute());
 			_loc6_ = Math.max(_loc6_, 0);
-			//const _loc7_ = new flash.display.Point(_loc2_.maxx, _loc2_.maxy + 1);
-			//this.globalToLocal(_loc7_);
+			// const _loc7_ = new Point(_loc2_.maxx, _loc2_.maxy + 1);
+			// this.globalToLocal(_loc7_);
 			this.localYOffset = viewPoint.miny + ViewPoint.MIN_EDGE_DISTANCE / 2;
 			this.localYScale = (viewPoint.maxPriceRangeViewSize - 20) / context.scaleVariation;
 			this.localStartPrice = this.calculatePercentChangeBase(_loc6_);
 			const _loc8_ = this.drawLine(this, _loc6_, lastRelativeMinuteIndex, viewPoint, context);
-			const point = new flash.display.Point(_loc8_, viewPoint.maxy);
+			const point = new Point(_loc8_, viewPoint.maxy);
 			gr.lineStyle(0, 0, 0);
-			//this.globalToLocal(_loc9_);	// TODO:?
+			// this.globalToLocal(_loc9_);	// TODO:?
 			gr.lineTo(point.x, point.y);
 		}
 
-		highlightPoint(context: Context, x: number, state: Dictionary)
-		{
+		highlightPoint(context: Context, x: number, state: Dictionary) {
 			this.clearHighlight();
 			const dataSeries = this.getDataSeries();
 			const _loc6_ = this.viewPoint.getXPos(dataSeries.units[0]);
-			//const _loc7_ = this.viewPoint.getXPos(_loc4_.units[_loc4_.units.length - 1]);
-			if (x < _loc6_)
+			// const _loc7_ = this.viewPoint.getXPos(_loc4_.units[_loc4_.units.length - 1]);
+			if (x < _loc6_) {
 				return;
+			}
 
 			let unit: DataUnit;
-			if (x > this.viewPoint.maxx)
+			if (x > this.viewPoint.maxx) {
 				unit = notnull(this.viewPoint.getLastDataUnit(dataSeries));
-			else
+			} else {
 				unit = notnull(this.getPoint(dataSeries, x));
+			}
 
 			const _loc8_ = this.viewPoint.getMinuteXPos(unit.relativeMinutes);
 			const _loc9_ = this.getYPos(context, unit);
@@ -128,14 +133,16 @@ namespace com.google.finance
 			gr.lineStyle(5, this.lineColor, 1);
 			gr.moveTo(_loc8_, _loc9_ - 0.2);
 			gr.lineTo(_loc8_, _loc9_ + 0.2);
-			if (state["points"] === undefined)
+			if (state["points"] === undefined) {
 				state["points"] = [];
+			}
 
 			const _loc10_ = Math.round((unit.close / this.localStartPrice - 1) * 10000) / 100;
-			const _loc11_ = ' ' + this.getPercentText(_loc10_) + '%';
+			const _loc11_ = " " + this.getPercentText(_loc10_) + "%";
 			let _loc12_ = Const.POSITIVE_DIFFERENCE_COLOR;
-			if (_loc10_ < 0)
+			if (_loc10_ < 0) {
 				_loc12_ = Const.NEGATIVE_DIFFERENCE_COLOR;
+			}
 
 			const quoteText = this.getQuoteText(this.dataSource.quoteName);
 			const infoDotInfo = new InfoDotInfo();
@@ -143,27 +150,27 @@ namespace com.google.finance
 			infoDotInfo.quoteColor = this.lineColor;
 			infoDotInfo.value = _loc11_;
 			infoDotInfo.valueColor = _loc12_;
-			if (this.dataSource.displayName)
+			if (this.dataSource.displayName) {
 				infoDotInfo.displayName = this.dataSource.displayName;
+			}
 
 			state["points"].push(infoDotInfo);
 			state["setter"] = this;
 		}
 
-		private getPercentText(param1: number): string
-		{
+		private getPercentText(param1: number): string {
 			let percentText = "";
-			if (param1 > 0)
-				percentText += '+';
-			else
-				percentText += '-';
+			if (param1 > 0) {
+				percentText += "+";
+			} else {
+				percentText += "-";
+			}
 
 			param1 = Math.abs(param1);
 			const _loc3_ = Math.floor(param1);
 			percentText += _loc3_;
-			percentText += '.';
+			percentText += ".";
 			percentText += Utils.numberToMinTwoChars(Math.floor((param1 - _loc3_) * 100));
 			return percentText;
 		}
 	}
-}

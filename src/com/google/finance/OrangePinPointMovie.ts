@@ -1,16 +1,16 @@
-/// <reference path="PinPointMovie.ts" />
+import { PinPointMovie } from "PinPointMovie";
+import { OrangePinPointMovie_LocalExtraFlagBorder } from "./OrangePinPointMovie_LocalExtraFlagBorder";
+import { OrangePinPointMovie_LocalFlagActiveImg } from "./OrangePinPointMovie_LocalFlagActiveImg";
+import { OrangePinPointMovie_LocalFlagImg } from "./OrangePinPointMovie_LocalFlagImg";
+import { OrangePinPointMovie_LocalFlagOverImg } from "./OrangePinPointMovie_LocalFlagOverImg";
+import { OrangePinPointMovie_LocalFlagPoleImg } from "./OrangePinPointMovie_LocalFlagPoleImg";
 
-namespace com.google.finance
-{
-	export class OrangePinPointMovie extends PinPointMovie
-	{
-		protected getPinPointType(): string
-		{
+export class OrangePinPointMovie extends PinPointMovie {
+		protected getPinPointType(): string {
 			return "feedpin";
 		}
 
-		initImageClasses()
-		{
+		initImageClasses() {
 			this.FlagImg = OrangePinPointMovie_LocalFlagImg;
 			this.FlagOverImg = OrangePinPointMovie_LocalFlagOverImg;
 			this.FlagActiveImg = OrangePinPointMovie_LocalFlagActiveImg;
@@ -18,4 +18,3 @@ namespace com.google.finance
 			this.ExtraFlagBorder = OrangePinPointMovie_LocalExtraFlagBorder;
 		}
 	}
-}

@@ -1,9 +1,9 @@
-namespace com.google.finance
-{
-	export class EventFactory
-	{
-		private static buildEvent(chartEventType: ChartEventTypes, quote: string, period: string, interval: number, columns: string, detailType: ChartDetailTypes | null = null): ChartEvent
-		{
+import { ChartEventTypes, ChartEventPriorities, ChartEvent } from './ChartEvent';
+import { ChartDetailTypes, Const } from './Const';
+import { MainManager } from './MainManager';
+
+	export class EventFactory {
+		private static buildEvent(chartEventType: ChartEventTypes, quote: string, period: string, interval: number, columns: string, detailType: ChartDetailTypes | null = null): ChartEvent {
 			const chartEvent = new ChartEvent(chartEventType);
 			chartEvent.detailType = detailType;
 			chartEvent.quote = quote;
@@ -13,14 +13,11 @@ namespace com.google.finance
 			return chartEvent;
 		}
 
-		static getEvent(detailType: ChartDetailTypes, quote: string, priorities: ChartEventPriorities): ChartEvent
-		{
+		static getEvent(detailType: ChartDetailTypes, quote: string, priorities: ChartEventPriorities): ChartEvent {
 			let event: ChartEvent;
-			if (Const.INDICATOR_ENABLED)
-			{
+			if (Const.INDICATOR_ENABLED) {
 				const delayedMinutes: number = MainManager.paramsObj && MainManager.paramsObj.delayedMinutes >= 0 ? MainManager.paramsObj.delayedMinutes : 0;
-				switch (detailType)
-				{
+				switch (detailType) {
 					default:
 					case ChartDetailTypes.GET_1Y_DATA:
 						event = EventFactory.buildEvent(ChartEventTypes.GET_DATA, quote, "1Y", Const.DAILY_INTERVAL, "d,c,v,o,h,l", detailType);
@@ -50,17 +47,14 @@ namespace com.google.finance
 						event = EventFactory.buildEvent(ChartEventTypes.GET_DATA, quote, "30d", Const.HALF_HOUR_INTERVAL, "d,c,v,o,h,l", detailType);
 						break;
 					case ChartDetailTypes.GET_RT_DATA:
-						event = EventFactory.buildEvent(ChartEventTypes.GET_RT_DATA, quote, "" + (delayedMinutes + 10) + 'm', Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", detailType);
+						event = EventFactory.buildEvent(ChartEventTypes.GET_RT_DATA, quote, "" + (delayedMinutes + 10) + "m", Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", detailType);
 						break;
 					case ChartDetailTypes.GET_RT_AH_DATA:
-						event = EventFactory.buildEvent(ChartEventTypes.GET_RT_AH_DATA, quote, "" + (delayedMinutes + 10) + 'm', Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", detailType);
+						event = EventFactory.buildEvent(ChartEventTypes.GET_RT_AH_DATA, quote, "" + (delayedMinutes + 10) + "m", Const.INTRADAY_INTERVAL, "d,c,v,o,h,l", detailType);
 						break;
 				}
-			}
-			else
-			{
-				switch (detailType)
-				{
+			} else {
+				switch (detailType) {
 					default:
 					case ChartDetailTypes.GET_1Y_DATA:
 						event = EventFactory.buildEvent(ChartEventTypes.GET_DATA, quote, "1Y", Const.DAILY_INTERVAL, "d,c,v");
@@ -89,4 +83,3 @@ namespace com.google.finance
 			return event;
 		}
 	}
-}

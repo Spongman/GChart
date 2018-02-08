@@ -1,32 +1,29 @@
-/// <reference path="IndependentIndicatorLayer.ts" />
+import { IndependentIndicatorLayer } from "IndependentIndicatorLayer";
+import { Messages } from "Messages";
+import { Message } from "../Messages";
+import { Context } from "../ViewPoint";
+import { IndicatorLineStyle } from "./IndicatorLineStyle";
 
-namespace com.google.finance.indicator
-{
 	// import com.google.finance.Messages;
 	// import com.google.finance.ViewPoint;
 	// import com.google.finance.DataSource;
 
-	export class AbstractStochasticIndicatorLayer extends IndependentIndicatorLayer
-	{
+export class AbstractStochasticIndicatorLayer extends IndependentIndicatorLayer {
 		private static readonly PARAMETER_NAMES: ReadonlyArray<string> = ["kPeriod", "dPeriod"];
 
 		protected dPeriod = 3;
 		protected kPeriod = 14;
 
-		static getParameterNames()
-		{
+		static getParameterNames() {
 			return AbstractStochasticIndicatorLayer.PARAMETER_NAMES;
 		}
 
-		isOhlcDataRequired(): boolean
-		{
+		isOhlcDataRequired(): boolean {
 			return true;
 		}
 
-		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string
-		{
-			switch (param1)
-			{
+		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string {
+			switch (param1) {
 				case 0:
 					return Message.getMsg(Messages.K_STOCHASTIC, param2);
 				case 1:
@@ -36,22 +33,21 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		protected getLineStyle(param1: number): number
-		{
-			if (param1 >= 0 && param1 < 2)
+		protected getLineStyle(param1: number): number {
+			if (param1 >= 0 && param1 < 2) {
 				return IndicatorLineStyle.SIMPLE_LINE;
+			}
 
 			return IndicatorLineStyle.NONE;
 		}
 
-		setIndicatorInstanceArray(indicators: any[])
-		{
-			if (!indicators || indicators.length !== 1)
+		setIndicatorInstanceArray(indicators: any[]) {
+			if (!indicators || indicators.length !== 1) {
 				return;
+			}
 
 			this.indicator.clear();
 			this.kPeriod = indicators[0].kPeriod;
 			this.dPeriod = indicators[0].dPeriod;
 		}
 	}
-}

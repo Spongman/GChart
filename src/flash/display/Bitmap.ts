@@ -1,34 +1,37 @@
-namespace flash.display
+import { DisplayObject } from './DisplayObject';
+
+export class BitmapData
 {
-	export class BitmapData
-	{
-		width: number;
-		height: number;
-	}
+	width: number;
+	height: number;
+}
 
-	export class Bitmap extends DisplayObject
-	{
-		protected _width: number;
-		protected _height: number;
+export class Bitmap extends DisplayObject
+{
+	protected _width: number;
+	protected _height: number;
 
-		constructor()
+	constructor()
+	{
+		super(document.createElement("img"));
+		(this.element as HTMLImageElement).onload = () =>
 		{
-			super(document.createElement("img"));
-			(<HTMLImageElement>this.element).onload = () =>
+			if (!this.element.style.width)
 			{
-				if (!this.element.style.width)
-					this.element.style.width = (<HTMLImageElement>this.element).naturalWidth + "px";
-				if (!this.element.style.height)
-					this.element.style.height = (<HTMLImageElement>this.element).naturalHeight + "px";
-			};
-			//console.log(getClassName(this) + ".png");
-			(<HTMLImageElement>this.element).src = "images/" + getClassName(this) + ".png";
-		}
-
-		get width() { return this._width || this.element.scrollWidth; }
-		set width(value: number) { this.element.style.width = value + "px"; }
-
-		get height() { return this._height || this.element.scrollHeight; }
-		set height(value: number) { this.element.style.height = value + "px"; }
+				this.element.style.width = (this.element as HTMLImageElement).naturalWidth + "px";
+			}
+			if (!this.element.style.height)
+			{
+				this.element.style.height = (this.element as HTMLImageElement).naturalHeight + "px";
+			}
+		};
+		// console.log(getClassName(this) + ".png");
+		(this.element as HTMLImageElement).src = "images/" + getClassName(this) + ".png";
 	}
+
+	get width() { return this._width || this.element.scrollWidth; }
+	set width(value: number) { this.element.style.width = value + "px"; }
+
+	get height() { return this._height || this.element.scrollHeight; }
+	set height(value: number) { this.element.style.height = value + "px"; }
 }

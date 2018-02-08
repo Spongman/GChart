@@ -1,7 +1,14 @@
-/// <reference path="../../../flash/display/Sprite.ts" />
+import { SimpleButton } from "../../../flash/display/SimpleButton";
+import { Sprite } from "../../../flash/display/Sprite";
+import { TextField, TextFormat, TextFieldAutoSize } from '../../../flash/text/TextField';
+import { Const } from "./Const";
+import { MainManager } from "./MainManager";
+import { MouseCursors } from "./MouseCursor";
+import { PinPoint } from "./PinPoint";
+import { PinPointContentMovie_BubbleCloseButton } from "./PinPointContentMovie_BubbleCloseButton";
+import { ViewPoint } from "./ViewPoint";
+import { DateTimeLocale } from '../i18n/locale/DateTimeLocale';
 
-namespace com.google.finance
-{
 	// import flash.display.Sprite;
 	// import flash.text.TextFieldAutoSize;
 	// import flash.display.SimpleButton;
@@ -10,37 +17,33 @@ namespace com.google.finance
 	// import com.google.i18n.locale.DateTimeLocale;
 	// import flash.text.TextField;
 	// import flash.filters.DropShadowFilter;
-	// import flash.display.Bitmap;
+	// import Bitmap;
 	// import flash.text.TextFormat;
 	// import flash.events.MouseEvent;
 	// import flash.events.Event;
 
-	export class PinPointContentMovie extends flash.display.Sprite
-	{
+export class PinPointContentMovie extends Sprite {
 		private static readonly TEXT_FIELD_PADDING = 8;
 		private static readonly MIN_CONTENT_WIDTH = 140;
 		private static readonly MAX_CONTENT_WIDTH = 250;
 
 		private movieLeftX: number;
 		private activePinPoint: PinPoint | null;
-		private closeButton = new flash.display.SimpleButton("closeButton");
+		private closeButton = new SimpleButton("closeButton");
 		private viewPoint: ViewPoint;
-		private content = new flash.text.TextField();
+		private content = new TextField();
 		private movieBottomY: number;
 
-		constructor(viewPoint: ViewPoint)
-		{
+		constructor(viewPoint: ViewPoint) {
 			super();
 			this.viewPoint = viewPoint;
-			this.content.defaultTextFormat = new flash.text.TextFormat("Arial", 11);
+			this.content.defaultTextFormat = new TextFormat("Arial", 11);
 			this.content.selectable = false;
-			this.content.addEventListener(MouseEvents.MOUSE_OVER, (event: Event) =>
-			{
+			this.content.addEventListener(MouseEvents.MOUSE_OVER, (event: Event) => {
 				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.content);
 			});
-			this.content.addEventListener(MouseEvents.MOUSE_OUT, (event: Event) =>
-			{
+			this.content.addEventListener(MouseEvents.MOUSE_OUT, (event: Event) => {
 				MainManager.mouseCursor.unlock();
 			});
 			/* TODO
@@ -55,35 +58,31 @@ namespace com.google.finance
 			this.closeButton.hitTestState = closeButtonBitmap;
 			this.closeButton.upState = closeButtonBitmap;
 			this.closeButton.useHandCursor = true;
-			this.closeButton.addEventListener(MouseEvents.MOUSE_OVER, (event: Event) =>
-			{
+			this.closeButton.addEventListener(MouseEvents.MOUSE_OVER, (event: Event) => {
 				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.closeButton);
 			});
-			this.closeButton.addEventListener(MouseEvents.MOUSE_OUT, (event: Event) =>
-			{
+			this.closeButton.addEventListener(MouseEvents.MOUSE_OUT, (event: Event) => {
 				MainManager.mouseCursor.unlock();
 			});
-			this.closeButton.addEventListener(MouseEvents.CLICK, (event: Event) =>
-			{
+			this.closeButton.addEventListener(MouseEvents.CLICK, (event: Event) => {
 				const activePinPoint = notnull(this.activePinPoint);
 				activePinPoint.active = false;
 				activePinPoint.forceExpandInGroup = true;
 				this.clearMovie();
-				if (this.viewPoint)
+				if (this.viewPoint) {
 					this.viewPoint.updateObjectLayers();
+				}
 			});
 		}
 
-		setActivePinPoint(pinPoint: PinPoint, x: number, y: number)
-		{
+		setActivePinPoint(pinPoint: PinPoint, x: number, y: number) {
 			this.activePinPoint = pinPoint;
 			this.movieLeftX = x;
 			this.movieBottomY = y;
 		}
 
-		private renderBackground()
-		{
+		private renderBackground() {
 			const gr = this.graphics;
 			gr.lineStyle(2, 0x666666, 1);
 			gr.beginFill(0xffffff, 1);
@@ -91,18 +90,14 @@ namespace com.google.finance
 			gr.endFill();
 		}
 
-		private renderContent()
-		{
+		private renderContent() {
 			this.content.wordWrap = false;
-			this.content.autoSize = flash.text.TextFieldAutoSize.LEFT;
+			this.content.autoSize = TextFieldAutoSize.LEFT;
 			this.content.htmlText = this.getContentHtmlText();
-			if (this.content.width > PinPointContentMovie.MAX_CONTENT_WIDTH)
-			{
+			if (this.content.width > PinPointContentMovie.MAX_CONTENT_WIDTH) {
 				this.content.width = PinPointContentMovie.MAX_CONTENT_WIDTH;
 				this.content.wordWrap = true;
-			}
-			else if (this.content.width < PinPointContentMovie.MIN_CONTENT_WIDTH)
-			{
+			} else if (this.content.width < PinPointContentMovie.MIN_CONTENT_WIDTH) {
 				this.content.width = PinPointContentMovie.MIN_CONTENT_WIDTH;
 				this.content.wordWrap = true;
 			}
@@ -115,94 +110,88 @@ namespace com.google.finance
 			this.addChild(this.closeButton);
 		}
 
-		protected getLetterHtml(param1: string): string
-		{
+		protected getLetterHtml(param1: string): string {
 			return "<b>" + this.escapeHtml(param1) + "</b>";
 		}
 
-		protected getAuthorHtml(param1: string): string
-		{
+		protected getAuthorHtml(param1: string): string {
 			return "<font color=\'#6B6B6B\' size=\'12\'>" + this.escapeHtml(param1) + "</font>";
 		}
 
-		protected getTitleHtml(param1: string, param2: string, param3: string): string
-		{
+		protected getTitleHtml(param1: string, param2: string, param3: string): string {
 			let titleHtml = "";
-			if (param3)
-			{
+			if (param3) {
 				const _loc5_ = "_GF_click(\'\', \'n-cn-\', \'" + encodeURIComponent(param1) + "\', \'\');";
 				const _loc6_ = "self.location=\'" + encodeURIComponent(param3) + "\';";
 				titleHtml += "<a href=\"javascript:" + _loc5_ + _loc6_ + "\'>";
 				titleHtml += "<u><font color=\'#0000CC\' size=\'12\'>";
-			}
-			else
-			{
+			} else {
 				titleHtml += "<font size=\'12\'>";
 			}
 			titleHtml += this.escapeHtml(param2);
-			if (param3)
+			if (param3) {
 				titleHtml += "</font></u></a>";
-			else
+			} else {
 				titleHtml += "</font>";
+			}
 
 			return titleHtml;
 		}
 
-		protected escapeHtml(param1: string): string
-		{
+		protected escapeHtml(param1: string): string {
 			throw new Error("not implemented");
-			//TODO: return XML(new XMLNode(XMLNodeType.TEXT_NODE, param1)).toXMLString();
+			// TODO: return XML(new XMLNode(XMLNodeType.TEXT_NODE, param1)).toXMLString();
 		}
 
-		protected getDateHtml(date: Date): string
-		{
-			const _loc2_ = Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale()) ? "yyyy-MM-dd HH:mm" : "MMM dd, yyyy h:mma";
-			return "<font color=\'#0B6CDE\'>" + i18n.locale.DateTimeLocale.formatDateTime(_loc2_, date, true) + "</font>";
+		protected getDateHtml(date: Date): string {
+			const _loc2_ = Const.isZhLocale(DateTimeLocale.getLocale()) ? "yyyy-MM-dd HH:mm" : "MMM dd, yyyy h:mma";
+			return "<font color=\'#0B6CDE\'>" + DateTimeLocale.formatDateTime(_loc2_, date, true) + "</font>";
 		}
 
-		renderMovie()
-		{
-			if (!this.activePinPoint)
+		renderMovie() {
+			if (!this.activePinPoint) {
 				return;
+			}
 
 			this.renderContent();
 			this.renderBackground();
 		}
 
-		clearMovie()
-		{
+		clearMovie() {
 			this.activePinPoint = null;
-			if (this.contains(this.content))
+			if (this.contains(this.content)) {
 				this.removeChild(this.content);
+			}
 
-			if (this.contains(this.closeButton))
+			if (this.contains(this.closeButton)) {
 				this.removeChild(this.closeButton);
+			}
 
 			this.graphics.clear();
 		}
 
-		private getContentHtmlText(): string
-		{
+		private getContentHtmlText(): string {
 			const activePinPoint = notnull(this.activePinPoint);
 			const originalObject = activePinPoint.originalObject;
 			let letterHtml = this.getLetterHtml(activePinPoint.letter);
-			if (activePinPoint.exchangeDateInUTC)
-				letterHtml += ' ' + this.getDateHtml(activePinPoint.exchangeDateInUTC);
+			if (activePinPoint.exchangeDateInUTC) {
+				letterHtml += " " + this.getDateHtml(activePinPoint.exchangeDateInUTC);
+			}
 
-			if (originalObject._title && originalObject._title !== "")
+			if (originalObject._title && originalObject._title !== "") {
 				letterHtml += "\n" + this.getTitleHtml(activePinPoint.letter, originalObject._title, originalObject._url);
+			}
 
-			if (originalObject._author && originalObject._author !== "")
+			if (originalObject._author && originalObject._author !== "") {
 				letterHtml += "\n" + this.getAuthorHtml(originalObject._author);
-			else if (originalObject._snippet && originalObject._snippet !== "")
+			} else if (originalObject._snippet && originalObject._snippet !== "") {
 				letterHtml += "\n" + this.getAuthorHtml(originalObject._snippet);
+								}
 
 			return letterHtml;
 		}
 
-		protected getSnippetHtml(param1: string): string
-		{
+		protected getSnippetHtml(param1: string): string {
 			return "<font color=\'#6B6B6B\' size=\'12\'>" + this.escapeHtml(param1) + "</font>";
 		}
 	}
-}

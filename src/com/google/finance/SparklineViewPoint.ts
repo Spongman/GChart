@@ -1,19 +1,39 @@
-/// <reference path="ViewPoint.ts" />
+import { ViewPoint } from "ViewPoint";
+import { IViewPoint, Context } from './ViewPoint';
+import { SimpleButton } from '../../../flash/display/SimpleButton';
+import { SparklineViewPoint_ScrollbarButtonRight } from './SparklineViewPoint_ScrollbarButtonRight';
+import { SparklineLayer } from './SparklineLayer';
+import { AbstractLayer } from 'AbstractLayer';
+import { Sprite } from '../../../flash/display/Sprite';
+import { SparklineViewPoint_ScrollbarButtonLeft } from './SparklineViewPoint_ScrollbarButtonLeft';
+import { WindowLayer } from './WindowLayer';
+import { DataSource } from './DataSource';
+import { TextFormat } from '../../../flash/text/TextField';
+import { DataManager } from './DataManager';
+import { Stage } from '../../../flash/display/Stage';
+import { MainManager } from './MainManager';
+import { Const, ChartDetailTypes, TickPositions, Directions, ControllerComponents, Intervals } from './Const';
+import { Bounds } from './Bounds';
+import { EventFactory } from './EventFactory';
+import { DataUnit } from './DataUnit';
+import { Utils } from './Utils';
+import { Controller } from './Controller';
+import { SparklineDateLinesLayer } from './SparklineDateLinesLayer';
+import { DisplayManager } from './DisplayManager';
+import { ChartEventPriorities } from './ChartEvent';
+import { Dictionary } from '../../../Global';
 
-namespace com.google.finance
-{
 	// import flash.display.Sprite;
 	// import flash.display.SimpleButton;
 	// import flash.utils.getDefinitionByName;
 	// import flash.events.Event;
 	// import flash.text.TextFormat;
-	// import flash.display.Bitmap;
+	// import Bitmap;
 	// import flash.events.MouseEvent;
 
-	export class SparklineViewPoint
-		extends IViewPoint
-	{
-		// private windowMask: flash.display.Sprite;
+export class SparklineViewPoint
+		extends IViewPoint {
+		// private windowMask: Sprite;
 
 		static readonly TEXT_FIELD_HEIGHT = 50;
 		static readonly TEXT_VERTICAL_OFFSET = -1;
@@ -21,18 +41,18 @@ namespace com.google.finance
 		static readonly TEXT_FIELD_WIDTH = 200;
 		readonly POINTS_DISTANCE = 2;
 
-		private readonly leftScrollButton = new flash.display.SimpleButton("leftScrollButton");
+		private readonly leftScrollButton = new SimpleButton("leftScrollButton");
 		//private currentSparkTimeLength = 0;
 		private readonly ScrollbarButtonRight = SparklineViewPoint_ScrollbarButtonRight;
 		private sparklineType: string;
 		private graySparkline: SparklineLayer;
-		private layers: AbstractLayer<SparklineViewPoint>[] = [];
-		private passiveLayers: AbstractLayer<SparklineViewPoint>[] = [];
+		private layers: Array<AbstractLayer<SparklineViewPoint>> = [];
+		private passiveLayers: Array<AbstractLayer<SparklineViewPoint>> = [];
 		private sparkline: SparklineLayer;
-		private readonly rightScrollButton = new flash.display.SimpleButton("rightScrollButton");
-		private displayThresholds: { chartDays: number, sparkDays: number }[];
-		// private textCanvas: flash.display.Sprite;
-		private readonly scrollBg = new flash.display.Sprite("scrollBg");
+		private readonly rightScrollButton = new SimpleButton("rightScrollButton");
+		private displayThresholds: Array<{ chartDays: number, sparkDays: number }>;
+		// private textCanvas: Sprite;
+		private readonly scrollBg = new Sprite("scrollBg");
 		private readonly ScrollbarButtonLeft = SparklineViewPoint_ScrollbarButtonLeft;
 		// private displayManager: DisplayManager;
 
@@ -41,7 +61,7 @@ namespace com.google.finance
 		my_miny: number;
 		sparkCount: number;
 		windowLayer: WindowLayer;
-		readonly bg = new flash.display.Sprite("bg");
+		readonly bg = new Sprite("bg");
 		my_maxx: number;
 		my_maxy: number;
 		lastMinute: number;
@@ -49,17 +69,16 @@ namespace com.google.finance
 		//myController: Controller;
 		sparkButtonMinutes: number;
 		sparkMinutesOffset: number = 0;
-		hourTextFormat: flash.text.TextFormat;
-		readonly priceTextFormat = new flash.text.TextFormat("_sans", 10, 0x666666);
-		readonly dateTextFormat = new flash.text.TextFormat("Verdana", 10, 0x6f6f6f);
+		hourTextFormat: TextFormat;
+		readonly priceTextFormat = new TextFormat("_sans", 10, 0x666666);
+		readonly dateTextFormat = new TextFormat("Verdana", 10, 0x6f6f6f);
 		topBorder = 0;
 
-		constructor(private readonly dataManager: DataManager, readonly displayManager: DisplayManager)
-		{
+		constructor(private readonly dataManager: DataManager, readonly displayManager: DisplayManager) {
 			super(displayManager);
 
 			this.addChild(this.bg);
-			this.textCanvas = new flash.display.Sprite("textCanvas");
+			this.textCanvas = new Sprite("textCanvas");
 			this.addChild(this.textCanvas);
 			this.dateTextFormat.bold = false;
 			this.priceTextFormat.align = "right";
@@ -79,24 +98,23 @@ namespace com.google.finance
 			this.addChild(this.rightScrollButton);
 			this.bg.addChild(this.scrollBg);
 			this.positionElements();
-			this.leftScrollButton.addEventListener(MouseEvents.MOUSE_DOWN, flash.display.Stage.bind(this.onMouseDown, this));
-			this.rightScrollButton.addEventListener(MouseEvents.MOUSE_DOWN, flash.display.Stage.bind(this.onMouseDown, this));
-			this.leftScrollButton.addEventListener(MouseEvents.MOUSE_UP, flash.display.Stage.bind(this.onMouseUp, this));
-			this.rightScrollButton.addEventListener(MouseEvents.MOUSE_UP, flash.display.Stage.bind(this.onMouseUp, this));
+			this.leftScrollButton.addEventListener(MouseEvents.MOUSE_DOWN, Stage.bind(this.onMouseDown, this));
+			this.rightScrollButton.addEventListener(MouseEvents.MOUSE_DOWN, Stage.bind(this.onMouseDown, this));
+			this.leftScrollButton.addEventListener(MouseEvents.MOUSE_UP, Stage.bind(this.onMouseUp, this));
+			this.rightScrollButton.addEventListener(MouseEvents.MOUSE_UP, Stage.bind(this.onMouseUp, this));
 			this.initDisplayCountThresholds();
-			if (MainManager.paramsObj.sparklineType === Const.STATIC || MainManager.paramsObj.sparklineType === Const.DYNAMIC)
+			if (MainManager.paramsObj.sparklineType === Const.STATIC || MainManager.paramsObj.sparklineType === Const.DYNAMIC) {
 				this.sparklineType = MainManager.paramsObj.sparklineType;
-			else
+			} else {
 				this.sparklineType = Const.STATIC;
+			}
 		}
 
-		getIntervalLength(param1: number): number
-		{
+		getIntervalLength(param1: number): number {
 			return param1 * (this.maxx - this.minx) / this.sparkCount;
 		}
 
-		private redraw()
-		{
+		private redraw() {
 			this.adjustWindowToSparkline();
 
 			this.resetCanvas();
@@ -105,70 +123,63 @@ namespace com.google.finance
 			this.renderPassiveLayers();
 		}
 
-		removeAllLayers()
-		{
-			for (const layer of this.layers)
+		removeAllLayers() {
+			for (const layer of this.layers) {
 				this.removeChild(layer);
+			}
 			this.layers = [];
 		}
 
-		setNewSize(bounds: Bounds)
-		{
+		setNewSize(bounds: Bounds) {
 			this.my_minx = bounds.minx;
 			this.my_miny = bounds.miny;
 			this.my_maxx = bounds.maxx;
 			this.my_maxy = bounds.maxy;
 			this.drawBorders();
 			this.positionElements();
-			if (this.sparkline)
-			{
+			if (this.sparkline) {
 				this.sparkline.fillColor = Const.SPARK_ACTIVE_FILL_COLOR;
 				this.sparkline.lineColor = Const.SPARK_ACTIVE_LINE_COLOR;
 				this.sparkline.renderLayer();
 			}
-			if (this.graySparkline)
-			{
+			if (this.graySparkline) {
 				this.graySparkline.fillColor = Const.SPARK_INACTIVE_FILL_COLOR;
 				this.graySparkline.lineColor = Const.SPARK_INACTIVE_LINE_COLOR;
 				this.graySparkline.renderLayer();
 			}
-			if (this.windowLayer)
-			{
+			if (this.windowLayer) {
 				this.windowLayer.updateFixedElements();
 				this.update();
 			}
 		}
 
-		getWidth(): number
-		{
+		getWidth(): number {
 			return this.maxx - this.minx;
 		}
 
-		generateEvent(detailType: ChartDetailTypes, dataSource: DataSource)
-		{
+		generateEvent(detailType: ChartDetailTypes, dataSource: DataSource) {
 			const event = EventFactory.getEvent(detailType, dataSource.quoteName, ChartEventPriorities.OPTIONAL);
 			this.dataManager.expectEvent(event);
 			this.dataManager.eventHandler(event);
 		}
 
-		addLayer(layerTypeName: string, dataSource: DataSource, name: string): AbstractLayer<IViewPoint> | null
-		{
-			if (layerTypeName === "")
+		addLayer(layerTypeName: string, dataSource: DataSource, name: string): AbstractLayer<IViewPoint> | null {
+			if (layerTypeName === "") {
 				return null;
+			}
 
 			this.addDataSource(dataSource);
 			const layerType = getDefinitionByName("com.google.finance." + layerTypeName) as typeof AbstractLayer;
 			const layer = new layerType(this, dataSource);
 			layer.name = name;
 			layer.layerId = name;
-			if (layer instanceof WindowLayer)
-			{
-				if (this.windowLayer && this.contains(this.windowLayer))
-				{
+			if (layer instanceof WindowLayer) {
+				if (this.windowLayer && this.contains(this.windowLayer)) {
 					this.removeChild(this.windowLayer);
 					const indexOfWindow = this.layers.indexOf(this.windowLayer);
-					if (indexOfWindow !== -1)
+					if (indexOfWindow !== -1) {
 						this.layers.splice(indexOfWindow, 1);
+					}
 				}
 				this.windowLayer = layer;
 			}
@@ -178,49 +189,39 @@ namespace com.google.finance
 			return layer;
 		}
 
-		commitSparklineOffset_Handler()
-		{
+		commitSparklineOffset_Handler() {
 			this.sparkLastMinute += this.sparkMinutesOffset;
 			this.sparkMinutesOffset = 0;
 		}
 
-		private adjustWindowToSparkline()
-		{
+		private adjustWindowToSparkline() {
 			const lastMinute = this.getLastMinute();
 			const firstMinute = this.getFirstMinute();
 			const sparkLastMinute = this.getSparkLastMinute();
 			const sparkFirstMinute = this.getSparkFirstMinute();
-			if (lastMinute > sparkLastMinute)
-			{
+			if (lastMinute > sparkLastMinute) {
 				this.myController.jumpTo(sparkLastMinute, lastMinute - firstMinute);
-			}
-			else if (firstMinute < sparkFirstMinute)
-			{
+			} else if (firstMinute < sparkFirstMinute) {
 				const count = lastMinute - firstMinute;
 				this.myController.jumpTo(sparkFirstMinute + count, count);
 			}
 		}
 
-		getLayers(): AbstractLayer<SparklineViewPoint>[]
-		{
+		getLayers(): Array<AbstractLayer<SparklineViewPoint>> {
 			return this.layers;
 		}
 
-		highlightPoint(x: number, state: Dictionary)
-		{
+		highlightPoint(x: number, state: Dictionary) {
 		}
 
-		getSparkFirstMinute(): number
-		{
+		getSparkFirstMinute(): number {
 			return this.getSparkLastMinute() - this.sparkCount;
 		}
 
-		precomputeContexts()
-		{
+		precomputeContexts() {
 		}
 
-		private positionElements()
-		{
+		private positionElements() {
 			this.leftScrollButton.x = -1;
 			this.leftScrollButton.y = this.maxy - 1;
 			this.rightScrollButton.x = this.maxx - 1;
@@ -230,81 +231,73 @@ namespace com.google.finance
 			this.scrollBg.width = this.maxx - this.minx;
 		}
 
-		replaceSparklineDataSource(dataSource: DataSource)
-		{
+		replaceSparklineDataSource(dataSource: DataSource) {
 			this.sparkline.dataSource = dataSource;
 			this.graySparkline.dataSource = dataSource;
 		}
 
-		zoomIn_Handler(param1: number, param2: number)
-		{
+		zoomIn_Handler(param1: number, param2: number) {
 			this.renderLayers();
 			this.moveMask();
 		}
 
-		getYScaling()
-		{
+		getYScaling() {
 			return { maxPriceRange: 0 };
 		}
 
-		getXPos(param1: number, param2: number, dataUnit: DataUnit): number
-		{
+		getXPos(param1: number, param2: number, dataUnit: DataUnit): number {
 			const sparkLastMinute = this.getSparkLastMinute();
 			const relativeMinutes = dataUnit.relativeMinutes;
 			return Math.round(param1 - (sparkLastMinute - relativeMinutes) * (param1 - param2) / this.sparkCount);
 		}
 
-		zoomInMinutes_Handler(context: Context, param2 = false)
-		{
+		zoomInMinutes_Handler(context: Context, param2 = false) {
 			this.checkResizeSparkline(context.count);
 		}
 
-		renderPassiveLayers()
-		{
-			for (const layer of this.passiveLayers)
+		renderPassiveLayers() {
+			for (const layer of this.passiveLayers) {
 				layer.renderLayer();
+			}
 		}
 
-		isAnimating(): boolean
-		{
+		isAnimating(): boolean {
 			return false;
 		}
 
-		toggleHandles(param1: boolean)
-		{
-			if (this.windowLayer)
+		toggleHandles(param1: boolean) {
+			if (this.windowLayer) {
 				this.windowLayer.toggleHandles(param1);
+			}
 		}
 
-		getLastMinute(): number
-		{
+		getLastMinute(): number {
 			const mainViewPoint = this.displayManager.getMainViewPoint();
 			return mainViewPoint.getLastMinute();
 		}
 
-		onMouseUp(event: Event)
-		{
+		onMouseUp(event: Event) {
 			this.myController.mouseUpAction();
 		}
 
-		private moveMask()
-		{
-			if (!this.windowMask)
+		private moveMask() {
+			if (!this.windowMask) {
 				return;
+			}
 
 			const lastMinuteXPos = this.getMinuteXPos(this.getLastMinute());
 			let firstMinuteXPos = this.getMinuteXPos(this.getFirstMinute());
-			if (lastMinuteXPos - firstMinuteXPos <= 4)
+			if (lastMinuteXPos - firstMinuteXPos <= 4) {
 				firstMinuteXPos = lastMinuteXPos - 4;
+			}
 
 			this.windowMask.x = firstMinuteXPos;
 			this.windowMask.y = this.my_miny - 1;
 			this.windowMask.width = lastMinuteXPos - firstMinuteXPos;
 		}
 
-		private createSparklineMask(): flash.display.Sprite
-		{
-			this.windowMask = new flash.display.Sprite("windowMask");
+		private createSparklineMask(): Sprite {
+			this.windowMask = new Sprite("windowMask");
 			this.windowMask.graphics.beginFill(0);
 			this.windowMask.graphics.drawRect(0, 0, 10, this.my_maxy - this.my_miny + 1);
 			this.windowMask.y = this.my_miny - 1;
@@ -312,153 +305,132 @@ namespace com.google.finance
 			return this.windowMask;
 		}
 
-		getMinutesForLength(param1: number): number
-		{
+		getMinutesForLength(param1: number): number {
 			return param1 * this.sparkCount / (this.maxx - this.minx);
 		}
 
-		get miny(): number
-		{
+		get miny(): number {
 			return this.my_miny;
 		}
 
-		getOldestMinute(): number
-		{
+		getOldestMinute(): number {
 			return this.dataSource.data.getFirstRelativeMinute();
 		}
 
-		getMedPrice()
-		{
+		getMedPrice() {
 			return { medPrice: 0 };
 		}
 
-		get minx(): number
-		{
+		get minx(): number {
 			return this.my_minx + 14;
 		}
 
-		getFirstDataUnit(): DataUnit
-		{
+		getFirstDataUnit(): DataUnit {
 			const mainViewPoint = this.displayManager.getMainViewPoint();
 			return notnull(mainViewPoint.getFirstDataUnit());
 		}
 
-		zoomingAnimation_ticker(sparklineViewPoint: SparklineViewPoint, param2: number, param3: boolean)
-		{
+		zoomingAnimation_ticker(sparklineViewPoint: SparklineViewPoint, param2: number, param3: boolean) {
 			sparklineViewPoint.checkResizeSparkline();
 			sparklineViewPoint.renderLayers();
 			sparklineViewPoint.moveMask();
 		}
 
-		renderLayers()
-		{
-			for (const layer of this.layers)
+		renderLayers() {
+			for (const layer of this.layers) {
 				layer.renderLayer();
+			}
 		}
 
-		getLastDataUnit(): DataUnit
-		{
+		getLastDataUnit(): DataUnit {
 			const mainViewPoint = this.displayManager.getMainViewPoint();
 			return notnull(mainViewPoint.getLastDataUnit());
 		}
 
-		getLeftX(): number
-		{
-			if (this.windowLayer)
+		getLeftX(): number {
+			if (this.windowLayer) {
 				return this.windowLayer.getLeftX();
+			}
 
 			return 0;
 		}
 
-		getHandleRightX(): number
-		{
-			if (this.windowLayer)
+		getHandleRightX(): number {
+			if (this.windowLayer) {
 				return this.windowLayer.getHandleRightX();
+			}
 
 			return 0;
 		}
 
-		private resetCanvas()
-		{
+		private resetCanvas() {
 			this.textCanvas.graphics.clear();
 			Utils.removeAllChildren(this.textCanvas);
 		}
 
-		get maxy(): number
-		{
+		get maxy(): number {
 			return this.my_maxy - 14;
 		}
 
-		commitOffset_Handler()
-		{
+		commitOffset_Handler() {
 			this.renderLayers();
 			this.moveMask();
 		}
 
-		setController(controller: Controller)
-		{
+		setController(controller: Controller) {
 			controller.addControlListener(this, TickPositions.BOTTOM);
 			this.myController = controller;
 		}
 
-		getFirstMinute(): number
-		{
+		getFirstMinute(): number {
 			const mainViewPoint = this.displayManager.getMainViewPoint();
 			return mainViewPoint.getFirstMinute();
 		}
 
-		moveChartBy_Handler(param1: number)
-		{
+		moveChartBy_Handler(param1: number) {
 			this.adjustSparklineToWindow();
 			this.renderLayers();
 			this.moveMask();
 		}
 
-		getRightX(): number
-		{
-			if (this.windowLayer)
+		getRightX(): number {
+			if (this.windowLayer) {
 				return this.windowLayer.getRightX();
+			}
 
 			return 0;
 		}
 
-		getHandleLeftX(): number
-		{
-			if (this.windowLayer)
+		getHandleLeftX(): number {
+			if (this.windowLayer) {
 				return this.windowLayer.getHandleLeftX();
+			}
 
 			return 0;
 		}
 
-		HTMLnotify(param1 = false)
-		{
+		HTMLnotify(param1 = false) {
 		}
 
-		get maxx(): number
-		{
+		get maxx(): number {
 			return this.my_maxx - 14;
 		}
 
-		getLastNotVisibleDataUnit(): DataUnit
-		{
+		getLastNotVisibleDataUnit(): DataUnit {
 			const mainViewPoint = this.displayManager.getMainViewPoint();
 			return notnull(mainViewPoint.getLastNotVisibleDataUnit());
 		}
 
-		zoomChart_Handler(direction: Directions, param2 = NaN)
-		{
+		zoomChart_Handler(direction: Directions, param2 = NaN) {
 			this.renderLayers();
 			this.moveMask();
 		}
 
-		newFinalAnimationState(viewPoint: IViewPoint)
-		{
+		newFinalAnimationState(viewPoint: IViewPoint) {
 		}
 
-		onMouseDown(event: Event)
-		{
-			switch (event.currentTarget)
-			{
+		onMouseDown(event: Event) {
+			switch (event.currentTarget) {
 				case this.leftScrollButton.element:
 					this.myController.mouseDownAction(ControllerComponents.LEFT_BUTTON);
 					break;
@@ -468,17 +440,17 @@ namespace com.google.finance
 			}
 		}
 
-		update()
-		{
-			if (this.stage.stageWidth === 0 || !this.dataSource || !this.dataSource.data || this.dataSource.data.points.length === 0)
+		update() {
+			if (this.stage.stageWidth === 0 || !this.dataSource || !this.dataSource.data || this.dataSource.data.points.length === 0) {
 				return;
+			}
 
 			const points = this.dataSource.data.points;
 			const firstRelativeMinute = this.dataSource.data.getFirstRelativeMinute();
-			if (this.dataSource && points.length !== 0)
-			{
-				if (this.sparkCount !== Math.abs(firstRelativeMinute) && this.sparklineType === Const.STATIC)
+			if (this.dataSource && points.length !== 0) {
+				if (this.sparkCount !== Math.abs(firstRelativeMinute) && this.sparklineType === Const.STATIC) {
 					this.sparkCount = Math.abs(firstRelativeMinute);
+				}
 
 				this.checkResizeSparkline();
 
@@ -489,62 +461,61 @@ namespace com.google.finance
 			}
 		}
 
-		sparklinePagingPossible(param1: number): boolean
-		{
+		sparklinePagingPossible(param1: number): boolean {
 			const sparkLastMinute = this.getSparkLastMinute() < 0;
 			const sparkFirstMinute = this.getSparkFirstMinute() > this.getOldestMinute();
 			return param1 < 0 && sparkFirstMinute || param1 > 0 && sparkLastMinute;
 		}
 
-		private checkResizeSparkline(param1 = NaN)
-		{
-			if (this.sparklineType === Const.STATIC)
+		private checkResizeSparkline(param1 = NaN) {
+			if (this.sparklineType === Const.STATIC) {
 				return;
+			}
 
 			let minutes = this.getLastMinute() - this.getFirstMinute();
-			if (!isNaN(param1))
+			if (!isNaN(param1)) {
 				minutes = param1;
+			}
 
-			if (!this.dataSource || !this.dataSource.data)
+			if (!this.dataSource || !this.dataSource.data) {
 				return;
+			}
 
 			const marketDayLength = this.dataSource.data.marketDayLength;
 			let _loc4_ = 0;
-			while (_loc4_ < this.displayThresholds.length - 1 && minutes > this.displayThresholds[_loc4_].chartDays * marketDayLength)
-			{
+			while (_loc4_ < this.displayThresholds.length - 1 && minutes > this.displayThresholds[_loc4_].chartDays * marketDayLength) {
 				_loc4_++;
 			}
 			let _loc5_ = this.displayThresholds[_loc4_].sparkDays * marketDayLength;
 			const _loc6_ = Math.abs(this.dataSource.data.getFirstRelativeMinute());
 			_loc5_ = Math.min(_loc5_, _loc6_);
-			if (_loc5_ !== this.sparkCount && !isNaN(_loc5_))
-			{
+			if (_loc5_ !== this.sparkCount && !isNaN(_loc5_)) {
 				this.sparkCount = _loc5_;
 				this.sparkButtonMinutes = (this.leftScrollButton.width - 2) * this.sparkCount / (this.maxx - this.minx);
-				if (this.sparkLastMinute - this.sparkCount < this.dataSource.data.getFirstRelativeMinute())
+				if (this.sparkLastMinute - this.sparkCount < this.dataSource.data.getFirstRelativeMinute()) {
 					this.sparkLastMinute = 0;
+				}
 
-				if (_loc4_ === this.displayThresholds.length - 1)
+				if (_loc4_ === this.displayThresholds.length - 1) {
 					this.generateEvent(ChartDetailTypes.GET_40Y_DATA, this.dataSource);
+				}
 
 				this.redraw();
 			}
 			this.adjustSparklineToWindow();
 		}
 
-		setNewCount(param1: number)
-		{
+		setNewCount(param1: number) {
 			this.checkResizeSparkline(param1);
 		}
 
-		drawBorders()
-		{
+		drawBorders() {
 			const gr = this.bg.graphics;
 			gr.clear();
 			gr.beginFill(0xffffff);
 			gr.drawRect(
 				this.my_minx, this.my_miny - this.topBorder,
-				this.my_maxx - this.my_minx, this.my_maxy - (this.my_miny - this.topBorder)
+				this.my_maxx - this.my_minx, this.my_maxy - (this.my_miny - this.topBorder),
 			);
 			/*
 			gr.moveTo(this.my_minx, this.my_miny - this.topBorder);
@@ -556,50 +527,44 @@ namespace com.google.finance
 			this.textCanvas.graphics.clear();
 		}
 
-		getMinuteXPos(param1: number): number
-		{
+		getMinuteXPos(param1: number): number {
 			return Math.round(this.maxx - (this.getSparkLastMinute() - param1) * (this.maxx - this.minx) / this.sparkCount);
 		}
 
-		getSparkLastMinute(): number
-		{
+		getSparkLastMinute(): number {
 			return this.sparkLastMinute + this.sparkMinutesOffset;
 		}
 
-		private initDisplayCountThresholds()
-		{
+		private initDisplayCountThresholds() {
 			let _loc1_ = false;
-			if (MainManager.paramsObj.displayThresholds)
-			{
+			if (MainManager.paramsObj.displayThresholds) {
 				this.displayThresholds = Utils.decodeObjects(MainManager.paramsObj.displayThresholds);
 				_loc1_ = true;
-				for (const threshold of this.displayThresholds)
-				{
-					if (isNaN(threshold.chartDays) || isNaN(threshold.sparkDays))
+				for (const threshold of this.displayThresholds) {
+					if (isNaN(threshold.chartDays) || isNaN(threshold.sparkDays)) {
 						_loc1_ = false;
+					}
 				}
 			}
-			if (!_loc1_)
-			{
+			if (!_loc1_) {
 				this.displayThresholds = [{
 					chartDays: 230,
-					sparkDays: 520
+					sparkDays: 520,
 				}, {
 					chartDays: Number.POSITIVE_INFINITY,
-					sparkDays: Number.POSITIVE_INFINITY
+					sparkDays: Number.POSITIVE_INFINITY,
 				}];
 			}
 		}
 
-		private addDataSource(dataSource: DataSource)
-		{
-			if (!this.dataSource)
-			{
+		private addDataSource(dataSource: DataSource) {
+			if (!this.dataSource) {
 				this.sparkMinutesOffset = 0;
-				if (this.sparklineType === Const.DYNAMIC)
+				if (this.sparklineType === Const.DYNAMIC) {
 					this.sparkCount = dataSource.data.marketDayLength * this.displayThresholds[0].sparkDays;
-				else
+				} else {
 					this.sparkCount = Math.abs(dataSource.data.getFirstRelativeMinute());
+				}
 
 				this.sparkButtonMinutes = (this.leftScrollButton.width - 2) * this.sparkCount / (this.my_maxx - this.my_minx);
 				this.sparkLastMinute = 0;
@@ -634,60 +599,57 @@ namespace com.google.finance
 			this.update();
 		}
 
-		clearPointInformation()
-		{
+		clearPointInformation() {
 		}
 
-		moveSparklineBy_Handler(param1: number): number
-		{
-			if (!this.dataSource || this.dataSource.data.points.length === 0)
+		moveSparklineBy_Handler(param1: number): number {
+			if (!this.dataSource || this.dataSource.data.points.length === 0) {
 				return 0;
+			}
 
-			if (this.sparklineType === Const.STATIC)
+			if (this.sparklineType === Const.STATIC) {
 				return param1;
+			}
 
 			let _loc2_ = param1 * this.sparkCount / (this.maxx - this.minx);
 			let _loc3_ = this.sparkLastMinute + _loc2_ - this.sparkCount;
 			const _loc4_ = _loc2_;
-			if (this.sparkLastMinute + _loc2_ > 0)
-			{
+			if (this.sparkLastMinute + _loc2_ > 0) {
 				_loc2_ = -this.sparkLastMinute;
-			}
-			else if (_loc3_ < this.getOldestMinute())
-			{
+			} else if (_loc3_ < this.getOldestMinute()) {
 				_loc2_ = this.getOldestMinute() + this.sparkCount - this.sparkLastMinute;
 				this.generateEvent(ChartDetailTypes.GET_40Y_DATA, this.dataSource);
 			}
 			const firstDataSource = this.displayManager.layersManager.getFirstDataSource();
-			if (this.myController.currentIntervalLevel !== Intervals.INVALID && firstDataSource)
-			{
+			if (this.myController.currentIntervalLevel !== Intervals.INVALID && firstDataSource) {
 				_loc3_ = this.sparkLastMinute + _loc2_ - this.sparkCount;
-				if (_loc3_ > this.getOldestMinute() && _loc3_ < firstDataSource.firstOpenRelativeMinutes)
+				if (_loc3_ > this.getOldestMinute() && _loc3_ < firstDataSource.firstOpenRelativeMinutes) {
 					_loc2_ = firstDataSource.firstOpenRelativeMinutes + this.sparkCount - this.sparkLastMinute;
+				}
 			}
-			if (_loc2_ !== this.sparkMinutesOffset)
-			{
+			if (_loc2_ !== this.sparkMinutesOffset) {
 				this.sparkMinutesOffset = _loc2_;
 				this.redraw();
 			}
-			if (_loc4_ === 0)
+			if (_loc4_ === 0) {
 				return 0;
+			}
 
 			return param1 * (_loc2_ / _loc4_);
 		}
 
-		private adjustSparklineToWindow()
-		{
+		private adjustSparklineToWindow() {
 			const lastMinute = this.getLastMinute();
 			const firstMinute = this.getFirstMinute();
 			const sparkLastMinute = this.getSparkLastMinute();
 			const sparkFirstMinute = this.getSparkFirstMinute();
-			if (lastMinute > sparkLastMinute && lastMinute <= 0)
+			if (lastMinute > sparkLastMinute && lastMinute <= 0) {
 				this.sparkLastMinute += lastMinute - sparkLastMinute;
-			else if (firstMinute < sparkFirstMinute)
+			} else if (firstMinute < sparkFirstMinute) {
 				this.sparkLastMinute += firstMinute - sparkFirstMinute;
-			else
+								} else {
 				return;
+								}
 
 			this.resetCanvas();
 			this.renderPassiveLayers();
@@ -695,21 +657,17 @@ namespace com.google.finance
 			this.moveMask();
 		}
 
-		getMinuteOfX(x: number): number
-		{
+		getMinuteOfX(x: number): number {
 			return this.getSparkLastMinute() - (this.maxx - x) * this.sparkCount / (this.maxx - this.minx);
 		}
 
-		zoomingAnimation_init(context: Context)
-		{
+		zoomingAnimation_init(context: Context) {
 		}
 
-		getNewContext(lastMinute: number, count: number): Context
-		{
+		getNewContext(lastMinute: number, count: number): Context {
 			const context = new Context();
 			context.lastMinute = lastMinute;
 			context.count = count;
 			return context;
 		}
 	}
-}

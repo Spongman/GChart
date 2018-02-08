@@ -1,9 +1,6 @@
-/// <reference path="../../../flash/display/Bitmap.ts"/>
-namespace com.google.finance
-{
+import { Bitmap } from "../../../flash/display/Bitmap";
+
 	// import mx.core.Bitmap;
 
-	export class DividendMovie_DividendArrowClass extends flash.display.Bitmap
-	{
+export class DividendMovie_DividendArrowClass extends Bitmap {
 	}
-}

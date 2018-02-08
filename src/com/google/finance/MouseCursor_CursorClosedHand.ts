@@ -1,10 +1,6 @@
-/// <reference path="../../../flash/display/Bitmap.ts"/>
+import { Bitmap } from "../../../flash/display/Bitmap";
 
-namespace com.google.finance
-{
-	// import mx.core.Bitmap;
+// import mx.core.Bitmap;
 
-	export class MouseCursor_CursorClosedHand extends flash.display.Bitmap
-	{
-	}
+export class MouseCursor_CursorClosedHand extends Bitmap {
 }

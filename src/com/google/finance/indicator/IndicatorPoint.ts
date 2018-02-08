@@ -1,33 +1,30 @@
-namespace com.google.finance.indicator
-{
+import { Const } from "../Const";
+import { DataUnit } from "../DataUnit";
+import { Utils } from "../Utils";
+
 	// import com.google.finance.DataUnit;
 	// import com.google.finance.Const;
 	// import com.google.finance.Utils;
 
-	export class IndicatorPoint
-	{
+export class IndicatorPoint {
 		private logValue: number;
 
-		constructor(public readonly value: number = 0, public readonly point: DataUnit)
-		{
+		constructor(readonly value: number = 0, readonly point: DataUnit) {
 		}
 
-		getValue(): number
-		{
+		getValue(): number {
 			return this.value;
 		}
 
-		getPoint(): DataUnit
-		{
+		getPoint(): DataUnit {
 			return this.point;
 		}
 
-		getLogValue(scaleType: string): number
-		{
-			if (scaleType === Const.LOG_VSCALE || scaleType === Const.NEW_LOG_VSCALE)
-			{
-				if (isNaN(this.logValue))
+		getLogValue(scaleType: string): number {
+			if (scaleType === Const.LOG_VSCALE || scaleType === Const.NEW_LOG_VSCALE) {
+				if (isNaN(this.logValue)) {
 					this.logValue = Utils.logTransform(this.value);
+				}
 
 				return this.logValue;
 			}
@@ -35,19 +32,16 @@ namespace com.google.finance.indicator
 		}
 	}
 
-	export class VolumeIndicatorPoint
-		extends IndicatorPoint
-	{
+export class VolumeIndicatorPoint
+		extends IndicatorPoint {
 		get volume() { return this.value; }
 
 		constructor(
 			volume: number,
 			relativeMinutes: number,
 			point: DataUnit,
-			time: number
-		)
-		{
+			time: number,
+		) {
 			super(volume, point);
 		}
 	}
-}

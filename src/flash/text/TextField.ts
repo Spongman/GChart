@@ -1,53 +1,45 @@
-﻿namespace flash.text
-{
-	export enum TextFieldType
-	{
+import { InteractiveObject } from "../display/InteractiveObject";
+
+export enum TextFieldType {
 		INPUT,
 		DYNAMIC,
 	}
 
-	export class TextFormatAlign
-	{
+export class TextFormatAlign {
 		static readonly RIGHT = "right";
 	}
 
-	export class TextFieldAutoSize
-	{
+export class TextFieldAutoSize {
 		static readonly LEFT = "left";
 		static readonly RIGHT = "right";
 		static readonly CENTER = "center";
 	}
 
-	export class TextFormat
-	{
+export class TextFormat {
 		align: string;
 
 		constructor(public family: string = "Arial", public size = 0, public color = 0, public bold = false, public italic = false, public underline = false) { }
 	}
 
-	export class TextField
-		extends display.InteractiveObject
-	{
+export class TextField
+		extends InteractiveObject {
 		type: TextFieldType = TextFieldType.INPUT;
 		autoSize: string;
 		cacheAsBitmap: boolean;
 		selectable: boolean;
 		wordWrap: boolean;
 
-		constructor()
-		{
+		constructor() {
 			super(document.createElement("span"));
 		}
 
-		appendText(p: string)
-		{
+		appendText(p: string) {
 			this.element.textContent += p;
 		}
 
 		setTextFormat(p: TextFormat, start: number = -1, end: number = -1) { }
 		getTextFormat(): TextFormat|null { return null; }
-		set defaultTextFormat(value: TextFormat)
-		{
+		set defaultTextFormat(value: TextFormat) {
 			this.element.style.fontFamily = value.family || "Arial";
 			this.element.style.fontSize = (value.size) + "px";
 			this.element.style.color = cssColor(value.color);
@@ -68,18 +60,15 @@
 
 		private _textColor: number;
 		get textColor(): number { return this._textColor; }
-		set textColor(value: number)
-		{
+		set textColor(value: number) {
 			this._textColor = value;
 			this.element.style.color = cssColor(value);
 		}
 
 		private _textHeight: number;
 		get textHeight(): number { return this._textHeight; }
-		set textHeight(value: number)
-		{
+		set textHeight(value: number) {
 			this._textHeight = value;
 			this.element.style.fontSize = value + "pt";
 		}
 	}
-}

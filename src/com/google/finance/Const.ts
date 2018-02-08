@@ -1,8 +1,7 @@
-/// <reference path="Messages.ts"/>
-namespace com.google.finance
-{
-	export enum Intervals
-	{
+import { Map } from '../../../Global';
+import { Messages } from "Messages";
+
+export enum Intervals {
 		INVALID = -1,
 
 		INTRADAY = 0,
@@ -12,8 +11,7 @@ namespace com.google.finance
 		WEEKLY,
 	}
 
-	export enum QuoteTypes
-	{
+export enum QuoteTypes {
 		COMPANY = 0,
 		MUTUAL_FUND = 1,
 		CURRENCY = 2,
@@ -22,8 +20,7 @@ namespace com.google.finance
 		BACKTESTING = 5,
 	}
 
-	export enum ScaleTypes
-	{
+export enum ScaleTypes {
 		INVALID = -1,
 
 		SCALE_MAX = 0,
@@ -40,16 +37,14 @@ namespace com.google.finance
 		SCALE_CUSTOM = 11,
 	}
 
-	export enum AddStreamResults
-	{
+export enum AddStreamResults {
 		ERROR = -1,
 		NOTHING = 0,
 		FIRST_DATA = 1,
 		ADDED_DATA = 2,
 	}
 
-	export enum Orientations
-	{
+export enum Orientations {
 		UP = 0,
 		DOWN = 1,
 		SIDEWAYS = 2,
@@ -57,14 +52,12 @@ namespace com.google.finance
 		SIDEWAYS_DOWN = 3,
 	}
 
-	export enum Directions
-	{
+export enum Directions {
 		BACKWARD = 1,
 		FORWARD = -1,
 	}
 
-	export enum ChartDetailTypes
-	{
+export enum ChartDetailTypes {
 		GET_1Y_DATA = 0,
 		GET_5D_DATA = 1,
 		GET_2Y_DATA = 2,
@@ -79,8 +72,7 @@ namespace com.google.finance
 		GET_RT_AH_DATA = 11,
 	}
 
-	export enum ControllerComponents
-	{
+export enum ControllerComponents {
 		SCROLL_BAR = 0,
 		LEFT_BUTTON = 1,
 		RIGHT_BUTTON = 2,
@@ -89,49 +81,42 @@ namespace com.google.finance
 		SCROLL_BG = 5,
 	}
 
-	export enum Snaps
-	{
+export enum Snaps {
 		SNAP_DAY = 0,
 		SNAP_WEEK = 1,
 		SNAP_MONTH = 2,
 		SNAP_YEAR = 3,
 	}
 
-	export enum TickPositions
-	{
+export enum TickPositions {
 		BOTTOM = 0,
 		TOP = 1,
 	}
 
-	export class IntervalPeriod
-	{
+export class IntervalPeriod {
 		constructor(
 			public type: number,
 			public days: number,
 			public maxdays: number,
 			public mindays: number,
 			public text: Messages,
-			public logtext: string)
-		{
+			public logtext: string) {
 		}
 	}
 
-	export class ScaleInterval
-	{
+export class ScaleInterval {
 		constructor(
 			public type: ScaleTypes,
 			public days: number,
 			public months: number,
 			public text: Messages,
 			public logtext: string,
-			public width: number
-		)
-		{
+			public width: number,
+		) {
 		}
 	}
 
-	export class Const
-	{
+export class Const {
 		private static readonly DETAIL_LEVEL_INFO: { [key: number]: number } = {};
 		private static readonly INTERVAL_INFO: { [key: number]: Intervals } = [];
 		static APPLY_CHINESE_STYLE_MACD = false;
@@ -186,7 +171,7 @@ namespace com.google.finance
 		static readonly CURRENCY_PREFIX = "CURRENCY:";
 		static readonly DAILY_DAYS = 270;
 		static readonly DAILY_INTERVAL = 24 * 60 * 60;
-		static readonly DATA_DELIMITER = ',';
+		static readonly DATA_DELIMITER = ",";
 		static readonly DATE_DEFAULT_BORDER_COLOR = 0xe8e8e8;
 		static readonly DATE_HIGHLIGHTED_BACKGROUND_COLOR = 0xffffa0;
 		static readonly DATE_HIGHLIGHTED_BORDER_COLOR = 0;
@@ -248,7 +233,7 @@ namespace com.google.finance
 		static readonly MS_PER_MINUTE = 60 * 1000;
 		static readonly MUTUAL_FUND_PREFIX = "MUTF(_.*?)?:";
 		static readonly NEW_LOG_VSCALE = "Logarithmic";
-		static readonly NO_BUTTON_TEXT = <Messages>-1;
+		static readonly NO_BUTTON_TEXT = -1 as Messages;
 		static readonly NORMAL_THEME = 1;
 		static readonly OHLC_CHART = "OhlcChartLayer";
 		static readonly PAGE_LEFT_BUTTON = 6;
@@ -315,7 +300,7 @@ namespace com.google.finance
 			MACD: [{
 				shortPeriod: 12,
 				longPeriod: 26,
-				emaPeriod: 9
+				emaPeriod: 9,
 			}],
 			RSI: [{ period: 14 }],
 			SMA: [{ period: 20 }],
@@ -325,12 +310,12 @@ namespace com.google.finance
 			BollingerBands: [{ period: 20 }],
 			FastStochastic: [{
 				kPeriod: 14,
-				dPeriod: 3
+				dPeriod: 3,
 			}],
 			SlowStochastic: [{
 				kPeriod: 14,
-				dPeriod: 3
-			}]
+				dPeriod: 3,
+			}],
 		};
 
 		static readonly SCALE_INTERVALS: ReadonlyArray<ScaleInterval> = [
@@ -344,27 +329,27 @@ namespace com.google.finance
 			new ScaleInterval(ScaleTypes.SCALE_1M, 20, 1, Messages.ZOOM_1M, "1m", 17),
 			new ScaleInterval(ScaleTypes.SCALE_5D, 5, 0, Messages.ZOOM_5D, "5d", 15),
 			new ScaleInterval(ScaleTypes.SCALE_3D, 3, 0, Const.NO_BUTTON_TEXT, "3d", 0),
-			new ScaleInterval(ScaleTypes.SCALE_1D, 1, 0, Messages.ZOOM_1D, "1d", 15)
+			new ScaleInterval(ScaleTypes.SCALE_1D, 1, 0, Messages.ZOOM_1D, "1d", 15),
 		];
 
 		static readonly CHART_STYLE_NAMES: ReadonlyArray<string> = [
 			Const.LINE_CHART,
 			Const.CANDLE_STICK,
-			Const.OHLC_CHART
+			Const.OHLC_CHART,
 		];
 		static readonly OHLC_DEPENDENT_INDICATOR_NAMES: ReadonlyArray<string> = [
 			Const.WilliamsPercentR,
 			Const.KDJ,
 			Const.FastStochastic,
 			Const.SlowStochastic,
-			Const.CCI
+			Const.CCI,
 		];
 		static readonly DETAIL_LEVELS: ReadonlyArray<Intervals> = [
 			Intervals.INTRADAY,
 			Intervals.FIVE_MINUTES,
 			Intervals.HALF_HOUR,
 			Intervals.DAILY,
-			Intervals.WEEKLY
+			Intervals.WEEKLY,
 		];
 		static readonly INDEPENDENT_INDICATOR_NAMES: ReadonlyArray<string> = [
 			Const.MACD,
@@ -374,19 +359,19 @@ namespace com.google.finance
 			Const.BIAS,
 			Const.FastStochastic,
 			Const.SlowStochastic,
-			Const.CCI
+			Const.CCI,
 		];
 		static readonly VOLUME_DEPENDENT_INDICATOR_NAMES: ReadonlyArray<string> = [
-			Const.VMA
+			Const.VMA,
 		];
 		static readonly DEPENDENT_INDICATOR_NAMES: ReadonlyArray<string> = [
 			Const.SMA,
 			Const.EMA,
-			Const.BollingerBands
+			Const.BollingerBands,
 		];
 		static readonly VOLUME_PLUS_CHART_TYPE: ReadonlyArray<string> = [
 			Const.CANDLE_STICK,
-			Const.OHLC_CHART
+			Const.OHLC_CHART,
 		];
 
 		static readonly INTERVAL_PERIODS: ReadonlyArray<IntervalPeriod> = [
@@ -401,8 +386,7 @@ namespace com.google.finance
 		static readonly DEFAULT_I = "" + Const.INTRADAY_INTERVAL;
 		static DEFAULT_CHART_STYLE_NAME = Const.LINE_CHART;
 
-		private static _staticConstructor = (() =>
-		{
+		private static _staticConstructor = (() => {
 			Const.INTERVAL_INFO[Const.INTRADAY_INTERVAL] = Intervals.INTRADAY;
 			Const.INTERVAL_INFO[Const.FIVE_MINUTE_INTERVAL] = Intervals.FIVE_MINUTES;
 			Const.INTERVAL_INFO[Const.HALF_HOUR_INTERVAL] = Intervals.HALF_HOUR;
@@ -416,59 +400,57 @@ namespace com.google.finance
 			Const.DETAIL_LEVEL_INFO[Intervals.WEEKLY] = Const.WEEKLY_INTERVAL;
 		})();
 
-		static getDetailLevelInterval(detailLevel: Intervals): number
-		{
+		static getDetailLevelInterval(detailLevel: Intervals): number {
 			return Const.DETAIL_LEVEL_INFO[detailLevel];
 		}
 
-		static getIntervalDetailLevel(interval: number): Intervals
-		{
+		static getIntervalDetailLevel(interval: number): Intervals {
 			return Const.INTERVAL_INFO[interval];
 		}
 
-		static getZoomLevel(param1: number, param2: number): ScaleTypes
-		{
+		static getZoomLevel(param1: number, param2: number): ScaleTypes {
 			const scaleIntervals = Const.SCALE_INTERVALS;
 			let scaleIntervalIndex = scaleIntervals.length - 1;
-			while (scaleIntervals[scaleIntervalIndex].days * param2 < Math.floor(param1) && scaleIntervalIndex > 0)
+			while (scaleIntervals[scaleIntervalIndex].days * param2 < Math.floor(param1) && scaleIntervalIndex > 0) {
 				scaleIntervalIndex--;
+			}
 
-			return <ScaleTypes>scaleIntervalIndex;
+			return scaleIntervalIndex as ScaleTypes;
 		}
 
-		static getQuoteType(quote: string): QuoteTypes
-		{
-			if (quote.indexOf(Const.CURRENCY_PREFIX) === 0)
+		static getQuoteType(quote: string): QuoteTypes {
+			if (quote.indexOf(Const.CURRENCY_PREFIX) === 0) {
 				return QuoteTypes.CURRENCY;
+			}
 
-			if (quote.indexOf(Const.PORTFOLIO_PREFIX) === 0)
+			if (quote.indexOf(Const.PORTFOLIO_PREFIX) === 0) {
 				return QuoteTypes.PORTFOLIO;
+			}
 
-			if (quote.indexOf(Const.BACKTESTING_PREFIX) === 0)
+			if (quote.indexOf(Const.BACKTESTING_PREFIX) === 0) {
 				return QuoteTypes.BACKTESTING;
+			}
 
-			if (quote.search(Const.MUTUAL_FUND_PREFIX) === 0)
+			if (quote.search(Const.MUTUAL_FUND_PREFIX) === 0) {
 				return QuoteTypes.MUTUAL_FUND;
+			}
 
-			if (quote.search(Const.QUERY_INDEX_PREFIX) === 0)
+			if (quote.search(Const.QUERY_INDEX_PREFIX) === 0) {
 				return QuoteTypes.QUERY_INDEX;
+			}
 
 			return QuoteTypes.COMPANY;
 		}
 
-		static getDefaultDisplayDays(param1 = false): number
-		{
-			if (Const.DEFAULT_DISPLAY_MINUTES !== -1)
-			{
+		static getDefaultDisplayDays(param1 = false): number {
+			if (Const.DEFAULT_DISPLAY_MINUTES !== -1) {
 				const dayLength = param1 ? 1 : Const.MARKET_DAY_LENGTH;
 				return Const.DEFAULT_DISPLAY_MINUTES / dayLength;
 			}
 			return Const.DEFAULT_DISPLAY_DAYS;
 		}
 
-		static isZhLocale(locale: string): boolean
-		{
+		static isZhLocale(locale: string): boolean {
 			return locale === Const.ZH_CN_LOCALE || locale === Const.ZH_HK_LOCALE || locale === Const.ZH_TW_LOCALE;
 		}
 	}
-}

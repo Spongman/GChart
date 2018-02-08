@@ -1,33 +1,32 @@
-/// <reference path="InteractiveObject.ts"/>
+import { InteractiveObject } from "InteractiveObject";
+import { Stage } from './Stage';
+import { DisplayObject } from './DisplayObject';
 
-namespace flash.display
-{
-	export class DisplayObjectContainer
-		extends InteractiveObject
-	{
+export class DisplayObjectContainer
+		extends InteractiveObject {
 		children: DisplayObject[] = [];
 		get numChildren() { return this.children.length; }
 
 		get stage() { return this._stage; }
-		set stage(value: Stage)
-		{
-			if (this._stage === value)
+		set stage(value: Stage) {
+			if (this._stage === value) {
 				return;
+			}
 			this._stage = value;
-			for (const child of this.children)
+			for (const child of this.children) {
 				child.stage = value;
+			}
 		}
 
-		private prepareChild(child: DisplayObject)
-		{
+		private prepareChild(child: DisplayObject) {
 			assert(child && !!child.element);
 
-			if (child.parent)
+			if (child.parent) {
 				child.parent.removeChild(child);
+			}
 
 			const childElement = child.element;
-			if (childElement.parentElement)
-			{
+			if (childElement.parentElement) {
 				assert(childElement.parentElement === document.body);
 				childElement.remove();
 				childElement.classList.remove("pending");
@@ -37,8 +36,7 @@ namespace flash.display
 			child.stage = this.stage;
 		}
 
-		addChild(child: DisplayObject)
-		{
+		addChild(child: DisplayObject) {
 			assert(!!this.element);
 
 			this.prepareChild(child);
@@ -47,8 +45,7 @@ namespace flash.display
 			this.element.appendChild(child.element);
 			return child;
 		}
-		addChildAt(child: DisplayObject, index: number)
-		{
+		addChildAt(child: DisplayObject, index: number) {
 			assert(!!this.element);
 
 			this.prepareChild(child);
@@ -57,12 +54,10 @@ namespace flash.display
 			this.children.splice(index, 0, child);
 			return this.element.insertBefore(child.element, childBefore && childBefore.element);
 		}
-		removeChild(child: DisplayObject)
-		{
+		removeChild(child: DisplayObject) {
 			this.removeChildAt(this.getChildIndex(child));
 		}
-		removeChildAt(i: number)
-		{
+		removeChildAt(i: number) {
 			const child = this.getChildAt(i);
 			//this.element.removeChild(child.element);
 			child.element.remove();
@@ -70,18 +65,15 @@ namespace flash.display
 			delete child.parent;
 			delete child.stage;
 		}
-		getChildAt(i: number): DisplayObject
-		{
+		getChildAt(i: number): DisplayObject {
 			assert(i >= 0 && i < this.children.length);
 			return this.children[i];
 		}
-		getChildIndex(child: DisplayObject): number
-		{
+		getChildIndex(child: DisplayObject): number {
 			assert(child && child.parent === this);
 			return this.children.indexOf(child);
 		}
-		swapChildrenAt(i1: number, i2: number)
-		{
+		swapChildrenAt(i1: number, i2: number) {
 			assert(i1 >= 0 && i1 < this.children.length);
 			assert(i2 >= 0 && i2 < this.children.length);
 
@@ -92,68 +84,66 @@ namespace flash.display
 			// TODO: swap elements
 		}
 
-		contains(child: DisplayObject): boolean
-		{
+		contains(child: DisplayObject): boolean {
 			return child.parent === this;
 		}
 
 		private _width: number;
 		private _height: number;
 
-		get width()
-		{
-			if (this._width != null)
+		get width() {
+			if (this._width != null) {
 				return this._width;
+			}
 
 			let w = 0;
-			for (const child of this.children)
-			{
-				if (child.element.classList.contains("pending"))
+			for (const child of this.children) {
+				if (child.element.classList.contains("pending")) {
 					continue;
+				}
 				const x = child.x + child.width;
-				if (w < x)
+				if (w < x) {
 					w = x;
+				}
 			}
-			if (this._graphics)
-			{
-				if (w < this._graphics.width)
+			if (this._graphics) {
+				if (w < this._graphics.width) {
 					w = this._graphics.width;
+				}
 			}
 			return w;
 		}
 
-		set width(value: number)
-		{
+		set width(value: number) {
 			this._width = value;
 			this.element.style.width = value + "px";
 		}
 
-		get height()
-		{
-			if (this._height != null)
+		get height() {
+			if (this._height != null) {
 				return this._height;
+			}
 
 			let h = 0;
-			for (const child of this.children)
-			{
-				if (child.element.classList.contains("pending"))
+			for (const child of this.children) {
+				if (child.element.classList.contains("pending")) {
 					continue;
+				}
 				const y = child.y + child.height;
-				if (h < y)
+				if (h < y) {
 					h = y;
+				}
 			}
-			if (this._graphics)
-			{
-				if (h < this._graphics.height)
+			if (this._graphics) {
+				if (h < this._graphics.height) {
 					h = this._graphics.height;
+				}
 			}
 			return h;
 		}
 
-		set height(value: number)
-		{
+		set height(value: number) {
 			this._height = value;
 			this.element.style.height = value + "px";
 		}
 	}
-}

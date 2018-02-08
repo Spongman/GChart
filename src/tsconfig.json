@@ -1,26 +1,32 @@
 {
 	"compileOnSave": true,
 	"compilerOptions": {
+
+		"lib": [
+			"dom", "es2015"
+		],
 		"target": "ES5",
 		"module": "system",
-		"noImplicitAny": true,
-		"noImplicitReturns": true,
+		//"noImplicitAny": true,
+		//"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
-		"noUnusedLocals": true,
-		/*
-		"noUnusedParameters": true,
-		*/
-		"strictNullChecks": true,
+		//"noUnusedLocals": true,
+		//"noUnusedParameters": true,
+		"strictNullChecks": false,
 		"allowUnusedLabels": false,
 		"removeComments": false,
 		"preserveConstEnums": true,
 		"sourceMap": true,
-		"strict": true,
+		//"strict": true,
 		//"noResolve": true,
 		"outDir": "js",
 		"outFile": "js/GoogleChart.js"
 	},
+	"files": [
+		"global.d.ts",
+	],
 	"include": [
+		"Global.ts",
 		"./**/*.ts"
 	]
 }

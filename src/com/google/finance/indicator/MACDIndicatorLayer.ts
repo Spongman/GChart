@@ -1,5 +1,13 @@
-namespace com.google.finance.indicator
-{
+import { IndependentIndicatorLayer } from "IndependentIndicatorLayer";
+import { Messages } from "Messages";
+import { Const } from "../Const";
+import { DataSeries } from "../DataSeries";
+import { Message } from "../Messages";
+import { Utils } from "../Utils";
+import { Context } from "../ViewPoint";
+import { IndicatorLineStyle } from "./IndicatorLineStyle";
+import { IndicatorPoint } from "./IndicatorPoint";
+
 	// import com.google.finance.Messages;
 	// import com.google.finance.Const;
 	// import com.google.finance.DataUnit;
@@ -8,23 +16,19 @@ namespace com.google.finance.indicator
 	// import com.google.finance.ViewPoint;
 	// import com.google.finance.DataSource;
 
-	export class MACDIndicatorLayer extends IndependentIndicatorLayer
-	{
+export class MACDIndicatorLayer extends IndependentIndicatorLayer {
 		private static readonly PARAMETER_NAMES: ReadonlyArray<string> = ["shortPeriod", "longPeriod", "emaPeriod"];
 
 		private emaPeriod = 9;
 		private longPeriod = 26;
 		private shortPeriod = 12;
 
-		static getParameterNames()
-		{
+		static getParameterNames() {
 			return MACDIndicatorLayer.PARAMETER_NAMES;
 		}
 
-		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string
-		{
-			switch (param1)
-			{
+		protected getIndicatorValueText(param1: number, param2: number, param3: string, context: Context): string {
+			switch (param1) {
 				case 0:
 					return Message.getMsg(Const.APPLY_CHINESE_STYLE_MACD ? Messages.DIFF_MACD : Messages.MACD_MACD, param2);
 				case 1:
@@ -36,10 +40,8 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		protected getLineStyle(param1: number): number
-		{
-			switch (param1)
-			{
+		protected getLineStyle(param1: number): number {
+			switch (param1) {
 				case 0:
 				case 1:
 					return IndicatorLineStyle.SIMPLE_LINE;
@@ -50,10 +52,8 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		protected getColor(param1: number, param2 = NaN): number
-		{
-			switch (param1)
-			{
+		protected getColor(param1: number, param2 = NaN): number {
+			switch (param1) {
 				case 0:
 					return Const.COLOR_BLUE;
 				case 1:
@@ -65,19 +65,19 @@ namespace com.google.finance.indicator
 			}
 		}
 
-		protected getIndicatorNameText(param1: string): string
-		{
+		protected getIndicatorNameText(param1: string): string {
 			return Message.getMsg(Messages.MACD_INTERVAL, this.shortPeriod, this.longPeriod, this.emaPeriod, param1);
 		}
 
-		computeIntervalIndicator(interval: number)
-		{
-			if (this.indicator.hasInterval(interval))
+		computeIntervalIndicator(interval: number) {
+			if (this.indicator.hasInterval(interval)) {
 				return;
+			}
 
 			const points = this.originalDataSeries.getPointsInIntervalArray(interval);
-			if (!points || points.length === 0)
+			if (!points || points.length === 0) {
 				return;
+			}
 
 			const dataSeries0 = new DataSeries();
 			const dataSeries1 = new DataSeries();
@@ -90,11 +90,9 @@ namespace com.google.finance.indicator
 			dataSeries0.points.push(indicatorPoint);
 			dataSeries1.points.push(indicatorPoint);
 			dataSeries2.points.push(indicatorPoint);
-			for (let pointIndex = 1; pointIndex < points.length; pointIndex++)
-			{
+			for (let pointIndex = 1; pointIndex < points.length; pointIndex++) {
 				const unit = points[pointIndex];
-				if (!this.shouldSkip(unit, dataSeries0, dataSeries1, dataSeries2))
-				{
+				if (!this.shouldSkip(unit, dataSeries0, dataSeries1, dataSeries2)) {
 					close = (close * (this.shortPeriod - 1) + unit.close * 2) / (this.shortPeriod + 1);
 					_loc4_ = (_loc4_ * (this.longPeriod - 1) + unit.close * 2) / (this.longPeriod + 1);
 					value0 = close - _loc4_;
@@ -110,10 +108,10 @@ namespace com.google.finance.indicator
 			this.indicator.setDataSeries(interval, dataSeries2, 2);
 		}
 
-		setIndicatorInstanceArray(indicators: MACDIndicatorLayer[])
-		{
-			if (!indicators || indicators.length !== 1)
+		setIndicatorInstanceArray(indicators: MACDIndicatorLayer[]) {
+			if (!indicators || indicators.length !== 1) {
 				return;
+			}
 
 			this.indicator.clear();
 			this.shortPeriod = indicators[0].shortPeriod;
@@ -121,12 +119,10 @@ namespace com.google.finance.indicator
 			this.emaPeriod = indicators[0].emaPeriod;
 		}
 
-		getContext(context: Context, param2 = false)
-		{
+		getContext(context: Context, param2 = false) {
 			context = super.getContext(context, param2);
 			context.maxValue = Utils.extendedMax(0, context.maxValue);
 			context.minValue = Utils.extendedMin(0, context.minValue);
 			return context;
 		}
 	}
-}

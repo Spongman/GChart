@@ -1,119 +1,127 @@
-/// <reference path="../../../flash/display/DisplayObject.ts"/>
+import { Shape } from '../../../flash/display/DisplayObject';
+import { Const } from './Const';
+import { DisplayManager } from './DisplayManager';
+import { SparklineViewPoint } from './SparklineViewPoint';
 
-namespace com.google.finance
+// import flash.display.Shape;
+// import flash.display.DisplayObject;
+
+export class BorderLayer extends Shape
 {
-	// import flash.display.Shape;
-	// import flash.display.DisplayObject;
-
-	export class BorderLayer extends flash.display.Shape
+	constructor(public readonly displayManager: DisplayManager, public topViewPoint: SparklineViewPoint)
 	{
-		constructor(public readonly displayManager: DisplayManager, public topViewPoint: SparklineViewPoint)
+		super(document.createElement("div"))
+	}
+
+	update(borderLayer?: BorderLayer, param2 = 0, param3 = false)
+	{
+		if (borderLayer)
 		{
-			super(document.createElement("div"));
+			this.topViewPoint = borderLayer.topViewPoint;
+		}
+		else
+		{
+			// TODO:
+			//_loc4_ = {};
+			//if (this.topViewPoint.windowLayer)
+			//	debugger;
+			borderLayer = this;
 		}
 
-		update(borderLayer?: BorderLayer, param2 = 0, param3 = false)
+		if (!this.topViewPoint.windowLayer)
 		{
-			if (borderLayer)
-			{
-				this.topViewPoint = borderLayer.topViewPoint;
-			}
-			else
-			{
-				// TODO:
-				//_loc4_ = {};
-				//if (this.topViewPoint.windowLayer)
-				//	debugger;
-				borderLayer = this;
-			}
+			return;
+		}
 
-			if (!this.topViewPoint.windowLayer)
-				return;
+		const windowLayer = this.topViewPoint.windowLayer;
+		const leftHandle = windowLayer.leftHandle;
+		const rightHandle = windowLayer.rightHandle;
+		let handleLeftX = Math.floor(this.topViewPoint.getHandleLeftX());
+		let handleRightX = Math.floor(this.topViewPoint.getHandleRightX());
+		//const _loc10_ = Const.MOVIE_WIDTH;
+		const height = Const.MOVIE_HEIGHT;
+		if (handleLeftX <= 0 || handleRightX <= 0)
+		{
+			return;
+		}
 
-			const windowLayer = this.topViewPoint.windowLayer;
-			const leftHandle = windowLayer.leftHandle;
-			const rightHandle = windowLayer.rightHandle;
-			let handleLeftX = Math.floor(this.topViewPoint.getHandleLeftX());
-			let handleRightX = Math.floor(this.topViewPoint.getHandleRightX());
-			//const _loc10_ = Const.MOVIE_WIDTH;
-			const height = Const.MOVIE_HEIGHT;
-			if (handleLeftX <= 0 || handleRightX <= 0)
-				return;
+		if (handleLeftX === handleRightX)
+		{
+			handleLeftX = handleLeftX - 3;
+			handleRightX = handleRightX + 3;
+		}
+		const scrollSlider = windowLayer.scrollSlider;
+		const gr = borderLayer.graphics;
+		gr.clear();
+		const left = Math.floor(scrollSlider.x);
+		const right = Math.floor(scrollSlider.x + scrollSlider.width);
+		if (handleLeftX === left - 1)
+		{
+			handleLeftX = left;
+		}
 
-			if (handleLeftX === handleRightX)
-			{
-				handleLeftX = handleLeftX - 3;
-				handleRightX = handleRightX + 3;
-			}
-			const scrollSlider = windowLayer.scrollSlider;
-			const gr = borderLayer.graphics;
-			gr.clear();
-			const left = Math.floor(scrollSlider.x);
-			const right = Math.floor(scrollSlider.x + scrollSlider.width);
-			if (handleLeftX === left - 1)
-				handleLeftX = left;
+		if (handleRightX === right + 1)
+		{
+			handleRightX = right;
+		}
 
-			if (handleRightX === right + 1)
-				handleRightX = right;
+		const y = height - Const.SPARKLINE_HEIGHT - Const.SPARK_PADDING;
+		gr.lineStyle(0, Const.BORDER_LINE_COLOR, Const.BORDER_LINE_OPACITY);
+		gr.moveTo(left, height - 1);
+		gr.lineTo(right, height - 1);
+		gr.lineTo(right, height - Const.SCROLL_HEIGHT - 2);
+		gr.lineTo(handleRightX, height - Const.SCROLL_HEIGHT - 2);
+		if (windowLayer.contains(leftHandle))
+		{
+			gr.lineTo(handleRightX, rightHandle.y + rightHandle.height - 1);
+			gr.moveTo(handleRightX, rightHandle.y + 1);
+		}
+		gr.lineTo(handleRightX, y);
+		gr.lineTo(Const.MOVIE_WIDTH - 1 - 1, y);
+		gr.lineTo(Const.MOVIE_WIDTH - 1 - 1, 1);
+		gr.lineTo(1, 1);
+		gr.lineTo(1, y);
+		gr.lineTo(handleLeftX, y);
+		if (windowLayer.contains(leftHandle))
+		{
+			gr.lineTo(handleLeftX, leftHandle.y + 1);
+			gr.moveTo(handleLeftX, leftHandle.y + leftHandle.height - 1);
+		}
+		gr.lineTo(handleLeftX, height - Const.SCROLL_HEIGHT - 2);
+		gr.lineTo(left, height - Const.SCROLL_HEIGHT - 2);
+		gr.lineTo(left, height);
+		gr.lineStyle(0, Const.BORDER_SHADOW_COLOR, 1);
+		gr.moveTo(handleRightX + 1, height - Const.SCROLL_HEIGHT - 2 - 0.5);
+		if (windowLayer.contains(rightHandle))
+		{
+			gr.lineTo(handleRightX + 1, rightHandle.y + rightHandle.height - 1);
+			gr.moveTo(handleRightX + 1, rightHandle.y + 1);
+		}
+		gr.lineTo(handleRightX + 1, y + 1);
+		gr.lineTo(Const.MOVIE_WIDTH - 1, y + 1);
+		gr.lineTo(Const.MOVIE_WIDTH - 1, 0);
+		gr.lineTo(0, 0);
+		gr.lineTo(0, y + 1);
+		gr.lineTo(handleLeftX - 1, y + 1);
+		if (windowLayer.contains(leftHandle))
+		{
+			gr.lineTo(handleLeftX - 1, leftHandle.y + 1);
+			gr.moveTo(handleLeftX - 1, leftHandle.y + leftHandle.height - 1);
+		}
+		gr.lineTo(handleLeftX - 1, height - Const.SCROLL_HEIGHT - 2);
+		if (Const.INDICATOR_ENABLED)
+		{
+			gr.lineStyle(0, Const.HORIZONTAL_LINE_COLOR, 1);
 
-			const y = height - Const.SPARKLINE_HEIGHT - Const.SPARK_PADDING;
-			gr.lineStyle(0, Const.BORDER_LINE_COLOR, Const.BORDER_LINE_OPACITY);
-			gr.moveTo(left, height - 1);
-			gr.lineTo(right, height - 1);
-			gr.lineTo(right, height - Const.SCROLL_HEIGHT - 2);
-			gr.lineTo(handleRightX, height - Const.SCROLL_HEIGHT - 2);
-			if (windowLayer.contains(leftHandle))
+			let renderedViewPointIndex = 1;
+			for (const viewPoint of this.displayManager.getViewPoints())
 			{
-				gr.lineTo(handleRightX, rightHandle.y + rightHandle.height - 1);
-				gr.moveTo(handleRightX, rightHandle.y + 1);
-			}
-			gr.lineTo(handleRightX, y);
-			gr.lineTo(Const.MOVIE_WIDTH - 1 - 1, y);
-			gr.lineTo(Const.MOVIE_WIDTH - 1 - 1, 1);
-			gr.lineTo(1, 1);
-			gr.lineTo(1, y);
-			gr.lineTo(handleLeftX, y);
-			if (windowLayer.contains(leftHandle))
-			{
-				gr.lineTo(handleLeftX, leftHandle.y + 1);
-				gr.moveTo(handleLeftX, leftHandle.y + leftHandle.height - 1);
-			}
-			gr.lineTo(handleLeftX, height - Const.SCROLL_HEIGHT - 2);
-			gr.lineTo(left, height - Const.SCROLL_HEIGHT - 2);
-			gr.lineTo(left, height);
-			gr.lineStyle(0, Const.BORDER_SHADOW_COLOR, 1);
-			gr.moveTo(handleRightX + 1, height - Const.SCROLL_HEIGHT - 2 - 0.5);
-			if (windowLayer.contains(rightHandle))
-			{
-				gr.lineTo(handleRightX + 1, rightHandle.y + rightHandle.height - 1);
-				gr.moveTo(handleRightX + 1, rightHandle.y + 1);
-			}
-			gr.lineTo(handleRightX + 1, y + 1);
-			gr.lineTo(Const.MOVIE_WIDTH - 1, y + 1);
-			gr.lineTo(Const.MOVIE_WIDTH - 1, 0);
-			gr.lineTo(0, 0);
-			gr.lineTo(0, y + 1);
-			gr.lineTo(handleLeftX - 1, y + 1);
-			if (windowLayer.contains(leftHandle))
-			{
-				gr.lineTo(handleLeftX - 1, leftHandle.y + 1);
-				gr.moveTo(handleLeftX - 1, leftHandle.y + leftHandle.height - 1);
-			}
-			gr.lineTo(handleLeftX - 1, height - Const.SCROLL_HEIGHT - 2);
-			if (Const.INDICATOR_ENABLED)
-			{
-				gr.lineStyle(0, Const.HORIZONTAL_LINE_COLOR, 1);
-
-				let renderedViewPointIndex = 1;
-				for (const viewPoint of this.displayManager.getViewPoints())
+				if (Const.INDEPENDENT_INDICATOR_NAMES.indexOf(viewPoint.name) !== -1 || viewPoint.name === Const.BOTTOM_VIEW_POINT_NAME)
 				{
-					if (Const.INDEPENDENT_INDICATOR_NAMES.indexOf(viewPoint.name) !== -1 || viewPoint.name === Const.BOTTOM_VIEW_POINT_NAME)
-					{
-						const yPos2 = y - Const.TECHNICAL_INDICATOR_HEIGHT * renderedViewPointIndex;
-						gr.moveTo(1, yPos2);
-						gr.lineTo(Const.MOVIE_WIDTH - 1 - 1, yPos2);
-						renderedViewPointIndex++;
-					}
+					const yPos2 = y - Const.TECHNICAL_INDICATOR_HEIGHT * renderedViewPointIndex;
+					gr.moveTo(1, yPos2);
+					gr.lineTo(Const.MOVIE_WIDTH - 1 - 1, yPos2);
+					renderedViewPointIndex++;
 				}
 			}
 		}

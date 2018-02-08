@@ -1,8 +1,6 @@
-namespace com.google.finance
-{
-	// import mx.core.Bitmap;
+import { Bitmap } from "../../../flash/display/Bitmap";
 
-	export class StockDividendMovie_DividendArrowClass extends flash.display.Bitmap
-	{
-	}
+// import mx.core.Bitmap;
+
+export class StockDividendMovie_DividendArrowClass extends Bitmap {
 }

@@ -1,9 +1,33 @@
-/// <reference path="../../../flash/display/Sprite.ts" />
+import { Sprite } from "../../../flash/display/Sprite";
+import { IViewPoint, ViewPointState, Context, ViewPoint } from './ViewPoint';
+import { TextFormat, TextField, TextFieldAutoSize } from '../../../flash/text/TextField';
+import { ToolTipMovie } from './ToolTipMovie';
+import { Bounds } from './Bounds';
+import { SimpleButton } from '../../../flash/display/SimpleButton';
+import { Intervals, ScaleTypes, Const, QuoteTypes, Directions, TickPositions, ChartDetailTypes, ControllerComponents } from './Const';
+import { MainManager } from './MainManager';
+import { Bitmap } from '../../../flash/display/Bitmap';
+import { Message } from './Messages';
+import { Messages } from 'Messages';
+import { DataSource } from './DataSource';
+import { Utils } from './Utils';
+import { MouseCursor, MouseCursors } from './MouseCursor';
+import { EventFactory } from './EventFactory';
+import { ChartEventPriorities } from './ChartEvent';
+import { LayersManager } from './LayersManager';
+import { DisplayManager } from './DisplayManager';
+import { Controller_ExpandIcon } from './Controller_ExpandIcon';
+import { AnimationManager } from './AnimationManager';
+import { Controller_ShrinkIcon } from './Controller_ShrinkIcon';
+import { DateTimeLocale } from '../i18n/locale/DateTimeLocale';
+import { Graphics } from '../../../flash/display/Graphics';
+import { Stage } from '../../../flash/display/Stage';
+import { TextButtonsGroup } from './ui/TextButtonsGroup';
+import { Timer, TimerEvent } from '../../../flash/utils/Timer';
+import { DisplayObject } from '../../../flash/display/DisplayObject';
 
-namespace com.google.finance
-{
 	// import flash.display.Sprite;
-	// import flash.display.Bitmap;
+	// import Bitmap;
 	// import flash.display.SimpleButton;
 	// import flash.events.MouseEvent;
 	// import flash.events.Event;
@@ -19,8 +43,7 @@ namespace com.google.finance
 	// import flash.events.KeyboardEvent;
 	// import com.google.i18n.locale.DateTimeLocale;
 
-	export enum ControllerStates
-	{
+export enum ControllerStates {
 		NOTHING = 0,
 		DRAGGING = 1,
 		SELECTING = 2,
@@ -36,8 +59,7 @@ namespace com.google.finance
 		DRAGGING_SPARKLINE = 12,
 	}
 
-	export class Controller extends flash.display.Sprite
-	{
+export class Controller extends Sprite {
 		private static NOTIFY_TIMEOUT = 500;
 
 		private PAGING_AREA_WIDTH = 100;
@@ -53,104 +75,106 @@ namespace com.google.finance
 		private lastCount: number;
 		private delayedMinutes: number;
 		private baseXOffset: number;
-		private promotedButtonTextFormat: flash.text.TextFormat;
-		private zoomButtons: ui.TextButtonsGroup;
-		private chartTypeButtons: ui.TextButtonsGroup;
+		private promotedButtonTextFormat: TextFormat;
+		private zoomButtons: TextButtonsGroup;
+		private chartTypeButtons: TextButtonsGroup;
 		private aniManager = new AnimationManager();
 		private scrollMouseMinX: number;
 		private listeners: IViewPoint[];
-		private separatorTextFormat: flash.text.TextFormat;
-		private pollingTimer: flash.utils.Timer;
+		private separatorTextFormat: TextFormat;
+		private pollingTimer: Timer;
 		private chartSizeChangeToolTip: ToolTipMovie;
-		private buttonTextFormat: flash.text.TextFormat;
+		private buttonTextFormat: TextFormat;
 		private intId: number;
 		private chartTypeNameMapping: { [key: string]: string };
 		private scrollMouseMaxX: number;
 		private isMarketOpen: boolean;
 		private initialXMouse: number;
 		private notifyHtmlIntervalId: number;
-		private selectedTextFormat: flash.text.TextFormat;
+		private selectedTextFormat: TextFormat;
 		private holderBounds: Bounds = new Bounds(Number.MAX_VALUE, Number.MAX_VALUE, 0, 0);
-		private chartTypeText: flash.text.TextField;
+		private chartTypeText: TextField;
 		private state = ControllerStates.NOTHING;
-		private intervalText: flash.text.TextField;
-		private chartSizeChangeButton: flash.display.SimpleButton;
+		private intervalText: TextField;
+		private chartSizeChangeButton: SimpleButton;
 		private customZoomEndDate: Date;
-		private zoomText: flash.text.TextField;
+		private zoomText: TextField;
 		private customZoomStartDate: Date;
 		private cumulativeXOffset: number = 0;
 		private stateRemainingMinutes: number;
 		private lastIntervalLevel: Intervals;
 		private controlledAreaBounds: Bounds[] = [];
 		private lastLastMinutes: number;
-		private windowTitleTextFormat: flash.text.TextFormat;
-		private intervalButtons: ui.TextButtonsGroup;
+		private windowTitleTextFormat: TextFormat;
+		private intervalButtons: TextButtonsGroup;
 		private isZh: boolean;
 
 		currentIntervalLevel: Intervals;
 		currentZoomLevel: ScaleTypes;
 
-		constructor(public readonly mainManager: MainManager, public readonly displayManager: DisplayManager)
-		{
+		constructor(readonly mainManager: MainManager, readonly displayManager: DisplayManager) {
 			super();
 			this.listeners = [];
-			this.isZh = Const.isZhLocale(i18n.locale.DateTimeLocale.getLocale());
+			this.isZh = Const.isZhLocale(DateTimeLocale.getLocale());
 			this.mouseEnabled = true;
-			this.buttonTextFormat = new flash.text.TextFormat("Verdana", this.isZh ? 10 : 9, 204);
+			this.buttonTextFormat = new TextFormat("Verdana", this.isZh ? 10 : 9, 204);
 			this.buttonTextFormat.underline = true;
-			this.promotedButtonTextFormat = new flash.text.TextFormat("Verdana", this.isZh ? 10 : 9, 14290192);
+			this.promotedButtonTextFormat = new TextFormat("Verdana", this.isZh ? 10 : 9, 14290192);
 			this.promotedButtonTextFormat.underline = true;
-			this.selectedTextFormat = new flash.text.TextFormat("Verdana", this.isZh ? 10 : 9, 0);
+			this.selectedTextFormat = new TextFormat("Verdana", this.isZh ? 10 : 9, 0);
 			this.selectedTextFormat.underline = false;
-			this.windowTitleTextFormat = new flash.text.TextFormat("Verdana", 10, 0);
+			this.windowTitleTextFormat = new TextFormat("Verdana", 10, 0);
 			this.windowTitleTextFormat.underline = false;
 			this.windowTitleTextFormat.bold = true;
-			this.separatorTextFormat = new flash.text.TextFormat("Verdana", 9, 0);
-			if (Const.INDICATOR_ENABLED && Const.CHART_TYPE_BUTTONS_ENABLED && mainManager.getQuoteType() === QuoteTypes.COMPANY)
+			this.separatorTextFormat = new TextFormat("Verdana", 9, 0);
+			if (Const.INDICATOR_ENABLED && Const.CHART_TYPE_BUTTONS_ENABLED && mainManager.getQuoteType() === QuoteTypes.COMPANY) {
 				this.createChartTypeButtons();
+			}
 
 			this.createZoomButtons();
 			this.createIntervalButtons();
 			this.enableZoomButtons();
-			if (Const.EXPAND_BUTTON_ENABLED)
+			if (Const.EXPAND_BUTTON_ENABLED) {
 				this.createChartSizeChangeButton(true);
-			else if (Const.SHRINK_BUTTON_ENABLED)
+			} else if (Const.SHRINK_BUTTON_ENABLED) {
 				this.createChartSizeChangeButton(false);
+								}
 
 			this.addChild(this.aniManager);
 			this.currentZoomLevel = this.getInitialZoomLevel();
 		}
 
-		private movePage(direction: Directions)
-		{
+		private movePage(direction: Directions) {
 			const mainViewPoint = this.displayManager.getMainViewPoint();
-			if (mainViewPoint)
-				this.notifyListenersToMove(<number>direction * (mainViewPoint.maxx - mainViewPoint.minx));
+			if (mainViewPoint) {
+				this.notifyListenersToMove(direction as number * (mainViewPoint.maxx - mainViewPoint.minx));
+			}
 		}
 
-		private getInitialZoomLevel(): ScaleTypes
-		{
-			if (Const.DEFAULT_DISPLAY_MINUTES !== -1)
+		private getInitialZoomLevel(): ScaleTypes {
+			if (Const.DEFAULT_DISPLAY_MINUTES !== -1) {
 				return -1;
+			}
 
-			for (let index = <ScaleTypes>0; index < <ScaleTypes>Const.SCALE_INTERVALS.length; index++)
-			{
-				if (Const.SCALE_INTERVALS[index].days === Const.DEFAULT_DISPLAY_DAYS && index >= ScaleTypes.SCALE_5D)
+			for (let index = 0 as ScaleTypes; index < (Const.SCALE_INTERVALS.length as ScaleTypes); index++) {
+				if (Const.SCALE_INTERVALS[index].days === Const.DEFAULT_DISPLAY_DAYS && index >= ScaleTypes.SCALE_5D) {
 					return index;
+				}
 			}
 			return ScaleTypes.INVALID;
 		}
 
-		createChartSizeChangeButton(showExpand: boolean)
-		{
-			if (this.chartSizeChangeToolTip && this.contains(this.chartSizeChangeToolTip))
+		createChartSizeChangeButton(showExpand: boolean) {
+			if (this.chartSizeChangeToolTip && this.contains(this.chartSizeChangeToolTip)) {
 				this.removeChild(this.chartSizeChangeToolTip);
+			}
 
-			if (this.chartSizeChangeButton && this.contains(this.chartSizeChangeButton))
+			if (this.chartSizeChangeButton && this.contains(this.chartSizeChangeButton)) {
 				this.removeChild(this.chartSizeChangeButton);
+			}
 
-			this.chartSizeChangeButton = new flash.display.SimpleButton("chartSizeChangeButton");
-			const buttonBitmap: flash.display.Bitmap = showExpand ? new Controller_ExpandIcon() : new Controller_ShrinkIcon();
+			this.chartSizeChangeButton = new SimpleButton("chartSizeChangeButton");
+			const buttonBitmap: Bitmap = showExpand ? new Controller_ExpandIcon() : new Controller_ShrinkIcon();
 
 			this.chartSizeChangeButton.overState = buttonBitmap;
 			this.chartSizeChangeButton.downState = buttonBitmap;
@@ -162,80 +186,70 @@ namespace com.google.finance
 			this.addChild(this.chartSizeChangeButton);
 			this.chartSizeChangeToolTip = new ToolTipMovie();
 			this.addChild(this.chartSizeChangeToolTip);
-			this.chartSizeChangeButton.addEventListener(MouseEvents.MOUSE_OVER, (event: Event): void =>
-			{
+			this.chartSizeChangeButton.addEventListener(MouseEvents.MOUSE_OVER, (event: Event): void => {
 				MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				MainManager.mouseCursor.lockOnDisplayObject(this.chartSizeChangeButton);
 				this.chartSizeChangeToolTip.renderMovie(this.chartSizeChangeButton.x - 5, this.chartSizeChangeButton.y, showExpand ? Message.getMsg(Messages.LARGE_CHART) : Message.getMsg(Messages.SMALL_CHART));
 
-				flash.display.Graphics.cleanupPending();
+				Graphics.cleanupPending();
 			});
-			this.chartSizeChangeButton.addEventListener(MouseEvents.MOUSE_OUT, (event: Event): void =>
-			{
+			this.chartSizeChangeButton.addEventListener(MouseEvents.MOUSE_OUT, (event: Event): void => {
 				MainManager.mouseCursor.unlock();
 				this.chartSizeChangeToolTip.clearMovie();
 
-				flash.display.Graphics.cleanupPending();
+				Graphics.cleanupPending();
 			});
-			this.chartSizeChangeButton.addEventListener(MouseEvents.CLICK, (event: Event): void =>
-			{
-				if (showExpand)
+			this.chartSizeChangeButton.addEventListener(MouseEvents.CLICK, (event: Event): void => {
+				if (showExpand) {
 					MainManager.jsProxy.expandChart();
-				else
+				} else {
 					MainManager.jsProxy.shrinkChart();
+				}
 
-				flash.display.Graphics.cleanupPending();
+				Graphics.cleanupPending();
 			});
 		}
 
-		private applyLastOrDefaultInterval(dataSource: DataSource | null, viewPoint: ViewPoint)
-		{
-			if (this.lastIntervalLevel !== Intervals.INVALID && this.lastIntervalLevel <= Intervals.WEEKLY)
-			{
+		private applyLastOrDefaultInterval(dataSource: DataSource | null, viewPoint: ViewPoint) {
+			if (this.lastIntervalLevel !== Intervals.INVALID && this.lastIntervalLevel <= Intervals.WEEKLY) {
 				this.enableIntervalButtons(this.lastIntervalLevel);
 				this.currentIntervalLevel = this.lastIntervalLevel;
 				this.animateTo(this.lastLastMinutes, this.lastCount, 1);
-			}
-			else
-			{
+			} else {
 				this.enableIntervalButtons(Const.DEFAULT_D);
 				this.currentIntervalLevel = Const.DEFAULT_D;
 				viewPoint.checkEvents();
-				if (dataSource)
+				if (dataSource) {
 					this.animateTo(0, Const.INTERVAL_PERIODS[Const.DEFAULT_D].days * (dataSource.data.marketDayLength + 1), 1);
+				}
 			}
 		}
 
-		onMouseMove(mouseEvent: MouseEvent)
-		{
+		onMouseMove(mouseEvent: MouseEvent) {
 			this.stage.setMouse(mouseEvent.pageX, mouseEvent.pageY);
 			const timer = getTimer();
-			if (timer - this.lastMouseMoveTime < 16)
+			if (timer - this.lastMouseMoveTime < 16) {
 				return;
+			}
 
 			this.lastMouseMoveTime = timer;
 			this.mouseMoveAction(mouseEvent);
 		}
 
-		removeControlListener(sprites: flash.display.Sprite)
-		{
-			for (let listenerIndex = 0; listenerIndex < this.listeners.length; listenerIndex++)
-			{
-				if (this.listeners[listenerIndex] === sprites)
-				{
+		removeControlListener(sprites: Sprite) {
+			for (let listenerIndex = 0; listenerIndex < this.listeners.length; listenerIndex++) {
+				if (this.listeners[listenerIndex] === sprites) {
 					this.listeners.splice(listenerIndex, 1);
 					return;
 				}
 			}
 		}
 
-		triggerMouseMoveAction()
-		{
+		triggerMouseMoveAction() {
 			this.mouseMoveAction(new MouseEvent(MouseEvents.MOUSE_MOVE));
 		}
 
-		getCountForDays(dataSource: DataSource, param2: number, param3: number): number
-		{
+		getCountForDays(dataSource: DataSource, param2: number, param3: number): number {
 			const units = dataSource.data.units;
 			const days = dataSource.data.days;
 			const endOfDayDataUnit = dataSource.getEndOfDayDataUnitFor(param3);
@@ -245,26 +259,21 @@ namespace com.google.finance
 			let _loc9_ = 0;
 			const relativeMinutes = units[days[minuteMetaIndex]].relativeMinutes;
 			let _loc11_ = dataSource.getEndOfDayDataUnitFor(relativeMinutes);
-			if (Utils.compareUtcDates(_loc11_.exchangeDateInUTC, endOfDayDataUnit.exchangeDateInUTC) !== 0)
+			if (Utils.compareUtcDates(_loc11_.exchangeDateInUTC, endOfDayDataUnit.exchangeDateInUTC) !== 0) {
 				_loc8_ += dataSource.afterHoursData.getSessionLength(Const.PRE_MARKET_NAME) + 1;
+			}
 
-			while (minuteMetaIndex >= 0 && _loc9_ < param2)
-			{
+			while (minuteMetaIndex >= 0 && _loc9_ < param2) {
 				minuteMetaIndex--;
 				let unit = units[days[minuteMetaIndex]];
-				if (_loc11_.coveredDays > 0)
-				{
+				if (_loc11_.coveredDays > 0) {
 					_loc8_ += _loc11_.coveredDays * (dataSource.data.marketDayLength + 1);
 					_loc9_ += _loc11_.coveredDays;
-				}
-				else if (unit)
-				{
+				} else if (unit) {
 					unit = dataSource.getEndOfDayDataUnitFor(unit.relativeMinutes);
 					_loc8_ += _loc11_.relativeMinutes - unit.relativeMinutes;
 					_loc9_++;
-				}
-				else
-				{
+				} else {
 					_loc8_ += dataSource.data.marketDayLength + 1;
 					_loc9_++;
 				}
@@ -274,11 +283,11 @@ namespace com.google.finance
 			return _loc8_;
 		}
 
-		moveListenersByOffsets()
-		{
+		moveListenersByOffsets() {
 			const mainViewPoint = this.displayManager.getMainViewPoint();
-			if (!mainViewPoint)
+			if (!mainViewPoint) {
 				return;
+			}
 
 			const sparklineViewPoint = this.displayManager.getSparklineViewPoint();
 			//const _loc3_ = _loc2_.dataSource;
@@ -289,89 +298,80 @@ namespace com.google.finance
 			this.changeListenersOffset(_loc7_);
 		}
 
-		handleMouseWheel(delta: number)
-		{
-			if (delta !== 0)
-			{
+		handleMouseWheel(delta: number) {
+			if (delta !== 0) {
 				const distance = Math.abs(delta);
-				if (delta > 0)
+				if (delta > 0) {
 					this.zoomStuff(Directions.FORWARD, this.mouseX, distance);
-				else if (delta < 0)
+				} else if (delta < 0) {
 					this.zoomStuff(Directions.BACKWARD, this.mouseY, distance);
+									}
 
 				clearInterval(this.notifyHtmlIntervalId);
 				this.notifyHtmlIntervalId = setInterval(this.listenersNotifyHtml.bind(this), Controller.NOTIFY_TIMEOUT);
 			}
 		}
 
-		private hitTestInsideBounds(x: number, y: number): boolean
-		{
-			for (const bounds of this.controlledAreaBounds)
-			{
-				if (bounds.containsPoint(x, y))
+		private hitTestInsideBounds(x: number, y: number): boolean {
+			for (const bounds of this.controlledAreaBounds) {
+				if (bounds.containsPoint(x, y)) {
 					return true;
+				}
 			}
 			return false;
 		}
 
-		checkSparklinePositioning()
-		{
+		checkSparklinePositioning() {
 			const sparklineViewPoint = this.displayManager.getSparklineViewPoint();
 			const mainViewPoint = this.displayManager.getMainViewPoint();
-			if (!sparklineViewPoint || !mainViewPoint)
+			if (!sparklineViewPoint || !mainViewPoint) {
 				return;
+			}
 
 			//const _loc3_ = _loc2_.minutesOffset;
-			if (!sparklineViewPoint.windowLayer)
+			if (!sparklineViewPoint.windowLayer) {
 				return;
+			}
 
 			const leftX = sparklineViewPoint.windowLayer.getLeftX();
 			const rightX = sparklineViewPoint.windowLayer.getRightX();
 			const firstDataSource = this.displayManager.layersManager.getFirstDataSource();
 			const sparkLastMinute = sparklineViewPoint.getSparkLastMinute() < 0;
 			let sparkFirstMinute = sparklineViewPoint.getSparkFirstMinute() > sparklineViewPoint.getOldestMinute();
-			if (this.currentIntervalLevel !== Intervals.INVALID && firstDataSource)
-			{
+			if (this.currentIntervalLevel !== Intervals.INVALID && firstDataSource) {
 				const tFirstRelativeMinute = firstDataSource.getFirstRelativeMinute(this.currentIntervalLevel);
 				sparkFirstMinute = sparklineViewPoint.getSparkFirstMinute() > tFirstRelativeMinute;
 			}
-			if (sparkFirstMinute && leftX < sparklineViewPoint.minx + this.PAGING_AREA_WIDTH)
-			{
+			if (sparkFirstMinute && leftX < sparklineViewPoint.minx + this.PAGING_AREA_WIDTH) {
 				sparklineViewPoint.moveSparklineBy_Handler(leftX - (sparklineViewPoint.minx + this.PAGING_AREA_WIDTH));
 				sparklineViewPoint.commitSparklineOffset_Handler();
-			}
-			else if (sparkLastMinute && rightX > sparklineViewPoint.maxx - this.PAGING_AREA_WIDTH)
-			{
+			} else if (sparkLastMinute && rightX > sparklineViewPoint.maxx - this.PAGING_AREA_WIDTH) {
 				sparklineViewPoint.moveSparklineBy_Handler(rightX - (sparklineViewPoint.maxx - this.PAGING_AREA_WIDTH));
 				sparklineViewPoint.commitSparklineOffset_Handler();
 			}
 		}
 
-		setNewFinalState(viewPointState: ViewPointState, param2: boolean = false)
-		{
-			if (viewPointState.lastMinute === undefined || viewPointState.count === undefined)
+		setNewFinalState(viewPointState: ViewPointState, param2: boolean = false) {
+			if (viewPointState.lastMinute === undefined || viewPointState.count === undefined) {
 				return;
-
-			if (this.aniManager.isAnimating())
-			{
-				for (const listener of this.listeners)
-					listener.newFinalAnimationState(viewPointState);
 			}
-			else
-			{
+
+			if (this.aniManager.isAnimating()) {
+				for (const listener of this.listeners) {
+					listener.newFinalAnimationState(viewPointState);
+				}
+			} else {
 				this.jumpTo(viewPointState.lastMinute, viewPointState.count, param2);
 			}
 		}
 
-		animateTo(lastMinute: number, count: number, param3: number = NaN, param4 = false)
-		{
-			const _loc5_: ((displayObjects: flash.display.DisplayObject, param2: number, param3: boolean) => void)[] = [];
-			const _loc6_: flash.display.DisplayObject[] = [];
+		animateTo(lastMinute: number, count: number, param3: number = NaN, param4 = false) {
+			const _loc5_: Array<(displayObjects: DisplayObject, param2: number, param3: boolean) => void> = [];
+			const _loc6_: DisplayObject[] = [];
 			const context = new Context();
 			context.lastMinute = lastMinute;
 			context.count = count;
-			for (let listenerIndex = 0; listenerIndex < this.listeners.length; listenerIndex++)
-			{
+			for (let listenerIndex = 0; listenerIndex < this.listeners.length; listenerIndex++) {
 				this.listeners[listenerIndex].zoomingAnimation_init(context);
 				const listener = this.listeners[listenerIndex];
 				_loc5_[listenerIndex] = listener.zoomingAnimation_ticker.bind(listener);
@@ -383,39 +383,38 @@ namespace com.google.finance
 			this.aniManager.animate(_loc5_, _loc6_, param3, param4);
 		}
 
-		chartTypeButtonClicked(param1: string)
-		{
+		chartTypeButtonClicked(param1: string) {
 			MainManager.jsProxy.setJsChartType(this.chartTypeNameMapping[param1]);
 		}
 
-		onMouseUp(event: Event)
-		{
+		onMouseUp(event: Event) {
 			this.mouseUpAction();
 		}
 
-		syncZoomLevel(param1?: boolean)
-		{
-			if (this.state === ControllerStates.SCROLLING)
+		syncZoomLevel(param1?: boolean) {
+			if (this.state === ControllerStates.SCROLLING) {
 				return;
+			}
 
-			if (this.displayManager.isDifferentMarketSessionComparison())
+			if (this.displayManager.isDifferentMarketSessionComparison()) {
 				return;
+			}
 
 			const zoomLevelFinalState = this.getZoomLevelFinalState(this.currentZoomLevel);
-			if (zoomLevelFinalState)
+			if (zoomLevelFinalState) {
 				this.setNewFinalState(zoomLevelFinalState, param1);
+			}
 		}
 
-		private createChartTypeButtons()
-		{
-			this.chartTypeText = new flash.text.TextField();
+		private createChartTypeButtons() {
+			this.chartTypeText = new TextField();
 			this.chartTypeText.x = 5;
 			this.chartTypeText.y = 5;
-			this.chartTypeText.autoSize = flash.text.TextFieldAutoSize.LEFT;
+			this.chartTypeText.autoSize = TextFieldAutoSize.LEFT;
 			this.chartTypeText.defaultTextFormat = this.windowTitleTextFormat;
-			this.chartTypeText.text = Message.getMsg(Messages.TYPE) + ':';
+			this.chartTypeText.text = Message.getMsg(Messages.TYPE) + ":";
 			this.chartTypeText.selectable = false;
-			this.chartTypeButtons = new ui.TextButtonsGroup();
+			this.chartTypeButtons = new TextButtonsGroup();
 			this.chartTypeButtons.setSpacing("", this.isZh ? 1 : 3);
 			this.chartTypeButtons.setTextFormats(this.buttonTextFormat, this.selectedTextFormat, this.separatorTextFormat);
 			this.chartTypeButtons.x = this.chartTypeText.x + this.chartTypeText.width + this.chartTypeButtons.spacing;
@@ -431,16 +430,14 @@ namespace com.google.finance
 			this.addChild(this.chartTypeButtons);
 		}
 
-		mouseMoveAction(mouseEvent: MouseEvent)
-		{
+		mouseMoveAction(mouseEvent: MouseEvent) {
 			let _loc10_ = false;
 			let _loc11_ = false;
 			const mainViewPoint = this.displayManager.getMainViewPoint();
 			const sparklineViewPoint = this.displayManager.getSparklineViewPoint();
 			//const _loc4_ = this.displayManager.getViewPoint("BottomViewPoint");
 			//const _loc5_ = this.mainManager.layersManager;
-			switch (this.state)
-			{
+			switch (this.state) {
 				case ControllerStates.SELECTING:
 					this.drawSquare(this.initialXMouse, this.initialYMouse, this.mouseX, this.mouseY);
 					break;
@@ -450,19 +447,18 @@ namespace com.google.finance
 					this.checkSparklinePositioning();
 					break;
 				case ControllerStates.NOTHING:
-					if (this.hitTestInsideBounds(this.mouseX, this.mouseY) && !mainViewPoint.isAnimating())
-					{
+					if (this.hitTestInsideBounds(this.mouseX, this.mouseY) && !mainViewPoint.isAnimating()) {
 						this.displayManager.spaceText.setPointInfo(this.highlightPoints());
 						MainManager.mouseCursor.setCursor(MouseCursors.OPENED_HAND);
 						break;
 					}
-					if (sparklineViewPoint.windowLayer && mouseEvent.target !== sparklineViewPoint.windowLayer.leftHandle.button.element && mouseEvent.target !== sparklineViewPoint.windowLayer.rightHandle.button.element)
+					if (sparklineViewPoint.windowLayer && mouseEvent.target !== sparklineViewPoint.windowLayer.leftHandle.button.element && mouseEvent.target !== sparklineViewPoint.windowLayer.rightHandle.button.element) {
 						MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
+					}
 
 					this.clearAllHighlights();
 					this.displayManager.showContextualStaticInfo();
-					if (sparklineViewPoint.bg.hitTestPoint(this.mouseX, this.mouseY, false))
-					{
+					if (sparklineViewPoint.bg.hitTestPoint(this.mouseX, this.mouseY, false)) {
 						sparklineViewPoint.toggleHandles(true);
 						break;
 					}
@@ -483,21 +479,18 @@ namespace com.google.finance
 					const _loc9_ = this.displayManager.layersManager.getFirstDataSource();
 					_loc10_ = sparklineViewPoint.getSparkLastMinute() < 0;
 					_loc11_ = sparklineViewPoint.getSparkFirstMinute() > sparklineViewPoint.getOldestMinute();
-					if (this.currentIntervalLevel !== Intervals.INVALID && _loc9_)
-					{
+					if (this.currentIntervalLevel !== Intervals.INVALID && _loc9_) {
 						const firstRelativeMinute = _loc9_.getFirstRelativeMinute(this.currentIntervalLevel);
 						_loc11_ = sparklineViewPoint.getSparkFirstMinute() > firstRelativeMinute;
 					}
-					if (mouseX < this.scrollMouseMinX + this.PAGING_AREA_WIDTH && _loc11_)
-					{
+					if (mouseX < this.scrollMouseMinX + this.PAGING_AREA_WIDTH && _loc11_) {
 						this.pagingAmount = mouseX - (this.scrollMouseMinX + this.PAGING_AREA_WIDTH);
 						this.addXOffset(this, this.pagingAmount);
 						clearInterval(this.intId);
 						this.intId = setInterval(() => { this.addXOffset(this, this.pagingAmount); }, 20);
 						break;
 					}
-					if (mouseX >= this.scrollMouseMaxX - this.PAGING_AREA_WIDTH && _loc10_)
-					{
+					if (mouseX >= this.scrollMouseMaxX - this.PAGING_AREA_WIDTH && _loc10_) {
 						this.pagingAmount = mouseX - (this.scrollMouseMaxX - this.PAGING_AREA_WIDTH);
 						this.addXOffset(this, this.pagingAmount);
 						clearInterval(this.intId);
@@ -522,101 +515,93 @@ namespace com.google.finance
 					this.displayManager.spaceText.setTimePeriod(sparklineViewPoint.windowLayer);
 					break;
 			}
-			if (this.displayManager.topBorderLayer)
+			if (this.displayManager.topBorderLayer) {
 				this.displayManager.topBorderLayer.update();
+			}
 		}
 
-		addControlListener(viewPoint: IViewPoint, tickPosition: TickPositions = <TickPositions>NaN)
-		{
-			if (tickPosition === TickPositions.BOTTOM)
+		addControlListener(viewPoint: IViewPoint, tickPosition: TickPositions = NaN as TickPositions) {
+			if (tickPosition === TickPositions.BOTTOM) {
 				this.listeners.push(viewPoint);
-			else
+			} else {
 				this.listeners.splice(0, 0, viewPoint);
+			}
 		}
 
-		getButtonsWidth(): number
-		{
-			if (!this.zoomButtons || !this.intervalButtons)
+		getButtonsWidth(): number {
+			if (!this.zoomButtons || !this.intervalButtons) {
 				return 0;
+			}
 
 			return Math.max(this.zoomButtons.x + this.zoomButtons.width, this.intervalButtons.x + this.intervalButtons.width);
 		}
 
-		listenersNotifyHtml()
-		{
-			for (const listener of this.listeners)
+		listenersNotifyHtml() {
+			for (const listener of this.listeners) {
 				listener.HTMLnotify();
+			}
 
 			clearInterval(this.notifyHtmlIntervalId);
 		}
 
-		shouldRequestAfterHoursData(param1: boolean, param2: number, param3: number, param4: number): boolean
-		{
-			if (!param1)
+		shouldRequestAfterHoursData(param1: boolean, param2: number, param3: number, param4: number): boolean {
+			if (!param1) {
 				return true;
+			}
 
-			if (param2 <= Const.REALTIME_CHART_POLLING_MARGIN || param2 >= param4 - param3 - Const.REALTIME_CHART_POLLING_MARGIN)
+			if (param2 <= Const.REALTIME_CHART_POLLING_MARGIN || param2 >= param4 - param3 - Const.REALTIME_CHART_POLLING_MARGIN) {
 				return true;
+			}
 
 			return false;
 		}
 
-		get mouseCursor(): MouseCursor
-		{
+		get mouseCursor(): MouseCursor {
 			return MainManager.mouseCursor;
 		}
 
-		private createIntervalButtons()
-		{
-			this.intervalText = new flash.text.TextField();
+		private createIntervalButtons() {
+			this.intervalText = new TextField();
 			this.intervalText.x = !this.chartTypeButtons ? 5 : this.chartTypeButtons.x + this.chartTypeButtons.width + 5;
 			this.intervalText.y = 5;
-			this.intervalText.autoSize = flash.text.TextFieldAutoSize.LEFT;
+			this.intervalText.autoSize = TextFieldAutoSize.LEFT;
 			this.intervalText.defaultTextFormat = this.windowTitleTextFormat;
-			this.intervalText.text = Message.getMsg(Messages.INTERVAL) + ':';
+			this.intervalText.text = Message.getMsg(Messages.INTERVAL) + ":";
 			this.intervalText.selectable = false;
-			this.intervalButtons = new ui.TextButtonsGroup();
+			this.intervalButtons = new TextButtonsGroup();
 			this.intervalButtons.setSpacing("", this.isZh ? 1 : 3);
 			this.intervalButtons.setTextFormats(this.buttonTextFormat, this.selectedTextFormat, this.separatorTextFormat);
 			this.intervalButtons.x = this.intervalText.x + this.intervalText.width + this.intervalButtons.spacing;
 			this.intervalButtons.y = this.intervalText.y;
 			const intervalPeriods = Const.INTERVAL_PERIODS;
-			for (const intervalPeriod of intervalPeriods)
-			{
-				if (intervalPeriod.days >= Const.MIN_DISPLAY_DAYS)
+			for (const intervalPeriod of intervalPeriods) {
+				if (intervalPeriod.days >= Const.MIN_DISPLAY_DAYS) {
 					this.intervalButtons.addButton(Message.getMsg(intervalPeriod.text));
+				}
 			}
 			this.intervalButtons.addListener(this.intervalButtonClicked, this);
 		}
 
-		jumpTo(lastMinute: number, count: number, param3: boolean = false)
-		{
+		jumpTo(lastMinute: number, count: number, param3: boolean = false) {
 			let context = new Context();
 			context.lastMinute = lastMinute;
 			context.count = count;
-			for (const listener of this.listeners)
-			{
+			for (const listener of this.listeners) {
 				context = listener.getNewContext(lastMinute, count);
 				listener.zoomInMinutes_Handler(context, param3);
 			}
 		}
 
-		private adjustCountForAfterHours(param1: number, dataSource: DataSource, startInterval: Intervals, endInterval: Intervals): number
-		{
-			if (startInterval === Intervals.INTRADAY && endInterval > Intervals.INTRADAY)
-			{
-				for (let intervalIndex = 0; intervalIndex < dataSource.visibleExtendedHours.length(); intervalIndex++)
-				{
+		private adjustCountForAfterHours(param1: number, dataSource: DataSource, startInterval: Intervals, endInterval: Intervals): number {
+			if (startInterval === Intervals.INTRADAY && endInterval > Intervals.INTRADAY) {
+				for (let intervalIndex = 0; intervalIndex < dataSource.visibleExtendedHours.length(); intervalIndex++) {
 					const interval = dataSource.visibleExtendedHours.getIntervalAt(intervalIndex);
 					const startUnit = dataSource.afterHoursData.units[interval.start];
 					const endUnit = dataSource.afterHoursData.units[interval.end];
 					param1 -= endUnit.dayMinute - startUnit.dayMinute;
 				}
-			}
-			else if (startInterval > Intervals.INTRADAY && endInterval === Intervals.INTRADAY)
-			{
-				for (let intervalIndex = 0; intervalIndex < dataSource.hiddenExtendedHours.length(); intervalIndex++)
-				{
+			} else if (startInterval > Intervals.INTRADAY && endInterval === Intervals.INTRADAY) {
+				for (let intervalIndex = 0; intervalIndex < dataSource.hiddenExtendedHours.length(); intervalIndex++) {
 					const interval = dataSource.hiddenExtendedHours.getIntervalAt(intervalIndex);
 					const startUnit = dataSource.afterHoursData.units[interval.start];
 					const endUnit = dataSource.afterHoursData.units[interval.end];
@@ -626,76 +611,69 @@ namespace com.google.finance
 			return param1;
 		}
 
-		resetZoomButtons(param1: number)
-		{
-			if (!this.zoomButtons)
+		resetZoomButtons(param1: number) {
+			if (!this.zoomButtons) {
 				return;
+			}
 
 			this.zoomButtons.clearSelection();
 			this.zoomButtons.resetButtonsGroup();
 			const scaleIntervals = Const.SCALE_INTERVALS;
-			for (let index = scaleIntervals.length - 1; index >= 0; index--)
-			{
-				if (scaleIntervals[index].days >= param1)
-				{
-					if (scaleIntervals[index].text !== Const.NO_BUTTON_TEXT)
+			for (let index = scaleIntervals.length - 1; index >= 0; index--) {
+				if (scaleIntervals[index].days >= param1) {
+					if (scaleIntervals[index].text !== Const.NO_BUTTON_TEXT) {
 						this.zoomButtons.addButton(Message.getMsg(scaleIntervals[index].text));
+					}
 				}
 			}
 			this.zoomButtons.addListener(this.zoomButtonClicked, this);
 		}
 
-		private computeHolderBounds()
-		{
+		private computeHolderBounds() {
 			this.holderBounds = new Bounds(Number.MAX_VALUE, Number.MAX_VALUE, 0, 0);
-			for (const bounds of this.controlledAreaBounds)
+			for (const bounds of this.controlledAreaBounds) {
 				this.holderBounds.append(bounds);
+			}
 		}
 
-		clearCurrentInterval()
-		{
+		clearCurrentInterval() {
 			this.currentIntervalLevel = Intervals.INVALID;
 			this.intervalButtons.clearSelection();
 		}
 
-		clearCurrentZoom()
-		{
+		clearCurrentZoom() {
 			this.currentZoomLevel = ScaleTypes.INVALID;
 			this.zoomButtons.clearSelection();
 		}
 
-		private initPollingTimer()
-		{
-			if (Const.INDICATOR_ENABLED && Const.REALTIME_CHART_ENABLED && this.mainManager.quote.indexOf("INDEXDJX") === -1)
-			{
+		private initPollingTimer() {
+			if (Const.INDICATOR_ENABLED && Const.REALTIME_CHART_ENABLED && this.mainManager.quote.indexOf("INDEXDJX") === -1) {
 				this.isMarketOpen = Number(MainManager.paramsObj.isMarketOpenState) === 1;
 				this.stateRemainingMinutes = MainManager.paramsObj.stateRemainingMinutes >= 0 ? MainManager.paramsObj.stateRemainingMinutes : Number.MAX_VALUE;
 				this.delayedMinutes = MainManager.paramsObj.delayedMinutes >= 0 ? MainManager.paramsObj.delayedMinutes : 0;
-				this.pollingTimer = new flash.utils.Timer(Const.REALTIME_CHART_POLLING_INTERVAL);
-				this.pollingTimer.addEventListener(TimerEvents.TIMER, flash.display.Stage.bind(this.pollingTimerHandler, this));
+				this.pollingTimer = new Timer(Const.REALTIME_CHART_POLLING_INTERVAL);
+				this.pollingTimer.addEventListener(TimerEvents.TIMER, Stage.bind(this.pollingTimerHandler, this));
 				this.pollingTimer.start();
 			}
 		}
 
-		onMouseLeave(event: Event)
-		{
+		onMouseLeave(event: Event) {
 			MainManager.jsProxy.setChartFocus(false);
 			MainManager.mouseCursor.setCursor(MouseCursors.CLASSIC);
 			this.clearAllHighlights();
 			this.displayManager.showContextualStaticInfo();
 		}
 
-		mouseUpAction()
-		{
+		mouseUpAction() {
 			//const _loc1_ = this.displayManager.getMainViewPoint();
 			const sparklineViewPoint = this.displayManager.getSparklineViewPoint();
-			switch (this.state)
-			{
+			switch (this.state) {
 				case ControllerStates.SELECTING:
 					const _loc5_ = Math.min(this.initialXMouse, this.mouseX);
 					const _loc6_ = Math.max(this.initialXMouse, this.mouseX);
-					for (const listener of this.listeners)
+					for (const listener of this.listeners) {
 						listener.zoomIn_Handler(_loc5_, _loc6_);
+					}
 
 					this.listenersNotifyHtml();
 					this.graphics.clear();
@@ -715,10 +693,10 @@ namespace com.google.finance
 					this.cumulativeXOffset = 0;
 					this.pagingAmount = 0;
 					this.commitListenersOffset();
-					if (Math.abs(this.initialXMouse - this.mouseX) >= this.MIN_PIXELS)
-					{
-						for (const listener of this.listeners)
+					if (Math.abs(this.initialXMouse - this.mouseX) >= this.MIN_PIXELS) {
+						for (const listener of this.listeners) {
 							listener.HTMLnotify();
+						}
 						break;
 					}
 					break;
@@ -733,83 +711,80 @@ namespace com.google.finance
 			}
 			this.mouseCursor.setCursor(MouseCursors.CLASSIC);
 			const viewPoints = this.displayManager.getViewPoints();
-			for (const viewPoint of viewPoints)
-			{
-				if (viewPoint.bg.hitTestPoint(this.mouseX, this.mouseY, false) && !viewPoint.isAnimating())
+			for (const viewPoint of viewPoints) {
+				if (viewPoint.bg.hitTestPoint(this.mouseX, this.mouseY, false) && !viewPoint.isAnimating()) {
 					MainManager.mouseCursor.setCursor(MouseCursor.DRAGGABLE_CURSOR);
+				}
 			}
 			this.displayManager.topBorderLayer.update();
 			this.state = ControllerStates.NOTHING;
 			this.MOUSE_DOWN = false;
 		}
 
-		private clearAllHighlights()
-		{
+		private clearAllHighlights() {
 			const viewPoints = this.displayManager.getViewPoints();
-			for (const viewPoint of viewPoints)
+			for (const viewPoint of viewPoints) {
 				viewPoint.clearPointInformation();
+			}
 		}
 
-		moveSparkline(param1: number)
-		{
+		moveSparkline(param1: number) {
 			const sparklineViewPoint = this.displayManager.getSparklineViewPoint();
 			sparklineViewPoint.moveSparklineBy_Handler(param1 * 10);
 			sparklineViewPoint.commitSparklineOffset_Handler();
 			this.displayManager.topBorderLayer.update();
 		}
 
-		zoomButtonClicked(param1: string)
-		{
+		zoomButtonClicked(param1: string) {
 			const firstDataSource = this.displayManager.layersManager.getFirstDataSource();
-			if (!firstDataSource || firstDataSource.isEmpty())
+			if (!firstDataSource || firstDataSource.isEmpty()) {
 				return;
+			}
 
 			const scaleIntervals = Const.SCALE_INTERVALS;
 			let index = scaleIntervals.length - 1;
-			while (index >= 0 && Message.getMsg(scaleIntervals[index].text) !== param1)
+			while (index >= 0 && Message.getMsg(scaleIntervals[index].text) !== param1) {
 				index--;
+			}
 
-			if (index === -1)
+			if (index === -1) {
 				return;
+			}
 
 			MainManager.jsProxy.logZoomButtonClick(scaleIntervals[index].logtext);
-			this.animateToLevel(<ScaleTypes>index);
+			this.animateToLevel(index as ScaleTypes);
 		}
 
-		private addXOffset(controller: Controller, param2: number)
-		{
+		private addXOffset(controller: Controller, param2: number) {
 			const sparklineViewPoint = notnull(controller.displayManager.getSparklineViewPoint());
-			if (sparklineViewPoint.sparklinePagingPossible(param2))
-			{
+			if (sparklineViewPoint.sparklinePagingPossible(param2)) {
 				controller.cumulativeXOffset += param2;
 				controller.moveListenersByOffsets();
-			}
-			else
-			{
+			} else {
 				controller.stopContinuousPaging();
 			}
 		}
 
-		findBestFitDetailLevel(viewPoint: ViewPoint, dataSource: DataSource | null): Intervals
-		{
-			if (!viewPoint || !dataSource)
+		findBestFitDetailLevel(viewPoint: ViewPoint, dataSource: DataSource | null): Intervals {
+			if (!viewPoint || !dataSource) {
 				return Intervals.INVALID;
+			}
 
 			const firstMinute = viewPoint.getFirstMinute();
 			const count = viewPoint.count;
-			if (this.isFitDetailLevel(this.lastIntervalLevel, dataSource, firstMinute, count))
+			if (this.isFitDetailLevel(this.lastIntervalLevel, dataSource, firstMinute, count)) {
 				return this.lastIntervalLevel;
+			}
 
-			for (let intervalIndex = Intervals.INTRADAY; intervalIndex <= Intervals.WEEKLY; intervalIndex++)
-			{
-				if (this.isFitDetailLevel(intervalIndex, dataSource, firstMinute, count))
+			for (let intervalIndex = Intervals.INTRADAY; intervalIndex <= Intervals.WEEKLY; intervalIndex++) {
+				if (this.isFitDetailLevel(intervalIndex, dataSource, firstMinute, count)) {
 					return intervalIndex;
+				}
 			}
 			return Intervals.INVALID;
 		}
 
-		private drawSquare(x: number, param2: number, right: number, param4: number)
-		{
+		private drawSquare(x: number, param2: number, right: number, param4: number) {
 			const gr = this.graphics;
 			gr.clear();
 			gr.beginFill(Const.SELECTING_FILL_COLOR, 0.4);
@@ -826,26 +801,26 @@ namespace com.google.finance
 			gr.endFill();
 		}
 
-		replaceBounds(remove: Bounds, add: Bounds)
-		{
+		replaceBounds(remove: Bounds, add: Bounds) {
 			const boundsIndex = this.getBoundsIndex(remove);
-			if (boundsIndex !== -1)
+			if (boundsIndex !== -1) {
 				this.controlledAreaBounds.splice(boundsIndex, 1);
+			}
 
 			this.controlledAreaBounds.push(add);
 			this.computeHolderBounds();
 		}
 
-		private commitListenersOffset()
-		{
-			for (const listener of this.listeners)
+		private commitListenersOffset() {
+			for (const listener of this.listeners) {
 				listener.commitOffset_Handler();
+			}
 		}
 
-		getCustomScaleZoomLevel(dataSource: DataSource, startDate: Date, endDate: Date)
-		{
-			if (!startDate || !endDate || startDate >= endDate)
+		getCustomScaleZoomLevel(dataSource: DataSource, startDate: Date, endDate: Date) {
+			if (!startDate || !endDate || startDate >= endDate) {
 				return null;
+			}
 
 			const units = dataSource.data.units;
 			const firstTimeIndex = DataSource.getTimeIndex(startDate.getTime(), units);
@@ -854,65 +829,62 @@ namespace com.google.finance
 			const firstRelativeMinute = units[firstTimeIndex].relativeMinutes;
 			return {
 				lastMinute: lastRelativeMinute,
-				count: lastRelativeMinute - firstRelativeMinute
+				count: lastRelativeMinute - firstRelativeMinute,
 			};
 		}
 
-		setMinDisplayDays(minDisplayDays: number)
-		{
+		setMinDisplayDays(minDisplayDays: number) {
 			const mainViewPoint = this.displayManager.getMainViewPoint();
-			if (!mainViewPoint)
+			if (!mainViewPoint) {
 				return;
+			}
 			const firstMinute = mainViewPoint.getFirstMinute();
 			const lastMinute = mainViewPoint.getLastMinute();
 			const firstDataSource = this.mainManager.layersManager.getFirstDataSource();
-			if (!firstDataSource)
+			if (!firstDataSource) {
 				return;
+			}
 			const endOfDayDataUnit = firstDataSource.getEndOfDayDataUnitFor(lastMinute);
 			const endOfDayMinute = endOfDayDataUnit.relativeMinutes;
 			const countForDays = this.getCountForDays(firstDataSource, minDisplayDays, endOfDayMinute);
 			Const.MIN_DISPLAY_DAYS = minDisplayDays;
-			if (countForDays > lastMinute - firstMinute)
+			if (countForDays > lastMinute - firstMinute) {
 				this.animateTo(endOfDayMinute, countForDays);
+			}
 		}
 
-		private notifyListenersToMove(param1: number)
-		{
+		private notifyListenersToMove(param1: number) {
 			this.changeListenersOffset(param1);
 			this.checkSparklinePositioning();
 			this.commitListenersOffset();
 			this.displayManager.showContextualStaticInfo();
 			this.displayManager.topBorderLayer.update();
 			clearInterval(this.notifyHtmlIntervalId);
-			this.notifyHtmlIntervalId = setInterval(flash.display.Stage.bind(this.listenersNotifyHtml, this), Controller.NOTIFY_TIMEOUT);
+			this.notifyHtmlIntervalId = setInterval(Stage.bind(this.listenersNotifyHtml, this), Controller.NOTIFY_TIMEOUT);
 		}
 
-		private stopContinuousPaging()
-		{
+		private stopContinuousPaging() {
 			clearInterval(this.intId);
 			this.pagingAmount = 0;
 		}
 
-		private enableZoomButtons()
-		{
-			if (this.contains(this.zoomButtons))
+		private enableZoomButtons() {
+			if (this.contains(this.zoomButtons)) {
 				return;
+			}
 
 			this.addChild(this.zoomText);
 			this.addChild(this.zoomButtons);
-			if (this.contains(this.intervalButtons))
-			{
+			if (this.contains(this.intervalButtons)) {
 				this.removeChild(this.intervalButtons);
 				this.removeChild(this.intervalText);
 			}
 			this.clearCurrentInterval();
 		}
 
-		private pollingTimerHandler(timerEvent: flash.utils.TimerEvent)
-		{
+		private pollingTimerHandler(timerEvent: TimerEvent) {
 			const firstDataSource = this.displayManager.layersManager.getFirstDataSource();
-			if (!firstDataSource || firstDataSource.isEmpty())
-			{
+			if (!firstDataSource || firstDataSource.isEmpty()) {
 				this.pollingTimer.stop();
 				return;
 			}
@@ -920,60 +892,51 @@ namespace com.google.finance
 			const newMarketState = this.getNewMarketState(this.isMarketOpen, this.stateRemainingMinutes, minutes);
 			this.isMarketOpen = newMarketState.isMarketOpen;
 			this.stateRemainingMinutes = newMarketState.stateRemainingMinutes;
-			if (firstDataSource.data.hasPointsInIntervalArray(Const.INTRADAY_INTERVAL) && this.shouldRequestRegularMarketData(this.isMarketOpen, this.stateRemainingMinutes, this.delayedMinutes, minutes))
-			{
+			if (firstDataSource.data.hasPointsInIntervalArray(Const.INTRADAY_INTERVAL) && this.shouldRequestRegularMarketData(this.isMarketOpen, this.stateRemainingMinutes, this.delayedMinutes, minutes)) {
 				const event = EventFactory.getEvent(ChartDetailTypes.GET_RT_DATA, firstDataSource.quoteName, ChartEventPriorities.POLLING);
 				this.mainManager.dataManager.eventHandler(event);
 			}
-			if (Boolean(MainManager.paramsObj.hasExtendedHours) && firstDataSource.afterHoursData.hasPointsInIntervalArray(Const.INTRADAY_INTERVAL) && this.shouldRequestAfterHoursData(this.isMarketOpen, this.stateRemainingMinutes, this.delayedMinutes, minutes))
-			{
+			if (Boolean(MainManager.paramsObj.hasExtendedHours) && firstDataSource.afterHoursData.hasPointsInIntervalArray(Const.INTRADAY_INTERVAL) && this.shouldRequestAfterHoursData(this.isMarketOpen, this.stateRemainingMinutes, this.delayedMinutes, minutes)) {
 				const event = EventFactory.getEvent(ChartDetailTypes.GET_RT_AH_DATA, firstDataSource.quoteName, ChartEventPriorities.POLLING);
 				this.mainManager.dataManager.eventHandler(event);
 			}
 		}
 
-		updateChartSizeChangeButtonPosition()
-		{
-			if (this.chartSizeChangeButton)
+		updateChartSizeChangeButtonPosition() {
+			if (this.chartSizeChangeButton) {
 				this.chartSizeChangeButton.x = this.mainManager.stage.stageWidth - this.chartSizeChangeButton.width - 5;
+			}
 		}
 
-		toggleZoomIntervalButtons(param1: string, param2: string)
-		{
-			if (param1 === param2)
+		toggleZoomIntervalButtons(param1: string, param2: string) {
+			if (param1 === param2) {
 				return;
+			}
 
-			if (this.chartTypeButtons)
+			if (this.chartTypeButtons) {
 				this.chartTypeButtons.selectButtonByIndex(Const.CHART_STYLE_NAMES.indexOf(param2));
+			}
 
 			const mainViewPoint = this.displayManager.getMainViewPoint();
-			if (param1 === Const.LINE_CHART)
-			{
+			if (param1 === Const.LINE_CHART) {
 				const firstDataSource = this.displayManager.layersManager.getFirstDataSource();
-				if (firstDataSource && mainViewPoint.getFirstMinute() < firstDataSource.firstOpenRelativeMinutes)
-				{
+				if (firstDataSource && mainViewPoint.getFirstMinute() < firstDataSource.firstOpenRelativeMinutes) {
 					this.applyLastOrDefaultInterval(firstDataSource, mainViewPoint);
 					return;
 				}
-				if (this.displayManager.getDetailLevel() < Intervals.DAILY && Boolean(MainManager.paramsObj.displayExtendedHours))
-				{
+				if (this.displayManager.getDetailLevel() < Intervals.DAILY && Boolean(MainManager.paramsObj.displayExtendedHours)) {
 					this.applyLastOrDefaultInterval(firstDataSource, mainViewPoint);
 					return;
 				}
 				const dBestFitDetailLevel = this.findBestFitDetailLevel(mainViewPoint, firstDataSource);
-				if (dBestFitDetailLevel === Intervals.INVALID)
-				{
+				if (dBestFitDetailLevel === Intervals.INVALID) {
 					this.applyLastOrDefaultInterval(firstDataSource, mainViewPoint);
-				}
-				else
-				{
+				} else {
 					this.enableIntervalButtons(dBestFitDetailLevel);
 					this.currentIntervalLevel = dBestFitDetailLevel;
 					mainViewPoint.checkEvents();
 				}
-			}
-			else if (param2 === Const.LINE_CHART)
-			{
+			} else if (param2 === Const.LINE_CHART) {
 				this.lastIntervalLevel = this.currentIntervalLevel;
 				this.lastCount = mainViewPoint.count;
 				this.lastLastMinutes = mainViewPoint.lastMinute;
@@ -981,32 +944,28 @@ namespace com.google.finance
 			}
 		}
 
-		addBounds(bounds: Bounds)
-		{
+		addBounds(bounds: Bounds) {
 			this.controlledAreaBounds.push(bounds);
 			this.holderBounds.append(bounds);
 		}
 
-		animateToLevel(currentZoomLevel: ScaleTypes)
-		{
+		animateToLevel(currentZoomLevel: ScaleTypes) {
 			const zoomLevelFinalState = this.getZoomLevelFinalState(currentZoomLevel);
-			if (zoomLevelFinalState)
-			{
+			if (zoomLevelFinalState) {
 				this.currentZoomLevel = currentZoomLevel;
 				this.animateTo(zoomLevelFinalState.lastMinute, zoomLevelFinalState.count);
 			}
 		}
 
-		private createZoomButtons()
-		{
-			this.zoomText = new flash.text.TextField();
+		private createZoomButtons() {
+			this.zoomText = new TextField();
 			this.zoomText.x = !this.chartTypeButtons ? 5 : this.chartTypeButtons.x + this.chartTypeButtons.width + 5;
 			this.zoomText.y = 5;
-			this.zoomText.autoSize = flash.text.TextFieldAutoSize.LEFT;
+			this.zoomText.autoSize = TextFieldAutoSize.LEFT;
 			this.zoomText.defaultTextFormat = this.windowTitleTextFormat;
-			this.zoomText.text = Message.getMsg(Messages.ZOOM) + ':';
+			this.zoomText.text = Message.getMsg(Messages.ZOOM) + ":";
 			this.zoomText.selectable = false;
-			this.zoomButtons = new ui.TextButtonsGroup();
+			this.zoomButtons = new TextButtonsGroup();
 			this.zoomButtons.setSpacing("", this.isZh ? 1 : 3);
 			this.zoomButtons.setTextFormats(this.buttonTextFormat, this.selectedTextFormat, this.separatorTextFormat);
 			this.zoomButtons.x = this.zoomText.x + this.zoomText.width + this.zoomButtons.spacing;
@@ -1014,32 +973,32 @@ namespace com.google.finance
 			this.resetZoomButtons(Const.MIN_DISPLAY_DAYS);
 		}
 
-		private onKeyDown(keyboardEvent: KeyboardEvent)
-		{
+		private onKeyDown(keyboardEvent: KeyboardEvent) {
 			this.CTRL_DOWN = keyboardEvent.ctrlKey;
 			this.SHIFT_DOWN = keyboardEvent.shiftKey;
-			if (keyboardEvent.charCode === "vVeElLcC".charCodeAt(0))
+			if (keyboardEvent.charCode === "vVeElLcC".charCodeAt(0)) {
 				MainManager.jsProxy.setParameter("displayVolume", "false");
-			else if (keyboardEvent.charCode === "vVeElLcC".charCodeAt(1))
+			} else if (keyboardEvent.charCode === "vVeElLcC".charCodeAt(1)) {
 				MainManager.jsProxy.setParameter("displayVolume", "true");
-			else if (keyboardEvent.charCode === "vVeElLcC".charCodeAt(2))
+								} else if (keyboardEvent.charCode === "vVeElLcC".charCodeAt(2)) {
 				MainManager.jsProxy.setParameter("displayExtendedHours", "true");
-			else if (keyboardEvent.charCode === "vVeElLcC".charCodeAt(3))
+								} else if (keyboardEvent.charCode === "vVeElLcC".charCodeAt(3)) {
 				MainManager.jsProxy.setParameter("displayExtendedHours", "false");
-			else if (keyboardEvent.charCode === "vVeElLcC".charCodeAt(4))
+								} else if (keyboardEvent.charCode === "vVeElLcC".charCodeAt(4)) {
 				MainManager.jsProxy.setParameter("verticalScaling", "Logarithmic");
-			else if (keyboardEvent.charCode === "vVeElLcC".charCodeAt(5))
+								} else if (keyboardEvent.charCode === "vVeElLcC".charCodeAt(5)) {
 				MainManager.jsProxy.setParameter("verticalScaling", "Linear");
-			else if (keyboardEvent.keyCode === 38)
+								} else if (keyboardEvent.keyCode === 38) {
 				this.zoomStuff(Directions.FORWARD, 0, 1);
-			else if (keyboardEvent.keyCode === 40)
+								} else if (keyboardEvent.keyCode === 40) {
 				this.zoomStuff(Directions.BACKWARD, 0, 1);
+								}
 		}
 
-		isFitDetailLevel(detailLevel: Intervals, dataSource: DataSource, param3: number, param4: number): boolean
-		{
-			if (!(detailLevel >= Intervals.INTRADAY && detailLevel <= Intervals.WEEKLY))
+		isFitDetailLevel(detailLevel: Intervals, dataSource: DataSource, param3: number, param4: number): boolean {
+			if (!(detailLevel >= Intervals.INTRADAY && detailLevel <= Intervals.WEEKLY)) {
 				return false;
+			}
 
 			const interval = Const.getDetailLevelInterval(detailLevel);
 			const points = dataSource.data.getPointsInIntervalArray(interval);
@@ -1047,249 +1006,229 @@ namespace com.google.finance
 			return points && points.length > 0 && points[0].relativeMinutes <= param3 && param4 <= Const.INTERVAL_PERIODS[detailLevel].maxdays * _loc7_ && param4 >= Const.INTERVAL_PERIODS[detailLevel].mindays * _loc7_;
 		}
 
-		onMouseDown(mouseEvent: MouseEvent)
-		{
+		onMouseDown(mouseEvent: MouseEvent) {
 			MainManager.jsProxy.setChartFocus(true);
 			this.SHIFT_DOWN = mouseEvent.shiftKey;
 			this.CTRL_DOWN = mouseEvent.ctrlKey;
-			if (!this.displayManager.spaceText.isDateFieldClicked(mouseEvent))
+			if (!this.displayManager.spaceText.isDateFieldClicked(mouseEvent)) {
 				this.displayManager.spaceText.resetInfoText();
+			}
 
 			this.mouseDownAction();
 		}
 
-		private onKeyUp(keyboardEvent: KeyboardEvent)
-		{
+		private onKeyUp(keyboardEvent: KeyboardEvent) {
 			this.CTRL_DOWN = keyboardEvent.ctrlKey;
 			this.SHIFT_DOWN = keyboardEvent.shiftKey;
 			clearInterval(this.intId);
 		}
 
-		removeAllBounds()
-		{
+		removeAllBounds() {
 			this.controlledAreaBounds.splice(0);
 			this.computeHolderBounds();
 		}
 
-		shouldRequestRegularMarketData(param1: boolean, param2: number, param3: number, param4: number): boolean
-		{
-			if (param1)
+		shouldRequestRegularMarketData(param1: boolean, param2: number, param3: number, param4: number): boolean {
+			if (param1) {
 				return true;
+			}
 
-			if (param2 <= Const.REALTIME_CHART_POLLING_MARGIN || param2 >= Const.MIN_PER_DAY - param4 - param3 - Const.REALTIME_CHART_POLLING_MARGIN)
+			if (param2 <= Const.REALTIME_CHART_POLLING_MARGIN || param2 >= Const.MIN_PER_DAY - param4 - param3 - Const.REALTIME_CHART_POLLING_MARGIN) {
 				return true;
+			}
 
 			return false;
 		}
 
-		animateToCustomLevel(startDate: Date, endDate: Date)
-		{
+		animateToCustomLevel(startDate: Date, endDate: Date) {
 			this.customZoomStartDate = startDate;
 			this.customZoomEndDate = endDate;
 			this.animateToLevel(ScaleTypes.SCALE_CUSTOM);
 		}
 
-		intervalButtonClicked(param1: string)
-		{
+		intervalButtonClicked(param1: string) {
 			const firstDataSource = this.displayManager.layersManager.getFirstDataSource();
-			if (!firstDataSource || firstDataSource.isEmpty())
+			if (!firstDataSource || firstDataSource.isEmpty()) {
 				return;
+			}
 
 			const intervalPeriods = Const.INTERVAL_PERIODS;
-			let intervalIndex = <Intervals>(intervalPeriods.length - 1);
-			while (intervalIndex !== Intervals.INVALID && Message.getMsg(intervalPeriods[intervalIndex].text) !== param1)
+			let intervalIndex = (intervalPeriods.length - 1) as Intervals;
+			while (intervalIndex !== Intervals.INVALID && Message.getMsg(intervalPeriods[intervalIndex].text) !== param1) {
 				intervalIndex--;
+			}
 
-			if (intervalIndex === Intervals.INVALID)
+			if (intervalIndex === Intervals.INVALID) {
 				return;
+			}
 
 			MainManager.jsProxy.logIntervalButtonClick(intervalPeriods[intervalIndex].logtext);
 			this.currentIntervalLevel = intervalIndex;
-			if (Boolean(MainManager.paramsObj.displayExtendedHours))
-			{
-				if (this.currentIntervalLevel === Intervals.INTRADAY)
+			if (Boolean(MainManager.paramsObj.displayExtendedHours)) {
+				if (this.currentIntervalLevel === Intervals.INTRADAY) {
 					this.displayManager.toggleAllAfterHoursSessions(true);
-				else
+				} else {
 					this.displayManager.toggleAllAfterHoursSessions(false);
+				}
 			}
 			this.animateTo(0, intervalPeriods[intervalIndex].days * (firstDataSource.data.marketDayLength + 1), 1);
 			MainManager.jsProxy.setJsCurrentViewParam("defaultDisplayInterval", Const.getDetailLevelInterval(intervalIndex));
 		}
 
-		private highlightPoints()
-		{
+		private highlightPoints() {
 			const pointInfo = {};
 			const viewPoints = this.displayManager.getViewPoints();
 
-			for (const viewPoint of viewPoints)
+			for (const viewPoint of viewPoints) {
 				viewPoint.highlightPoint(this.mouseX, pointInfo);
+			}
 
 			return pointInfo;
 		}
 
-		getState(): ControllerStates
-		{
+		getState(): ControllerStates {
 			return this.state;
 		}
 
-		private getZoomLevelFinalState(scaleIntervalIndex: ScaleTypes): ViewPointState | null
-		{
+		private getZoomLevelFinalState(scaleIntervalIndex: ScaleTypes): ViewPointState | null {
 			let count = NaN;
 			const sparklineViewPoint = this.displayManager.getSparklineViewPoint();
 			const mainViewPoint = this.displayManager.getMainViewPoint();
 			const layersManager = this.mainManager.layersManager;
 			const firstDataSource = layersManager.getFirstDataSource();
-			if (!firstDataSource)
+			if (!firstDataSource) {
 				return null;
+			}
 
 			const scaleIntervals = Const.SCALE_INTERVALS;
 			let lastMinute = sparklineViewPoint.getLastMinute();
-			if (scaleIntervalIndex === ScaleTypes.SCALE_CUSTOM)
-			{
+			if (scaleIntervalIndex === ScaleTypes.SCALE_CUSTOM) {
 				const customScaleZoomLevel = this.getCustomScaleZoomLevel(firstDataSource, this.customZoomStartDate, this.customZoomEndDate);
-				if (!customScaleZoomLevel)
+				if (!customScaleZoomLevel) {
 					return null;
+				}
 
 				lastMinute = customScaleZoomLevel.lastMinute;
 				count = customScaleZoomLevel.count;
-			}
-			else if (scaleIntervalIndex === ScaleTypes.SCALE_YTD)
-			{
+			} else if (scaleIntervalIndex === ScaleTypes.SCALE_YTD) {
 				const date = new Date(firstDataSource.data.units[firstDataSource.data.units.length - 1].time);
 				date.setMonth(0);
 				date.setDate(1);
 				const units = firstDataSource.data.units;
 				lastMinute = 0;
 				count = lastMinute - units[DataSource.getTimeIndex(date.getTime(), units)].relativeMinutes;
-			}
-			else if (scaleIntervalIndex === ScaleTypes.SCALE_MAX)
-			{
+			} else if (scaleIntervalIndex === ScaleTypes.SCALE_MAX) {
 				lastMinute = mainViewPoint.getNewestMinute();
 				count = Math.abs(mainViewPoint.getOldestBaseMinute());
-			}
-			else if (scaleIntervalIndex !== ScaleTypes.INVALID && scaleIntervalIndex <= ScaleTypes.SCALE_1M)
-			{
+			} else if (scaleIntervalIndex !== ScaleTypes.INVALID && scaleIntervalIndex <= ScaleTypes.SCALE_1M) {
 				const date = new Date(sparklineViewPoint.getLastDataUnit().time);
 				date.setMonth(date.getMonth() - scaleIntervals[scaleIntervalIndex].months);
 				const units = firstDataSource.data.units;
 				const timeIndex = DataSource.getTimeIndex(date.getTime(), units);
 				count = sparklineViewPoint.getLastMinute() - units[timeIndex].relativeMinutes;
-			}
-			else if (scaleIntervalIndex >= 0 && scaleIntervalIndex < scaleIntervals.length)
-			{
+			} else if (scaleIntervalIndex >= 0 && scaleIntervalIndex < scaleIntervals.length) {
 				lastMinute = firstDataSource.getEndOfDayDataUnitFor(mainViewPoint.getLastMinute()).relativeMinutes;
 				count = this.getCountForDays(firstDataSource, scaleIntervals[scaleIntervalIndex].days, lastMinute);
-			}
-			else
-			{
+			} else {
 				return null;
 			}
 
 			const style = this.displayManager.layersManager.getStyle();
-			if (style === LayersManager.SINGLE && Boolean(MainManager.paramsObj.displayExtendedHours))
-			{
+			if (style === LayersManager.SINGLE && Boolean(MainManager.paramsObj.displayExtendedHours)) {
 				let startInterval: Intervals;
 				let endInterval: Intervals;
 
-				if (Const.INDICATOR_ENABLED)
-				{
+				if (Const.INDICATOR_ENABLED) {
 					startInterval = mainViewPoint.getDetailLevelForTechnicalStyle();
 					endInterval = mainViewPoint.getDetailLevelForTechnicalStyle(count, lastMinute);
-				}
-				else
-				{
+				} else {
 					startInterval = mainViewPoint.getDetailLevel();
 					endInterval = mainViewPoint.getDetailLevel(count, lastMinute);
 				}
 				count = this.adjustCountForAfterHours(count, firstDataSource, startInterval, endInterval);
 			}
-			if (isNaN(count) || isNaN(lastMinute))
+			if (isNaN(count) || isNaN(lastMinute)) {
 				return null;
+			}
 
 			return { lastMinute, count };
 		}
 
-		zoomStuff(direction: Directions, param2: number, param3: number = NaN)
-		{
+		zoomStuff(direction: Directions, param2: number, param3: number = NaN) {
 			this.clearCurrentZoom();
 
-			for (const listener of this.listeners)
+			for (const listener of this.listeners) {
 				listener.zoomChart_Handler(direction, param3);
+			}
 
 			this.displayManager.topBorderLayer.update();
 			this.displayManager.showContextualStaticInfo();
 		}
 
-		private getBoundsIndex(bounds: Bounds): number
-		{
-			for (let boundsIndex = 0; boundsIndex < this.controlledAreaBounds.length; boundsIndex++)
-			{
-				if (bounds.equals(this.controlledAreaBounds[boundsIndex]))
+		private getBoundsIndex(bounds: Bounds): number {
+			for (let boundsIndex = 0; boundsIndex < this.controlledAreaBounds.length; boundsIndex++) {
+				if (bounds.equals(this.controlledAreaBounds[boundsIndex])) {
 					return boundsIndex;
+				}
 			}
 			return -1;
 		}
 
-		private changeListenersOffset(param1: number)
-		{
-			for (const listener of this.listeners)
+		private changeListenersOffset(param1: number) {
+			for (const listener of this.listeners) {
 				listener.moveChartBy_Handler(param1);
+			}
 		}
 
-		getNewMarketState(param1: boolean, param2: number, minutes: number)
-		{
-			if (param2 === 0)
-			{
+		getNewMarketState(param1: boolean, param2: number, minutes: number) {
+			if (param2 === 0) {
 				param1 = !param1;
 				param2 = param1 ? minutes : Const.MIN_PER_DAY - minutes;
 			}
 			param2 -= Const.REALTIME_CHART_POLLING_INTERVAL / Const.MS_PER_MINUTE;
 			return {
 				isMarketOpen: param1,
-				stateRemainingMinutes: param2
+				stateRemainingMinutes: param2,
 			};
 		}
 
-		initEventListeners()
-		{
-			if (!this.stage)
+		initEventListeners() {
+			if (!this.stage) {
 				return;
+			}
 
 			const stage = this.stage;
 			//var stage = document.body;
 
-			stage.addEventListener(KeyboardEvents.KEY_DOWN, flash.display.Stage.bind(this.onKeyDown, this));
-			stage.addEventListener(KeyboardEvents.KEY_UP, flash.display.Stage.bind(this.onKeyUp, this));
-			stage.addEventListener(MouseEvents.MOUSE_MOVE, flash.display.Stage.bind(this.onMouseMove, this));
-			stage.addEventListener(MouseEvents.MOUSE_LEAVE, flash.display.Stage.bind(this.onMouseLeave, this));
-			stage.addEventListener(MouseEvents.MOUSE_DOWN, flash.display.Stage.bind(this.onMouseDown, this));
-			stage.addEventListener(MouseEvents.MOUSE_UP, flash.display.Stage.bind(this.onMouseUp, this));
+			stage.addEventListener(KeyboardEvents.KEY_DOWN, Stage.bind(this.onKeyDown, this));
+			stage.addEventListener(KeyboardEvents.KEY_UP, Stage.bind(this.onKeyUp, this));
+			stage.addEventListener(MouseEvents.MOUSE_MOVE, Stage.bind(this.onMouseMove, this));
+			stage.addEventListener(MouseEvents.MOUSE_LEAVE, Stage.bind(this.onMouseLeave, this));
+			stage.addEventListener(MouseEvents.MOUSE_DOWN, Stage.bind(this.onMouseDown, this));
+			stage.addEventListener(MouseEvents.MOUSE_UP, Stage.bind(this.onMouseUp, this));
 			this.initPollingTimer();
 		}
 
-		enableIntervalButtons(detailLevel: Intervals)
-		{
-			if (this.contains(this.intervalButtons))
+		enableIntervalButtons(detailLevel: Intervals) {
+			if (this.contains(this.intervalButtons)) {
 				return;
+			}
 
 			this.addChild(this.intervalText);
 			this.addChild(this.intervalButtons);
-			this.intervalButtons.selectButtonByIndex(<number>detailLevel);
-			if (this.contains(this.zoomButtons))
-			{
+			this.intervalButtons.selectButtonByIndex(detailLevel as number);
+			if (this.contains(this.zoomButtons)) {
 				this.removeChild(this.zoomButtons);
 				this.removeChild(this.zoomText);
 			}
 			this.clearCurrentZoom();
 		}
 
-		mouseDownAction(controllerComponent: ControllerComponents = <ControllerComponents>NaN)
-		{
+		mouseDownAction(controllerComponent: ControllerComponents = NaN as ControllerComponents) {
 			const sparklineViewPoint = this.displayManager.getSparklineViewPoint();
 			this.initialXMouse = this.stage.mouseX;
 			this.initialYMouse = this.stage.mouseY;
-			switch (controllerComponent)
-			{
+			switch (controllerComponent) {
 				case ControllerComponents.SCROLL_BAR:
 					this.state = ControllerStates.SCROLLING;
 					this.cumulativeXOffset = 0;
@@ -1301,13 +1240,11 @@ namespace com.google.finance
 					break;
 				case ControllerComponents.SCROLL_BG:
 					const scrollSlider = sparklineViewPoint.windowLayer.scrollSlider;
-					if (this.mouseX < scrollSlider.x)
-					{
+					if (this.mouseX < scrollSlider.x) {
 						this.movePage(Directions.BACKWARD);
 						break;
 					}
-					if (this.mouseX > scrollSlider.x + scrollSlider.width)
-					{
+					if (this.mouseX > scrollSlider.x + scrollSlider.width) {
 						this.movePage(Directions.FORWARD);
 						break;
 					}
@@ -1333,20 +1270,19 @@ namespace com.google.finance
 					this.mouseCursor.setCursor(MouseCursors.H_ARROWS);
 					return;
 			}
-			if (!this.hitTestInsideBounds(this.mouseX, this.mouseY))
+			if (!this.hitTestInsideBounds(this.mouseX, this.mouseY)) {
 				return;
+			}
 
 			this.MOUSE_DOWN = true;
 			this.clearAllHighlights();
-			if (this.CTRL_DOWN && this.SHIFT_DOWN)
-			{
+			if (this.CTRL_DOWN && this.SHIFT_DOWN) {
 				this.state = ControllerStates.ZOOMING_OUT;
 				clearInterval(this.intId);
 				this.intId = setInterval(() => { this.zoomStuff(Directions.BACKWARD, this.stage.mouseX); }, 20);
 				return;
 			}
-			if (this.SHIFT_DOWN)
-			{
+			if (this.SHIFT_DOWN) {
 				this.state = ControllerStates.SELECTING;
 				this.mouseCursor.setCursor(MouseCursors.CLASSIC);
 				return;
@@ -1355,4 +1291,3 @@ namespace com.google.finance
 			this.state = ControllerStates.DRAGGING;
 		}
 	}
-}

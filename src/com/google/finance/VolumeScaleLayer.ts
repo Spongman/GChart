@@ -1,81 +1,76 @@
-namespace com.google.finance
-{
+import { Const, Intervals } from './Const';
+import { Messages } from 'Messages';
+import { Message } from './Messages';
+import { TextFormat, TextFieldAutoSize, TextField } from '../../../flash/text/TextField';
+import { Context, ViewPoint, IViewPoint } from './ViewPoint';
+import { AbstractLayer } from 'AbstractLayer';
+import { DataSource } from './DataSource';
+
 	// import flash.text.TextField;
 	// import flash.text.TextFormat;
 	// import flash.text.TextFieldAutoSize;
 
-	export class VolumeScaleLayer extends AbstractLayer<ViewPoint>
-	{
+	export class VolumeScaleLayer extends AbstractLayer<ViewPoint> {
 		private static readonly LABEL_PADDING = 2;
 
 		//private maxPriceRange: number;
 		//private priceSkip: number;
 		//private averagePrice: number;
-		private midScaleTextField: flash.text.TextField;
-		private topScaleTextField: flash.text.TextField;
-		private volumeLabel = new flash.text.TextField();
+		private midScaleTextField: TextField;
+		private topScaleTextField: TextField;
+		private volumeLabel = new TextField();
 
-		constructor(viewPoint: ViewPoint, dataSource: DataSource)
-		{
+		constructor(viewPoint: ViewPoint, dataSource: DataSource) {
 			super(viewPoint, dataSource);
-			this.volumeLabel.defaultTextFormat = new flash.text.TextFormat("Verdana", 9, 0x999999);
-			this.volumeLabel.autoSize = flash.text.TextFieldAutoSize.LEFT;
+			this.volumeLabel.defaultTextFormat = new TextFormat("Verdana", 9, 0x999999);
+			this.volumeLabel.autoSize = TextFieldAutoSize.LEFT;
 			this.volumeLabel.selectable = false;
 			this.addChild(this.volumeLabel);
 			this.initTextFields(viewPoint);
 		}
 
-		private drawVolumeLines(context: Context)
-		{
+		private drawVolumeLines(context: Context) {
 			let _loc2_ = 1000;
 			const viewPoint = this.viewPoint;
-			if (context && context.maxVolume / 1000000 > 0.5)
-			{
+			if (context && context.maxVolume / 1000000 > 0.5) {
 				this.volumeLabel.text = Message.getMsg(Messages.VOLUME_LONG) + " (" + Message.getMsg(Messages.MILLION_SHORT) + " / ";
 				_loc2_ = 1000000;
-			}
-			else
-			{
+			} else {
 				this.volumeLabel.text = Message.getMsg(Messages.VOLUME_LONG) + " (" + Message.getMsg(Messages.THOUSAND_SHORT) + " / ";
 				_loc2_ = 1000;
 			}
 			const _loc4_ = Const.INDICATOR_ENABLED ? viewPoint.getDetailLevelForTechnicalStyle() : viewPoint.getDetailLevel();
 			const _loc5_ = Const.INDICATOR_ENABLED ? 1 : viewPoint.getSkipInterval().skip;
-			switch (_loc4_)
-			{
+			switch (_loc4_) {
 				case Intervals.INTRADAY:
-					this.volumeLabel.appendText(_loc5_ * (Const.INTRADAY_INTERVAL / 60) + Message.getMsg(Messages.MINUTES_SHORT) + ')');
+					this.volumeLabel.appendText(_loc5_ * (Const.INTRADAY_INTERVAL / 60) + Message.getMsg(Messages.MINUTES_SHORT) + ")");
 					break;
 				case Intervals.FIVE_MINUTES:
-					this.volumeLabel.appendText(_loc5_ * (Const.FIVE_MINUTE_INTERVAL / 60) + Message.getMsg(Messages.MINUTES_SHORT) + ')');
+					this.volumeLabel.appendText(_loc5_ * (Const.FIVE_MINUTE_INTERVAL / 60) + Message.getMsg(Messages.MINUTES_SHORT) + ")");
 					break;
 				case Intervals.HALF_HOUR:
-					this.volumeLabel.appendText(_loc5_ * (Const.HALF_HOUR_INTERVAL / 60) + Message.getMsg(Messages.MINUTES_SHORT) + ')');
+					this.volumeLabel.appendText(_loc5_ * (Const.HALF_HOUR_INTERVAL / 60) + Message.getMsg(Messages.MINUTES_SHORT) + ")");
 					break;
 				case Intervals.DAILY:
-					this.volumeLabel.appendText(_loc5_ + Message.getMsg(Messages.DAY_SHORT) + ')');
+					this.volumeLabel.appendText(_loc5_ + Message.getMsg(Messages.DAY_SHORT) + ")");
 					break;
 				case Intervals.WEEKLY:
-					this.volumeLabel.appendText(_loc5_ + Message.getMsg(Messages.WEEK_SHORT) + ')');
+					this.volumeLabel.appendText(_loc5_ + Message.getMsg(Messages.WEEK_SHORT) + ")");
 					break;
 			}
 			const gr = this.graphics;
 			gr.clear();
-			if (!context.maxVolume)
-			{
+			if (!context.maxVolume) {
 				this.topScaleTextField.text = "";
 				this.midScaleTextField.text = "";
 				return;
 			}
 			gr.lineStyle(0, 0x666666, 1);
 			const _loc6_ = Const.INDICATOR_ENABLED ? Number(viewPoint.miny + Const.BOTTOM_VIEWPOINT_HEADER_HEIGHT) : viewPoint.miny;
-			if (Const.INDICATOR_ENABLED)
-			{
+			if (Const.INDICATOR_ENABLED) {
 				gr.moveTo(viewPoint.maxx, _loc6_ + 1);
 				gr.lineTo(viewPoint.maxx - 5, _loc6_ + 1);
-			}
-			else
-			{
+			} else {
 				gr.moveTo(viewPoint.maxx, _loc6_ + 3);
 				gr.lineTo(viewPoint.maxx - 5, _loc6_ + 3);
 			}
@@ -89,27 +84,24 @@ namespace com.google.finance
 			this.midScaleTextField.text = String(Math.floor(context.maxVolume / 2) / _loc2_);
 		}
 
-		private positionVolumeLabel()
-		{
+		private positionVolumeLabel() {
 			this.volumeLabel.x = this.viewPoint.minx + VolumeScaleLayer.LABEL_PADDING;
 			this.volumeLabel.y = this.viewPoint.miny + VolumeScaleLayer.LABEL_PADDING;
 		}
 
-		renderLayer(context: Context)
-		{
+		renderLayer(context: Context) {
 			this.drawVolumeLines(context);
 			this.positionVolumeLabel();
 		}
 
-		private initTextFields(viewPoint: IViewPoint)
-		{
-			this.topScaleTextField = new flash.text.TextField();
+		private initTextFields(viewPoint: IViewPoint) {
+			this.topScaleTextField = new TextField();
 			this.topScaleTextField.width = ViewPoint.TEXT_FIELD_WIDTH;
 			this.topScaleTextField.height = ViewPoint.TEXT_FIELD_HEIGHT;
 			this.topScaleTextField.defaultTextFormat = viewPoint.priceTextFormat;
 			this.topScaleTextField.selectable = false;
 			this.addChild(this.topScaleTextField);
-			this.midScaleTextField = new flash.text.TextField();
+			this.midScaleTextField = new TextField();
 			this.midScaleTextField.width = ViewPoint.TEXT_FIELD_WIDTH;
 			this.midScaleTextField.height = ViewPoint.TEXT_FIELD_HEIGHT;
 			this.midScaleTextField.defaultTextFormat = viewPoint.priceTextFormat;
@@ -117,4 +109,3 @@ namespace com.google.finance
 			this.addChild(this.midScaleTextField);
 		}
 	}
-}

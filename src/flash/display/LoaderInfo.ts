@@ -1,8 +1,5 @@
-﻿namespace flash.display
-{
-	export class LoaderInfo
-	{
+
+	export class LoaderInfo {
 		url: string;
 		parameters: any;
 	}
-}

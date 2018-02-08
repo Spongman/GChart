@@ -1,24 +1,20 @@
-namespace flash.display
-{
+import { DisplayObjectContainer } from './DisplayObjectContainer';
+import { Graphics } from './Graphics';
 
-	export abstract class StageAlign
-	{
+	export abstract class StageAlign {
 		static readonly TOP_LEFT = "top-left";
 	}
 
-	export abstract class StageScaleMode
-	{
+	export abstract class StageScaleMode {
 		static readonly NO_SCALE = "no-scale";
 	}
 
 	export class Stage
-		extends DisplayObjectContainer
-	{
+		extends DisplayObjectContainer {
 		align: string;
 		scaleMode: string;
 
-		constructor(elt: HTMLElement)
-		{
+		constructor(elt: HTMLElement) {
 			super(elt);
 
 			Graphics.initialize();
@@ -26,8 +22,7 @@ namespace flash.display
 			this.stage = this;
 			this.mouseEnabled = false;
 
-			window.addEventListener("resize", () =>
-			{
+			window.addEventListener("resize", () => {
 				this.element.dispatchEvent(new Event("resize"));
 			});
 		}
@@ -35,13 +30,11 @@ namespace flash.display
 		get width() { return this.stageWidth; }
 		get height() { return this.stageHeight; }
 
-		get stageWidth(): number
-		{
+		get stageWidth(): number {
 			return this.element.clientWidth;
 		}
 
-		get stageHeight(): number
-		{
+		get stageHeight(): number {
 			return this.element.clientHeight;
 		}
 
@@ -50,19 +43,16 @@ namespace flash.display
 		get mouseX(): number { return this._mouseX; }
 		get mouseY(): number { return this._mouseY; }
 
-		setMouse(x: number, y: number)
-		{
+		setMouse(x: number, y: number) {
 			const offset = offsetOf(this.element);
 			this._mouseX = x - offset.left;
 			this._mouseY = y - offset.top;
 		}
 
-		static bind(fToBind: Function, oThis: any, ...rest: any[]): EventListener
-		{
+		static bind(fToBind: Function, oThis: any, ...rest: any[]): EventListener {
 			const aArgs = Array.prototype.slice.call(arguments, 2);
 			const fNOP = () => { };
-			function fBound()
-			{
+			function fBound() {
 				const value = fToBind.apply(
 					this instanceof fNOP ? this : oThis,
 					aArgs.concat(Array.prototype.slice.call(arguments)));
@@ -72,12 +62,12 @@ namespace flash.display
 				return value;
 			}
 
-			if (this.prototype)
+			if (this.prototype) {
 				fNOP.prototype = this.prototype;
+			}
 
-			fBound.prototype = new (<any>fNOP)();
+			fBound.prototype = new (fNOP as any)();
 
 			return fBound;
 		}
 	}
-}

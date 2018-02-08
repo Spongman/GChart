@@ -1,7 +1,8 @@
-namespace com.google.i18n.locale
-{
-	export enum DateTimeFormats
-	{
+import { DateTimeFormat } from './DateTimeFormat';
+import { DateTimeConstants } from 'DateTimeConstants';
+import { Map, Dictionary } from '../../../../Global';
+
+	export enum DateTimeFormats {
 		FULL_DATE_FORMAT = 0,
 		LONG_DATE_FORMAT = 1,
 		MEDIUM_DATE_FORMAT = 2,
@@ -16,8 +17,7 @@ namespace com.google.i18n.locale
 		SHORT_DATETIME_FORMAT = 11,
 	}
 
-	export class DateTimeLocale
-	{
+	export class DateTimeLocale {
 
 		static readonly DATE_TIME_CONSTANTS = "DateTimeConstants";
 
@@ -25,61 +25,54 @@ namespace com.google.i18n.locale
 
 		private static activeLocale: string;
 
-		static getStandardDateTimeFormatter(pattern: DateTimeFormats, isUtc = false): DateTimeFormat
-		{
+		static getStandardDateTimeFormatter(pattern: DateTimeFormats, isUtc = false): DateTimeFormat {
 			const format = new DateTimeFormat(isUtc);
 			format.applyStandardPattern(pattern);
 			return format;
 		}
 
-		static getResource(locale: string)
-		{
+		static getResource(locale: string) {
 			return DateTimeLocale.constantsRepository[locale || DateTimeLocale.getLocale()];
 		}
 
-		static getDateTimeFormatter(pattern: string, isUtc = false): DateTimeFormat
-		{
+		static getDateTimeFormatter(pattern: string, isUtc = false): DateTimeFormat {
 			const format = new DateTimeFormat(isUtc);
 			format.applyPattern(pattern);
 			return format;
 		}
 
-		static standardFormatDateTime(pattern: DateTimeFormats, date: Date, isUtc = false): string
-		{
+		static standardFormatDateTime(pattern: DateTimeFormats, date: Date, isUtc = false): string {
 			const format = new DateTimeFormat(isUtc);
 			format.applyStandardPattern(pattern);
 			return format.format(date);
 		}
 
-		static getLocale(): string
-		{
-			if (!DateTimeLocale.activeLocale)
+		static getLocale(): string {
+			if (!DateTimeLocale.activeLocale) {
 				DateTimeLocale.activeLocale = "en";
+			}
 
 			return DateTimeLocale.activeLocale;
 		}
 
-		static formatDateTime(pattern: string, date: Date, isUtc = false): string
-		{
+		static formatDateTime(pattern: string, date: Date, isUtc = false): string {
 			const format = new DateTimeFormat(isUtc);
 			format.applyPattern(pattern);
 			return format.format(date);
 		}
 
-		static registerResource(resource: Dictionary, locale: string)
-		{
+		static registerResource(resource: Dictionary, locale: string) {
 			DateTimeLocale.constantsRepository[locale] = resource;
-			if (!DateTimeLocale.activeLocale)
+			if (!DateTimeLocale.activeLocale) {
 				DateTimeLocale.activeLocale = locale;
+			}
 		}
 
-		static setLocale(activeLocale: string)
-		{
+		static setLocale(activeLocale: string) {
 			DateTimeLocale.activeLocale = activeLocale;
 		}
 
-		//private static readonly registerLocale = DateTimeConstants.register(DateTimeLocale.registerResource);
+		// private static readonly registerLocale = DateTimeConstants.register(DateTimeLocale.registerResource);
 	}
 
 	DateTimeConstants.register(DateTimeLocale.registerResource);
-}

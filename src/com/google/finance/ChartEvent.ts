@@ -1,7 +1,7 @@
-namespace com.google.finance
-{
-	export enum ChartEventTypes
-	{
+import { ChartDetailTypes } from './Const';
+import { EventCallback } from './ViewPoint';
+
+	export enum ChartEventTypes {
 		GENERIC = 0,
 		GET_DATA = 1,
 		GET_AH_DATA = 2,
@@ -10,8 +10,7 @@ namespace com.google.finance
 		GET_RT_AH_DATA = 5,
 	}
 
-	export enum ChartEventPriorities
-	{
+	export enum ChartEventPriorities {
 		EXPECTED = 0,
 		REQUIRED = 1,
 		OPTIONAL = 2,
@@ -21,8 +20,7 @@ namespace com.google.finance
 		POLLING = 6,
 	}
 
-	export class ChartEvent
-	{
+	export class ChartEvent {
 		quote: string;
 		interval: string;
 		period: string;
@@ -32,31 +30,33 @@ namespace com.google.finance
 		columns: string;
 		callbacks?: EventCallback[];
 
-		constructor(public readonly type = ChartEventTypes.GENERIC)
-		{
+		constructor(readonly type = ChartEventTypes.GENERIC) {
 		}
 
-		getEventName(period?: string): string
-		{
+		getEventName(period?: string): string {
 			let eventName = "";
-			if (this.quote)
+			if (this.quote) {
 				eventName = eventName + ("" + this.quote);
+			}
 
-			if (this.type)
+			if (this.type) {
 				eventName = eventName + ("-t:" + this.type);
+			}
 
-			if (this.interval)
+			if (this.interval) {
 				eventName = eventName + ("-i:" + this.interval);
+			}
 
-			if (period)
+			if (period) {
 				eventName = eventName + ("-p:" + period);
-			else if (this.period)
+			} else if (this.period) {
 				eventName = eventName + ("-p:" + this.period);
+								}
 
-			if (this.startTime)
+			if (this.startTime) {
 				eventName = eventName + ("-st:" + this.startTime);
+			}
 
 			return eventName;
 		}
 	}
-}

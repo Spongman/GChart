@@ -53,7 +53,6 @@ gulp.task('typescript', () =>
 
 gulp.task("tslint", ['typescript'], () => {
 
-
 	var program = tslint.Linter.createProgram("./src/tsconfig.json");
 
 	return gulp.src('./src/**/*.ts', { base: './src' })

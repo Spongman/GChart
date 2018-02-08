@@ -1,11 +1,7 @@
-/// <reference path="../../../flash/display/Bitmap.ts"/>
-/// <reference path="../../../flash/display/Bitmap.ts"/>
+import { Bitmap } from "../../../flash/display/Bitmap";
 
-namespace com.google.finance
+// import mx.core.Bitmap;
+
+export class SplitMovie_SplitArrowOnOverClass extends Bitmap
 {
-	// import mx.core.Bitmap;
-
-	export class SplitMovie_SplitArrowOnOverClass extends flash.display.Bitmap
-	{
-	}
 }

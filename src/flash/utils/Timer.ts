@@ -1,38 +1,28 @@
-﻿namespace flash.utils
-{
-	export class TimerEvent
-	//extends Event
-	{
+import { EventDispatcherImpl } from '../events/EventDispatcher';
+
+export class TimerEvent {
+}
+
+export class Timer
+	extends EventDispatcherImpl {
+	private handle?: number;
+
+	constructor(readonly period: number) {
+		super();
 	}
 
-	export class Timer
-		extends events.EventDispatcherImpl
-	{
-		private handle?: number;
-
-		constructor(public readonly period: number)
-		{
-			super();
+	start() {
+		if (!this.handle) {
+			this.handle = setInterval(() => {
+				const evt = new TimerEvent();
+				this.fire(TimerEvents.TIMER, evt);
+			}, this.period);
 		}
-
-		start()
-		{
-			if (!this.handle)
-			{
-				this.handle = setInterval(() =>
-				{
-					const evt = new TimerEvent();
-					this.fire(TimerEvents.TIMER, evt);
-				}, this.period);
-			}
-		}
-		stop()
-		{
-			if (this.handle)
-			{
-				clearInterval(this.handle);
-				delete this.handle;
-			}
+	}
+	stop() {
+		if (this.handle) {
+			clearInterval(this.handle);
+			delete this.handle;
 		}
 	}
 }

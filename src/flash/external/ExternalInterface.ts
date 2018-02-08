@@ -1,7 +1,5 @@
-﻿namespace flash.external
-{
-	export class ExternalInterface
-	{
+
+	export class ExternalInterface {
 		static available = true;
 
 		/*
@@ -13,9 +11,7 @@
 		}
 		*/
 
-		static call(name: string, ...rest: any[])
-		{
+		static call(name: string, ...rest: any[]) {
 			console.log.apply(console, arguments);
 		}
 	}
-}

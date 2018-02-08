@@ -1,19 +1,24 @@
-/// <reference path="IntervalBasedVolumeLayer.ts" />
+import { IntervalBasedVolumeLayer } from "IntervalBasedVolumeLayer";
+import { IntervalSet } from './IntervalSet';
+import { Context } from './ViewPoint';
+import { Const, Intervals } from './Const';
+import { SpaceText } from './SpaceText';
+import { ViewPoint } from 'ViewPoint';
+import { DataSeries } from './DataSeries';
+import { Dictionary } from '../../../Global';
 
-namespace com.google.finance
-{
-	export class IntervalBasedAHVolumeLayer extends IntervalBasedVolumeLayer
-	{
+export class IntervalBasedAHVolumeLayer extends IntervalBasedVolumeLayer {
 		private regionsXLimits: IntervalSet;
 
-		highlightPoint(context: Context, param2: number, state: Dictionary)
-		{
+		highlightPoint(context: Context, param2: number, state: Dictionary) {
 			this.clearHighlight();
-			if (!this.regionsXLimits || !this.regionsXLimits.containsValue(param2))
+			if (!this.regionsXLimits || !this.regionsXLimits.containsValue(param2)) {
 				return;
+			}
 
-			if (state["volumesetter"])
+			if (state["volumesetter"]) {
 				state["volumesetter"].clearHighlight();
+			}
 
 			const dataSeries = this.getDataSeries();
 			const viewPoint = this.viewPoint;
@@ -21,8 +26,9 @@ namespace com.google.finance
 			const detailLevel = viewPoint.getDetailLevelForTechnicalStyle();
 			const detailLevelInterval = Const.getDetailLevelInterval(detailLevel);
 			const points = dataSeries.getPointsInIntervalArray(detailLevelInterval);
-			if (!points || pointIndex === -1)
+			if (!points || pointIndex === -1) {
 				return;
+			}
 
 			const unit = points[pointIndex];
 			const x = viewPoint.getXPos(unit);
@@ -33,30 +39,30 @@ namespace com.google.finance
 			state["ahsetter"] = this;
 		}
 
-		renderLayer(context: Context)
-		{
+		renderLayer(context: Context) {
 			this.graphics.clear();
 			const vp = this.viewPoint;
-			if (vp.getDetailLevelForTechnicalStyle() !== Intervals.INTRADAY)
+			if (vp.getDetailLevelForTechnicalStyle() !== Intervals.INTRADAY) {
 				return;
+			}
 
 			const points = this.getDataSeries().getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
-			if (!points)
+			if (!points) {
 				return;
+			}
 
 			const visibleExtendedHours = this.dataSource.visibleExtendedHours;
-			if (visibleExtendedHours.length() === 0)
+			if (visibleExtendedHours.length() === 0) {
 				return;
+			}
 
 			this.regionsXLimits = new IntervalSet();
 
-			for (let intervalIndex = 0; intervalIndex < visibleExtendedHours.length(); intervalIndex++)
-			{
+			for (let intervalIndex = 0; intervalIndex < visibleExtendedHours.length(); intervalIndex++) {
 				const interval = visibleExtendedHours.getIntervalAt(intervalIndex);
 				const startUnit = points[interval.start];
 				const endUnit = points[interval.end];
-				if (ViewPoint.sessionVisible(startUnit, endUnit, context))
-				{
+				if (ViewPoint.sessionVisible(startUnit, endUnit, context)) {
 					const startX = vp.getXPos(startUnit);
 					const endX = vp.getXPos(endUnit);
 					this.regionsXLimits.addInterval(startX, endX);
@@ -65,9 +71,7 @@ namespace com.google.finance
 			super.renderLayer(context);
 		}
 
-		getDataSeries(context?: Context): DataSeries
-		{
+		getDataSeries(context?: Context): DataSeries {
 			return this.dataSource.afterHoursData;
 		}
 	}
-}

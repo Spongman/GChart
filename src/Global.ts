@@ -1,8 +1,9 @@
-﻿
-type Map<T> = { [key: string]: T };
-type Dictionary = Map<any>;
+import { LoaderInfo } from './flash/display/LoaderInfo';
 
-interface Date
+export interface Map<T> { [key: string]: T }
+export type Dictionary = Map<any>;
+
+export interface Date
 {
 	dateUTC: number;
 	monthUTC: number;
@@ -29,86 +30,56 @@ addGetter(Date, "date", Date.prototype.getDate);
 addGetter(Date, "month", Date.prototype.getMonth);
 addGetter(Date, "fullYear", Date.prototype.getFullYear);
 
-interface Window
+
+export interface Window
 {
-	loaderInfo: flash.display.LoaderInfo;
+	loaderInfo: LoaderInfo;
 }
 
-module Events
-{
-	export const COMPLETE = "complete";
-	export const RESIZE = "resize";
-}
 
-module MouseEvents
+export function cssColor(n: number, alpha = 1): string
 {
-	export const CLICK = "click";
-	export const MOUSE_DOWN = "mousedown";
-	export const MOUSE_MOVE = "mousemove";
-	export const MOUSE_OUT = "mouseout";
-	export const MOUSE_OVER = "mouseover";
-	export const MOUSE_UP = "mouseup";
-	export const ROLL_OUT = "rollout";
-	export const ROLL_OVER = "rollover";
-	export const MOUSE_WHEEL = "wheel";//mousewheel";
-	export const MOUSE_LEAVE = "mouseleave";
-}
 
-module KeyboardEvents
-{
-	export const KEY_DOWN = "keydown";
-	export const KEY_UP = "keyup";
-}
-
-module TimerEvents
-{
-	export const TIMER = "timer";
-}
-
-module IOErrorEvents
-{
-	export const IO_ERROR = "io-error";
-}
-
-module SecurityErrorEvents
-{
-	export const SECURITY_ERROR = "security-error";
-}
-
-function cssColor(n: number, alpha = 1): string
-{
 	const s = Math.floor(n).toString(16);
 	if (alpha >= 1)
-		return '#' + "000000".substr(s.length) + s;
+	{
+		return "#" + "000000".substr(s.length) + s;
+	}
 
 	const a = Math.floor(alpha * 255).toString(16);
-	return '#' + "00".substr(a.length) + "000000".substr(s.length) + s;
+	return "#" + "00".substr(a.length) + "000000".substr(s.length) + s;
 }
 
-function assert(cond: boolean)
+function assert(cond: boolean):void
 {
 	if (!cond)
+	{
 		debugger;
+	}
 }
 
 function getDefinitionByName(name: string): Function
 {
+
 	let container: any = window;
-	const parts = name.split('.');
+	const parts = name.split(".");
 	for (const part of parts)
+	{
 		container = container[part];
+	}
 	return container;
 }
 
 function getClassName(obj: any)
 {
 	return obj.constructor.name;
-	/*
-	let funcNameRegex = /function (.{1,})\(/;
-	let results = (funcNameRegex).exec(obj["constructor"].toString());
-	return (results && results.length > 1) ? results[1] : "";
-	*/
 }
+/*
+let funcNameRegex = /function (.{1,})\(/;
+let results = (funcNameRegex).exec(obj["constructor"].toString());
+return (results && results.length > 1) ? results[1] : "";
+*/
+
 function getTimer()
 {
 	return Date.now();
@@ -117,17 +88,19 @@ function getTimer()
 function notnull<T>(value: T | null): T
 {
 	if (!value)
+	{
 		throw new Error();
+	}
 	return value;
 }
 
 function parseQueryString(str: string)
 {
 	const result: { [_: string]: string } = {};
-	const pairs = str.split('&');
+	const pairs = str.split("&");
 	for (const pair of pairs)
 	{
-		const parts = pair.split('=');
+		const parts = pair.split("=");
 		result[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
 	}
 	return result;

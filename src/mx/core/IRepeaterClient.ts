@@ -1,15 +1,12 @@
-namespace mx.core
-{
-	export interface IRepeaterClient
-	{
-		instanceIndices: string[];
 
-		isDocument: boolean;
+export interface IRepeaterClient {
+	instanceIndices: string[];
 
-		initializeRepeaterArrays(client: IRepeaterClient): void;
+	isDocument: boolean;
 
-		//repeaters: Array;
+	initializeRepeaterArrays(client: IRepeaterClient): void;
 
-		//repeaterIndices: Array;
-	}
+	//repeaters: Array;
+
+	//repeaterIndices: Array;
 }

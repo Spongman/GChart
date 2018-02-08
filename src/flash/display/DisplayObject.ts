@@ -1,22 +1,22 @@
-namespace flash.display
-{
-	export class DisplayObject
-	{
-		public name: string;
+import { Graphics } from './Graphics';
+import { Stage } from './Stage';
+import { Rectangle, Point } from './Sprite';
+import { DisplayObjectContainer } from './DisplayObjectContainer';
 
-		constructor(public readonly element: HTMLElement, name?: string)
-		{
-			assert(!(<any>element).displayObject);
-			(<any>element).displayObject = this;
+	export class DisplayObject {
+		name: string;
+
+		constructor(readonly element: HTMLElement, name?: string) {
+			assert(!(element as any).displayObject);
+			(element as any).displayObject = this;
 
 			assert(!!element);
-			if (!element.parentElement)
-			{
+			if (!element.parentElement) {
 				element.classList.add("pending");
 				document.body.appendChild(element);
 			}
 
-			this.name = (name ? name + ':' : "") + getClassName(this);
+			this.name = (name ? name + ":" : "") + getClassName(this);
 			element.setAttribute("name", this.name);
 
 			/*
@@ -32,8 +32,7 @@ namespace flash.display
 		}
 
 		protected _graphics: Graphics;
-		get graphics(): Graphics
-		{
+		get graphics(): Graphics {
 			return this._graphics || (this._graphics = new Graphics(this.element));
 		}
 
@@ -43,16 +42,14 @@ namespace flash.display
 
 		_x = 0;
 		get x(): number { return this._x; }
-		set x(value: number)
-		{
+		set x(value: number) {
 			this._x = value;
 			this.element.style.left = value + "px";
 		}
 
 		_y = 0;
 		get y(): number { return this._y; }
-		set y(value: number)
-		{
+		set y(value: number) {
 			this._y = value;
 			this.element.style.top = value + "px";
 		}
@@ -80,28 +77,23 @@ namespace flash.display
 
 		parent: DisplayObjectContainer;
 
-		addEventListener(e: string, f: EventListenerOrEventListenerObject)
-		{
+		addEventListener(e: string, f: EventListenerOrEventListenerObject) {
 			this.element.addEventListener(e, f);
 		}
 
-		removeEventListener(eventType: string, listener?: EventListenerOrEventListenerObject, useCapture?: boolean): void
-		{
+		removeEventListener(eventType: string, listener?: EventListenerOrEventListenerObject, useCapture?: boolean): void {
 			this.element.removeEventListener(eventType, listener);
 		}
 
-		hitTestPoint(x: number, y: number, shapeFlag = false): boolean
-		{
+		hitTestPoint(x: number, y: number, shapeFlag = false): boolean {
 			const pt = this.globalToLocal(new Point(x, y));
 			return pt.x >= 0 && pt.x < this.width &&
 				pt.y >= 0 && pt.y < this.height;
 		}
 
-		globalToLocal(point: Point): Point
-		{
+		globalToLocal(point: Point): Point {
 			let node: DisplayObject = this;
-			do
-			{
+			do {
 				point.x -= node._x;
 				point.y -= node._y;
 				node = node.parent;
@@ -111,7 +103,5 @@ namespace flash.display
 		}
 	}
 
-	export class Shape extends DisplayObject
-	{
+	export class Shape extends DisplayObject {
 	}
-}

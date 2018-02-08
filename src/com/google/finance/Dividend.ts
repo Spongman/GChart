@@ -1,15 +1,11 @@
-/// <reference path="StockAssociatedObject.ts" />
+import { StockAssociatedObject } from "StockAssociatedObject";
+import { SeriesPosition } from './DataSource';
 
-namespace com.google.finance
-{
-	export class Dividend extends StockAssociatedObject
-	{
+export class Dividend extends StockAssociatedObject {
 		yield: number;
 
-		constructor(pos: number, dayPos: number, posInInterval: SeriesPosition[] | null, time: number, exchangeDateInUTC: Date, id: number, qname: string, public amount: number, public currency: string, param10: number)
-		{
+		constructor(pos: number, dayPos: number, posInInterval: SeriesPosition[] | null, time: number, exchangeDateInUTC: Date, id: number, qname: string, public amount: number, public currency: string, param10: number) {
 			super(pos, dayPos, posInInterval, time, exchangeDateInUTC, id, qname);
 			this.yield = amount / param10;
 		}
 	}
-}

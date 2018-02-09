@@ -1,6 +1,6 @@
 import { DataUnit } from "./DataUnit";
 import { IntervalBasedBarChartLayer } from "./IntervalBasedBarChartLayer";
-import { Context } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 
 export class OhlcChartLayer extends IntervalBasedBarChartLayer {
 		protected drawBarAtDataUnit(context: Context, dataUnits: DataUnit[], unitIndex: number) {

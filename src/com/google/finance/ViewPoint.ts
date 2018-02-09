@@ -1,24 +1,27 @@
-import { Sprite } from "../../../flash/display/Sprite";
-import { TextField, TextFieldAutoSize, TextFormat, TextFormatAlign } from "../../../flash/text/TextField";
-import { Dictionary } from "../../../Global";
-import { AbstractDrawingLayer } from "./AbstractDrawingLayer";
-import { AbstractLayer } from "./AbstractLayer";
-import { Bounds } from "./Bounds";
-import { ChartEventPriorities } from "./ChartEvent";
-import { ChartDetailTypes, Const, Directions, Intervals, QuoteTypes, ScaleTypes, Snaps } from "./Const";
-import { Controller } from "./Controller";
-import { DataSeries } from "./DataSeries";
-import { DataSource } from "./DataSource";
-import { DataUnit } from "./DataUnit";
-import { DisplayManager } from "./DisplayManager";
-import { EventFactory } from "./EventFactory";
-import { IndependentObjectsLayer } from "./IndependentObjectsLayer";
-import { IntervalBasedIndependentObjectsLayer } from "./IntervalBasedIndependentObjectsLayer";
-import { IntervalBasedPinPointsLayer } from "./IntervalBasedPinPointsLayer";
-import { LayersManager } from "./LayersManager";
-import { MainManager } from "./MainManager";
-import { PinPointsLayer } from "./PinPointsLayer";
-import { Utils } from "./Utils";
+import { DisplayObjectContainer } from '../../../flash/display/DisplayObjectContainer';
+import { Sprite } from '../../../flash/display/Sprite';
+import { TextField, TextFieldAutoSize, TextFormat, TextFormatAlign } from '../../../flash/text/TextField';
+import { Dictionary } from '../../../Global';
+import { AbstractDrawingLayer } from './AbstractDrawingLayer';
+import { AbstractLayer } from './AbstractLayer';
+import { Bounds } from './Bounds';
+import { ChartEventPriorities } from './ChartEventPriorities';
+import { ChartDetailTypes, Const, Directions, Intervals, QuoteTypes, ScaleTypes, Snaps } from './Const';
+import { Controller } from './Controller';
+import { DataSeries } from './DataSeries';
+import { DataSource } from './DataSource';
+import { DataUnit } from './DataUnit';
+import { EventCallback } from './EventCallback';
+import { EventFactory } from './EventFactory';
+import { IDisplayManager } from './IDisplayManager';
+import { IndependentObjectsLayer } from './IndependentObjectsLayer';
+import { IntervalBasedIndependentObjectsLayer } from './IntervalBasedIndependentObjectsLayer';
+import { IntervalBasedPinPointsLayer } from './IntervalBasedPinPointsLayer';
+import { Context, IViewPoint, SkipInterval } from './IViewPoint';
+import { LayersManager } from './LayersManager';
+import { MainManager } from './MainManager';
+import { PinPointsLayer } from './PinPointsLayer';
+import { Utils } from './Utils';
 
 // import flash.display.Sprite;
 // import flash.text.TextField;
@@ -27,104 +30,18 @@ import { Utils } from "./Utils";
 // import flash.utils.getDefinitionByName;
 // import flash.text.TextFormatAlign;
 
-export interface ViewPointState {
-	count: number;
-	lastMinute: number;
-}
+export abstract class IControlledViewpoint
+	extends IViewPoint {
 
-export class SkipInterval {
-	constructor(readonly skip: number, readonly interval: number) { }
-}
-
-export class EventCallback {
-	constructor(readonly func: (p1: any) => void, readonly param: any) { }
-}
-
-export interface IDataUnitContainer {
-	getFirstDataUnit(): DataUnit | null;
-	getLastDataUnit(dataSeries?: DataSeries): DataUnit | null;
-}
-
-export abstract class IViewPoint
-	extends Sprite
-	implements IDataUnitContainer {
-	name: string;
-
-	constructor(protected readonly displayManager: DisplayManager) {
+	constructor(protected readonly displayManager: IDisplayManager) {
 		super();
 	}
 
-	protected textCanvas: Sprite;
-	protected windowMask: Sprite;
-	bg: Sprite;
-	dateTextFormat: TextFormat;
-
-	minx: number;
-	miny: number;
-	maxx: number;
-	maxy: number;
-
-	hourTextFormat: TextFormat;
-	lastMinute: number;
-
-	priceTextFormat: TextFormat;
-
-	minutesOffset = 0;
-
-	count: number;
-
-	minutePix: number;
-
-	abstract getNewContext(lastMinute: number, count: number): Context;
-
-	abstract highlightPoint(x: number, state: Dictionary): void;
-	abstract getMinuteOfX(x: number): number;
-
-	abstract getIntervalLength(param1: number): number;
-
-	abstract getLayers(): Array<AbstractLayer<IViewPoint>>;
-	abstract update(): void;
-	abstract removeAllLayers(): void;
-
-	abstract addLayer(param1: string, dataSource: DataSource, param3: string): AbstractLayer<IViewPoint> | null;
-	abstract clearPointInformation(): void;
-
-	abstract getFirstMinute(): number;
-	abstract getLastMinute(): number;
-
-	abstract getFirstDataUnit(): DataUnit | null;
-	abstract getLastDataUnit(dataSeries: DataSeries): DataUnit | null;
-
-	abstract getLastNotVisibleDataUnit(): DataUnit | null;
-
-	abstract getMinuteXPos(param1: number): number;
-
-	abstract HTMLnotify(param1?: boolean): void;
-
-	abstract isAnimating(): boolean;
-
 	myController: Controller;
-
-	abstract precomputeContexts(): void;
-
-	abstract renderLayers(): void;
-
-	abstract setNewCount(param1: number, param2?: boolean): void;
-
-	abstract setNewSize(bounds: Bounds): void;
-
-	abstract zoomIn_Handler(p1: number, p2: number): void;
-	abstract zoomingAnimation_ticker(viewPoint: IViewPoint, param2: number, param3: boolean): void;
-	abstract zoomChart_Handler(direction: Directions, p2: number): void;
-	abstract moveChartBy_Handler(p1: number): void;
-	abstract commitOffset_Handler(): void;
-	abstract zoomInMinutes_Handler(p1: Context, p2: boolean): void;
-	abstract zoomingAnimation_init(p1: Context): void;
-	abstract newFinalAnimationState(viewPointState: ViewPointState): void;
 }
 
 export class ViewPoint
-	extends IViewPoint {
+	extends IControlledViewpoint {
 	static readonly MIN_DISTANCE_BETWEEN_V_LINES = 100;
 	static readonly GRID_TEXT_VERTICAL_OFFSET = 3;
 	static readonly TICK_SIZE_SMALL = 3;
@@ -162,6 +79,7 @@ export class ViewPoint
 	readonly POINTS_DISTANCE = 1.5;
 	readonly V_OFFSET = 2;
 
+
 	layersContext: Context;
 	medPriceY = 0;
 	bottomTextHeight = 0;
@@ -170,7 +88,7 @@ export class ViewPoint
 
 	display: string;
 
-	constructor(displayManager: DisplayManager) {
+	constructor(displayManager: IDisplayManager) {
 		super(displayManager);
 
 		this.bg = new Sprite("bg");
@@ -220,7 +138,7 @@ export class ViewPoint
 	}
 
 	private clearTextCanvas() {
-		Utils.removeAllChildren(this.textCanvas);
+		DisplayObjectContainer.removeAllChildren(this.textCanvas);
 	}
 
 	adjustBarChartContext(context: Context, detailLevel: Intervals) {
@@ -391,8 +309,8 @@ export class ViewPoint
 		}
 
 		this.addChild(layer);
-		Utils.displayObjectToTop(this.textCanvas, this);
-		Utils.displayObjectToTop(this.topCanvas, this);
+		DisplayObjectContainer.displayObjectToTop(this.textCanvas, this);
+		DisplayObjectContainer.displayObjectToTop(this.topCanvas, this);
 
 		return layer;
 	}
@@ -733,7 +651,7 @@ export class ViewPoint
 		return baseDataSource.getClosestDataUnitAfterMinute(this.getFirstMinute());
 	}
 
-	getDisplayManager(): DisplayManager {
+	getDisplayManager(): IDisplayManager {
 		return this.displayManager;
 	}
 
@@ -1218,44 +1136,4 @@ export class ViewPoint
 		this.precomputeContexts();
 		this.update();
 	}
-}
-
-export interface MinMaxMedPrice {
-	maxPrice: number;
-	minPrice: number;
-	medPrice: number;
-}
-
-export class Context
-	// extends ViewPoint
-	implements MinMaxMedPrice {
-	[key: string]: any;
-
-	// lastMinute: number;
-	// count: number;
-	verticalScaling: string;
-
-	maxPrice: number;
-	minPrice: number;
-	medPrice: number;
-
-	maxPriceRange: number;
-
-	maxValue: number;
-	minValue: number;
-
-	maxVolume: number;
-
-	maxRangeLowerBound: number;
-	maxRangeUpperBound: number;
-
-	plusVariation: number;
-	minusVariation: number;
-
-	scaleVariation: number;
-	localYAdjustment: number;
-	plusSize: number;
-
-	lastMinute: number;
-	count: number;
 }

@@ -2,7 +2,8 @@ import { TextField, TextFieldAutoSize, TextFormat } from "../../../flash/text/Te
 import { AbstractLayer } from "./AbstractLayer";
 import { Messages } from "./Messages";
 import { Message } from "./Messages";
-import { Context, ViewPoint } from "./ViewPoint";
+import { ViewPoint } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 
 	// import flash.text.TextFormat;
 	// import flash.text.TextField;

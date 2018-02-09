@@ -1,27 +1,27 @@
-import { SimpleButton } from "../../../flash/display/SimpleButton";
-import { Sprite } from "../../../flash/display/Sprite";
-import { Stage } from "../../../flash/display/Stage";
-import { TextFormat } from "../../../flash/text/TextField";
-import { Dictionary } from "../../../Global";
-import { AbstractLayer } from "./AbstractLayer";
-import { Bounds } from "./Bounds";
-import { ChartEventPriorities } from "./ChartEvent";
-import { ChartDetailTypes, Const, ControllerComponents, Directions, Intervals, TickPositions } from "./Const";
-import { Controller } from "./Controller";
-import { DataManager } from "./DataManager";
-import { DataSource } from "./DataSource";
-import { DataUnit } from "./DataUnit";
-import { DisplayManager } from "./DisplayManager";
-import { EventFactory } from "./EventFactory";
-import { MainManager } from "./MainManager";
-import { SparklineDateLinesLayer } from "./SparklineDateLinesLayer";
-import { SparklineLayer } from "./SparklineLayer";
-import { SparklineViewPoint_ScrollbarButtonLeft } from "./SparklineViewPoint_ScrollbarButtonLeft";
-import { SparklineViewPoint_ScrollbarButtonRight } from "./SparklineViewPoint_ScrollbarButtonRight";
-import { Utils } from "./Utils";
-import { Context, IViewPoint } from "./ViewPoint";
-import { ViewPoint } from "./ViewPoint";
-import { WindowLayer } from "./WindowLayer";
+import { DisplayObjectContainer } from '../../../flash/display/DisplayObjectContainer';
+import { SimpleButton } from '../../../flash/display/SimpleButton';
+import { Sprite } from '../../../flash/display/Sprite';
+import { Stage } from '../../../flash/display/Stage';
+import { TextFormat } from '../../../flash/text/TextField';
+import { Dictionary } from '../../../Global';
+import { AbstractLayer } from './AbstractLayer';
+import { Bounds } from './Bounds';
+import { ChartEventPriorities } from './ChartEventPriorities';
+import { ChartDetailTypes, Const, ControllerComponents, Directions, Intervals, TickPositions } from './Const';
+import { Controller } from './Controller';
+import { DataManager } from './DataManager';
+import { DataSource } from './DataSource';
+import { DataUnit } from './DataUnit';
+import { EventFactory } from './EventFactory';
+import { IDisplayManager } from './IDisplayManager';
+import { Context, IViewPoint } from './IViewPoint';
+import { MainManager } from './MainManager';
+import { SparklineDateLinesLayer } from './SparklineDateLinesLayer';
+import { SparklineLayer } from './SparklineLayer';
+import { SparklineViewPoint_ScrollbarButtonLeft } from './SparklineViewPoint_ScrollbarButtonLeft';
+import { SparklineViewPoint_ScrollbarButtonRight } from './SparklineViewPoint_ScrollbarButtonRight';
+import { IControlledViewpoint } from './ViewPoint';
+import { WindowLayer } from './WindowLayer';
 
 // import flash.display.Sprite;
 // import flash.display.SimpleButton;
@@ -32,7 +32,7 @@ import { WindowLayer } from "./WindowLayer";
 // import flash.events.MouseEvent;
 
 export class SparklineViewPoint
-	extends IViewPoint {
+	extends IControlledViewpoint {
 	// private windowMask: Sprite;
 
 	static readonly TEXT_FIELD_HEIGHT = 50;
@@ -54,7 +54,7 @@ export class SparklineViewPoint
 	// private textCanvas: Sprite;
 	private readonly scrollBg = new Sprite("scrollBg");
 	private readonly ScrollbarButtonLeft = SparklineViewPoint_ScrollbarButtonLeft;
-	// private displayManager: DisplayManager;
+	// private displayManager: IDisplayManager;
 
 	sparkLastMinute: number;
 	my_minx: number;
@@ -74,7 +74,7 @@ export class SparklineViewPoint
 	readonly dateTextFormat = new TextFormat("Verdana", 10, 0x6f6f6f);
 	topBorder = 0;
 
-	constructor(private readonly dataManager: DataManager, readonly displayManager: DisplayManager) {
+	constructor(private readonly dataManager: DataManager, readonly displayManager: IDisplayManager) {
 		super(displayManager);
 
 		this.addChild(this.bg);
@@ -367,7 +367,7 @@ export class SparklineViewPoint
 
 	private resetCanvas() {
 		this.textCanvas.graphics.clear();
-		Utils.removeAllChildren(this.textCanvas);
+		DisplayObjectContainer.removeAllChildren(this.textCanvas);
 	}
 
 	get maxy(): number {
@@ -542,7 +542,7 @@ export class SparklineViewPoint
 	private initDisplayCountThresholds() {
 		let _loc1_ = false;
 		if (MainManager.paramsObj.displayThresholds) {
-			this.displayThresholds = Utils.decodeObjects(MainManager.paramsObj.displayThresholds);
+			this.displayThresholds = MainManager.decodeObjects(MainManager.paramsObj.displayThresholds);
 			_loc1_ = true;
 			for (const threshold of this.displayThresholds) {
 				if (isNaN(threshold.chartDays) || isNaN(threshold.sparkDays)) {

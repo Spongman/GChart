@@ -1,28 +1,31 @@
-import { Sprite } from "../../../flash/display/Sprite";
-import { Map } from "../../../Global";
-import { AbstractLayer } from "./AbstractLayer";
-import { BorderLayer } from "./BorderLayer";
-import { Bounds } from "./Bounds";
-import { ChartEventPriorities } from "./ChartEvent";
-import { ChartDetailTypes, Const, Intervals, ScaleTypes } from "./Const";
-import { Controller } from "./Controller";
-import { DataSeries } from "./DataSeries";
-import { DataSource } from "./DataSource";
-import { DataUnit } from "./DataUnit";
-import { EventFactory } from "./EventFactory";
-import { DependentIndicatorLayer } from "./indicator/DependentIndicatorLayer";
-import { IndependentIndicatorLayer } from "./indicator/IndependentIndicatorLayer";
-import { IndicatorLayer } from "./indicator/IndicatorLayer";
-import { VolumeDependentIndicatorLayer } from "./indicator/VolumeDependentIndicatorLayer";
-import { IntervalBasedChartManagerLayer } from "./IntervalBasedChartManagerLayer";
-import { LayersManager } from "./LayersManager";
-import { MainManager } from "./MainManager";
-import { PinPoint } from "./PinPoint";
-import { SpaceText } from "./SpaceText";
-import { SparklineViewPoint } from "./SparklineViewPoint";
-import { StartEndPair } from "./StartEndPair";
-import { Utils } from "./Utils";
-import { EventCallback, IViewPoint, ViewPoint } from "./ViewPoint";
+import { Sprite } from '../../../flash/display/Sprite';
+import { Map } from '../../../Global';
+import { AbstractLayer } from './AbstractLayer';
+import { BorderLayer } from './BorderLayer';
+import { Bounds } from './Bounds';
+import { ChartEventPriorities } from './ChartEventPriorities';
+import { ChartDetailTypes, Const, Intervals, ScaleTypes } from './Const';
+import { Controller } from './Controller';
+import { DataSeries } from './DataSeries';
+import { DataSource } from './DataSource';
+import { DataUnit } from './DataUnit';
+import { EventCallback } from './EventCallback';
+import { EventFactory } from './EventFactory';
+import { IDisplayManager } from './IDisplayManager';
+import { DependentIndicatorLayer } from './indicator/DependentIndicatorLayer';
+import { IndependentIndicatorLayer } from './indicator/IndependentIndicatorLayer';
+import { IndicatorLayer } from './indicator/IndicatorLayer';
+import { VolumeDependentIndicatorLayer } from './indicator/VolumeDependentIndicatorLayer';
+import { IntervalBasedChartManagerLayer } from './IntervalBasedChartManagerLayer';
+import { IViewPoint } from './IViewPoint';
+import { LayersManager } from './LayersManager';
+import { MainManager } from './MainManager';
+import { PinPoint } from './PinPoint';
+import { SpaceText } from './SpaceText';
+import { SparklineViewPoint } from './SparklineViewPoint';
+import { StartEndPair } from './StartEndPair';
+import { Utils } from './Utils';
+import { ViewPoint } from './ViewPoint';
 
 // import flash.display.Sprite;
 // import flash.utils.Dictionary;
@@ -32,7 +35,9 @@ import { EventCallback, IViewPoint, ViewPoint } from "./ViewPoint";
 // import com.google.finance.indicator.VolumeDependentIndicatorLayer;
 // import com.google.finance.indicator.IndependentIndicatorLayer;
 
-export class DisplayManager extends Sprite {
+export class DisplayManager
+	extends Sprite
+	implements IDisplayManager {
 	private firstResize: boolean = true;
 	private viewpoints: IViewPoint[] = [];
 	private differentMarketSessionComparison: boolean;
@@ -143,7 +148,7 @@ export class DisplayManager extends Sprite {
 		} else {
 			this.viewpoints.push(null!);	// TODO: really?
 		}
-		const viewPoints = Utils.decodeObjects(MainManager.paramsObj.single_viewpoints) as ViewPoint[];
+		const viewPoints = MainManager.decodeObjects(MainManager.paramsObj.single_viewpoints) as ViewPoint[];
 		for (const viewPoint of viewPoints) {
 			if (viewPoint.display !== "hidden") {
 				this.addViewPoint("ViewPoint", viewPoint.name, this.stage.stageWidth, Number(viewPoint.height), Number(viewPoint.topMargin), width, height);
@@ -747,7 +752,7 @@ export class DisplayManager extends Sprite {
 			return;
 		}
 
-		dataUnits.sort(Utils.compareDataUnits);
+		dataUnits.sort(DataUnit.compare);
 		let minutes = 0;
 		const _loc5_ = dataUnits[dataUnits.length - 1];
 		let date = new Date(_loc5_.exchangeDateInUTC.getUTCFullYear(), _loc5_.exchangeDateInUTC.getUTCMonth(), _loc5_.exchangeDateInUTC.getUTCDate());

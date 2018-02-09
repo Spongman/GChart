@@ -3,7 +3,7 @@ import { Sprite } from "../../../flash/display/Sprite";
 import { Const, TickPositions } from "./Const";
 import { DataSeries } from "./DataSeries";
 import { DataSource } from "./DataSource";
-import { Context, IViewPoint } from "./ViewPoint";
+import { Context, IViewPoint } from './IViewPoint';
 
 export class AbstractLayer<T extends IViewPoint> extends Sprite {
 	layerId: string | undefined;

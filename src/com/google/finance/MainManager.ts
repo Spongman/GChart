@@ -1,19 +1,21 @@
-import { Graphics } from "../../../flash/display/Graphics";
-import { Sprite } from "../../../flash/display/Sprite";
-import { Stage, StageAlign, StageScaleMode } from "../../../flash/display/Stage";
-import { DateTimeLocale } from "../i18n/locale/DateTimeLocale";
-import { ChartEvent, ChartEventPriorities } from "./ChartEvent";
-import { Console } from "./Console";
-import { AddStreamResults, ChartDetailTypes, Const, Intervals, QuoteTypes, ScaleTypes } from "./Const";
-import { DataManager } from "./DataManager";
-import { DataSource } from "./DataSource";
-import { DisplayManager } from "./DisplayManager";
-import { EventFactory } from "./EventFactory";
-import { JSProxy } from "./JSProxy";
-import { LayersManager } from "./LayersManager";
-import { MouseCursor } from "./MouseCursor";
-import { PinPoint } from "./PinPoint";
-import { Utils } from "./Utils";
+import { Graphics } from '../../../flash/display/Graphics';
+import { Sprite } from '../../../flash/display/Sprite';
+import { Stage, StageAlign, StageScaleMode } from '../../../flash/display/Stage';
+import { Map } from '../../../Global';
+import { DateTimeLocale } from '../i18n/locale/DateTimeLocale';
+import { ChartEvent } from './ChartEvent';
+import { ChartEventPriorities } from './ChartEventPriorities';
+import { Console } from './Console';
+import { AddStreamResults, ChartDetailTypes, Const, Intervals, QuoteTypes, ScaleTypes } from './Const';
+import { DataManager } from './DataManager';
+import { DataSource } from './DataSource';
+import { DisplayManager } from './DisplayManager';
+import { EventFactory } from './EventFactory';
+import { JSProxy } from './JSProxy';
+import { LayersManager } from './LayersManager';
+import { MouseCursor } from './MouseCursor';
+import { PinPoint } from './PinPoint';
+import { Utils } from './Utils';
 
 export class MainManager extends Sprite {
 	static paramsObj: any;
@@ -503,4 +505,36 @@ export class MainManager extends Sprite {
 		_loc5_.updateObjectLayers();
 		this.displayManager.animateToSelectedPin(_loc4_);
 	}
+
+
+
+	static decodeObjects(param1: string): any[] {
+		if (!param1) {
+			return [];
+		}
+
+		param1 = decodeURIComponent(param1);
+		const _loc2_: Array<Map<string>> = [];
+		for (const obj of param1.split(MainManager.paramsObj.objectSeparator)) {
+			const _loc5_: Map<string> = {};
+			for (const field of obj.split(MainManager.paramsObj.fieldSeparator)) {
+				const _loc8_ = field.split(":");
+				let value: any = _loc8_[1];
+				if (!isNaN(value)) {
+					value = Number(value);
+				} else if (value === "true") {
+					value = true;
+				} else if (value === "false") {
+					value = false;
+				} else if (value === "null") {
+					value = null;
+				}
+				_loc5_[_loc8_[0]] = value;
+			}
+			_loc2_.push(_loc5_);
+		}
+		return _loc2_;
+	}
+
 }
+

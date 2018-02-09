@@ -59,50 +59,59 @@
 			};
 		}		
 	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js"></script>
 	<script src="js/GoogleChart.js"></script>
+
 	<script>
-		var loaderInfo = new flash.display.LoaderInfo();
-		loaderInfo.url = "/finance/s/n-VxNKK74DU/chart9.swf?hl=en&gl=us";
-		loaderInfo.parameters = parseQueryString("lcId=1481658809818&q=NASDAQ:GOOG&u=getprices&sa=&ei=t1FQWOHBM4eu2AaDyayACQ&fieldSeparator=,&objectSeparator=::&sparklineType=dynamic&single_viewpoints=name%3AMainViewPoint%2Cheight%3A202%2CtopMargin%3A0%3A%3Aname%3ABottomViewPoint%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Avisible%3A%3Aname%3AMACD%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden%3A%3Aname%3ARSI%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden%3A%3Aname%3AWilliamsPercentR%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden%3A%3Aname%3AKDJ%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden%3A%3Aname%3ABIAS%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden%3A%3Aname%3AFastStochastic%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden%3A%3Aname%3ASlowStochastic%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden%3A%3Aname%3ACCI%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden&single_layers=vp%3AMACD%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3AMACD%2Cname%3AMACD%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3ARSI%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3ARSI%2Cname%3ARSI%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3AWilliamsPercentR%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3AWilliamsPercentR%2Cname%3AWilliamsPercentR%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3AKDJ%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3AKDJ%2Cname%3AKDJ%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3ABIAS%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3ABIAS%2Cname%3ABIAS%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3AFastStochastic%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3AFastStochastic%2Cname%3AFastStochastic%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3ASlowStochastic%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3ASlowStochastic%2Cname%3ASlowStochastic%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3ACCI%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3ACCI%2Cname%3ACCI%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3AMainViewPoint%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A0%2Ctype%3Asimple%2ChasText%3Atrue%3A%3Avp%3AMainViewPoint%2Cname%3APriceLinesLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3AIntervalBasedChartManagerLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3ASMA%2Carity%3AUnique%2Ctype%3Aindicator%2Cenabled%3Afalse%3A%3Avp%3AMainViewPoint%2Cname%3AEMA%2Carity%3AUnique%2Ctype%3Aindicator%2Cenabled%3Afalse%3A%3Avp%3AMainViewPoint%2Cname%3ABollingerBands%2Carity%3AUnique%2Ctype%3Aindicator%2Cenabled%3Afalse%3A%3Avp%3AMainViewPoint%2Cname%3AIntervalBasedAHChartLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3ALastDayLineLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3AIntervalBasedPinPointsLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3AIntervalBasedIndependentObjectsLayer%2Carity%3AUnique%2Ctype%3Asimple%2CrenderObj%3Astock_dividend%2Cpositioning%3Abottom%2CavoidObj%3Asplit%3A%3Avp%3AMainViewPoint%2Cname%3AIntervalBasedIndependentObjectsLayer%2Carity%3AUnique%2Ctype%3Asimple%2CrenderObj%3Adividend%2Cpositioning%3Abottom%2CavoidObj%3Asplit%3A%3Avp%3AMainViewPoint%2Cname%3AIntervalBasedIndependentObjectsLayer%2Carity%3AUnique%2Ctype%3Asimple%2CrenderObj%3Asplit%2Cpositioning%3Abottom%2CavoidObj%3Adividend%3A%3Avp%3AMainViewPoint%2Cname%3ABottomBarLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3ABottomViewPoint%2Cname%3AVolumeScaleLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3ABottomViewPoint%2Cname%3AIntervalBasedAHVolumeLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3ABottomViewPoint%2Cname%3AIntervalBasedVolumeLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3ABottomViewPoint%2Cname%3AVMA%2Carity%3AUnique%2Ctype%3Aindicator%2Cenabled%3Afalse%3A%3Avp%3ABottomViewPoint%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2CtopMargin%3A20%2Ctype%3Asimple&compare_viewpoints=name%3AMainViewPoint%2Cheight%3A247%2CtopMargin%3A15&compare_layers=vp%3AMainViewPoint%2Cname%3APercentLinesLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3ADateLinesLayer%2Carity%3AUnique%2Ctype%3Asimple%2CtickPosition%3A0%3A%3Avp%3AMainViewPoint%2Cname%3ABottomBarLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3APercentLineChartLayer%2Carity%3AMultiple%2Ctype%3Asimple&percent_viewpoints=name%3AMainViewPoint%2Cheight%3A247%2CtopMargin%3A15&percent_layers=vp%3AMainViewPoint%2Cname%3APercentLinesLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3ADateLinesLayer%2Carity%3AUnique%2Ctype%3Asimple%2CtickPosition%3A0%3A%3Avp%3AMainViewPoint%2Cname%3ABottomBarLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3APrecalculatedPercentLineChartLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3APercentLineChartLayer%2Carity%3AMultipleNonPrimary%2Ctype%3Asimple&hasVolume=true&hasNews=true&hasExtendedHours=true&hasDefaultZoomSetting=true&hasVerticalScaleSetting=true&displayVolume=true&displayNewsPins=true&displayDividends=true&displaySplits=true&displayExtendedHours=false&enableCustomDateEntry=true&defaultZoomDays=3&snapping=false&verticalScaling=Linear&minZoomDaysNormal=1&minZoomDaysNoIntraDay=1&enableIndicator=true&companyId=22144&enableRealtimeChart=true&isMarketOpenState=1&stateRemainingMinutes=66&delayedMinutes=15&enableChartTypeSetting=true&lineStyle=Ohlc&defaultInterval=300&enableIndicatorSetting=true&biasSetting=&emaSetting=&kdjSetting=&macdSetting=&rsiSetting=&smaSetting=&vmaSetting=&cciSetting=&williamsPercentRSetting=&bollingerBandsSetting=&fastStochasticSetting=true*14*3&slowStochasticSetting=true*14*3&expandButtonEnabled=true&companyCurrency=USD&displayDividendsUnits=true");
+		require([
+			'flash/display/LoaderInfo',
+			'flash/display/Stage',
+			'com/google/finance/MainManager'
+		], function (LoaderInfo, Stage, MainManager) {
 
-		var eltStage = document.getElementById("stage");
-		var stage = new flash.display.Stage(eltStage);
+			var loaderInfo = new LoaderInfo.LoaderInfo();
+			loaderInfo.url = "/finance/s/n-VxNKK74DU/chart9.swf?hl=en&gl=us";
+			loaderInfo.parameters = parseQueryString("lcId=1481658809818&q=NASDAQ:GOOG&u=getprices&sa=&ei=t1FQWOHBM4eu2AaDyayACQ&fieldSeparator=,&objectSeparator=::&sparklineType=dynamic&single_viewpoints=name%3AMainViewPoint%2Cheight%3A202%2CtopMargin%3A0%3A%3Aname%3ABottomViewPoint%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Avisible%3A%3Aname%3AMACD%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden%3A%3Aname%3ARSI%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden%3A%3Aname%3AWilliamsPercentR%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden%3A%3Aname%3AKDJ%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden%3A%3Aname%3ABIAS%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden%3A%3Aname%3AFastStochastic%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden%3A%3Aname%3ASlowStochastic%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden%3A%3Aname%3ACCI%2Cheight%3A80%2CtopMargin%3A0%2Cdisplay%3Ahidden&single_layers=vp%3AMACD%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3AMACD%2Cname%3AMACD%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3ARSI%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3ARSI%2Cname%3ARSI%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3AWilliamsPercentR%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3AWilliamsPercentR%2Cname%3AWilliamsPercentR%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3AKDJ%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3AKDJ%2Cname%3AKDJ%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3ABIAS%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3ABIAS%2Cname%3ABIAS%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3AFastStochastic%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3AFastStochastic%2Cname%3AFastStochastic%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3ASlowStochastic%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3ASlowStochastic%2Cname%3ASlowStochastic%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3ACCI%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2Ctype%3Asimple%2CtopMargin%3A20%3A%3Avp%3ACCI%2Cname%3ACCI%2Carity%3AUnique%2Ctype%3Aindicator%3A%3Avp%3AMainViewPoint%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A0%2Ctype%3Asimple%2ChasText%3Atrue%3A%3Avp%3AMainViewPoint%2Cname%3APriceLinesLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3AIntervalBasedChartManagerLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3ASMA%2Carity%3AUnique%2Ctype%3Aindicator%2Cenabled%3Afalse%3A%3Avp%3AMainViewPoint%2Cname%3AEMA%2Carity%3AUnique%2Ctype%3Aindicator%2Cenabled%3Afalse%3A%3Avp%3AMainViewPoint%2Cname%3ABollingerBands%2Carity%3AUnique%2Ctype%3Aindicator%2Cenabled%3Afalse%3A%3Avp%3AMainViewPoint%2Cname%3AIntervalBasedAHChartLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3ALastDayLineLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3AIntervalBasedPinPointsLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3AIntervalBasedIndependentObjectsLayer%2Carity%3AUnique%2Ctype%3Asimple%2CrenderObj%3Astock_dividend%2Cpositioning%3Abottom%2CavoidObj%3Asplit%3A%3Avp%3AMainViewPoint%2Cname%3AIntervalBasedIndependentObjectsLayer%2Carity%3AUnique%2Ctype%3Asimple%2CrenderObj%3Adividend%2Cpositioning%3Abottom%2CavoidObj%3Asplit%3A%3Avp%3AMainViewPoint%2Cname%3AIntervalBasedIndependentObjectsLayer%2Carity%3AUnique%2Ctype%3Asimple%2CrenderObj%3Asplit%2Cpositioning%3Abottom%2CavoidObj%3Adividend%3A%3Avp%3AMainViewPoint%2Cname%3ABottomBarLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3ABottomViewPoint%2Cname%3AVolumeScaleLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3ABottomViewPoint%2Cname%3AIntervalBasedAHVolumeLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3ABottomViewPoint%2Cname%3AIntervalBasedVolumeLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3ABottomViewPoint%2Cname%3AVMA%2Carity%3AUnique%2Ctype%3Aindicator%2Cenabled%3Afalse%3A%3Avp%3ABottomViewPoint%2Cname%3ADateLinesLayer%2Carity%3AUnique%2CtickPosition%3A1%2CtopMargin%3A20%2Ctype%3Asimple&compare_viewpoints=name%3AMainViewPoint%2Cheight%3A247%2CtopMargin%3A15&compare_layers=vp%3AMainViewPoint%2Cname%3APercentLinesLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3ADateLinesLayer%2Carity%3AUnique%2Ctype%3Asimple%2CtickPosition%3A0%3A%3Avp%3AMainViewPoint%2Cname%3ABottomBarLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3APercentLineChartLayer%2Carity%3AMultiple%2Ctype%3Asimple&percent_viewpoints=name%3AMainViewPoint%2Cheight%3A247%2CtopMargin%3A15&percent_layers=vp%3AMainViewPoint%2Cname%3APercentLinesLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3ADateLinesLayer%2Carity%3AUnique%2Ctype%3Asimple%2CtickPosition%3A0%3A%3Avp%3AMainViewPoint%2Cname%3ABottomBarLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3APrecalculatedPercentLineChartLayer%2Carity%3AUnique%2Ctype%3Asimple%3A%3Avp%3AMainViewPoint%2Cname%3APercentLineChartLayer%2Carity%3AMultipleNonPrimary%2Ctype%3Asimple&hasVolume=true&hasNews=true&hasExtendedHours=true&hasDefaultZoomSetting=true&hasVerticalScaleSetting=true&displayVolume=true&displayNewsPins=true&displayDividends=true&displaySplits=true&displayExtendedHours=false&enableCustomDateEntry=true&defaultZoomDays=3&snapping=false&verticalScaling=Linear&minZoomDaysNormal=1&minZoomDaysNoIntraDay=1&enableIndicator=true&companyId=22144&enableRealtimeChart=true&isMarketOpenState=1&stateRemainingMinutes=66&delayedMinutes=15&enableChartTypeSetting=true&lineStyle=Ohlc&defaultInterval=300&enableIndicatorSetting=true&biasSetting=&emaSetting=&kdjSetting=&macdSetting=&rsiSetting=&smaSetting=&vmaSetting=&cciSetting=&williamsPercentRSetting=&bollingerBandsSetting=&fastStochasticSetting=true*14*3&slowStochasticSetting=true*14*3&expandButtonEnabled=true&companyCurrency=USD&displayDividendsUnits=true");
 
-		var mm = new com.google.finance.MainManager(stage);
+			var eltStage = document.getElementById("stage");
+			var stage = new Stage.Stage(eltStage);
 
-		setTimeout(function () {
-			eltStage.callAsFunction("enableIndicator", ["FastStochastic", "true*14*3"]);
-			eltStage.callAsFunction("enableIndicator", ["SlowStochastic", "true*14*3"]);
-		}, 2000);
+			var mm = new MainManager.MainManager(stage);
 
-		document.querySelectorAll("#compares input").forEach(function (e) {
-			e.addEventListener("click", function (event) {
-				if (e.checked)
-					eltStage.callAsFunction("addCompareTo", [e.name, e.name.split(':')[1]]);
-				else
-					eltStage.callAsFunction("removeCompareTo", [e.name]);
-			})
-		});
-		document.querySelectorAll("#parameters input.setParameter").forEach(function (e) {
-			e.addEventListener("click", function (event) {
-				eltStage.callAsFunction("setParameter", [e.name, e.checked]);
-			})
-		});
+			setTimeout(function () {
+				eltStage.callAsFunction("enableIndicator", ["FastStochastic", "true*14*3"]);
+				eltStage.callAsFunction("enableIndicator", ["SlowStochastic", "true*14*3"]);
+			}, 2000);
 
-		document.querySelectorAll("#parameters select.setParameter").forEach(function (e) {
-			e.addEventListener("change", function (event) {
-				eltStage.callAsFunction("setParameter", [e.name, e.value]);
-			})
-		});
+			document.querySelectorAll("#compares input").forEach(function (e) {
+				e.addEventListener("click", function (event) {
+					if (e.checked)
+						eltStage.callAsFunction("addCompareTo", [e.name, e.name.split(':')[1]]);
+					else
+						eltStage.callAsFunction("removeCompareTo", [e.name]);
+				})
+			});
+			document.querySelectorAll("#parameters input.setParameter").forEach(function (e) {
+				e.addEventListener("click", function (event) {
+					eltStage.callAsFunction("setParameter", [e.name, e.checked]);
+				})
+			});
 
-		document.querySelectorAll("#lineStyle").forEach(function (e) {
-			e.addEventListener("change", function (event) {
-				eltStage.callAsFunction("setLineStyle", [e.value]);
-			})
+			document.querySelectorAll("#parameters select.setParameter").forEach(function (e) {
+				e.addEventListener("change", function (event) {
+					eltStage.callAsFunction("setParameter", [e.name, e.value]);
+				})
+			});
+
+			document.querySelectorAll("#lineStyle").forEach(function (e) {
+				e.addEventListener("change", function (event) {
+					eltStage.callAsFunction("setLineStyle", [e.value]);
+				})
+			});
 		});
 
 	</script>
-
+-->
 	<script async src="https:// www.googletagmanager.com/gtag/js?id=UA-106815406-2"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];

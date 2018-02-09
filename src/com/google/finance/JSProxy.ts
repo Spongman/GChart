@@ -1,7 +1,7 @@
 import { Stage } from "../../../flash/display/Stage";
 import { ExternalInterface } from "../../../flash/external/ExternalInterface";
 import { Dictionary, Map } from "../../../Global";
-import { ChartEventPriorities, ChartEventTypes } from "./ChartEvent";
+import { ChartEventPriorities } from "./ChartEventPriorities";
 import { ChartDetailTypes, Const, Intervals } from "./Const";
 import { DataSeries } from "./DataSeries";
 import { DataSource } from "./DataSource";
@@ -12,6 +12,8 @@ import { IndicatorLayer } from "./indicator/IndicatorLayer";
 import { LayerInfo, LayersManager } from "./LayersManager";
 import { MainManager } from "./MainManager";
 import { Utils } from "./Utils";
+import { DataUnit } from './DataUnit';
+import { ChartEventTypes } from './ChartEventTypes';
 
 	// import flash.system.Capabilities;
 	// import flash.external.ExternalInterface;
@@ -400,7 +402,7 @@ export class JSProxy {
 
 		updateLastPriceInDataSeries(dataSeries: DataSeries, close: number): boolean {
 			const pointsInIntervalArray = dataSeries.getPointsInIntervalArray(Const.INTRADAY_INTERVAL);
-			const lastRealPointIndex = Utils.getLastRealPointIndex(pointsInIntervalArray);
+			const lastRealPointIndex = DataUnit.getLastRealPointIndex(pointsInIntervalArray);
 			if (lastRealPointIndex >= 0) {
 				const _loc5_ = pointsInIntervalArray[lastRealPointIndex];
 				_loc5_.close = close;

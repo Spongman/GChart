@@ -1,4 +1,4 @@
-import { Point, Sprite } from "../../../flash/display/Sprite";
+import { Sprite } from "../../../flash/display/Sprite";
 import { Dictionary } from "../../../Global";
 import { AbstractDrawingLayer } from "./AbstractDrawingLayer";
 import { Const, Intervals } from "./Const";
@@ -7,8 +7,9 @@ import { DataSource } from "./DataSource";
 import { DataUnit } from "./DataUnit";
 import { SpaceText } from "./SpaceText";
 import { Utils } from "./Utils";
-import { Context, MinMaxMedPrice } from "./ViewPoint";
 import { ViewPoint } from "./ViewPoint";
+import { Point } from "../../../flash/display/Point";
+import { Context, MinMaxMedPrice } from "./IViewPoint";
 
 // import flash.display.Sprite;
 // import flash.geom.Point;

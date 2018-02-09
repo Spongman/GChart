@@ -5,7 +5,8 @@ import { Const, Intervals } from "./Const";
 import { DataSource } from "./DataSource";
 import { SpaceText } from "./SpaceText";
 import { Utils } from "./Utils";
-import { Context, IViewPoint, ViewPoint } from "./ViewPoint";
+import { ViewPoint } from "./ViewPoint";
+import { IViewPoint, Context } from './IViewPoint';
 
 export class IntervalBasedVolumeLayer extends AbstractDrawingLayer<ViewPoint> {
 	private localYScale: number;

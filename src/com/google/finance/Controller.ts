@@ -1,29 +1,39 @@
-import { Bitmap } from "../../../flash/display/Bitmap";
-import { DisplayObject } from "../../../flash/display/DisplayObject";
-import { Graphics } from "../../../flash/display/Graphics";
-import { SimpleButton } from "../../../flash/display/SimpleButton";
-import { Sprite } from "../../../flash/display/Sprite";
-import { Stage } from "../../../flash/display/Stage";
-import { TextField, TextFieldAutoSize, TextFormat } from "../../../flash/text/TextField";
-import { Timer, TimerEvent } from "../../../flash/utils/Timer";
-import { DateTimeLocale } from "../i18n/locale/DateTimeLocale";
-import { AnimationManager } from "./AnimationManager";
-import { Bounds } from "./Bounds";
-import { ChartEventPriorities } from "./ChartEvent";
-import { ChartDetailTypes, Const, ControllerComponents, Directions, Intervals, QuoteTypes, ScaleTypes, TickPositions } from "./Const";
-import { Controller_ExpandIcon } from "./Controller_ExpandIcon";
-import { Controller_ShrinkIcon } from "./Controller_ShrinkIcon";
-import { DataSource } from "./DataSource";
-import { DisplayManager } from "./DisplayManager";
-import { EventFactory } from "./EventFactory";
-import { LayersManager } from "./LayersManager";
-import { MainManager } from "./MainManager";
-import { Message, Messages } from "./Messages";
-import { MouseCursor, MouseCursors } from "./MouseCursor";
-import { ToolTipMovie } from "./ToolTipMovie";
-import { TextButtonsGroup } from "./ui/TextButtonsGroup";
-import { Utils } from "./Utils";
-import { Context, IViewPoint, ViewPoint, ViewPointState } from "./ViewPoint";
+import { Bitmap } from '../../../flash/display/Bitmap';
+import { DisplayObject } from '../../../flash/display/DisplayObject';
+import { Graphics } from '../../../flash/display/Graphics';
+import { SimpleButton } from '../../../flash/display/SimpleButton';
+import { Sprite } from '../../../flash/display/Sprite';
+import { Stage } from '../../../flash/display/Stage';
+import { TextField, TextFieldAutoSize, TextFormat } from '../../../flash/text/TextField';
+import { Timer, TimerEvent } from '../../../flash/utils/Timer';
+import { DateTimeLocale } from '../i18n/locale/DateTimeLocale';
+import { AnimationManager } from './AnimationManager';
+import { Bounds } from './Bounds';
+import { ChartEventPriorities } from './ChartEventPriorities';
+import {
+  ChartDetailTypes,
+  Const,
+  ControllerComponents,
+  Directions,
+  Intervals,
+  QuoteTypes,
+  ScaleTypes,
+  TickPositions,
+} from './Const';
+import { Controller_ExpandIcon } from './Controller_ExpandIcon';
+import { Controller_ShrinkIcon } from './Controller_ShrinkIcon';
+import { DataSource } from './DataSource';
+import { EventFactory } from './EventFactory';
+import { IDisplayManager } from './IDisplayManager';
+import { Context, IViewPoint, ViewPointState } from './IViewPoint';
+import { LayersManager } from './LayersManager';
+import { MainManager } from './MainManager';
+import { Message, Messages } from './Messages';
+import { MouseCursor, MouseCursors } from './MouseCursor';
+import { ToolTipMovie } from './ToolTipMovie';
+import { TextButtonsGroup } from './ui/TextButtonsGroup';
+import { Utils } from './Utils';
+import { ViewPoint } from './ViewPoint';
 
 // import flash.display.Sprite;
 // import Bitmap;
@@ -111,7 +121,7 @@ export class Controller extends Sprite {
 	currentIntervalLevel: Intervals;
 	currentZoomLevel: ScaleTypes;
 
-	constructor(readonly mainManager: MainManager, readonly displayManager: DisplayManager) {
+	constructor(readonly mainManager: MainManager, readonly displayManager: IDisplayManager) {
 		super();
 		this.listeners = [];
 		this.isZh = Const.isZhLocale(DateTimeLocale.getLocale());

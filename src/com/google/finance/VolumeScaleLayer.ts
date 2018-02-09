@@ -1,9 +1,10 @@
-import { TextField, TextFieldAutoSize, TextFormat } from "../../../flash/text/TextField";
-import { AbstractLayer } from "./AbstractLayer";
-import { Const, Intervals } from "./Const";
-import { DataSource } from "./DataSource";
-import { Message, Messages } from "./Messages";
-import { Context, IViewPoint, ViewPoint } from "./ViewPoint";
+import { TextField, TextFieldAutoSize, TextFormat } from '../../../flash/text/TextField';
+import { AbstractLayer } from './AbstractLayer';
+import { Const, Intervals } from './Const';
+import { DataSource } from './DataSource';
+import { Context, IViewPoint } from './IViewPoint';
+import { Message, Messages } from './Messages';
+import { ViewPoint } from './ViewPoint';
 
 // import flash.text.TextField;
 // import flash.text.TextFormat;

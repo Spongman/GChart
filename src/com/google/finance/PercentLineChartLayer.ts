@@ -1,11 +1,11 @@
-import { Point } from "../../../flash/display/Sprite";
+import { Point } from "../../../flash/display/Point";
 import { Dictionary } from "../../../Global";
 import { Const } from "./Const";
 import { DataUnit } from "./DataUnit";
 import { InfoDotInfo } from "./InfoDot";
 import { LineChartLayer } from "./LineChartLayer";
 import { Utils } from "./Utils";
-import { Context } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 import { ViewPoint } from "./ViewPoint";
 
 // import flash.geom.Point;

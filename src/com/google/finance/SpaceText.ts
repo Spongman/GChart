@@ -1,19 +1,18 @@
-import { Sprite } from "../../../flash/display/Sprite";
-import { Stage } from "../../../flash/display/Stage";
-import { TextField, TextFieldAutoSize, TextFieldType, TextFormat, TextFormatAlign } from "../../../flash/text/TextField";
-import { Dictionary } from "../../../Global";
-import { DateTimeLocale } from "../i18n/locale/DateTimeLocale";
-import { Const } from "./Const";
-import { DataSource } from "./DataSource";
-import { DataUnit } from "./DataUnit";
-import { DateTextField } from "./DateTextField";
-import { DisplayManager } from "./DisplayManager";
-import { InfoDot } from "./InfoDot";
-import { Message } from "./Messages";
-import { Messages } from "./Messages";
-import { Utils } from "./Utils";
-import { IDataUnitContainer } from "./ViewPoint";
-import { ViewPoint } from "./ViewPoint";
+import { Sprite } from '../../../flash/display/Sprite';
+import { Stage } from '../../../flash/display/Stage';
+import { TextField, TextFieldAutoSize, TextFieldType, TextFormat, TextFormatAlign } from '../../../flash/text/TextField';
+import { Dictionary } from '../../../Global';
+import { DateTimeLocale } from '../i18n/locale/DateTimeLocale';
+import { Const } from './Const';
+import { DataSource } from './DataSource';
+import { DataUnit } from './DataUnit';
+import { DateTextField } from './DateTextField';
+import { IDisplayManager } from './IDisplayManager';
+import { InfoDot } from './InfoDot';
+import { IDataUnitContainer } from './IViewPoint';
+import { Message, Messages } from './Messages';
+import { Utils } from './Utils';
+import { ViewPoint } from './ViewPoint';
 
 // import flash.display.Sprite;
 // import com.google.i18n.locale.DateTimeLocale;
@@ -63,7 +62,7 @@ export class SpaceText extends Sprite {
 	endDate: DateTextField;
 	startDate: DateTextField;
 
-	constructor(private readonly displayManager: DisplayManager) {
+	constructor(private readonly displayManager: IDisplayManager) {
 		super();
 
 		this.bg.graphics.beginFill(0xffffff, 1);

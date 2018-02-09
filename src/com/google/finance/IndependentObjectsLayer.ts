@@ -2,13 +2,15 @@ import { Sprite } from "../../../flash/display/Sprite";
 import { AbstractLayer } from "./AbstractLayer";
 import { BottomBarLayer } from "./BottomBarLayer";
 import { Intervals, Orientations } from "./Const";
-import { DataSource, SeriesPosition } from "./DataSource";
+import { DataSource } from "./DataSource";
 import { DataUnit } from "./DataUnit";
 import { DividendMovie } from "./DividendMovie";
 import { SplitMovie } from "./SplitMovie";
 import { StockAssociatedObject } from "./StockAssociatedObject";
 import { StockDividendMovie } from "./StockDividendMovie";
-import { Context, ViewPoint } from "./ViewPoint";
+import { ViewPoint } from "./ViewPoint";
+import { SeriesPosition } from './SeriesPosition';
+import { Context } from "./IViewPoint";
 
 // import flash.display.Sprite;
 

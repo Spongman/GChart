@@ -4,7 +4,7 @@ import { DataSeries } from "./DataSeries";
 import { IntervalBasedVolumeLayer } from "./IntervalBasedVolumeLayer";
 import { IntervalSet } from "./IntervalSet";
 import { SpaceText } from "./SpaceText";
-import { Context } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 import { ViewPoint } from "./ViewPoint";
 
 export class IntervalBasedAHVolumeLayer extends IntervalBasedVolumeLayer {

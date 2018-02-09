@@ -1,9 +1,10 @@
-import { Graphics } from "../../../flash/display/Graphics";
-import { URLLoader, URLRequest } from "../../../flash/net/URLLoader";
-import { ChartEvent, ChartEventTypes } from "./ChartEvent";
-import { AddStreamResults, Const } from "./Const";
-import { DataManager } from "./DataManager";
-import { MainManager } from "./MainManager";
+import { Graphics } from '../../../flash/display/Graphics';
+import { URLLoader, URLRequest } from '../../../flash/net/URLLoader';
+import { ChartEvent } from './ChartEvent';
+import { ChartEventTypes } from './ChartEventTypes';
+import { AddStreamResults, Const } from './Const';
+import { DataManager } from './DataManager';
+import { MainManager } from './MainManager';
 
 // import URLLoader;
 // import flash.events.IOErrorEvent;

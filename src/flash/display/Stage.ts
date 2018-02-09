@@ -1,5 +1,6 @@
-import { DisplayObjectContainer } from "./DisplayObjectContainer";
-import { Graphics } from "./Graphics";
+import { IStage } from './DisplayObject';
+import { DisplayObjectContainer } from './DisplayObjectContainer';
+import { Graphics } from './Graphics';
 
 export abstract class StageAlign {
 	static readonly TOP_LEFT = "top-left";
@@ -10,7 +11,8 @@ export abstract class StageScaleMode {
 }
 
 export class Stage
-	extends DisplayObjectContainer {
+	extends DisplayObjectContainer
+	implements IStage {
 	align: string;
 	scaleMode: string;
 

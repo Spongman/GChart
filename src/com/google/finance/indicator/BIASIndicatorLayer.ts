@@ -1,9 +1,9 @@
-import { DataSeries } from "../DataSeries";
-import { Message, Messages } from "../Messages";
-import { Context } from "./../ViewPoint";
-import { IndependentIndicatorLayer } from "./IndependentIndicatorLayer";
-import { IndicatorLineStyle } from "./IndicatorLineStyle";
-import { IndicatorPoint } from "./IndicatorPoint";
+import { DataSeries } from '../DataSeries';
+import { Context } from '../IViewPoint';
+import { Message, Messages } from '../Messages';
+import { IndependentIndicatorLayer } from './IndependentIndicatorLayer';
+import { IndicatorLineStyle } from './IndicatorLineStyle';
+import { IndicatorPoint } from './IndicatorPoint';
 
 	// import com.google.finance.Messages;
 	// import com.google.finance.DataUnit;

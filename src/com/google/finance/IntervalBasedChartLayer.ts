@@ -7,7 +7,8 @@ import { DataSource } from "./DataSource";
 import { DataUnit } from "./DataUnit";
 import { SpaceText } from "./SpaceText";
 import { Utils } from "./Utils";
-import { Context, ViewPoint } from "./ViewPoint";
+import { ViewPoint } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 
 // import com.google.i18n.locale.DateTimeLocale;
 // import flash.display.Sprite;

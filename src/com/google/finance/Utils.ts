@@ -1,11 +1,7 @@
-import { DisplayObject } from "../../../flash/display/DisplayObject";
-import { DisplayObjectContainer } from "../../../flash/display/DisplayObjectContainer";
-import { Sprite } from "../../../flash/display/Sprite";
 import { TextField, TextFieldAutoSize, TextFormat } from "../../../flash/text/TextField";
 import { Dictionary, Map } from "../../../Global";
 import { Const } from "./Const";
-import { DataUnit } from "./DataUnit";
-import { MainManager } from "./MainManager";
+
 
 // import flash.text.TextField;
 // import flash.display.Sprite;
@@ -18,10 +14,6 @@ import { MainManager } from "./MainManager";
 
 export class Utils {
 	private static localTzOffset: number;
-
-	static compareDataUnits(dataUnit1: DataUnit, dataUnit2: DataUnit): number {
-		return dataUnit1.exchangeDateInUTC.getTime() - dataUnit2.exchangeDateInUTC.getTime();
-	}
 
 	static getLocalTimezoneOffset(): number {
 		if (isNaN(Utils.localTzOffset)) {
@@ -42,34 +34,6 @@ export class Utils {
 				}
 			}
 		}
-	}
-
-	static decodeObjects(param1: string): any[] {
-		if (!param1) {
-			return [];
-		}
-
-		param1 = decodeURIComponent(param1);
-		const _loc2_: Array<Map<string>> = [];
-		for (const obj of param1.split(MainManager.paramsObj.objectSeparator)) {
-			const _loc5_: Map<string> = {};
-			for (const field of obj.split(MainManager.paramsObj.fieldSeparator)) {
-				const _loc8_ = field.split(":");
-				let value: any = _loc8_[1];
-				if (!isNaN(value)) {
-					value = Number(value);
-				} else if (value === "true") {
-					value = true;
-				} else if (value === "false") {
-					value = false;
-				} else if (value === "null") {
-					value = null;
-				}
-				_loc5_[_loc8_[0]] = value;
-			}
-			_loc2_.push(_loc5_);
-		}
-		return _loc2_;
 	}
 
 	static getTickerParts(ticker: string) {
@@ -157,19 +121,6 @@ export class Utils {
 		return Utils.getTickerParts(quote).symbol;
 	}
 
-	static getLastRealPointIndex(dataUnits: DataUnit[]): number {
-		if (!dataUnits || dataUnits.length === 0) {
-			return -1;
-		}
-
-		let unitIndex = dataUnits.length - 1;
-		while (unitIndex >= 0 && dataUnits[unitIndex].fake) {
-			unitIndex--;
-		}
-
-		return unitIndex;
-	}
-
 	static getExchangeFromTicker(param1: string): string {
 		return Utils.getTickerParts(param1).exchange;
 	}
@@ -192,16 +143,6 @@ export class Utils {
 
 	static utcDateToString(date: Date): string {
 		return date.getUTCFullYear() + "." + (date.getUTCMonth() + 1) + "." + date.getUTCDate() + "/" + date.getUTCHours() + ":" + date.getUTCMinutes();
-	}
-
-	static createLabel(sprite: Sprite, text: string, textFormat: TextFormat): TextField {
-		const textField = new TextField();
-		sprite.addChild(textField);
-		textField.autoSize = TextFieldAutoSize.LEFT;
-		textField.defaultTextFormat = textFormat;
-		textField.selectable = false;
-		textField.text = text;
-		return textField;
 	}
 
 	static extendedMin(param1: number, param2: number): number {
@@ -273,12 +214,6 @@ export class Utils {
 		}
 
 		return value;
-	}
-
-	static removeAllChildren(displayObjectContainer: DisplayObjectContainer) {
-		while (displayObjectContainer.numChildren > 0) {
-			displayObjectContainer.removeChildAt(displayObjectContainer.numChildren - 1);
-		}
 	}
 
 	static compareNumbers(param1: number, param2: number): number {
@@ -372,18 +307,6 @@ export class Utils {
 		return _loc3_;
 	}
 
-	static displayObjectToTop(displayObject: DisplayObject, displayObjectContainer: DisplayObjectContainer) {
-		let index = 0;
-		const child = displayObject;
-		const container = displayObjectContainer;
-		try {
-			index = container.getChildIndex(child);
-			container.swapChildrenAt(index, container.numChildren - 1);
-			return;
-		} catch (ae /*:ArgumentError*/) {
-			return;
-		}
-	}
 
 	static getLastDayOfWeek(param1: number): number {
 		for (let day = Const.DAY_PER_WEEK - 1; day >= 0; day--) {

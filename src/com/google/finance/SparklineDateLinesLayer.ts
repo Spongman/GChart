@@ -4,8 +4,9 @@ import { AbstractLayer } from "./AbstractLayer";
 import { TickPositions } from "./Const";
 import { SparklineViewPoint } from "./SparklineViewPoint";
 import { Utils } from "./Utils";
-import { Context } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 import { ViewPoint } from "./ViewPoint";
+import { DisplayObjectContainer } from '../../../flash/display/DisplayObjectContainer';
 
 // import flash.display.Sprite;
 // import flash.text.TextField;
@@ -112,7 +113,7 @@ export class SparklineDateLinesLayer extends AbstractLayer<SparklineViewPoint> {
 
 	private drawVerticalLines() {
 		this.textCanvas.graphics.clear();
-		Utils.removeAllChildren(this.textCanvas);
+		DisplayObjectContainer.removeAllChildren(this.textCanvas);
 		this.drawYearStarts(this.textCanvas);
 		if (this.getOneYearWidth() > SparklineDateLinesLayer.MIN_YEAR_WIDTH) {
 			this.drawQuarterStarts(this.textCanvas);

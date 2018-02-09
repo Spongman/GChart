@@ -2,7 +2,7 @@ import { Const } from "../Const";
 import { DataSeries } from "../DataSeries";
 import { Message, Messages } from "../Messages";
 import { Utils } from "../Utils";
-import { Context } from "../ViewPoint";
+import { Context } from "../IViewPoint";
 import { IndicatorLineStyle } from "./IndicatorLineStyle";
 import { IndicatorPoint } from "./IndicatorPoint";
 import { VolumeDependentIndicatorLayer } from "./VolumeDependentIndicatorLayer";

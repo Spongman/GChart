@@ -1,7 +1,7 @@
 import { Const, Intervals } from "./Const";
 import { DataUnit } from "./DataUnit";
 import { IntervalBasedChartLayer } from "./IntervalBasedChartLayer";
-import { Context } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 
 export class IntervalBasedLineChartLayer extends IntervalBasedChartLayer {
 		private drawLine(detailLevel: Intervals, context: Context, dataUnit: DataUnit[], param4: number, param5: number, param6: number, param7: number): number {

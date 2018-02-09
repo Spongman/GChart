@@ -5,7 +5,8 @@ import { DataSource } from "./DataSource";
 import { DataUnit } from "./DataUnit";
 import { IntervalBasedChartLayer } from "./IntervalBasedChartLayer";
 import { IntervalSet } from "./IntervalSet";
-import { Context, ViewPoint } from "./ViewPoint";
+import { ViewPoint } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 
 export class IntervalBasedAHChartLayer extends IntervalBasedChartLayer {
 		private regionsXLimits: IntervalSet;

@@ -7,7 +7,8 @@ import { DataSource } from "./DataSource";
 import { DataUnit } from "./DataUnit";
 import { Indicator } from "./Indicator";
 import { InfoDotInfo } from "./InfoDot";
-import { Context, ViewPoint } from "./ViewPoint";
+import { ViewPoint } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 
 	// import flash.display.Sprite;
 

@@ -1,14 +1,14 @@
-import { DisplayObject } from "./DisplayObject";
-import { InteractiveObject } from "./InteractiveObject";
-import { Stage } from "./Stage";
+import { DisplayObject, IDisplayObjectContainer, IStage } from './DisplayObject';
+import { InteractiveObject } from './InteractiveObject';
 
 export class DisplayObjectContainer
-	extends InteractiveObject {
+	extends InteractiveObject
+	implements IDisplayObjectContainer {
 	children: DisplayObject[] = [];
 	get numChildren() { return this.children.length; }
 
 	get stage() { return this._stage; }
-	set stage(value: Stage) {
+	set stage(value: IStage) {
 		if (this._stage === value) {
 			return;
 		}
@@ -146,4 +146,26 @@ export class DisplayObjectContainer
 		this._height = value;
 		this.element.style.height = value + "px";
 	}
+
+
+	static displayObjectToTop(displayObject: DisplayObject, displayObjectContainer: DisplayObjectContainer) {
+		let index = 0;
+		const child = displayObject;
+		const container = displayObjectContainer;
+		try {
+			index = container.getChildIndex(child);
+			container.swapChildrenAt(index, container.numChildren - 1);
+			return;
+		} catch (ae /*:ArgumentError*/) {
+			return;
+		}
+	}
+
+
+	static removeAllChildren(displayObjectContainer: DisplayObjectContainer) {
+		while (displayObjectContainer.numChildren > 0) {
+			displayObjectContainer.removeChildAt(displayObjectContainer.numChildren - 1);
+		}
+	}
+
 }

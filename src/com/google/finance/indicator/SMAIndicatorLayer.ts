@@ -1,5 +1,5 @@
 import { DataSeries } from "../DataSeries";
-import { Context } from "../ViewPoint";
+import { Context } from "../IViewPoint";
 import { Message, Messages } from "./../Messages";
 import { DependentIndicatorLayer } from "./DependentIndicatorLayer";
 import { IndicatorLineStyle } from "./IndicatorLineStyle";

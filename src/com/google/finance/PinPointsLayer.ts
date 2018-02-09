@@ -7,7 +7,8 @@ import { OrangePinPointMovie } from "./OrangePinPointMovie";
 import { PinPoint } from "./PinPoint";
 import { PinPointContentMovie } from "./PinPointContentMovie";
 import { PinOrientations, PinPointMovie } from "./PinPointMovie";
-import { Context, ViewPoint } from "./ViewPoint";
+import { ViewPoint } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 
 export class PinPointsLayer extends AbstractLayer<ViewPoint> {
 		private static readonly FLAG_HEIGHT = 14;

@@ -1,18 +1,19 @@
-import { Dictionary, Map } from "../../../Global";
-import { AbstractLayer } from "./AbstractLayer";
-import { Const, Intervals } from "./Const";
-import { DataSource } from "./DataSource";
-import { DisplayManager } from "./DisplayManager";
-import { IndependentObjectsLayer } from "./IndependentObjectsLayer";
-import { IndicatorLayer } from "./indicator/IndicatorLayer";
-import { IntervalBasedIndependentObjectsLayer } from "./IntervalBasedIndependentObjectsLayer";
-import { MainManager } from "./MainManager";
-import { SparklineViewPoint } from "./SparklineViewPoint";
-import { StartEndPair } from "./StartEndPair";
-import { Utils } from "./Utils";
-import { IViewPoint, ViewPoint } from "./ViewPoint";
-import { VolumeCalculator } from "./VolumeCalculator";
-import { VolumeLinesChartLayer } from "./VolumeLinesChartLayer";
+import { Dictionary, Map } from '../../../Global';
+import { AbstractLayer } from './AbstractLayer';
+import { Const, Intervals } from './Const';
+import { DataSource } from './DataSource';
+import { IDisplayManager } from './IDisplayManager';
+import { IndependentObjectsLayer } from './IndependentObjectsLayer';
+import { IndicatorLayer } from './indicator/IndicatorLayer';
+import { IntervalBasedIndependentObjectsLayer } from './IntervalBasedIndependentObjectsLayer';
+import { IViewPoint } from './IViewPoint';
+import { MainManager } from './MainManager';
+import { SparklineViewPoint } from './SparklineViewPoint';
+import { StartEndPair } from './StartEndPair';
+import { Utils } from './Utils';
+import { ViewPoint } from './ViewPoint';
+import { VolumeCalculator } from './VolumeCalculator';
+import { VolumeLinesChartLayer } from './VolumeLinesChartLayer';
 
 // import com.google.finance.indicator.AbstractStochasticIndicatorLayer;
 // import com.google.finance.indicator.BIASIndicatorLayer;
@@ -65,20 +66,20 @@ export class LayersManager {
 	readonly config: Map<LayerConfig> = {};
 	layers: LayerInfo[] = [];
 
-	constructor(private readonly displayManager: DisplayManager, private readonly mainManager: MainManager) {
+	constructor(private readonly displayManager: IDisplayManager, private readonly mainManager: MainManager) {
 		// TODO: this.registerLayerClasses();
 		this.displayManager.layersManager = this;
 		const paramsObj = MainManager.paramsObj;
-		const _loc4_ = Utils.decodeObjects(paramsObj.single_layers);
-		const _loc5_ = Utils.decodeObjects(paramsObj.single_viewpoints);
+		const _loc4_ = MainManager.decodeObjects(paramsObj.single_layers);
+		const _loc5_ = MainManager.decodeObjects(paramsObj.single_viewpoints);
 		this.config[LayersManager.SINGLE] = new LayerConfig();
 		this.config[LayersManager.SINGLE].layers = _loc4_;
 		this.config[LayersManager.SINGLE].viewpoints = _loc5_;
 		this.config[LayersManager.SINGLE].hiddenViewpoints = [];
 		this.config[LayersManager.SINGLE].lastMinute = 0;
 		this.separateHiddenViewPoints(this.config[LayersManager.SINGLE]);
-		const _loc6_ = Utils.decodeObjects(paramsObj.compare_layers);
-		const _loc7_ = Utils.decodeObjects(paramsObj.compare_viewpoints);
+		const _loc6_ = MainManager.decodeObjects(paramsObj.compare_layers);
+		const _loc7_ = MainManager.decodeObjects(paramsObj.compare_viewpoints);
 		this.config[LayersManager.COMPARISON] = new LayerConfig();
 		this.config[LayersManager.COMPARISON].layers = _loc6_;
 		this.config[LayersManager.COMPARISON].viewpoints = _loc7_;
@@ -86,8 +87,8 @@ export class LayersManager {
 		this.config[LayersManager.COMPARISON].lastMinute = 0;
 		this.separateHiddenViewPoints(this.config[LayersManager.COMPARISON]);
 		this.config[LayersManager.PERCENT] = new LayerConfig();
-		this.config[LayersManager.PERCENT].layers = Utils.decodeObjects(paramsObj.percent_layers);
-		this.config[LayersManager.PERCENT].viewpoints = Utils.decodeObjects(paramsObj.percent_viewpoints);
+		this.config[LayersManager.PERCENT].layers = MainManager.decodeObjects(paramsObj.percent_layers);
+		this.config[LayersManager.PERCENT].viewpoints = MainManager.decodeObjects(paramsObj.percent_viewpoints);
 		this.config[LayersManager.PERCENT].hiddenViewpoints = [];
 		this.config[LayersManager.PERCENT].lastMinute = 0;
 		this.separateHiddenViewPoints(this.config[LayersManager.PERCENT]);

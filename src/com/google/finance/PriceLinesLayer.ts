@@ -3,7 +3,8 @@ import { AbstractLayer } from "./AbstractLayer";
 import { BottomBarLayer } from "./BottomBarLayer";
 import { Const } from "./Const";
 import { Utils } from "./Utils";
-import { Context, ViewPoint } from "./ViewPoint";
+import { ViewPoint } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 
 	// import flash.text.TextFieldAutoSize;
 

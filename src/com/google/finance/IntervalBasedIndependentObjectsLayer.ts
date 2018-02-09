@@ -9,7 +9,8 @@ import { Position } from "./IndependentObjectsLayer";
 import { SplitMovie } from "./SplitMovie";
 import { StockAssociatedObject } from "./StockAssociatedObject";
 import { StockDividendMovie } from "./StockDividendMovie";
-import { Context, ViewPoint } from "./ViewPoint";
+import { ViewPoint } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 
 // import flash.display.Sprite;
 

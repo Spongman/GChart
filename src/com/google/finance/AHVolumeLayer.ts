@@ -6,9 +6,9 @@ import { DataSource } from "./DataSource";
 import { VolumeIndicatorPoint } from "./indicator/IndicatorPoint";
 import { IntervalSet } from "./IntervalSet";
 import { Utils } from "./Utils";
-import { Context, IViewPoint } from "./ViewPoint";
 import { ViewPoint } from "./ViewPoint";
 import { VolumeLinesChartLayer } from "./VolumeLinesChartLayer";
+import { Context, IViewPoint } from './IViewPoint';
 
 // import flash.display.Sprite;
 

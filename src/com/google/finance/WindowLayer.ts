@@ -11,7 +11,7 @@ import { MainManager } from "./MainManager";
 import { MouseCursors } from "./MouseCursor";
 import { ScrollSlider } from "./ScrollSlider";
 import { SparklineViewPoint } from "./SparklineViewPoint";
-import { Context } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 import { WindowLayer_ScrollBarBg } from "./WindowLayer_ScrollBarBg";
 import { WindowLayer_SparkHandle } from "./WindowLayer_SparkHandle";
 import { WindowLayer_SparkHandleActive } from "./WindowLayer_SparkHandleActive";

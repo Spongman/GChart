@@ -1,11 +1,12 @@
-import { TextField, TextFormat } from "../../../../flash/text/TextField";
-import { Const } from "../Const";
-import { DataSource } from "../DataSource";
-import { Utils } from "../Utils";
-import { Context, ViewPoint } from "../ViewPoint";
-import { IndicatorLayer } from "./IndicatorLayer";
-import { IndicatorLineStyle } from "./IndicatorLineStyle";
-import { IndicatorPoint } from "./IndicatorPoint";
+import { TextField, TextFormat } from '../../../../flash/text/TextField';
+import { Const } from '../Const';
+import { DataSource } from '../DataSource';
+import { Context } from '../IViewPoint';
+import { Utils } from '../Utils';
+import { ViewPoint } from '../ViewPoint';
+import { IndicatorLayer } from './IndicatorLayer';
+import { IndicatorLineStyle } from './IndicatorLineStyle';
+import { IndicatorPoint } from './IndicatorPoint';
 
 // import com.google.finance.ViewPoint;
 // import com.google.finance.Const;

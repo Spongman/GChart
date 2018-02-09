@@ -1,4 +1,4 @@
-import { Context } from "../ViewPoint";
+import { Context } from "../IViewPoint";
 import { IndicatorLayer } from "./IndicatorLayer";
 import { IndicatorPoint } from "./IndicatorPoint";
 

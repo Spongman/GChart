@@ -1,4 +1,4 @@
-import { SeriesPosition } from "./DataSource";
+import { SeriesPosition } from "./SeriesPosition";
 import { PinPoint } from "./PinPoint";
 
 export class StockAssociatedObject

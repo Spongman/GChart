@@ -1,15 +1,16 @@
-import { Sprite } from "../../../../flash/display/Sprite";
-import { TextField, TextFormat } from "../../../../flash/text/TextField";
-import { Dictionary } from "../../../../Global";
-import { AbstractDrawingLayer } from "../AbstractDrawingLayer";
-import { Const, Intervals } from "../Const";
-import { DataSeries } from "../DataSeries";
-import { DataSource } from "../DataSource";
-import { DataUnit } from "../DataUnit";
-import { Indicator } from "../Indicator";
-import { Context, ViewPoint } from "../ViewPoint";
-import { IndicatorLineStyle } from "./IndicatorLineStyle";
-import { IndicatorPoint } from "./IndicatorPoint";
+import { Sprite } from '../../../../flash/display/Sprite';
+import { TextField, TextFormat } from '../../../../flash/text/TextField';
+import { Dictionary } from '../../../../Global';
+import { AbstractDrawingLayer } from '../AbstractDrawingLayer';
+import { Const, Intervals } from '../Const';
+import { DataSeries } from '../DataSeries';
+import { DataSource } from '../DataSource';
+import { DataUnit } from '../DataUnit';
+import { Indicator } from '../Indicator';
+import { Context } from '../IViewPoint';
+import { ViewPoint } from '../ViewPoint';
+import { IndicatorLineStyle } from './IndicatorLineStyle';
+import { IndicatorPoint } from './IndicatorPoint';
 
 // import com.google.finance.AbstractDrawingLayer;
 // import flash.text.TextField;

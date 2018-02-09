@@ -3,7 +3,7 @@ import { AbstractDrawingLayer } from "./AbstractDrawingLayer";
 import { Const } from "./Const";
 import { DataSource } from "./DataSource";
 import { IntervalBasedChartLayer } from "./IntervalBasedChartLayer";
-import { Context } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 import { ViewPoint } from "./ViewPoint";
 
 // import flash.utils.getDefinitionByName;

@@ -6,7 +6,8 @@ import { DataUnit } from "./DataUnit";
 import { IntervalSet } from "./IntervalSet";
 import { LineChartLayer } from "./LineChartLayer";
 import { Utils } from "./Utils";
-import { Context, ViewPoint } from "./ViewPoint";
+import { ViewPoint } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 
 // import flash.display.Sprite;
 

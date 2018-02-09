@@ -1,7 +1,7 @@
 import { AbstractLayer } from "./AbstractLayer";
 import { Const } from "./Const";
 import { DataSource } from "./DataSource";
-import { Context } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 import { ViewPoint } from "./ViewPoint";
 export class BottomBarLayer extends AbstractLayer<ViewPoint> {
 	bottomTextHeight = 15;

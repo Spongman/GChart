@@ -1,7 +1,7 @@
 import { Const } from "./Const";
 import { PriceLinesLayer } from "./PriceLinesLayer";
 import { Utils } from "./Utils";
-import { Context } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 import { ViewPoint } from "./ViewPoint";
 
 export class PercentLinesLayer extends PriceLinesLayer {

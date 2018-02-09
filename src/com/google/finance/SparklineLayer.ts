@@ -1,10 +1,11 @@
-import { Point, Sprite } from "../../../flash/display/Sprite";
+import { Sprite } from "../../../flash/display/Sprite";
 import { AbstractLayer } from "./AbstractLayer";
 import { Const } from "./Const";
 import { DataSource } from "./DataSource";
 import { DataUnit } from "./DataUnit";
 import { SparklineViewPoint } from "./SparklineViewPoint";
-import { Context } from "./ViewPoint";
+import { Context } from "./IViewPoint";
+import { Point } from "../../../flash/display/Point";
 
 	// import flash.display.Sprite;
 	// import flash.geom.Point;

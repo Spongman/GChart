@@ -5,7 +5,8 @@ import { DataSeries } from "./DataSeries";
 import { DataUnit } from "./DataUnit";
 import { MainManager } from "./MainManager";
 import { Utils } from "./Utils";
-import { Context, IViewPoint, ViewPoint } from "./ViewPoint";
+import { ViewPoint } from "./ViewPoint";
+import { Context, IViewPoint } from './IViewPoint';
 
 export class AbstractDrawingLayer<T extends IViewPoint> extends AbstractLayer<T> {
 	getContext(context: Context, param2 = false) {
@@ -63,7 +64,7 @@ export class AbstractDrawingLayer<T extends IViewPoint> extends AbstractLayer<T>
 			return dataUnits.length - 1;
 		}
 
-		return Utils.getLastRealPointIndex(dataUnits);
+		return DataUnit.getLastRealPointIndex(dataUnits);
 	}
 
 	highlightPoint(context: Context, x: number, state: Dictionary) {

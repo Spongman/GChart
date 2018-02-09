@@ -1,13 +1,13 @@
-import { Shape } from "../../../flash/display/DisplayObject";
-import { Const } from "./Const";
-import { DisplayManager } from "./DisplayManager";
-import { SparklineViewPoint } from "./SparklineViewPoint";
+import { Shape } from '../../../flash/display/DisplayObject';
+import { Const } from './Const';
+import { IDisplayManager } from './IDisplayManager';
+import { SparklineViewPoint } from './SparklineViewPoint';
 
 // import flash.display.Shape;
 // import flash.display.DisplayObject;
 
 export class BorderLayer extends Shape {
-	constructor(readonly displayManager: DisplayManager, public topViewPoint: SparklineViewPoint) {
+	constructor(readonly displayManager: IDisplayManager, public topViewPoint: SparklineViewPoint) {
 		super(document.createElement("div"));
 	}
 

@@ -1,5 +1,5 @@
 import { Message, Messages } from "../Messages";
-import { Context } from "../ViewPoint";
+import { Context } from "../IViewPoint";
 import { IndependentIndicatorLayer } from "./IndependentIndicatorLayer";
 import { IndicatorLineStyle } from "./IndicatorLineStyle";
 

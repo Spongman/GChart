@@ -1,4 +1,3 @@
-import { LoaderInfo } from "./flash/display/LoaderInfo";
 
 export interface Map<T> { [key: string]: T; }
 export type Dictionary = Map<any>;
@@ -28,9 +27,11 @@ addGetter(Date, "date", Date.prototype.getDate);
 addGetter(Date, "month", Date.prototype.getMonth);
 addGetter(Date, "fullYear", Date.prototype.getFullYear);
 
+/*
 export interface Window {
 	loaderInfo: LoaderInfo;
 }
+*/
 
 export function cssColor(n: number, alpha = 1): string {
 

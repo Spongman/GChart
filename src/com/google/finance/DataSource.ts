@@ -1,5 +1,5 @@
 import { Map } from "../../../Global";
-import { ChartEvent, ChartEventPriorities, ChartEventTypes } from "./ChartEvent";
+import { ChartEvent } from "./ChartEvent";
 import { AddStreamResults, ChartDetailTypes, Const, Directions, Intervals, QuoteTypes } from "./Const";
 import { DataSeries } from "./DataSeries";
 import { DataUnit } from "./DataUnit";
@@ -13,18 +13,12 @@ import { StartEndPair } from "./StartEndPair";
 import { StockAssociatedObject } from "./StockAssociatedObject";
 import { StockDividend } from "./StockDividend";
 import { Utils } from "./Utils";
+import { ObjectPositions } from './ObjectPositions';
+import { SeriesPosition } from './SeriesPosition';
+import { ChartEventPriorities } from './ChartEventPriorities';
+import { ChartEventTypes } from './ChartEventTypes';
 
-export class SeriesPosition {
-	position: number;
-	constructor(public refDataSeries: DataSeries | null, public pos: number, public dayPos: number | null = null) {
-	}
-}
 
-export class ObjectPositions {
-	exchangeTimezoneOffset: number;
-	closePrice: number;
-	posInInterval: SeriesPosition[];
-}
 
 enum ColumnTypes {
 	COL_DATE_TYPE = 1,
@@ -260,7 +254,7 @@ export class DataSource {
 			return AddStreamResults.ADDED_DATA;
 		}
 
-		const lastRealPointIndex = Utils.getLastRealPointIndex(_loc9_);
+		const lastRealPointIndex = DataUnit.getLastRealPointIndex(_loc9_);
 		let _loc11_ = false;
 		if (Const.INDICATOR_ENABLED) {
 			switch (chartEvent.detailType) {

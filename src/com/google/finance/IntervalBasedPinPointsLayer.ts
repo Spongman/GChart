@@ -8,7 +8,7 @@ import { PinPoint } from "./PinPoint";
 import { PinPointContentMovie } from "./PinPointContentMovie";
 import { PinOrientations, PinPointMovie } from "./PinPointMovie";
 import { StockAssociatedObject } from "./StockAssociatedObject";
-import { Context } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 import { ViewPoint } from "./ViewPoint";
 
 export class IntervalBasedPinPointsLayer extends AbstractLayer<ViewPoint> {

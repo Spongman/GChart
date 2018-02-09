@@ -25,8 +25,8 @@ const config = {
 
 const tsProject = ts.createProject(
 	'./src/tsconfig.json', {
-		removeComments: config.production,
-		experimentalAsyncFunctions: !config.production,
+		//removeComments: config.production,
+		//experimentalAsyncFunctions: !config.production,
 		//target: config.production ? "es2015" : "es2017"
 	}
 );
@@ -46,7 +46,7 @@ gulp.task('typescript', () =>
 		.pipe(tsProject()).js
 		//.pipe(gulp.dest("dist/js"))
 		//.pipe(buffer())
-		.pipe(config.production ? uglify(uglifyOptions) : util.noop())
+		//.pipe(config.production ? uglify(uglifyOptions) : util.noop())
 		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest("dist"))
 );

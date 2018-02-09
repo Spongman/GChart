@@ -8,8 +8,9 @@ import { Indicator } from "./Indicator";
 import { VolumeIndicatorPoint } from "./indicator/IndicatorPoint";
 import { SpaceText } from "./SpaceText";
 import { Utils } from "./Utils";
-import { Context, IViewPoint } from "./ViewPoint";
+import { Context } from "./IViewPoint";
 import { ViewPoint } from "./ViewPoint";
+import { IViewPoint } from './IViewPoint';
 
 // import flash.display.Sprite;
 

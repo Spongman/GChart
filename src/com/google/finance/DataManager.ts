@@ -1,12 +1,14 @@
-import { Map } from "../../../Global";
-import { ChartEvent, ChartEventPriorities, ChartEventTypes } from "./ChartEvent";
-import { Const } from "./Const";
-import { DataRequestHandler } from "./DataRequestHandler";
-import { DataSource } from "./DataSource";
-import { DataUnit } from "./DataUnit";
-import { DisplayManager } from "./DisplayManager";
-import { MainManager } from "./MainManager";
-import { Utils } from "./Utils";
+import { Map } from '../../../Global';
+import { ChartEvent } from './ChartEvent';
+import { ChartEventPriorities } from './ChartEventPriorities';
+import { ChartEventTypes } from './ChartEventTypes';
+import { Const } from './Const';
+import { DataRequestHandler } from './DataRequestHandler';
+import { DataSource } from './DataSource';
+import { DataUnit } from './DataUnit';
+import { IDisplayManager } from './IDisplayManager';
+import { MainManager } from './MainManager';
+import { Utils } from './Utils';
 
 export class DataManager {
 	// private intId: number;
@@ -30,7 +32,7 @@ export class DataManager {
 		this.dataSources[chartEvent.quote].markEvent(chartEvent, ChartEventPriorities.EXPECTED);
 	}
 
-	syncDataSources(dataSource: DataSource, displayManager: DisplayManager) {
+	syncDataSources(dataSource: DataSource, displayManager: IDisplayManager) {
 		const otherDataSources: DataSource[] = [];
 		for (const dataSourceName of Object.keys(this.dataSources)) {
 			const hasPendingEvents = this.dataSources[dataSourceName].hasPendingEvents();

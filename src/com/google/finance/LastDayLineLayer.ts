@@ -1,7 +1,8 @@
-import { AbstractLayer } from "./AbstractLayer";
-import { Const, Intervals } from "./Const";
-import { DataUnit } from "./DataUnit";
-import { Context, ViewPoint } from "./ViewPoint";
+import { AbstractLayer } from './AbstractLayer';
+import { Const, Intervals } from './Const';
+import { DataUnit } from './DataUnit';
+import { Context } from './IViewPoint';
+import { ViewPoint } from './ViewPoint';
 
 export class LastDayLineLayer extends AbstractLayer<ViewPoint> {
 	private dashSize = 7;

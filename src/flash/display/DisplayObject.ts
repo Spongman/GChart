@@ -1,9 +1,9 @@
-import { Graphics } from './Graphics';
-import { Stage } from './Stage';
-import { Rectangle, Point } from './Sprite';
-import { DisplayObjectContainer } from './DisplayObjectContainer';
+import { DisplayObjectContainer } from "./DisplayObjectContainer";
+import { Graphics } from "./Graphics";
+import { Point, Rectangle } from "./Sprite";
+import { Stage } from "./Stage";
 
-	export class DisplayObject {
+export class DisplayObject {
 		name: string;
 
 		constructor(readonly element: HTMLElement, name?: string) {
@@ -103,5 +103,5 @@ import { DisplayObjectContainer } from './DisplayObjectContainer';
 		}
 	}
 
-	export class Shape extends DisplayObject {
+export class Shape extends DisplayObject {
 	}

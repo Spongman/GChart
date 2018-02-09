@@ -1,6 +1,6 @@
-import { IndicatorLayer } from "IndicatorLayer";
-import { Context } from '../ViewPoint';
-import { IndicatorPoint } from './IndicatorPoint';
+import { Context } from "../ViewPoint";
+import { IndicatorLayer } from "./IndicatorLayer";
+import { IndicatorPoint } from "./IndicatorPoint";
 
 	// import com.google.finance.ViewPoint;
 	// import com.google.finance.DataSource;

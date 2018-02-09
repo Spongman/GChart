@@ -1,10 +1,10 @@
-import { DataSeries } from './DataSeries';
-import { Indicator } from './Indicator';
-import { IndicatorPoint } from './indicator/IndicatorPoint';
+import { DataSeries } from "./DataSeries";
+import { Indicator } from "./Indicator";
+import { IndicatorPoint } from "./indicator/IndicatorPoint";
 
 	// import com.google.finance.indicator.IndicatorPoint;
 
-	export class GVizFormatConverter {
+export class GVizFormatConverter {
 		private static readonly VALUE_PROPERTY_NAME = "v";
 		private static readonly COLS_PROPERTY_NAME = "cols";
 		private static readonly ROWS_PROPERTY_NAME = "rows";

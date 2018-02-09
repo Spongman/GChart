@@ -1,8 +1,8 @@
-import { ChartEventTypes, ChartEventPriorities, ChartEvent } from './ChartEvent';
-import { ChartDetailTypes, Const } from './Const';
-import { MainManager } from './MainManager';
+import { ChartEvent, ChartEventPriorities, ChartEventTypes } from "./ChartEvent";
+import { ChartDetailTypes, Const } from "./Const";
+import { MainManager } from "./MainManager";
 
-	export class EventFactory {
+export class EventFactory {
 		private static buildEvent(chartEventType: ChartEventTypes, quote: string, period: string, interval: number, columns: string, detailType: ChartDetailTypes | null = null): ChartEvent {
 			const chartEvent = new ChartEvent(chartEventType);
 			chartEvent.detailType = detailType;

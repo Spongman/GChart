@@ -1,5 +1,5 @@
 
-	export class LoaderInfo {
+	export class LoaderInfo implements ILoaderInfo {
 		url: string;
 		parameters: any;
 	}

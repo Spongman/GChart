@@ -1,22 +1,31 @@
 ﻿<!DOCTYPE html>
 
 <html lang="en">
+
 <head>
 	<meta charset="utf-8" />
 	<title>TypeScript HTML App</title>
 	<link rel="stylesheet" href="app.css" type="text/css" />
 </head>
+
 <body>
 	<div id="compares">
-		<label><input type="checkbox" name="INDEXDJX:.DJI"/> Dow Jones</label>
-		<label><input type="checkbox" name="INDEXNASDAQ:.IXIC"/> Nasdaq</label>
-		<label><input type="checkbox" name="NASDAQ:AAPL"/> AAPL</label>
-		<label><input type="checkbox" name="NASDAQ:BIDU"/> BIDU</label>
-		<label><input type="checkbox" name="NASDAQ:MSFT"/> MSFT</label>
+		<label>
+			<input type="checkbox" name="INDEXDJX:.DJI" /> Dow Jones</label>
+		<label>
+			<input type="checkbox" name="INDEXNASDAQ:.IXIC" /> Nasdaq</label>
+		<label>
+			<input type="checkbox" name="NASDAQ:AAPL" /> AAPL</label>
+		<label>
+			<input type="checkbox" name="NASDAQ:BIDU" /> BIDU</label>
+		<label>
+			<input type="checkbox" name="NASDAQ:MSFT" /> MSFT</label>
 	</div>
 	<div id="parameters">
-		<label><input class="setParameter" type="checkbox" checked="checked" name="displayVolume"/> Volume</label>
-		<label><input class="setParameter" type="checkbox" checked="checked" name="displayExtendedHours"/> Extended Hours</label>
+		<label>
+			<input class="setParameter" type="checkbox" checked="checked" name="displayVolume" /> Volume</label>
+		<label>
+			<input class="setParameter" type="checkbox" checked="checked" name="displayExtendedHours" /> Extended Hours</label>
 		<select class="setParameter" name="verticalScaling">
 			<option selected="selected">Linear</option>
 			<option>Logarithmic</option>
@@ -31,15 +40,12 @@
 	<div id="stage"></div>
 
 	<script>
-		if (!Function.prototype.bind)
-		{
-			Function.prototype.bind = function (oThis)
-			{
+		if (!Function.prototype.bind) {
+			Function.prototype.bind = function (oThis) {
 				var aArgs = Array.prototype.slice.call(arguments, 1);
 				var fToBind = this;
 				var fNOP = function () { };
-				function fBound ()
-				{
+				function fBound() {
 					return fToBind.apply(
 						this instanceof fNOP ? this : oThis,
 						aArgs.concat(Array.prototype.slice.call(arguments)));
@@ -47,7 +53,7 @@
 
 				if (this.prototype)
 					fNOP.prototype = this.prototype;
-				fBound.prototype = new fNOP ();
+				fBound.prototype = new fNOP();
 
 				return fBound;
 			};
@@ -64,8 +70,7 @@
 
 		var mm = new com.google.finance.MainManager(stage);
 
-		setTimeout(function ()
-		{
+		setTimeout(function () {
 			eltStage.callAsFunction("enableIndicator", ["FastStochastic", "true*14*3"]);
 			eltStage.callAsFunction("enableIndicator", ["SlowStochastic", "true*14*3"]);
 		}, 2000);
@@ -94,11 +99,11 @@
 			e.addEventListener("change", function (event) {
 				eltStage.callAsFunction("setLineStyle", [e.value]);
 			})
-		});		
+		});
 
 	</script>
 
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106815406-2"></script>
+	<script async src="https:// www.googletagmanager.com/gtag/js?id=UA-106815406-2"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
 		function gtag() { dataLayer.push(arguments) };
@@ -107,4 +112,5 @@
 	</script>
 
 </body>
+
 </html>

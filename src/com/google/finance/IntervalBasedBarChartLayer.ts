@@ -1,7 +1,7 @@
-import { IntervalBasedChartLayer } from "IntervalBasedChartLayer";
-import { Context } from './ViewPoint';
-import { Intervals } from './Const';
-import { DataUnit } from './DataUnit';
+import { Intervals } from "./Const";
+import { DataUnit } from "./DataUnit";
+import { IntervalBasedChartLayer } from "./IntervalBasedChartLayer";
+import { Context } from "./ViewPoint";
 
 export abstract class IntervalBasedBarChartLayer extends IntervalBasedChartLayer {
 		protected barWidth: number;

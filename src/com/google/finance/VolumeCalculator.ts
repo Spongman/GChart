@@ -1,9 +1,9 @@
-import { IndicatorPoint, VolumeIndicatorPoint } from './indicator/IndicatorPoint';
-import { DataSeries } from './DataSeries';
-import { Const } from './Const';
-import { Indicator } from './Indicator';
+import { Const } from "./Const";
+import { DataSeries } from "./DataSeries";
+import { Indicator } from "./Indicator";
+import { IndicatorPoint, VolumeIndicatorPoint } from "./indicator/IndicatorPoint";
 
-	export class VolumeCalculator {
+export class VolumeCalculator {
 		private static computeWeekly(input: DataSeries, output: DataSeries, duration: number) {
 			const weeks = duration / Const.WEEKLY_INTERVAL;
 			for (let dayIndex = input.fridays.length - 1; dayIndex >= 0; dayIndex -= weeks) {

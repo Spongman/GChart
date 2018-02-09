@@ -1,8 +1,8 @@
-import { Map } from '../../../Global';
-import { DataSeries } from './DataSeries';
-import { Intervals } from './Const';
+import { Map } from "../../../Global";
+import { Intervals } from "./Const";
+import { DataSeries } from "./DataSeries";
 
-	export class Indicator {
+export class Indicator {
 		private hash: Map<DataSeries[]> = {};
 
 		intervals: number[] = [];

@@ -1,4 +1,4 @@
-import { StartEndPair } from "StartEndPair";
+import { StartEndPair } from "./StartEndPair";
 
 export class MarketSessionPair extends StartEndPair {
 		constructor(start: number, end: number, public name: string) {

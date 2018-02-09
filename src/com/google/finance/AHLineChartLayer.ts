@@ -1,22 +1,20 @@
-import { LineChartLayer } from "LineChartLayer";
-import { DataSource } from './DataSource';
-import { Const, Intervals } from './Const';
-import { Context, ViewPoint } from './ViewPoint';
-import { IntervalSet } from './IntervalSet';
-import { Utils } from './Utils';
-import { DataSeries } from './DataSeries';
-import { DataUnit } from './DataUnit';
-import { Dictionary } from '../../../Global';
+import { Dictionary } from "../../../Global";
+import { Const, Intervals } from "./Const";
+import { DataSeries } from "./DataSeries";
+import { DataSource } from "./DataSource";
+import { DataUnit } from "./DataUnit";
+import { IntervalSet } from "./IntervalSet";
+import { LineChartLayer } from "./LineChartLayer";
+import { Utils } from "./Utils";
+import { Context, ViewPoint } from "./ViewPoint";
 
 // import flash.display.Sprite;
 
-export class AHLineChartLayer extends LineChartLayer
-{
+export class AHLineChartLayer extends LineChartLayer {
 	private regionsXLimits: IntervalSet|undefined;
 	private visibleSessionsTimes: IntervalSet|undefined;
 
-	protected getPoint(dataSeries: DataSeries, x: number): DataUnit
-	{
+	protected getPoint(dataSeries: DataSeries, x: number): DataUnit {
 		const minute = this.viewPoint.getMinuteOfX(x);
 		let relativeMinuteIndex = dataSeries.getRelativeMinuteIndex(minute);
 		const time = dataSeries.units[relativeMinuteIndex].time;
@@ -24,85 +22,70 @@ export class AHLineChartLayer extends LineChartLayer
 		const timeIndex = DataSource.getTimeIndex(interval.end, dataSeries.units);
 		const skipInterval = this.viewPoint.getSkipInterval().skip;
 		relativeMinuteIndex -= (relativeMinuteIndex - timeIndex) % skipInterval;
-		while (dataSeries.units[relativeMinuteIndex].fake && dataSeries.units[relativeMinuteIndex].time > interval.start)
-		{
+		while (dataSeries.units[relativeMinuteIndex].fake && dataSeries.units[relativeMinuteIndex].time > interval.start) {
 			relativeMinuteIndex--;
 		}
 
 		return dataSeries.units[relativeMinuteIndex];
 	}
 
-	getDataSeries(context?: Context): DataSeries
-	{
+	getDataSeries(context?: Context): DataSeries {
 		return this.dataSource.afterHoursData;
 	}
 
-	private getVisibleSessionsTimes(context: Context): IntervalSet
-	{
+	private getVisibleSessionsTimes(context: Context): IntervalSet {
 		const intervalSet = new IntervalSet();
 		const visibleExtendedHours = this.dataSource.visibleExtendedHours;
-		for (let intervalIndex = visibleExtendedHours.length() - 1; intervalIndex >= 0; intervalIndex--)
-		{
+		for (let intervalIndex = visibleExtendedHours.length() - 1; intervalIndex >= 0; intervalIndex--) {
 			const interval = visibleExtendedHours.getIntervalAt(intervalIndex);
 			const startUnit = this.dataSource.afterHoursData.units[interval.start];
 			const endUnit = this.dataSource.afterHoursData.units[interval.end];
-			if (ViewPoint.sessionVisible(startUnit, endUnit, context))
-			{
+			if (ViewPoint.sessionVisible(startUnit, endUnit, context)) {
 				intervalSet.addInterval(startUnit.time, endUnit.time);
 			}
 		}
 		return intervalSet;
 	}
 
-	private computeMaxRange(context: Context, param2 = false): number
-	{
+	private computeMaxRange(context: Context, param2 = false): number {
 		this.minPrice = Number.POSITIVE_INFINITY;
 		this.maxPrice = 0;
 		const visibleSessionsTimes = this.getVisibleSessionsTimes(context);
 
-		for (let intervalIndex = 0; intervalIndex < visibleSessionsTimes.length(); intervalIndex++)
-		{
+		for (let intervalIndex = 0; intervalIndex < visibleSessionsTimes.length(); intervalIndex++) {
 			const interval = visibleSessionsTimes.getIntervalAt(intervalIndex);
 			this.computeSessionMinMaxPrice(context, interval.start, interval.end);
 		}
 		return this.maxPrice !== 0 ? this.maxPrice - this.minPrice : 0;
 	}
 
-	private computeSessionMinMaxPrice(context: Context, startTime: number, endTime: number)
-	{
+	private computeSessionMinMaxPrice(context: Context, startTime: number, endTime: number) {
 		const dataSeries = this.getDataSeries();
 		const startTimeIndex = DataSource.getTimeIndex(startTime, dataSeries.units);
 		const endTimeIndex = DataSource.getTimeIndex(endTime, dataSeries.units);
 
-		for (let timeIndex = startTimeIndex; timeIndex < endTimeIndex; timeIndex++)
-		{
+		for (let timeIndex = startTimeIndex; timeIndex < endTimeIndex; timeIndex++) {
 			const unit = dataSeries.units[timeIndex];
-			if (unit.close < this.minPrice)
-			{
+			if (unit.close < this.minPrice) {
 				this.minPrice = unit.close;
-			} else if (unit.close > this.maxPrice)
-			{
+			} else if (unit.close > this.maxPrice) {
 				this.maxPrice = unit.close;
 			}
 		}
 	}
 
-	getContext(context: Context, param2 = false)
-	{
+	getContext(context: Context, param2 = false) {
 		const dataSeries = this.getDataSeries();
-		if (dataSeries.points.length === 0)
-		{
+		if (dataSeries.points.length === 0) {
 			return context;
 		}
 
 		const firstRelativeMinute = dataSeries.getFirstRelativeMinute();
-		if (context.lastMinute < firstRelativeMinute)
-		{
+		if (context.lastMinute < firstRelativeMinute) {
 			return context;
 		}
 
-		if (this.viewPoint.getDetailLevel() > Intervals.INTRADAY)
-		{
+		if (this.viewPoint.getDetailLevel() > Intervals.INTRADAY) {
 			return context;
 		}
 
@@ -111,8 +94,7 @@ export class AHLineChartLayer extends LineChartLayer
 		const mediumPrice = this.getMediumPrice(context.lastMinute, context.count, dataSeries, context.verticalScaling);
 		let _loc7_ = 0;
 		let _loc8_ = 0;
-		if (mediumPrice.maxPrice === mediumPrice.minPrice && !context.maxPrice && !context.minPrice)
-		{
+		if (mediumPrice.maxPrice === mediumPrice.minPrice && !context.maxPrice && !context.minPrice) {
 			_loc7_ = Math.min(mediumPrice.minPrice, Const.DEFAULT_MAX_RANGE / 2);
 			_loc8_ = Const.DEFAULT_MAX_RANGE - _loc7_;
 		}
@@ -134,11 +116,9 @@ export class AHLineChartLayer extends LineChartLayer
 		return context;
 	}
 
-	renderLayer(context: Context)
-	{
+	renderLayer(context: Context) {
 		const dataSeries = this.getDataSeries();
-		if (dataSeries.points.length === 0)
-		{
+		if (dataSeries.points.length === 0) {
 			return;
 		}
 
@@ -149,35 +129,29 @@ export class AHLineChartLayer extends LineChartLayer
 		this.localYOffset = this.viewPoint.miny + vp.medPriceY + vp.V_OFFSET;
 		this.localYScale = vp.maxPriceRangeViewSize / context.maxPriceRange;
 
-		for (let intervalIndex = 0; intervalIndex < this.visibleSessionsTimes.length(); intervalIndex++)
-		{
+		for (let intervalIndex = 0; intervalIndex < this.visibleSessionsTimes.length(); intervalIndex++) {
 			const interval = this.visibleSessionsTimes.getIntervalAt(intervalIndex);
 			this.drawAfterHoursSession(this, interval.start, interval.end, context);
 		}
 	}
 
-	highlightPoint(context: Context, param2: number, state: Dictionary)
-	{
+	highlightPoint(context: Context, param2: number, state: Dictionary) {
 		this.clearHighlight();
-		if (!this.regionsXLimits || this.regionsXLimits.length() === 0)
-		{
+		if (!this.regionsXLimits || this.regionsXLimits.length() === 0) {
 			return;
 		}
 
 		const interval = this.regionsXLimits.getIntervalForValue(param2);
-		if (!interval)
-		{
+		if (!interval) {
 			return;
 		}
 
-		if (state["setter"])
-		{
+		if (state["setter"]) {
 			state["setter"].clearHighlight();
 		}
 
 		const dataSeries = this.getDataSeries();
-		if (!dataSeries)
-		{
+		if (!dataSeries) {
 			return;
 		}
 
@@ -194,8 +168,7 @@ export class AHLineChartLayer extends LineChartLayer
 		state["extraText"] = dataSeries.getSessionDisplayNameForMinute(point.dayMinute) + ": ";
 	}
 
-	protected getMediumPrice(param1: number, param2: number, dataSeries: DataSeries, param4: string)
-	{
+	protected getMediumPrice(param1: number, param2: number, dataSeries: DataSeries, param4: string) {
 		return {
 			medPrice: 0,
 			minPrice: this.minPrice,
@@ -203,8 +176,7 @@ export class AHLineChartLayer extends LineChartLayer
 		};
 	}
 
-	private drawAfterHoursSession(layer: AHLineChartLayer, param2: number, param3: number, context: Context)
-	{
+	private drawAfterHoursSession(layer: AHLineChartLayer, param2: number, param3: number, context: Context) {
 		const intradayInterval = Const.INTRADAY_INTERVAL / 60;
 		const units = this.dataSource.afterHoursData.units;
 		const timeIndex1 = DataSource.getTimeIndex(param3, units);
@@ -212,16 +184,13 @@ export class AHLineChartLayer extends LineChartLayer
 		const vp = this.viewPoint;
 		const right = vp.getXPos(units[timeIndex1]);
 		let _loc10_ = 1;
-		while (this.viewPoint.minutePix * intradayInterval * _loc10_ < vp.POINTS_DISTANCE)
-		{
+		while (this.viewPoint.minutePix * intradayInterval * _loc10_ < vp.POINTS_DISTANCE) {
 			_loc10_ *= 2;
 		}
 
 		let _loc11_ = timeIndex1;
-		if (units[_loc11_].relativeMinutes === 0)
-		{
-			while (units[_loc11_].time > param2 && units[_loc11_].fake)
-			{
+		if (units[_loc11_].relativeMinutes === 0) {
+			while (units[_loc11_].time > param2 && units[_loc11_].fake) {
 				_loc11_--;
 			}
 		}
@@ -235,8 +204,7 @@ export class AHLineChartLayer extends LineChartLayer
 		gr.lineTo(left, yPos);
 		gr.lineStyle(Const.ECN_LINE_CHART_LINE_THICKNESS, Const.ECN_LINE_CHART_LINE_COLOR, Const.ECN_LINE_CHART_LINE_VISIBILITY);
 		const intradayWidth = _loc10_ * (this.viewPoint.minutePix * intradayInterval);
-		for (let timeIndex = _loc11_; timeIndex > timeIndex2; timeIndex -= _loc10_)
-		{
+		for (let timeIndex = _loc11_; timeIndex > timeIndex2; timeIndex -= _loc10_) {
 			yPos = this.getYPos(context, units[timeIndex]);
 			gr.lineTo(left, yPos);
 			left -= intradayWidth;

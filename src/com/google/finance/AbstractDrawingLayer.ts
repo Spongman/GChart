@@ -1,11 +1,11 @@
-import { AbstractLayer } from "AbstractLayer";
+import { Dictionary } from "../../../Global";
+import { AbstractLayer } from "./AbstractLayer";
 import { Const, Intervals } from "./Const";
 import { DataSeries } from "./DataSeries";
 import { DataUnit } from "./DataUnit";
 import { MainManager } from "./MainManager";
 import { Utils } from "./Utils";
-import { Context, IViewPoint, ViewPoint } from './ViewPoint';
-import { Dictionary } from '../../../Global';
+import { Context, IViewPoint, ViewPoint } from "./ViewPoint";
 
 export class AbstractDrawingLayer<T extends IViewPoint> extends AbstractLayer<T> {
 	getContext(context: Context, param2 = false) {
@@ -18,9 +18,9 @@ export class AbstractDrawingLayer<T extends IViewPoint> extends AbstractLayer<T>
 			numDays = dataSeries.marketDayLength * 5;
 		} else if (detailLevel === Intervals.DAILY) {
 			numDays = dataSeries.marketDayLength;
-							} else {
+		} else {
 			numDays = Const.getDetailLevelInterval(detailLevel) / 60;
-							}
+		}
 
 		if (this.viewPoint.count === 0) {
 			return 0;
@@ -35,6 +35,7 @@ export class AbstractDrawingLayer<T extends IViewPoint> extends AbstractLayer<T>
 	}
 
 	clearHighlight() {
+		// do nothing
 	}
 
 	protected getWeeklyBarXPos(dataUnit: DataUnit, param2: number): number {
@@ -66,6 +67,7 @@ export class AbstractDrawingLayer<T extends IViewPoint> extends AbstractLayer<T>
 	}
 
 	highlightPoint(context: Context, x: number, state: Dictionary) {
+		// do nothing
 	}
 
 	getNewestMinute(): number {

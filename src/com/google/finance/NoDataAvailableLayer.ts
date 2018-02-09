@@ -1,6 +1,6 @@
-import { Messages } from "Messages";
-import { TextField, TextFormat, TextFieldAutoSize } from '../../../flash/text/TextField';
+import { TextField, TextFieldAutoSize, TextFormat } from "../../../flash/text/TextField";
 import { AbstractLayer } from "./AbstractLayer";
+import { Messages } from "./Messages";
 import { Message } from "./Messages";
 import { Context, ViewPoint } from "./ViewPoint";
 

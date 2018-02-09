@@ -1,8 +1,8 @@
 import { Sprite } from "../../../flash/display/Sprite";
-import { LoadingMessage } from './LoadingMessage';
-import { TextField } from '../../../flash/text/TextField';
-import { MainManager } from './MainManager';
-import { Const } from './Const';
+import { TextField } from "../../../flash/text/TextField";
+import { Const } from "./Const";
+import { LoadingMessage } from "./LoadingMessage";
+import { MainManager } from "./MainManager";
 
 	// import flash.display.Sprite;
 	// import flash.text.TextField;

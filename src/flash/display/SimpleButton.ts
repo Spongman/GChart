@@ -1,7 +1,7 @@
-import { DisplayObjectContainer } from './DisplayObjectContainer';
-import { DisplayObject } from 'DisplayObject';
+import { DisplayObject } from "./DisplayObject";
+import { DisplayObjectContainer } from "./DisplayObjectContainer";
 
-	export class SimpleButton extends DisplayObjectContainer {
+export class SimpleButton extends DisplayObjectContainer {
 		constructor(name?: string) {
 			const elt = document.createElement("div");
 			super(elt, name);

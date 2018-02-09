@@ -1,13 +1,13 @@
-import { AbstractDrawingLayer } from "AbstractDrawingLayer";
 import { Sprite } from "../../../flash/display/Sprite";
+import { Dictionary } from "../../../Global";
+import { AbstractDrawingLayer } from "./AbstractDrawingLayer";
 import { Const, Intervals } from "./Const";
 import { DataSeries } from "./DataSeries";
 import { DataSource } from "./DataSource";
 import { DataUnit } from "./DataUnit";
 import { Indicator } from "./Indicator";
+import { InfoDotInfo } from "./InfoDot";
 import { Context, ViewPoint } from "./ViewPoint";
-import { Dictionary } from '../../../Global';
-import { InfoDotInfo } from './InfoDot';
 
 	// import flash.display.Sprite;
 

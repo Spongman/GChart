@@ -1,6 +1,6 @@
-import { ScrollSlider_ScrollBarBg } from "ScrollSlider_ScrollBarBg";
-import { ScrollSlider_ScrollBarGrip } from "ScrollSlider_ScrollBarGrip";
 import { Sprite } from "../../../flash/display/Sprite";
+import { ScrollSlider_ScrollBarBg } from "./ScrollSlider_ScrollBarBg";
+import { ScrollSlider_ScrollBarGrip } from "./ScrollSlider_ScrollBarGrip";
 
 	// import flash.display.Sprite;
 	// import Bitmap;

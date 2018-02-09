@@ -1,6 +1,6 @@
-import { TextField, TextFieldType } from '../../../flash/text/TextField';
-import { DateTimeFormats, DateTimeLocale } from '../i18n/locale/DateTimeLocale';
-import { Const } from './Const';
+import { TextField, TextFieldType } from "../../../flash/text/TextField";
+import { DateTimeFormats, DateTimeLocale } from "../i18n/locale/DateTimeLocale";
+import { Const } from "./Const";
 
 	// import flash.text.TextField;
 	// import flash.text.TextFieldType;

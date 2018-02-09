@@ -1,7 +1,6 @@
-import { Messages } from "Messages";
 import { DataSeries } from "../DataSeries";
 import { Context } from "../ViewPoint";
-import { Message } from "./../Messages";
+import { Message, Messages } from "./../Messages";
 import { DependentIndicatorLayer } from "./DependentIndicatorLayer";
 import { IndicatorLineStyle } from "./IndicatorLineStyle";
 import { IndicatorPoint } from "./IndicatorPoint";

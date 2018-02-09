@@ -1,8 +1,8 @@
-import { DateTimeFormat } from './DateTimeFormat';
-import { DateTimeConstants } from 'DateTimeConstants';
-import { Map, Dictionary } from '../../../../Global';
+import { Dictionary, Map } from "../../../../Global";
+import { DateTimeConstants } from "./DateTimeConstants";
+import { DateTimeFormat } from "./DateTimeFormat";
 
-	export enum DateTimeFormats {
+export enum DateTimeFormats {
 		FULL_DATE_FORMAT = 0,
 		LONG_DATE_FORMAT = 1,
 		MEDIUM_DATE_FORMAT = 2,
@@ -17,7 +17,7 @@ import { Map, Dictionary } from '../../../../Global';
 		SHORT_DATETIME_FORMAT = 11,
 	}
 
-	export class DateTimeLocale {
+export class DateTimeLocale {
 
 		static readonly DATE_TIME_CONSTANTS = "DateTimeConstants";
 
@@ -75,4 +75,4 @@ import { Map, Dictionary } from '../../../../Global';
 		// private static readonly registerLocale = DateTimeConstants.register(DateTimeLocale.registerResource);
 	}
 
-	DateTimeConstants.register(DateTimeLocale.registerResource);
+DateTimeConstants.register(DateTimeLocale.registerResource);

@@ -1,5 +1,5 @@
-import { StockAssociatedObject } from "StockAssociatedObject";
-import { SeriesPosition } from './DataSource';
+import { SeriesPosition } from "./DataSource";
+import { StockAssociatedObject } from "./StockAssociatedObject";
 
 export class Dividend extends StockAssociatedObject {
 		yield: number;

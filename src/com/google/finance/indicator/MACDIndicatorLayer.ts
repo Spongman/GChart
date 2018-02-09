@@ -1,10 +1,9 @@
-import { IndependentIndicatorLayer } from "IndependentIndicatorLayer";
-import { Messages } from "Messages";
 import { Const } from "../Const";
 import { DataSeries } from "../DataSeries";
-import { Message } from "../Messages";
+import { Message, Messages } from "../Messages";
 import { Utils } from "../Utils";
 import { Context } from "../ViewPoint";
+import { IndependentIndicatorLayer } from "./IndependentIndicatorLayer";
 import { IndicatorLineStyle } from "./IndicatorLineStyle";
 import { IndicatorPoint } from "./IndicatorPoint";
 

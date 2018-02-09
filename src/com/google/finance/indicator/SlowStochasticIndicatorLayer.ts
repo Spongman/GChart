@@ -1,7 +1,6 @@
-import { Messages } from "Messages";
 import { DataSeries } from "../DataSeries";
 import { DataUnit } from "../DataUnit";
-import { Message } from "../Messages";
+import { Message, Messages } from "../Messages";
 import { Utils } from "../Utils";
 import { AbstractStochasticIndicatorLayer } from "./AbstractStochasticIndicatorLayer";
 import { IndicatorPoint } from "./IndicatorPoint";

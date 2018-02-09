@@ -1,7 +1,7 @@
-import { ChartDetailTypes } from './Const';
-import { EventCallback } from './ViewPoint';
+import { ChartDetailTypes } from "./Const";
+import { EventCallback } from "./ViewPoint";
 
-	export enum ChartEventTypes {
+export enum ChartEventTypes {
 		GENERIC = 0,
 		GET_DATA = 1,
 		GET_AH_DATA = 2,
@@ -10,7 +10,7 @@ import { EventCallback } from './ViewPoint';
 		GET_RT_AH_DATA = 5,
 	}
 
-	export enum ChartEventPriorities {
+export enum ChartEventPriorities {
 		EXPECTED = 0,
 		REQUIRED = 1,
 		OPTIONAL = 2,
@@ -20,7 +20,7 @@ import { EventCallback } from './ViewPoint';
 		POLLING = 6,
 	}
 
-	export class ChartEvent {
+export class ChartEvent {
 		quote: string;
 		interval: string;
 		period: string;

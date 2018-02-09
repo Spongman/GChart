@@ -1,27 +1,21 @@
-import { DisplayObject } from './DisplayObject';
+import { DisplayObject } from "./DisplayObject";
 
-export class BitmapData
-{
+export class BitmapData {
 	width: number;
 	height: number;
 }
 
-export class Bitmap extends DisplayObject
-{
+export class Bitmap extends DisplayObject {
 	protected _width: number;
 	protected _height: number;
 
-	constructor()
-	{
+	constructor() {
 		super(document.createElement("img"));
-		(this.element as HTMLImageElement).onload = () =>
-		{
-			if (!this.element.style.width)
-			{
+		(this.element as HTMLImageElement).onload = () => {
+			if (!this.element.style.width) {
 				this.element.style.width = (this.element as HTMLImageElement).naturalWidth + "px";
 			}
-			if (!this.element.style.height)
-			{
+			if (!this.element.style.height) {
 				this.element.style.height = (this.element as HTMLImageElement).naturalHeight + "px";
 			}
 		};

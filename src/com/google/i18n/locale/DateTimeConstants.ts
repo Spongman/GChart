@@ -1,6 +1,6 @@
-import { Dictionary } from '../../../../Global';
+import { Dictionary } from "../../../../Global";
 
-	export class DateTimeConstants {
+export class DateTimeConstants {
 		private static DateTimeConstants_en = {
 			ERAS: ["BC", "AD"],
 			ERANAMES: ["Before Christ", "Anno Domini"],

@@ -1,4 +1,4 @@
-import { EventDispatcherImpl } from '../events/EventDispatcher';
+import { EventDispatcherImpl } from "../events/EventDispatcher";
 
 export class TimerEvent {
 }

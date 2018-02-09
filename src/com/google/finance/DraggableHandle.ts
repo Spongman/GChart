@@ -1,6 +1,6 @@
+import { Bitmap } from "../../../flash/display/Bitmap";
+import { SimpleButton } from "../../../flash/display/SimpleButton";
 import { Sprite } from "../../../flash/display/Sprite";
-import { SimpleButton } from '../../../flash/display/SimpleButton';
-import { Bitmap } from '../../../flash/display/Bitmap';
 
 	// import flash.display.Sprite;
 	// import flash.display.SimpleButton;

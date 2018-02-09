@@ -1,12 +1,11 @@
+import { DataSeries } from "../DataSeries";
+import { DataUnit } from "../DataUnit";
+import { Message, Messages } from "../Messages";
+import { Utils } from "../Utils";
+import { Context } from "../ViewPoint";
 import { IndependentIndicatorLayer } from "./IndependentIndicatorLayer";
-import { Context } from '../ViewPoint';
-import { Message } from '../Messages';
 import { IndicatorLineStyle } from "./IndicatorLineStyle";
-import { Messages } from 'Messages';
-import { DataSeries } from '../DataSeries';
-import { DataUnit } from '../DataUnit';
-import { IndicatorPoint } from './IndicatorPoint';
-import { Utils } from '../Utils';
+import { IndicatorPoint } from "./IndicatorPoint";
 
 	// import com.google.finance.Messages;
 	// import com.google.finance.DataUnit;

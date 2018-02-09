@@ -1,13 +1,13 @@
 import { SimpleButton } from "../../../flash/display/SimpleButton";
 import { Sprite } from "../../../flash/display/Sprite";
-import { TextField, TextFormat, TextFieldAutoSize } from '../../../flash/text/TextField';
+import { TextField, TextFieldAutoSize, TextFormat } from "../../../flash/text/TextField";
+import { DateTimeLocale } from "../i18n/locale/DateTimeLocale";
 import { Const } from "./Const";
 import { MainManager } from "./MainManager";
 import { MouseCursors } from "./MouseCursor";
 import { PinPoint } from "./PinPoint";
 import { PinPointContentMovie_BubbleCloseButton } from "./PinPointContentMovie_BubbleCloseButton";
 import { ViewPoint } from "./ViewPoint";
-import { DateTimeLocale } from '../i18n/locale/DateTimeLocale';
 
 	// import flash.display.Sprite;
 	// import flash.text.TextFieldAutoSize;

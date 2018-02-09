@@ -1,7 +1,7 @@
 import { Sprite } from "../../../flash/display/Sprite";
-import { TextField, TextFormat, TextFieldAutoSize } from '../../../flash/text/TextField';
-import { MainManager } from './MainManager';
-import { MouseCursors } from './MouseCursor';
+import { TextField, TextFieldAutoSize, TextFormat } from "../../../flash/text/TextField";
+import { MainManager } from "./MainManager";
+import { MouseCursors } from "./MouseCursor";
 
 	// import flash.display.Sprite;
 	// import flash.text.TextFieldAutoSize;

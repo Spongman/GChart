@@ -1,11 +1,11 @@
-import { IntervalBasedChartLayer } from "IntervalBasedChartLayer";
-import { IntervalSet } from './IntervalSet';
-import { ViewPoint, Context } from './ViewPoint';
-import { DataSource } from './DataSource';
-import { DataUnit } from './DataUnit';
-import { Intervals, Const } from './Const';
-import { DataSeries } from './DataSeries';
-import { Dictionary } from '../../../Global';
+import { Dictionary } from "../../../Global";
+import { Const, Intervals } from "./Const";
+import { DataSeries } from "./DataSeries";
+import { DataSource } from "./DataSource";
+import { DataUnit } from "./DataUnit";
+import { IntervalBasedChartLayer } from "./IntervalBasedChartLayer";
+import { IntervalSet } from "./IntervalSet";
+import { Context, ViewPoint } from "./ViewPoint";
 
 export class IntervalBasedAHChartLayer extends IntervalBasedChartLayer {
 		private regionsXLimits: IntervalSet;

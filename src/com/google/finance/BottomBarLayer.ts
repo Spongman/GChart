@@ -1,20 +1,17 @@
-import { AbstractLayer } from 'AbstractLayer';
-import { ViewPoint } from 'ViewPoint';
-import { Context } from './ViewPoint';
-import { Const } from './Const';
-import { DataSource } from './DataSource';
-export class BottomBarLayer extends AbstractLayer<ViewPoint>
-{
+import { AbstractLayer } from "./AbstractLayer";
+import { Const } from "./Const";
+import { DataSource } from "./DataSource";
+import { Context } from "./ViewPoint";
+import { ViewPoint } from "./ViewPoint";
+export class BottomBarLayer extends AbstractLayer<ViewPoint> {
 	bottomTextHeight = 15;
 
-	constructor(viewPoint: ViewPoint, dataSource: DataSource)
-	{
+	constructor(viewPoint: ViewPoint, dataSource: DataSource) {
 		super(viewPoint, dataSource);
 		viewPoint.bottomTextHeight = this.bottomTextHeight;
 	}
 
-	private drawRectangle(color: number, alpha: number, x1: number, y1: number, x2: number, y2: number)
-	{
+	private drawRectangle(color: number, alpha: number, x1: number, y1: number, x2: number, y2: number) {
 		const gr = this.graphics;
 		gr.lineStyle(0, 0, 0);
 		gr.beginFill(color, alpha);
@@ -29,8 +26,7 @@ export class BottomBarLayer extends AbstractLayer<ViewPoint>
 		gr.endFill();
 	}
 
-	renderLayer(context: Context)
-	{
+	renderLayer(context: Context) {
 		this.graphics.clear();
 		this.drawRectangle(Const.TEXT_BACKGROUND_COLOR, 80, this.viewPoint.minx, this.viewPoint.maxy - this.bottomTextHeight, this.viewPoint.maxx, this.viewPoint.maxy);
 	}

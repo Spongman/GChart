@@ -1,24 +1,24 @@
-import { MainManager } from './MainManager';
-import { Utils } from './Utils';
-import { LayerInfo, LayersManager } from './LayersManager';
-import { Const, Intervals } from './Const';
-import { Indicator } from './Indicator';
-import { GVizFormatConverter } from './GVizFormatConverter';
-import { EventFactory } from './EventFactory';
-import { DataSeries } from './DataSeries';
-import { DataSource } from './DataSource';
-import { ExternalInterface } from '../../../flash/external/ExternalInterface';
-import { ChartEventTypes, ChartEventPriorities } from './ChartEvent';
-import { Stage } from '../../../flash/display/Stage';
-import { Map, Dictionary } from '../../../Global';
-import { IndicatorLayer } from './indicator/IndicatorLayer';
+import { Stage } from "../../../flash/display/Stage";
+import { ExternalInterface } from "../../../flash/external/ExternalInterface";
+import { Dictionary, Map } from "../../../Global";
+import { ChartEventPriorities, ChartEventTypes } from "./ChartEvent";
+import { ChartDetailTypes, Const, Intervals } from "./Const";
+import { DataSeries } from "./DataSeries";
+import { DataSource } from "./DataSource";
+import { EventFactory } from "./EventFactory";
+import { GVizFormatConverter } from "./GVizFormatConverter";
+import { Indicator } from "./Indicator";
+import { IndicatorLayer } from "./indicator/IndicatorLayer";
+import { LayerInfo, LayersManager } from "./LayersManager";
+import { MainManager } from "./MainManager";
+import { Utils } from "./Utils";
 
 	// import flash.system.Capabilities;
 	// import flash.external.ExternalInterface;
 	// import flash.utils.getDefinitionByName;
 	// import flash.events.MouseEvent;
 
-	export class JSProxy {
+export class JSProxy {
 		private javascriptRequestMade = false;
 		private javascriptNotified = false;
 
@@ -336,7 +336,7 @@ import { IndicatorLayer } from './indicator/IndicatorLayer';
 			ticker = Utils.adjustNasdToNasdaq(ticker);
 			const dataManager = this.mainManager.dataManager;
 			// TODO: wtf?
-			const event = EventFactory.getEvent(ChartEventTypes.GET_DATA, ticker, ChartEventPriorities.OPTIONAL);
+			const event = EventFactory.getEvent(ChartEventTypes.GET_DATA as any as ChartDetailTypes, ticker, ChartEventPriorities.OPTIONAL);
 			dataManager.addData(event, decodeURIComponent(param3));
 			if (param5) {
 				dataManager.addData(event, decodeURIComponent(param5));

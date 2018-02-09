@@ -6,7 +6,7 @@ export interface IRepeaterClient {
 
 	initializeRepeaterArrays(client: IRepeaterClient): void;
 
-	//repeaters: Array;
+	// repeaters: Array;
 
-	//repeaterIndices: Array;
+	// repeaterIndices: Array;
 }

@@ -1,9 +1,9 @@
+import { TextFieldAutoSize } from "../../../flash/text/TextField";
 import { AbstractLayer } from "./AbstractLayer";
 import { BottomBarLayer } from "./BottomBarLayer";
 import { Const } from "./Const";
 import { Utils } from "./Utils";
 import { Context, ViewPoint } from "./ViewPoint";
-import { TextFieldAutoSize } from '../../../flash/text/TextField';
 
 	// import flash.text.TextFieldAutoSize;
 

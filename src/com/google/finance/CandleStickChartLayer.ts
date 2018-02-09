@@ -1,6 +1,6 @@
-import { IntervalBasedBarChartLayer } from "IntervalBasedBarChartLayer";
-import { Context } from './ViewPoint';
-import { DataUnit } from './DataUnit';
+import { DataUnit } from "./DataUnit";
+import { IntervalBasedBarChartLayer } from "./IntervalBasedBarChartLayer";
+import { Context } from "./ViewPoint";
 
 export class CandleStickChartLayer extends IntervalBasedBarChartLayer {
 		protected drawBarAtDataUnit(context: Context, dataUnits: DataUnit[], unitIndex: number) {

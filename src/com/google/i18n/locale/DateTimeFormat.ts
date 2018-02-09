@@ -1,6 +1,6 @@
-import { DateTimeConstants } from "DateTimeConstants";
-import { DateTimeLocale, DateTimeFormats } from './DateTimeLocale';
-import { Dictionary } from '../../../../Global';
+import { Dictionary } from "../../../../Global";
+import { DateTimeConstants } from "./DateTimeConstants";
+import { DateTimeFormats, DateTimeLocale } from "./DateTimeLocale";
 
 enum PatternPartTypes {
 		QUOTED_STRING = 0,

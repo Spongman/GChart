@@ -1,7 +1,7 @@
-import { SeriesPosition } from './DataSource';
-import { PinPoint } from './PinPoint';
+import { SeriesPosition } from "./DataSource";
+import { PinPoint } from "./PinPoint";
 
-	export class StockAssociatedObject
+export class StockAssociatedObject
 		extends SeriesPosition {
 		// public refDataSeries: com.google.finance.DataSeries;
 		// public pos: number;

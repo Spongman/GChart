@@ -1,13 +1,13 @@
-import { IndicatorLayer } from 'IndicatorLayer';
-import { Context } from '../ViewPoint';
-import { Const } from '../Const';
-import { IndicatorPoint } from './IndicatorPoint';
+import { Const } from "../Const";
+import { Context } from "../ViewPoint";
+import { IndicatorLayer } from "./IndicatorLayer";
+import { IndicatorPoint } from "./IndicatorPoint";
 
 	// import com.google.finance.Const;
 	// import com.google.finance.ViewPoint;
 	// import com.google.finance.DataSource;
 
-	export class VolumeDependentIndicatorLayer extends IndicatorLayer {
+export class VolumeDependentIndicatorLayer extends IndicatorLayer {
 		protected getYPos(context: Context, indicatorPoint: IndicatorPoint): number {
 			return this.viewPoint.maxy - indicatorPoint.getValue() * this.localYScale;
 		}

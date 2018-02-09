@@ -1,7 +1,7 @@
-import { Utils } from './Utils';
-import { Const } from './Const';
+import { Const } from "./Const";
+import { Utils } from "./Utils";
 
-	export class DataUnit {
+export class DataUnit {
 		logHigh: number;
 		duplicate = false;
 		time: number;

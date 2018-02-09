@@ -1,5 +1,5 @@
-import { Map } from '../../../Global';
-import { Messages } from "Messages";
+import { Map } from "../../../Global";
+import { Messages } from "./Messages";
 
 export enum Intervals {
 		INVALID = -1,

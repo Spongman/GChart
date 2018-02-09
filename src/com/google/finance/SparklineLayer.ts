@@ -1,17 +1,17 @@
-import { AbstractLayer } from 'AbstractLayer';
-import { SparklineViewPoint } from './SparklineViewPoint';
-import { Const } from './Const';
-import { DataUnit } from './DataUnit';
-import { DataSource } from './DataSource';
-import { Sprite, Point } from '../../../flash/display/Sprite';
-import { Context } from './ViewPoint';
+import { Point, Sprite } from "../../../flash/display/Sprite";
+import { AbstractLayer } from "./AbstractLayer";
+import { Const } from "./Const";
+import { DataSource } from "./DataSource";
+import { DataUnit } from "./DataUnit";
+import { SparklineViewPoint } from "./SparklineViewPoint";
+import { Context } from "./ViewPoint";
 
 	// import flash.display.Sprite;
 	// import flash.geom.Point;
 
-	export class SparklineLayer extends AbstractLayer<SparklineViewPoint> {
-		//private realLIndex: number;
-		//private realRIndex: number;
+export class SparklineLayer extends AbstractLayer<SparklineViewPoint> {
+		// private realLIndex: number;
+		// private realRIndex: number;
 
 		borderColor = 11184810;
 		hasShadow: boolean;
@@ -75,8 +75,8 @@ import { Context } from './ViewPoint';
 		private drawLine(sprite: Sprite, param2: number, unitIndex: number, sparklineViewPoint: SparklineViewPoint, param5: number[]): number {
 			const dataSeries = notnull(this.getDataSeries());
 			const units = dataSeries.units;
-			//const _loc10_ = _loc8_.days;
-			//const _loc11_ = param3;
+			// const _loc10_ = _loc8_.days;
+			// const _loc11_ = param3;
 			const skipInterval = this.getSkipInterval(param5, dataSeries.units);
 			let _loc13_ = param5.length - 1;
 			while (_loc13_ >= 0 && param5[_loc13_] > unitIndex) {
@@ -135,7 +135,7 @@ import { Context } from './ViewPoint';
 			const _loc7_ = this.drawLine(this, sparkFirstMinuteIndex, sparkLastMinuteIndex, sparklineViewPoint, _loc4_);
 			gr.lineStyle(0, 0, 0);
 			const point = new Point(_loc7_, sparklineViewPoint.my_maxy);
-			//this.globalToLocal(_loc8_);	// TODO: ?
+			// this.globalToLocal(_loc8_);	// TODO: ?
 			gr.lineTo(point.x, point.y);
 			gr.endFill();
 			this.drawBackground(false);
@@ -165,7 +165,7 @@ import { Context } from './ViewPoint';
 		private getMaxRange(param1: number, param2: number, param3: number[]) {
 			const dataSeries = notnull(this.getDataSeries());
 			const units = dataSeries.units;
-			//const _loc6_ = param2;
+			// const _loc6_ = param2;
 			this.minPriceLog = Number.POSITIVE_INFINITY;
 			this.maxPriceLog = Number.NEGATIVE_INFINITY;
 			let _loc7_ = param3.length - 1;

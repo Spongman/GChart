@@ -1,10 +1,10 @@
-import { EventDispatcherImpl } from '../events/EventDispatcher';
+import { EventDispatcherImpl } from "../events/EventDispatcher";
 
-	export class URLRequest {
+export class URLRequest {
 		constructor(readonly url: string) { }
 	}
 
-	export class URLLoader
+export class URLLoader
 		extends EventDispatcherImpl {
 		data: any;
 

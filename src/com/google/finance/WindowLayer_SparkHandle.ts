@@ -1,8 +1,8 @@
-import { Bitmap } from '../../../flash/display/Bitmap';
+import { Bitmap } from "../../../flash/display/Bitmap";
 
 	// import mx.core.Bitmap;
 
-	export class WindowLayer_SparkHandle extends Bitmap {
+export class WindowLayer_SparkHandle extends Bitmap {
 		constructor() {
 			super();
 			this._width = 11;

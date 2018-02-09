@@ -1,14 +1,14 @@
-import { ButtonsGroup } from './ButtonsGroup';
-import { SimpleButton } from '../../../../flash/display/SimpleButton';
-import { DisplayObjectContainer } from '../../../../flash/display/DisplayObjectContainer';
-import { TextField } from '../../../../flash/text/TextField';
+import { DisplayObjectContainer } from "../../../../flash/display/DisplayObjectContainer";
+import { SimpleButton } from "../../../../flash/display/SimpleButton";
+import { TextField } from "../../../../flash/text/TextField";
+import { ButtonsGroup } from "./ButtonsGroup";
 
 	// import flash.events.Event;
 	// import flash.display.Sprite;
 	// import flash.display.SimpleButton;
 	// import flash.text.TextField;
 
-	export class TextButtonsGroup extends ButtonsGroup {
+export class TextButtonsGroup extends ButtonsGroup {
 		private currentButton: number = -1;
 
 		buttonPress(event: Event) {
